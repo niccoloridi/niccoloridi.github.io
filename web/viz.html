@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<body style="background-color:rgb(0, 0, 0); color:white">
+
+<!-- START SIGMA IMPORTS -->
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/sigma.core.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/conrad.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/utils/sigma.utils.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/utils/sigma.polyfills.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/sigma.settings.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/classes/sigma.classes.dispatcher.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/classes/sigma.classes.configurable.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/classes/sigma.classes.graph.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/classes/sigma.classes.camera.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/classes/sigma.classes.quad.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/classes/sigma.classes.edgequad.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/captors/sigma.captors.mouse.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/captors/sigma.captors.touch.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/sigma.renderers.canvas.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/sigma.renderers.webgl.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/sigma.renderers.svg.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/sigma.renderers.def.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/webgl/sigma.webgl.nodes.def.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/webgl/sigma.webgl.nodes.fast.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/webgl/sigma.webgl.edges.def.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/webgl/sigma.webgl.edges.fast.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/webgl/sigma.webgl.edges.arrow.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/canvas/sigma.canvas.labels.def.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/canvas/sigma.canvas.hovers.def.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/canvas/sigma.canvas.nodes.def.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/canvas/sigma.canvas.edges.def.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/canvas/sigma.canvas.edges.curve.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/canvas/sigma.canvas.edges.arrow.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/canvas/sigma.canvas.edges.curvedArrow.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/canvas/sigma.canvas.edgehovers.def.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/canvas/sigma.canvas.edgehovers.curve.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/canvas/sigma.canvas.edgehovers.arrow.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/canvas/sigma.canvas.extremities.def.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/svg/sigma.svg.utils.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/svg/sigma.svg.nodes.def.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/svg/sigma.svg.edges.def.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/svg/sigma.svg.edges.curve.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/svg/sigma.svg.labels.def.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/renderers/svg/sigma.svg.hovers.def.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/middlewares/sigma.middlewares.rescale.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/middlewares/sigma.middlewares.copy.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/misc/sigma.misc.animation.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/misc/sigma.misc.bindEvents.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/misc/sigma.misc.bindDOMEvents.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/misc/sigma.misc.drawHovers.js"></script>
+<!-- END SIGMA IMPORTS -->
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/plugins/sigma.parsers.gexf/gexf-parser.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/plugins/sigma.parsers.gexf/sigma.parsers.gexf.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/plugins/sigma.plugins.neighborhoods/sigma.plugins.neighborhoods.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/plugins/sigma.plugins.tooltips/sigma.plugins.tooltips.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/plugins/sigma.renderers.customShapes/shape-library.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/plugins/sigma.renderers.customShapes/sigma.renderers.customShapes.js"></script>
+<script src="http://cluster.ischool.drexel.edu/~cchen/citespace/examples/src/mustache/3.0.0/mustache.min.js" type="application/javascript"></script>
+
+<div id="container">
+	<style>
+		#graph-container {
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			position: absolute;
+		}
+		
+		.sigma-tooltip {
+		  max-width: 440px;
+		  max-height: 280px;
+		  background-color: rgba(138, 135, 121, 1);
+		  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+		  border-radius: 6px;
+		}
+
+		.sigma-tooltip-header {
+		  font-variant: small-caps;
+		  font-size: 120%;
+		  color: rgba(239, 251, 116, 1);
+		  border-bottom: 1px solid #aac789;
+		  padding: 10px;
+		}
+
+		.sigma-tooltip-body {
+		  padding: 10px;
+		}
+
+		.sigma-tooltip-body th {
+		  color: rgba(252, 252, 252, 1);
+		  text-align: left;
+		}
+
+		.sigma-tooltip-footer {
+		  padding: 10px;
+		  border-top: 1px solid #aac789;
+		}
+
+		.sigma-tooltip > .arrow {
+		  border-width: 10px;
+		  position: absolute;
+		  display: block;
+		  width: 0;
+		  height: 0;
+		  border-color: transparent;
+		  border-style: solid;
+		}
+
+		.sigma-tooltip.top {
+		  margin-top: -12px;
+		}
+		.sigma-tooltip.top > .arrow {
+		  left: 50%;
+		  bottom: -10px;
+		  margin-left: -10px;
+		  border-top-color: rgb(249, 247, 237);
+		  border-bottom-width: 0;
+		}
+
+		.sigma-tooltip.bottom {
+		  margin-top: 12px;
+		}
+		.sigma-tooltip.bottom > .arrow {
+		  left: 50%;
+		  top: -10px;
+		  margin-left: -10px;
+		  border-bottom-color: rgb(249, 247, 237);
+		  border-top-width: 0;
+		}
+
+		.sigma-tooltip.left {
+		  margin-left: -12px;
+		}
+		.sigma-tooltip.left > .arrow {
+		  top: 50%;
+		  right: -10px;
+		  margin-top: -10px;
+		  border-left-color: rgb(249, 247, 237);
+		  border-right-width: 0;
+		}
+
+		.sigma-tooltip.right {
+		  margin-left: 12px;
+		}
+		.sigma-tooltip.right > .arrow {
+		  top: 50%;
+		  left: -10px;
+		  margin-top: -10px;
+		  border-right-color: rgb(249, 247, 237);
+		  border-left-width: 0;
+		}
+	</style>
+	<div id="graph-container"></div>
+</div>
+<script>
+/**
+ * https://github.com/jacomyal/sigma.js/wiki/Settings
+**/
+  sigma.classes.graph.addMethod('neighbors', function(nodeId) {
+    var k,
+        neighbors = {},
+        index = this.allNeighborsIndex[nodeId] || {};
+
+    for (k in index)
+      neighbors[k] = this.nodesIndex[k];
+
+    return neighbors;
+  });
+
+sigma.classes.graph.addMethod('adjacentEdges', function(id) {
+    if (typeof id !== 'string')
+        throw 'adjacentEdges: the node id must be a string.';
+
+      var a = this.allNeighborsIndex[id],
+          eid,
+          target,
+          edges = [];
+      for(target in a) {
+        for(eid in a[target]) {
+          edges.push(a[target][eid]);
+        }
+      }
+      return edges;
+});
+	
+var db = new sigma.plugins.neighborhoods();
+
+s = new sigma({
+    renderer: {
+        container: document.getElementById('graph-container'),
+        type: 'canvas'
+    },
+    settings : {
+		//doubleClickEnabled: false,
+		enableEdgeHovering: false,
+		//edgeHoverColor: 'edge',
+		defaultLabelSize: 13,
+		defaultLabelColor: '#f8fefeff',
+		defaultLabelBGColor: '#ffff001a',
+		font: 'arial',
+		fontStyle: 'bold',
+		labelSize: 'proportional',
+		labelSizeRatio: 1,
+		labelThreshold:10,
+		minEdgeSize: 0.5,
+		//maxEdgeSize: 0.75,
+		defaultEdgeHoverColor: '#000',
+		edgeHoverSizeRatio: 1,
+		edgeHoverExtremities: true,
+		borderSize: 1,
+		nodeBorderColor: 'default',
+		defaultNodeBorderColor: '#000',
+		defaultBorderView: "always",
+		zoomMax: 20
+    }
+});
+  
+var config = {
+	node: {
+		show: 'doubleClickNode',
+		hide: 'clickStage',
+		cssClass: 'sigma-tooltip',
+		position: 'right',
+		template:
+		'<div class="arrow"></div>' +
+		' <div class="sigma-tooltip-header"><b>{{label}}</b></div>' +
+		'  <div class="sigma-tooltip-body">' +
+		'    <table>' +
+		'      <tr><th>Cluster</th> <td>{{cluster}}</td></tr>' +		
+		'      <tr><th>Reference</th> <td>{{key}}</td></tr>' +
+		'      <tr><th>Citations</th> <td>{{tc}}</td></tr>' +	
+		'    </table>' +
+		'  </div>' +
+		'  <div class="sigma-tooltip-footer">Number of connections: {{degree}}</div>',
+		renderer: function(node, template) {
+			// The function context is s.graph
+			node.degree = this.degree(node.id);
+			node.key = node.attributes[1];
+			node.cluster = node.attributes[2];
+			node.tc = node.attributes[3];
+			
+			// Returns an HTML string:
+			return Mustache.render(template, node);
+		}
+	}
+};
+
+var tooltips = sigma.plugins.tooltips(s, s.renderers[0], config);
+
+tooltips.bind('shown', function(event) {
+  console.log('tooltip shown', event);
+});
+tooltips.bind('hidden', function(event) {
+  console.log('tooltip hidden', event);
+});
+
+
+sigma.parsers.gexf('citespace2gexf.gexf', s, function(s) {
+	var fullcolor = true;
+
+    s.graph.nodes().forEach(function(n){ 
+      n.originalColor = n.color;
+	  borderColor: 'black';
+	  
+	  if ( n.label.startsWith('#') ) {
+		n.type = 'star';
+		borderColor: 'red';
+	  }
+    });
+	
+    s.graph.edges().forEach(function(edge){ 
+      edge.type = "curve";
+	  
+	  edge.originalColor = edge.color;
+    });
+	
+	var dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
+	
+	s.bind('clickNode', function(e) {
+		var nodeId = e.data.node.id,
+            toKeep = s.graph.neighbors(nodeId);
+        toKeep[nodeId] = e.data.node;
+	
+		s.graph.nodes().forEach(function(n) {
+			if ( toKeep[n.id]) {
+				n.color = n.originalColor;
+			} else {
+				n.color = '#0499a84d';
+			}
+		});
+		
+		s.graph.edges().forEach(function(edge) {
+			if (toKeep[edge.source] && toKeep[edge.target]){
+				edge.color = edge.originalColor;
+			} else {
+				edge.color = '#00ffe126';
+			}
+        });
+		s.refresh();
+	});
+	
+	s.bind('clickStage', function(v) {
+		if ( fullcolor ) {
+			s.defaultLabelColor='#000000ff';
+		} else {
+			s.defaultLabelColor='#ff0000ff';
+		}
+		
+		s.graph.nodes().forEach(function(n) {
+			n.color = n.originalColor;
+		});
+		
+		s.graph.edges().forEach(function(e) {
+			if ( fullcolor ) {
+				e.color = e.originalColor;
+			} else {
+				e.color = '#00ffe126';
+			}
+		});	
+		fullcolor = !fullcolor;
+		s.refresh();
+	});
+	
+	CustomShapes.init(s);
+	s.refresh();
+});
+
+</script>
+</body>
+</html>
