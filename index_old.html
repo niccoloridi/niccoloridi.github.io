@@ -4,19 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Niccolò Ridi | Public International Law</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- Basic Setup & Typography --- */
+        /* --- Basic Setup & Monochromatic Palette --- */
         :root {
-            --primary-color: #2c3e50; /* Dark Blue */
-            --secondary-color: #3498db; /* Bright Blue */
-            --light-gray: #f4f4f4;
-            --dark-gray: #333333;
-            --text-color: #555555;
-            --border-color: #dddddd;
+            --primary-color: #1a1a1a; /* Very Dark Gray / Off-Black */
+            --secondary-color: #555555; /* Medium Gray for accents */
+            --light-gray-bg: #f7f7f7;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
         }
 
         html {
@@ -24,12 +20,14 @@
         }
 
         body {
-            font-family: 'Lato', sans-serif;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             line-height: 1.7;
             margin: 0;
             padding: 0;
             background-color: #ffffff;
             color: var(--text-color);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .container {
@@ -38,24 +36,27 @@
             padding: 2rem;
         }
 
+        /* --- Typography --- */
         h1, h2, h3 {
-            font-family: 'Merriweather', serif;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-weight: bold;
             color: var(--primary-color);
             line-height: 1.3;
             margin-bottom: 1rem;
         }
 
         h1 { font-size: 2.8rem; }
-        h2 { font-size: 2rem; border-bottom: 2px solid var(--secondary-color); padding-bottom: 0.5rem; margin-top: 3rem; }
-        h3 { font-size: 1.4rem; color: var(--dark-gray); }
+        h2 { font-size: 2rem; border-bottom: 2px solid var(--primary-color); padding-bottom: 0.5rem; margin-top: 3rem; }
+        h3 { font-size: 1.4rem; color: var(--primary-color); }
 
         p {
             margin-bottom: 1rem;
         }
 
         a {
-            color: var(--secondary-color);
+            color: var(--primary-color);
             text-decoration: none;
+            font-weight: bold;
         }
 
         a:hover {
@@ -73,13 +74,13 @@
 
         /* --- Header & Navigation --- */
         .main-header {
-            background: var(--primary-color);
-            color: #ffffff;
+            background: #ffffff;
+            color: var(--primary-color);
             padding: 1rem 0;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .main-header .container {
@@ -91,10 +92,10 @@
         }
 
         .main-header .logo {
-            font-family: 'Merriweather', serif;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             font-size: 1.5rem;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--primary-color);
         }
 
         .main-nav ul {
@@ -103,8 +104,8 @@
         }
 
         .main-nav a {
-            color: #ffffff;
-            font-weight: 700;
+            color: var(--primary-color);
+            font-weight: normal;
             transition: color 0.3s ease;
         }
 
@@ -115,7 +116,7 @@
 
         /* --- Hero Section --- */
         .hero {
-            background: var(--light-gray);
+            background: #ffffff;
             text-align: center;
             padding: 4rem 2rem;
         }
@@ -124,29 +125,23 @@
             font-size: 1.2rem;
             max-width: 700px;
             margin: 1rem auto 2rem auto;
+            color: var(--secondary-color);
         }
 
         .btn {
             display: inline-block;
-            background: var(--secondary-color);
+            background: var(--primary-color);
             color: #ffffff;
             padding: 0.8rem 1.5rem;
             border-radius: 5px;
-            font-weight: 700;
+            font-weight: bold;
             margin: 0.5rem;
             transition: background 0.3s ease;
         }
 
         .btn:hover {
-            background: #2980b9;
+            background: var(--secondary-color);
             text-decoration: none;
-        }
-
-        .btn-secondary {
-            background: var(--dark-gray);
-        }
-        .btn-secondary:hover {
-            background: #555;
         }
 
         .social-links {
@@ -154,16 +149,38 @@
         }
         .social-links a {
             margin: 0 0.75rem;
-            font-weight: 700;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        .social-links a:hover {
+            color: var(--primary-color);
         }
 
         /* --- Section Specific Styles --- */
         section {
             padding: 2rem 0;
         }
+        
+        /* About Section with Photo */
+        .about-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+        .profile-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--border-color);
+        }
+        .about-text {
+            flex: 1;
+        }
 
         .section-light {
-            background: var(--light-gray);
+            background: var(--light-gray-bg);
         }
 
         /* Expertise Cards */
@@ -179,28 +196,18 @@
             padding: 1.5rem;
             border: 1px solid var(--border-color);
             border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .expertise-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        /* Publications & Roles Lists */
-        .publication-list li, .roles-list li {
+        /* Lists */
+        .styled-list li {
             padding: 1rem 0;
             border-bottom: 1px solid var(--border-color);
         }
-        .publication-list li:last-child, .roles-list li:last-child {
+        .styled-list li:last-child {
             border-bottom: none;
         }
-        .publication-list strong {
+        .styled-list strong {
             color: var(--primary-color);
-        }
-        .publication-list em {
-            color: var(--dark-gray);
         }
 
         /* --- Footer --- */
@@ -236,6 +243,13 @@
             }
             h1 { font-size: 2.2rem; }
             h2 { font-size: 1.8rem; }
+            
+            .about-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
             .expertise-grid {
                 grid-template-columns: 1fr;
             }
@@ -250,7 +264,7 @@
     <!-- ============================================ -->
     <header class="main-header">
         <div class="container">
-            <a href="#" class="logo">NICCOLÒ RIDI</a>
+            <a href="#" class="logo">Niccolò Ridi</a>
             <nav class="main-nav">
                 <ul>
                     <li><a href="#about">About</a></li>
@@ -267,15 +281,13 @@
     <!-- HERO SECTION -->
     <!-- ============================================ -->
     <section id="home" class="hero">
-        <!-- You can add a professional headshot here if you like -->
-        <!-- <img src="path/to/your/photo.jpg" alt="Niccolò Ridi" style="width:150px; height:150px; border-radius:50%;"> -->
-        <h1>NICCOLÒ RIDI</h1>
+        <h1>Niccolò Ridi</h1>
         <p class="subtitle">
-            Senior Lecturer in Public International Law at King's College London, specializing in international dispute resolution and the application of computational methods to legal scholarship.
+            Senior Lecturer in Public International Law at King's College London, specializing in international dispute resolution and computational methods in legal scholarship.
         </p>
-        <a href="#research" class="btn">View My Research</a>
-        <a href="path/to/your/cv.pdf" class="btn btn-secondary" target="_blank">Download Full CV</a>
+        <a href="#about" class="btn">Learn More</a>
         <div class="social-links">
+            <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank">LinkedIn</a>
             <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank">Google Scholar</a>
             <a href="https://orcid.org/0000-0002-7118-9555" target="_blank">ORCID</a>
             <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank">King's College Profile</a>
@@ -288,15 +300,20 @@
     <main>
         <section id="about" class="container">
             <h2>About Me</h2>
-            <p>
-                I am a Senior Lecturer (Associate Professor) in Public International Law at The Dickson Poon School of Law, King’s College London, where I also serve as the Associate Director of the Centre for International Governance and Dispute Resolution (CIGAD).
-            </p>
-            <p>
-                My academic and professional life is dedicated to the intersection of law, data, and global justice. My research explores the reasoning and authority of international courts and tribunals, with a particular focus on precedent, comity, and the evolving sources of international law. I am a pioneer in applying empirical and computational methods—including natural language processing and network analysis—to analyze legal texts and judicial behaviour.
-            </p>
-            <p>
-                Beyond academia, I actively engage in legal practice as counsel and advocate before the International Court of Justice (ICJ) and as an assistant to arbitral tribunals in ICSID cases. This practical experience directly informs my research and teaching, creating a dynamic feedback loop between theory and real-world application.
-            </p>
+            <div class="about-content">
+                <img src="/images/IMG_18.jpg" alt="A photo of Niccolò Ridi" class="profile-photo">
+                <div class="about-text">
+                    <p>
+                        I am a Senior Lecturer (Associate Professor) in Public International Law at The Dickson Poon School of Law, King’s College London, where I also serve as the Associate Director of the Centre for International Governance and Dispute Resolution (CIGAD).
+                    </p>
+                    <p>
+                        My research explores the reasoning and authority of international courts and tribunals. I am a pioneer in applying empirical and computational methods to analyze legal texts and judicial behaviour.
+                    </p>
+                    <p>
+                        Beyond academia, I act as counsel and advocate before international courts and as an assistant to arbitral tribunals.
+                    </p>
+                </div>
+            </div>
         </section>
 
         <!-- ============================================ -->
@@ -308,44 +325,30 @@
                 <div class="expertise-grid">
                     <div class="expertise-card">
                         <h3>Public International Law</h3>
-                        <p>Specializing in the law of state responsibility, sources of international law, human rights, and the law of the sea. My work examines the fundamental principles governing relations between states and international actors.</p>
+                        <p>All of it.</p>
                     </div>
                     <div class="expertise-card">
                         <h3>International Dispute Resolution</h3>
-                        <p>Extensive experience in the procedure and practice of international courts and tribunals, including the ICJ, investment arbitration (ICSID), and the WTO. My research analyzes judicial decision-making and the finality of judgments.</p>
+                        <p>Extensive experience in the procedure and practice of international courts and tribunals.</p>
                     </div>
                     <div class="expertise-card">
                         <h3>Law, AI & Computational Methods</h3>
-                        <p>A leading voice in digital legal studies. I develop open-source code and datasets to analyze legal documents, map scholarly influence, and explore the impact of generative AI on the legal profession and dispute settlement.</p>
+                        <p>Developing open-source tools to analyze legal documents and explore the impact of generative AI on the legal profession and dispute settlement.</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- ============================================ -->
-        <!-- RESEARCH & PUBLICATIONS SECTION -->
+        <!-- RESEARCH SECTION -->
         <!-- ============================================ -->
         <section id="research" class="container">
-            <h2>Featured Publications</h2>
-            <ul class="publication-list">
-                <li>
-                    <strong>Book:</strong> <em>Precedent in International Adjudication</em> (under contract with Oxford University Press, forthcoming 2025).
-                </li>
-                <li>
-                    <strong>Article:</strong> ‘Distantly Reading the Recueil des cours: A Quantitative Analysis of the Hague Academy Collected Courses’, (2024) <em>European Journal of International Law</em>.
-                </li>
-                <li>
-                    <strong>Article:</strong> ‘The Use of Scholarship by the European Court of Human Rights’ (with Kanstantsin Dzehtsiarou) (2024) <em>International and Comparative Law Quarterly</em>.
-                </li>
-                <li>
-                    <strong>Article:</strong> ‘The Shape and Structure of the “Usable Past”: An Empirical Analysis of the Use of Precedent in International Adjudication’ (2019) <em>Journal of International Dispute Settlement</em> (Runner-up, James Crawford Prize).
-                </li>
-                 <li>
-                    <strong>Article:</strong> ‘The Role of Previous Resolutions in the Practice of the Security Council’ (with Lorenzo Gasbarri), (2023) <em>Columbia Journal of Transnational Law</em>.
-                </li>
-            </ul>
-            <p style="text-align: center; margin-top: 2rem;">
-                <a href="path/to/your/publications_page.html" class="btn">View Full Publication List</a>
+            <h2>Research & Publications</h2>
+            <p>
+                My research on international adjudication, judicial reasoning, and computational law has been published in leading journals. My work contributes to the theoretical and empirical understanding of how international courts operate and create authority.
+            </p>
+            <p>
+                For a comprehensive list of my work, please visit my <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank">Google Scholar profile</a>.
             </p>
         </section>
 
@@ -354,13 +357,13 @@
         <!-- ============================================ -->
         <section id="practice" class="section-light">
             <div class="container">
-                <h2>Practice & Counsel Highlights</h2>
-                <ul class="roles-list">
-                    <li><strong>Counsel and Advocate</strong> for the Plurinational State of Bolivia before the International Court of Justice.</li>
-                    <li><strong>Counsel</strong> for the Republic of Ecuador in the Climate Change advisory proceedings before the ICJ.</li>
-                    <li><strong>Assistant to Arbitral Tribunals</strong> in high-profile ICSID investment disputes.</li>
-                    <li><strong>Legal Adviser</strong> to states on matters of international law, including boundary disputes.</li>
-                    <li><strong>Member of the Panel of Arbitrators</strong>, Centro de Conciliación y Arbitraje INTEGRARSE—La Paz, Bolivia.</li>
+                <h2>Practice & Counsel</h2>
+                <p>My academic work is complemented by an active role in legal practice. My experience includes <i>inter alia</i>:</p>
+                <ul class="styled-list">
+                    <li>Serving as <strong>counsel and advocate for States</strong> before the International Court of Justice.</li>
+                    <li>Acting as an <strong>assistant to arbitrators</strong> in investment treaty disputes administered by ICSID.</li>
+                    <li>Providing specialist advice as a <strong>legal adviser to States</strong> on complex matters of public international law.</li>
+                    <li>Serving as a member of the <strong>Panel of Arbitrators</strong> for a Latin American arbitration centre.</li>
                 </ul>
             </div>
         </section>
@@ -371,16 +374,16 @@
         <section id="teaching" class="container">
             <h2>Teaching & Supervision</h2>
             <p>
-                I am passionate about training the next generation of international lawyers. I convene and teach modules at King's College London, including:
+                I convene and teach modules at King's College London at both the undergraduate and postgraduate levels, including:
             </p>
-            <ul class="roles-list">
-                <li>Generative AI and the Law (LLM)</li>
-                <li>International Dispute Resolution (LLM)</li>
-                <li>Public International Law (LLB & LLM)</li>
-                <li>International Investment Law (LLM)</li>
+            <ul class="styled-list">
+                <li>Generative AI and the Law</li>
+                <li>International Dispute Resolution</li>
+                <li>Public International Law</li>
+                <li>International Investment Law</li>
             </ul>
             <p>
-                I welcome inquiries from prospective PhD students with innovative projects in public international law, international dispute resolution, and computational legal studies.
+                I welcome inquiries from prospective PhD students with projects in public international law, international dispute resolution, and computational legal studies.
             </p>
         </section>
     </main>
