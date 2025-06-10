@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Niccolò Ridi | Public International Law</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
         /* --- Basic Setup & Monochromatic Palette --- */
@@ -41,7 +38,8 @@
 
         /* --- Typography --- */
         h1, h2, h3 {
-            font-family: 'Merriweather', serif;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-weight: bold;
             color: var(--primary-color);
             line-height: 1.3;
             margin-bottom: 1rem;
@@ -94,7 +92,7 @@
         }
 
         .main-header .logo {
-            font-family: 'Merriweather', serif;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--primary-color);
@@ -162,6 +160,24 @@
         section {
             padding: 2rem 0;
         }
+        
+        /* About Section with Photo */
+        .about-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+        .profile-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--border-color);
+        }
+        .about-text {
+            flex: 1;
+        }
 
         .section-light {
             background: var(--light-gray-bg);
@@ -227,6 +243,13 @@
             }
             h1 { font-size: 2.2rem; }
             h2 { font-size: 1.8rem; }
+            
+            .about-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
             .expertise-grid {
                 grid-template-columns: 1fr;
             }
@@ -241,7 +264,7 @@
     <!-- ============================================ -->
     <header class="main-header">
         <div class="container">
-            <a href="#" class="logo">NICCOLÒ RIDI</a>
+            <a href="#" class="logo">Niccolò Ridi</a>
             <nav class="main-nav">
                 <ul>
                     <li><a href="#about">About</a></li>
@@ -258,12 +281,13 @@
     <!-- HERO SECTION -->
     <!-- ============================================ -->
     <section id="home" class="hero">
-        <h1>NICCOLÒ RIDI</h1>
+        <h1>Niccolò Ridi</h1>
         <p class="subtitle">
-            Senior Lecturer in Public International Law at King's College London, specializing in international dispute resolution and the application of computational methods to legal scholarship.
+            Senior Lecturer in Public International Law at King's College London, specializing in international dispute resolution and computational methods in legal scholarship.
         </p>
         <a href="#about" class="btn">Learn More</a>
         <div class="social-links">
+            <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank">LinkedIn</a>
             <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank">Google Scholar</a>
             <a href="https://orcid.org/0000-0002-7118-9555" target="_blank">ORCID</a>
             <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank">King's College Profile</a>
@@ -276,15 +300,20 @@
     <main>
         <section id="about" class="container">
             <h2>About Me</h2>
-            <p>
-                I am a Senior Lecturer (Associate Professor) in Public International Law at The Dickson Poon School of Law, King’s College London, where I also serve as the Associate Director of the Centre for International Governance and Dispute Resolution (CIGAD).
-            </p>
-            <p>
-                My academic and professional life is dedicated to the intersection of law, data, and global justice. My research explores the reasoning and authority of international courts and tribunals, with a particular focus on precedent, comity, and the evolving sources of international law. I am a pioneer in applying empirical and computational methods—including natural language processing and network analysis—to analyze legal texts and judicial behaviour.
-            </p>
-            <p>
-                Beyond academia, I actively engage in legal practice as counsel and advocate before international courts and as an assistant to arbitral tribunals. This practical experience directly informs my research and teaching, creating a dynamic feedback loop between theory and real-world application.
-            </p>
+            <div class="about-content">
+                <img src="/images/IMG_18.jpg" alt="A photo of Niccolò Ridi" class="profile-photo">
+                <div class="about-text">
+                    <p>
+                        I am a Senior Lecturer (Associate Professor) in Public International Law at The Dickson Poon School of Law, King’s College London, where I also serve as the Associate Director of the Centre for International Governance and Dispute Resolution (CIGAD).
+                    </p>
+                    <p>
+                        My research explores the reasoning and authority of international courts and tribunals, with a particular focus on precedent and the evolving sources of international law. I am a pioneer in applying empirical and computational methods—including natural language processing and network analysis—to analyze legal texts and judicial behaviour.
+                    </p>
+                    <p>
+                        Beyond academia, I actively engage in legal practice as counsel and advocate before international courts and as an assistant to arbitral tribunals. This practical experience directly informs my research and teaching.
+                    </p>
+                </div>
+            </div>
         </section>
 
         <!-- ============================================ -->
@@ -296,15 +325,15 @@
                 <div class="expertise-grid">
                     <div class="expertise-card">
                         <h3>Public International Law</h3>
-                        <p>Specializing in the law of state responsibility, sources of international law, human rights, and the law of the sea. My work examines the fundamental principles governing relations between states and international actors.</p>
+                        <p>Specializing in the law of state responsibility, sources of international law, human rights, and the law of the sea.</p>
                     </div>
                     <div class="expertise-card">
                         <h3>International Dispute Resolution</h3>
-                        <p>Extensive experience in the procedure and practice of international courts and tribunals, including the ICJ, investment arbitration (ICSID), and the WTO. My research analyzes judicial decision-making and the finality of judgments.</p>
+                        <p>Extensive experience in the procedure and practice of international courts and tribunals, including the ICJ and investment arbitration (ICSID).</p>
                     </div>
                     <div class="expertise-card">
                         <h3>Law, AI & Computational Methods</h3>
-                        <p>A leading voice in digital legal studies. I develop open-source code and datasets to analyze legal documents, map scholarly influence, and explore the impact of generative AI on the legal profession and dispute settlement.</p>
+                        <p>Developing open-source tools to analyze legal documents and explore the impact of generative AI on the legal profession and dispute settlement.</p>
                     </div>
                 </div>
             </div>
@@ -316,7 +345,7 @@
         <section id="research" class="container">
             <h2>Research & Publications</h2>
             <p>
-                My research on international adjudication, precedent, and computational law has been published in leading international law journals and by major university presses. My work contributes to the theoretical and empirical understanding of how international courts operate and create authority. I focus on the use of quantitative and computational tools to uncover patterns in judicial reasoning and the evolution of international legal norms.
+                My research on international adjudication, precedent, and computational law has been published in leading international law journals. My work contributes to the theoretical and empirical understanding of how international courts operate and create authority.
             </p>
             <p>
                 For a comprehensive list of my work, please visit my <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank">Google Scholar profile</a>.
@@ -331,9 +360,9 @@
                 <h2>Practice & Counsel</h2>
                 <p>My academic work is complemented by an active role in legal practice. My experience includes:</p>
                 <ul class="styled-list">
-                    <li>Serving as <strong>counsel and advocate for States</strong> in contentious cases and advisory proceedings before the International Court of Justice.</li>
-                    <li>Acting as an <strong>assistant to party-appointed arbitrators</strong> in investment treaty disputes administered by ICSID.</li>
-                    <li>Providing specialist advice as a <strong>legal adviser to States</strong> on complex matters of public international law, including boundary disputes.</li>
+                    <li>Serving as <strong>counsel and advocate for States</strong> before the International Court of Justice.</li>
+                    <li>Acting as an <strong>assistant to arbitrators</strong> in investment treaty disputes administered by ICSID.</li>
+                    <li>Providing specialist advice as a <strong>legal adviser to States</strong> on complex matters of public international law.</li>
                     <li>Serving as a member of the <strong>Panel of Arbitrators</strong> for a Latin American arbitration centre.</li>
                 </ul>
             </div>
@@ -345,7 +374,7 @@
         <section id="teaching" class="container">
             <h2>Teaching & Supervision</h2>
             <p>
-                I am passionate about training the next generation of international lawyers. I convene and teach modules at King's College London at both the undergraduate and postgraduate levels, including:
+                I convene and teach modules at King's College London at both the undergraduate and postgraduate levels, including:
             </p>
             <ul class="styled-list">
                 <li>Generative AI and the Law</li>
@@ -354,7 +383,7 @@
                 <li>International Investment Law</li>
             </ul>
             <p>
-                I welcome inquiries from prospective PhD students with innovative projects in public international law, international dispute resolution, and computational legal studies.
+                I welcome inquiries from prospective PhD students with projects in public international law, international dispute resolution, and computational legal studies.
             </p>
         </section>
     </main>
