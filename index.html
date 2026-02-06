@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Niccolò Ridi | Public International Law</title>
+    <script>(function(){var t=localStorage.getItem('theme');if(!t){var h=new Date().getHours();t=(h>=18||h<7)?'dark':'light';}if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
     <style>
         :root {
             --primary-color: #1a1a1a;
@@ -11,6 +12,19 @@
             --text-color: #333333;
             --border-color: #e0e0e0;
             --background-color: #ffffff;
+            --header-bg: #ffffff;
+            --accent-color: #1a1a1a;
+        }
+
+        /* Dark theme */
+        .dark-mode {
+            --primary-color: #e8eaed;
+            --secondary-color: #9aa0ab;
+            --text-color: #d0d0d0;
+            --border-color: #333333;
+            --background-color: #121212;
+            --header-bg: #1a1a1a;
+            --accent-color: #d4a574;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,9 +43,37 @@
         a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
         a:hover { color: var(--secondary-color); }
 
+        /* Dark mode link accent */
+        .dark-mode a { color: var(--accent-color); }
+        .dark-mode a:hover { color: #e8c49a; }
+        .dark-mode .main-nav a { color: var(--primary-color); }
+        .dark-mode .main-nav .ext-link { color: var(--secondary-color); }
+        .dark-mode .main-nav .ext-link:hover { color: var(--primary-color); }
+        .dark-mode .main-footer a { color: var(--accent-color); }
+        .dark-mode .social-links a { color: var(--secondary-color); }
+        .dark-mode .social-links a:hover { color: var(--accent-color); }
+        .dark-mode .main-header { box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+
+        /* Theme toggle */
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 2rem;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            font-family: inherit;
+        }
+        .theme-toggle:hover { color: var(--primary-color); border-color: var(--primary-color); }
         /* Header */
         .main-header {
-            background: var(--background-color);
+            background: var(--header-bg);
             padding: 1.5rem 0;
             position: fixed;
             top: 0;
@@ -48,6 +90,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 1rem;
         }
 
         .main-header .logo {
@@ -183,7 +226,7 @@
                 position: fixed;
                 top: 0; left: 0;
                 width: 100%; height: 100vh;
-                background-color: rgba(255, 255, 255, 0.98);
+                background-color: var(--background-color);
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -228,6 +271,7 @@
                         <li><a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" class="ext-link">KCL</a></li>
                     </ul>
                 </nav>
+                <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span id="theme-icon">◑</span> <span id="theme-label">Light</span></button>
                 <button class="hamburger-menu" aria-label="Open navigation menu">
                     <span class="line line-1"></span>
                     <span class="line line-2"></span>
@@ -263,6 +307,25 @@
         document.querySelectorAll('.main-nav a').forEach(link => {
             link.addEventListener('click', () => document.body.classList.remove('nav-open'));
         });
+
+        // Theme
+        const icons = { light: '◑', dark: '◐' };
+        const labels = { light: 'Light', dark: 'Dark' };
+        function getDefaultTheme() { var h = new Date().getHours(); return (h >= 18 || h < 7) ? 'dark' : 'light'; }
+        let currentTheme = localStorage.getItem('theme') || getDefaultTheme();
+        function applyTheme(t) {
+            document.body.classList.remove('dark-mode');
+            document.documentElement.classList.remove('dark-mode');
+            if (t === 'dark') { document.body.classList.add('dark-mode'); document.documentElement.classList.add('dark-mode'); }
+            document.getElementById('theme-icon').textContent = icons[t];
+            document.getElementById('theme-label').textContent = labels[t];
+            localStorage.setItem('theme', t);
+            currentTheme = t;
+        }
+        function toggleTheme() {
+            applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        }
+        applyTheme(currentTheme);
     </script>
 
 </body>

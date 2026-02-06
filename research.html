@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Research & Publications | Niccolò Ridi</title>
+    <script>(function(){var t=localStorage.getItem('theme');if(!t){var h=new Date().getHours();t=(h>=18||h<7)?'dark':'light';}if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
     <style>
         :root {
             --primary-color: #1a1a1a;
@@ -11,6 +12,20 @@
             --text-color: #333333;
             --border-color: #e0e0e0;
             --background-color: #ffffff;
+            --header-bg: #ffffff;
+            --accent-color: #1a1a1a;
+            --subtle-border: #f0f0f0;
+        }
+
+        .dark-mode {
+            --primary-color: #e8eaed;
+            --secondary-color: #9aa0ab;
+            --text-color: #d0d0d0;
+            --border-color: #333333;
+            --background-color: #121212;
+            --header-bg: #1a1a1a;
+            --accent-color: #d4a574;
+            --subtle-border: #2a2a2a;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -60,9 +75,38 @@
         a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
         a:hover { color: var(--secondary-color); }
 
+        /* Dark mode overrides */
+        .dark-mode a { color: var(--accent-color); }
+        .dark-mode a:hover { color: #e8c49a; }
+        .dark-mode .main-nav a { color: var(--primary-color); }
+        .dark-mode .main-nav .ext-link { color: var(--secondary-color); }
+        .dark-mode .main-nav .ext-link:hover { color: var(--primary-color); }
+        .dark-mode .main-footer a { color: var(--accent-color); }
+        .dark-mode .main-header { box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .dark-mode .filter-btn.active { background: var(--accent-color); color: #121212; border-color: var(--accent-color); }
+        .dark-mode .year-filter { background: var(--background-color); color: var(--text-color); }
+
+        /* Theme toggle */
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 2rem;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            font-family: inherit;
+        }
+        .theme-toggle:hover { color: var(--primary-color); border-color: var(--primary-color); }
+
         /* Header */
         .main-header {
-            background: var(--background-color);
+            background: var(--header-bg);
             padding: 1.5rem 0;
             position: sticky;
             top: 0;
@@ -75,6 +119,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 0 2rem;
+            gap: 1rem;
         }
 
         .main-header .logo {
@@ -174,12 +219,6 @@
             background: var(--background-color);
         }
 
-        .pub-count {
-            font-size: 0.8rem;
-            color: var(--secondary-color);
-            margin-left: auto;
-        }
-
         /* Publication list */
         .pub-list {
             list-style: none;
@@ -188,7 +227,7 @@
 
         .pub-list li {
             padding: 0.7rem 0;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid var(--subtle-border);
             line-height: 1.6;
             font-size: 0.95rem;
         }
@@ -200,6 +239,18 @@
             color: var(--secondary-color);
             font-style: italic;
         }
+
+        .pub-chip {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.1rem 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 2rem;
+            vertical-align: middle;
+            margin-left: 0.3rem;
+        }
+        .pub-chip:hover { border-color: currentColor; }
 
         /* Footer */
         .main-footer {
@@ -226,7 +277,7 @@
                 position: fixed;
                 top: 0; left: 0;
                 width: 100%; height: 100vh;
-                background-color: rgba(255, 255, 255, 0.98);
+                background-color: var(--background-color);
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -244,7 +295,6 @@
             body.nav-open .hamburger-menu .line-3 { transform: rotate(-45deg) translate(5px, -5px); }
 
             .filters { gap: 0.5rem; }
-            .pub-count { margin-left: 0; width: 100%; }
         }
     </style>
 </head>
@@ -266,6 +316,7 @@
                     <li><a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" class="ext-link">KCL</a></li>
                 </ul>
             </nav>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span id="theme-icon">◑</span> <span id="theme-label">Light</span></button>
             <button class="hamburger-menu" aria-label="Open navigation menu">
                 <span class="line line-1"></span>
                 <span class="line line-2"></span>
@@ -291,89 +342,88 @@
                     <button class="filter-btn" data-filter="article">Articles</button>
                     <button class="filter-btn" data-filter="working">Working Papers</button>
                     <button class="filter-btn" data-filter="dataset">Datasets</button>
+                    <button class="filter-btn" data-filter="code">Code</button>
                     <button class="filter-btn" data-filter="other">Other</button>
                 </div>
                 <select class="year-filter" id="year-filter">
                     <option value="all">All years</option>
                 </select>
-                <span class="pub-count" id="pub-count"></span>
             </div>
 
             <ul class="pub-list" id="pub-list">
-                <!-- Forthcoming: Books -->
+                <!-- Books (under contract) -->
                 <li data-type="book" data-year="forthcoming">Niccolò Ridi, <i>Precedent in International Adjudication</i> (Oxford University Press, forthcoming)</li>
                 <li data-type="book" data-year="forthcoming">Thomas Schultz, Jason Mitchenson &amp; Niccolò Ridi, <i>The Principle of Comity in Public and Private International Law</i> (Cambridge University Press, forthcoming)</li>
                 <li data-type="book" data-year="forthcoming"><i>The Elgar Concise Encyclopedia of the Law of International Organizations</i> (Edward Elgar, forthcoming) (edited with Lorenzo Gasbarri and Christiane Ahlborn)</li>
                 <li data-type="book" data-year="forthcoming"><i>Theorizing Procedure in International Adjudication</i> (edited with Juliette McIntyre) <span class="pub-note">Proposal stage</span></li>
-                <li data-type="book" data-year="forthcoming">Special Issue: <i>Artificial Intelligence in International Dispute Settlement</i>, Journal of International Dispute Settlement (co-edited with Tomer Broude) <span class="pub-note">In progress</span></li>
-                <li data-type="book" data-year="forthcoming">Special Issue: <i>Scholarship in International Dispute Settlement</i>, Journal of International Dispute Settlement (co-edited with Thomas Schultz) <span class="pub-note">In progress</span></li>
-
-                <!-- Forthcoming: Articles -->
-                <li data-type="article" data-year="forthcoming">'Res judicata: A Typology of Issues before International Courts and Tribunals' <span class="pub-note">Draft</span></li>
-                <li data-type="article" data-year="forthcoming">'Evolving State Preferences in the Reform of Investor-State Dispute Settlement' (with Weijia Rao)</li>
-                <li data-type="article" data-year="forthcoming">'Consensus, Repetition, Networks: Norm Consumption and Norm Diffusion in the Security Council' (with Lorenzo Gasbarri) <span class="pub-note">Draft</span></li>
-                <li data-type="article" data-year="forthcoming">'Stone by Stone: The Distinctiveness of Precedential Reasoning by the European Court of Justice' (with Luigi Lonardo) <span class="pub-note">Draft</span></li>
-                <li data-type="article" data-year="forthcoming">'Deconstructing the <i>M/V Norstar</i> Case through the Lens of the Law of Jurisdiction' <span class="pub-note">Advanced draft</span></li>
-                <li data-type="article" data-year="forthcoming">'The Hardening of Soft Law at the European Court of Human Rights' (with Ezgi Yildiz) <span class="pub-note">Research stage</span></li>
-                <li data-type="article" data-year="forthcoming">'The World Bank Administrative Tribunal and the Internal Rule-Making in International Organizations' (with Lorenzo Gasbarri) <span class="pub-note">Research stage</span></li>
-                <li data-type="article" data-year="forthcoming">'The ICJ Statute Article 38(1) Is Not Exhaustive(?)' (with Sondre Torp Helmersen) <span class="pub-note">Draft</span></li>
-                <li data-type="article" data-year="forthcoming">'Asymmetry of Information in CAS Arbitration: An Empirical Analysis' (with Antoine Duval) <span class="pub-note">Research stage</span></li>
 
                 <!-- 2025 -->
-                <li data-type="working" data-year="2025">'GenAI as an International Lawyer: A Case Study with the Jessup International Law Moot Court' (2025) (with Damien Charlotin) <span class="pub-note">Working paper</span></li>
+                <li data-type="working" data-year="2025">'GenAI as an International Lawyer: A Case Study with the Jessup International Law Moot Court' (2025) (with Damien Charlotin) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a> <span class="pub-note">Working paper · Top Ten in Legal Scholarship, Political Science &amp; Computer Science Research Networks</span></li>
                 <li data-type="other" data-year="2025">'Instrumentalized Migration and Jurisdictional Challenges: Lithuania v. Belarus at the ICJ', <i>EJIL: Talk!</i> (2025) (with Matina Papadaki)</li>
+                <li data-type="code" data-year="2025">'Peace Palace Papers, Please' (2025). Python code to download and OCR the entire body of case law, pleadings, and hearing transcripts of the International Court of Justice. <a href="https://shorturl.at/mgYkY" target="_blank" class="pub-chip">Colab</a></li>
+                <li data-type="code" data-year="2025">'Headnote Harvester' (2025). A PDF processing and legal Q&amp;A pipeline employing Mistral OCR and Google Gemini to extract key legal concepts and generate cited summaries (headnotes).</li>
+                <li data-type="code" data-year="2025">'SHABT.ai' (2025). Semantic Hyperdimensional Analysis of Bench Texts AI — a chatbot to query the jurisprudence of the ICJ based on data generated with Headnote Harvester.</li>
 
                 <!-- 2024 -->
-                <li data-type="article" data-year="2024">'Res Judicata and Time', in Andrea Gattini (ed), <i>Time and International Litigation</i> (Brill 2024)</li>
+                <li data-type="article" data-year="2024">'Res Judicata and Time', in Andrea Gattini (ed), <i>Time and International Litigation</i> (Brill 2024) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
                 <li data-type="article" data-year="2024">'Distantly Reading the <i>Recueil des cours</i>: A Quantitative Analysis of the Hague Academy Collected Courses' (2024) <i>European Journal of International Law</i> 247–262 (with Thomas Schultz)</li>
                 <li data-type="article" data-year="2024">'The Use of Scholarship by the European Court of Human Rights' (2024) <i>International and Comparative Law Quarterly</i> (with Kanstantsin Dzehtsiarou)</li>
-                <li data-type="article" data-year="2024">'Tracing the Footprints of International Law Ideas' (2024) 64(2) <i>Virginia Journal of International Law</i> 405–446 (with Thomas Schultz)</li>
+                <li data-type="article" data-year="2024">'Tracing the Footprints of International Law Ideas' (2024) 64(2) <i>Virginia Journal of International Law</i> 405–446 (with Thomas Schultz) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
                 <li data-type="article" data-year="2024">'The Use of Authorities by International Courts and Tribunals', in Joanna Gomula &amp; Stephan Wittich (eds), <i>Research Handbook of International Procedural Law</i> (Elgar 2024)</li>
                 <li data-type="article" data-year="2024">'Judicial Comity', in Hélène Ruiz Fabri (ed), <i>Max Planck Encyclopedia of International Procedural Law</i> (OUP 2024)</li>
                 <li data-type="article" data-year="2024">'Judicial Decisions – Article 38(1)(d) ICJ Statute', <i>Max Planck Encyclopedia of Public International Law</i> (2024)</li>
                 <li data-type="dataset" data-year="2024">Seán Fobbe, Lorenzo Gasbarri &amp; Niccolò Ridi, 'Corpus of Resolutions: UN Security Council (CR-UNSC)' (2024) Zenodo</li>
                 <li data-type="dataset" data-year="2024">Seán Fobbe, Lorenzo Gasbarri &amp; Niccolò Ridi, 'Words of Power: Introducing a Comprehensive Corpus of UN Security Council Resolutions' (2024) Zenodo</li>
+                <li data-type="code" data-year="2024">'ECHR Peerless Pleading Purveyor' (2024). Python code to download and transcribe webcasts of hearings before the European Court of Human Rights. <a href="https://shorturl.at/hpGMX" target="_blank" class="pub-chip">Colab</a></li>
+                <li data-type="code" data-year="2024">'IACtHR Listener' (2024). Python code to download and process decisions of the Inter-American Court of Human Rights. <a href="https://shorturl.at/afFU4" target="_blank" class="pub-chip">Colab</a></li>
+                <li data-type="code" data-year="2024">'UNCITRAL Listener' (2024). Python code to download, transcribe, and process audio recordings of UNCITRAL meetings. <a href="https://shorturl.at/BGN13" target="_blank" class="pub-chip">Colab</a></li>
+                <li data-type="code" data-year="2024">'The Purloined PDF' (2024). A converter and RAG pipeline to extract text from PDF files and optimise it for use with large language models. <a href="https://shorturl.at/afgG1" target="_blank" class="pub-chip">Colab</a></li>
+                <li data-type="code" data-year="2024">'ICJ Digest Generator' (2024). Python code generating a digest of the jurisprudence of the ICJ through citation mining and large language models. <a href="https://shorturl.at/knET5" target="_blank" class="pub-chip">Colab</a></li>
+                <li data-type="code" data-year="2024">'Dr. Ridi's Fabled Pleading Parser' (2024). A versatile document analysis tool utilising various LLM APIs (OpenAI, Gemini, Claude) and local models to analyse legal pleadings and generate structured spreadsheets of key information.</li>
+                <li data-type="code" data-year="2024">'Generative AI and the Law: A Series of Lecture Tutorials' (2024). Interactive Google Colaboratory notebooks covering LLM fundamentals, technical foundations, prompt engineering, customising AI for legal tasks, and adversarial prompt techniques.</li>
 
                 <!-- 2023 -->
-                <li data-type="article" data-year="2023">'The Role of Previous Resolutions in the Practice of the Security Council' (2023) 61(3) <i>Columbia Journal of Transnational Law</i> 571 (with Lorenzo Gasbarri)</li>
+                <li data-type="article" data-year="2023">'The Role of Previous Resolutions in the Practice of the Security Council' (2023) 61(3) <i>Columbia Journal of Transnational Law</i> 571 (with Lorenzo Gasbarri) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
                 <li data-type="other" data-year="2023">'Book Review: Rossana Deplano, <i>Empirical and Theoretical Perspectives on International Law</i>' (2023) <i>Australian Year Book of International Law</i></li>
+                <li data-type="code" data-year="2023">'Academic Scribe' (2023). Python code to transcribe and refine lecture recordings using OpenAI Whisper and large language models. <a href="https://shorturl.at/ELPU8" target="_blank" class="pub-chip">Colab</a></li>
+                <li data-type="code" data-year="2023">'Authority-Based Argument Miner' (2023). Python code to identify cited scholarship and case law in pleadings before international judicial bodies. <a href="https://shorturl.at/ghov0" target="_blank" class="pub-chip">Colab</a> <span class="pub-note">Companion code to Ridi &amp; Schultz, 'Tracing the Footprints of International Law Ideas'</span></li>
 
                 <!-- 2022 -->
-                <li data-type="article" data-year="2022">'Sanctioning to Change State Behaviour' (2022) 13(2) <i>Journal of International Dispute Settlement</i> 210 (with Veronika Fikfak)</li>
-                <li data-type="article" data-year="2022">'Layers of Preclusion: <i>Res judicata</i> Issues in <i>Victor Pey Casado v Chile</i>' (2022) <i>ICSID Review</i></li>
+                <li data-type="article" data-year="2022">'Sanctioning to Change State Behaviour' (2022) 13(2) <i>Journal of International Dispute Settlement</i> 210 (with Veronika Fikfak) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+                <li data-type="article" data-year="2022">'Layers of Preclusion: <i>Res judicata</i> Issues in <i>Victor Pey Casado v Chile</i>' (2022) <i>ICSID Review</i> <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
                 <li data-type="article" data-year="2022">'GATT Article XX(d)', in Peter-Tobias Stoll &amp; Holger P. Hestermeyer (eds), <i>Commentaries on World Trade Law</i> (Brill 2022)</li>
                 <li data-type="other" data-year="2022">'Book Review: Jan Paulsson, <i>The Unruly Notion of Abuse of Rights</i>' (2022) <i>European Journal of International Law</i></li>
 
                 <!-- 2021 -->
-                <li data-type="article" data-year="2021">'Rule of Precedent and Rules on Precedent: Regulating the Use of the Past in International Adjudication and Arbitration', in Eric de Brabandere (ed), <i>International Procedure in Interstate Litigation and Arbitration: A Comparative Approach</i> (CUP 2021)</li>
+                <li data-type="article" data-year="2021">'Rule of Precedent and Rules on Precedent: Regulating the Use of the Past in International Adjudication and Arbitration', in Eric de Brabandere (ed), <i>International Procedure in Interstate Litigation and Arbitration: A Comparative Approach</i> (CUP 2021) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a> <span class="pub-note">Cited in ILC, First Report on Subsidiary Means (A/CN.4/760)</span></li>
                 <li data-type="other" data-year="2021">Evidence to the UK Parliament Lords Select Committee on International Relations and Defence, 'UNCLOS: Fit for Purpose in the 21st Century?' (2021) (with Massimo Fabio Lando)</li>
 
                 <!-- 2020 -->
-                <li data-type="article" data-year="2020">'United States — Anti-Dumping Measures Applying Differential Pricing Methodology to Softwood Lumber from Canada' (2020) 114 <i>American Journal of International Law</i> 735</li>
-                <li data-type="article" data-year="2020">'Empirically Mapping Investment Arbitration Scholarship: Networks, Authorities, and the Research Front', in Katia Fach Gomez (ed), <i>Private Actors in International Investment Law</i> (Springer 2020) 209 (with Thomas Schultz)</li>
-                <li data-type="article" data-year="2020">'Arbitration Literature', in Thomas Schultz &amp; Federico Ortino (eds), <i>The Oxford Handbook of International Arbitration</i> (OUP 2020) 1 (with Thomas Schultz)</li>
-                <li data-type="article" data-year="2020">'Mapping the "Invisible College of International Lawyers" through Obituaries' (2020) 34(1) <i>Leiden Journal of International Law</i> (with Luíza Leão Soares Pereira)</li>
+                <li data-type="article" data-year="2020">'United States — Anti-Dumping Measures Applying Differential Pricing Methodology to Softwood Lumber from Canada' (2020) 114 <i>American Journal of International Law</i> 735 <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+                <li data-type="article" data-year="2020">'Empirically Mapping Investment Arbitration Scholarship: Networks, Authorities, and the Research Front', in Katia Fach Gomez (ed), <i>Private Actors in International Investment Law</i> (Springer 2020) 209 (with Thomas Schultz) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+                <li data-type="article" data-year="2020">'Arbitration Literature', in Thomas Schultz &amp; Federico Ortino (eds), <i>The Oxford Handbook of International Arbitration</i> (OUP 2020) 1 (with Thomas Schultz) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+                <li data-type="article" data-year="2020">'Mapping the "Invisible College of International Lawyers" through Obituaries' (2020) 34(1) <i>Leiden Journal of International Law</i> (with Luíza Leão Soares Pereira) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
                 <li data-type="article" data-year="2020">'Approaches to External Precedent: Invocation of International Decisions in Investment Arbitration and WTO Dispute Settlement', in Behn, Langford &amp; Gáspár-Szilágyi (eds), <i>Adjudicating Trade and Investment Law: Convergence or Divergence?</i> (CUP 2020)</li>
-                <li data-type="article" data-year="2020">'How Comity Makes Transnationalism Work', in Peer Zumbansen (ed), <i>The Many Lives of Transnational Law</i> (CUP 2020) 88–102 (with Thomas Schultz)</li>
+                <li data-type="article" data-year="2020">'How Comity Makes Transnationalism Work', in Peer Zumbansen (ed), <i>The Many Lives of Transnational Law</i> (CUP 2020) 88–102 (with Thomas Schultz) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
 
                 <!-- 2019 -->
-                <li data-type="article" data-year="2019">'The Shape and Structure of the "Usable Past": An Empirical Analysis of the Use of Precedent in International Adjudication' (2019) 10 <i>Journal of International Dispute Settlement</i> 200 <span class="pub-note">Runner-up, James Crawford Prize</span></li>
-                <li data-type="article" data-year="2019">'"Mirages of an Intellectual Dreamland"? <i>Ratio</i>, <i>Obiter</i> and the Textualization of International Precedent' (2019) 10 <i>Journal of International Dispute Settlement</i> 361</li>
+                <li data-type="article" data-year="2019">'The Shape and Structure of the "Usable Past": An Empirical Analysis of the Use of Precedent in International Adjudication' (2019) 10 <i>Journal of International Dispute Settlement</i> 200 <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a> <span class="pub-note">Runner-up, James Crawford Prize</span></li>
+                <li data-type="article" data-year="2019">'"Mirages of an Intellectual Dreamland"? <i>Ratio</i>, <i>Obiter</i> and the Textualization of International Precedent' (2019) 10 <i>Journal of International Dispute Settlement</i> 361 <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
 
                 <!-- 2018 -->
-                <li data-type="article" data-year="2018">'Precarious Finality? Reflections on <i>Res Judicata</i> in the <i>Question of the Delimitation of the Continental Shelf</i> Case' (2018) <i>Leiden Journal of International Law</i> 383</li>
-                <li data-type="article" data-year="2018">'Comity in US Courts' (2018) 10(1) <i>Northeastern University Law Review</i> 281 (with Thomas Schultz)</li>
+                <li data-type="article" data-year="2018">'Precarious Finality? Reflections on <i>Res Judicata</i> in the <i>Question of the Delimitation of the Continental Shelf</i> Case' (2018) <i>Leiden Journal of International Law</i> 383 <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+                <li data-type="article" data-year="2018">'Comity in US Courts' (2018) 10(1) <i>Northeastern University Law Review</i> 281 (with Thomas Schultz) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
 
                 <!-- 2017 -->
-                <li data-type="article" data-year="2017">'Comity and International Courts and Tribunals' (2017) 50 <i>Cornell International Law Journal</i> 577 (with Thomas Schultz)</li>
-                <li data-type="article" data-year="2017">'Comity: The Narrative and Influence of a Core American Concept' (2017) <i>Yearbook of Private International Law</i> (with Thomas Schultz)</li>
+                <li data-type="article" data-year="2017">'Comity and International Courts and Tribunals' (2017) 50 <i>Cornell International Law Journal</i> 577 (with Thomas Schultz) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+                <li data-type="article" data-year="2017">'Comity: The Narrative and Influence of a Core American Concept' (2017) <i>Yearbook of Private International Law</i> (with Thomas Schultz) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
                 <li data-type="article" data-year="2017">'Militias', in Grote, Lachenmann &amp; Wolfrum (eds), <i>Max Planck Encyclopedia of Comparative Constitutional Law</i> (2017)</li>
-                <li data-type="other" data-year="2017">'Book Review: Vadi, <i>Analogies in International Investment Law and Arbitration</i>' (2017) <i>British Yearbook of International Law</i> 222</li>
+                <li data-type="other" data-year="2017">'Book Review: Vadi, <i>Analogies in International Investment Law and Arbitration</i>' (2017) <i>British Yearbook of International Law</i> 222 <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
 
                 <!-- 2016 -->
-                <li data-type="other" data-year="2016">'The Last Page: Public International Law Limericks' (2016) <i>European Journal of International Law</i> (with Sondre Torp Helmersen)</li>
-                <li data-type="other" data-year="2016">'Book Review: Hindelang and Krajewski (eds), <i>Shifting Paradigms in International Investment Law</i>' (2016) <i>European Journal of International Law</i> 545</li>
-                <li data-type="other" data-year="2016">'Book Review: Bianchi, Peat, and Windsor (eds), <i>Interpretation in International Law</i>' (2016) <i>King's Law Journal</i></li>
+                <li data-type="other" data-year="2016">'The Last Page: Public International Law Limericks' (2016) <i>European Journal of International Law</i> (with Sondre Torp Helmersen) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+                <li data-type="other" data-year="2016">'Book Review: Hindelang and Krajewski (eds), <i>Shifting Paradigms in International Investment Law</i>' (2016) <i>European Journal of International Law</i> 545 <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+                <li data-type="other" data-year="2016">'Book Review: Bianchi, Peat, and Windsor (eds), <i>Interpretation in International Law</i>' (2016) <i>King's Law Journal</i> <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
 
                 <!-- 2015 -->
                 <li data-type="other" data-year="2015">'The Mediterranean Migrants Crisis and the Use of Force — Is There a Case for Destroying Smugglers' Boats?' (2015) <i>Opinio Juris</i> (with Sondre Torp Helmersen)</li>
@@ -414,7 +464,6 @@
         const items = document.querySelectorAll('.pub-list li');
         const typeBtns = document.querySelectorAll('.filter-btn');
         const yearSelect = document.getElementById('year-filter');
-        const countEl = document.getElementById('pub-count');
         let activeType = 'all';
 
         // Populate year dropdown from data
@@ -434,14 +483,11 @@
 
         function updateList() {
             const year = yearSelect.value;
-            let visible = 0;
             items.forEach(item => {
                 const matchType = activeType === 'all' || item.dataset.type === activeType;
                 const matchYear = year === 'all' || item.dataset.year === year;
                 item.style.display = matchType && matchYear ? '' : 'none';
-                if (matchType && matchYear) visible++;
             });
-            countEl.textContent = visible + ' publication' + (visible !== 1 ? 's' : '');
         }
 
         typeBtns.forEach(btn => {
@@ -455,6 +501,25 @@
 
         yearSelect.addEventListener('change', updateList);
         updateList();
+
+        // Theme
+        const icons = { light: '◑', dark: '◐' };
+        const labels = { light: 'Light', dark: 'Dark' };
+        function getDefaultTheme() { var h = new Date().getHours(); return (h >= 18 || h < 7) ? 'dark' : 'light'; }
+        let currentTheme = localStorage.getItem('theme') || getDefaultTheme();
+        function applyTheme(t) {
+            document.body.classList.remove('dark-mode');
+            document.documentElement.classList.remove('dark-mode');
+            if (t === 'dark') { document.body.classList.add('dark-mode'); document.documentElement.classList.add('dark-mode'); }
+            document.getElementById('theme-icon').textContent = icons[t];
+            document.getElementById('theme-label').textContent = labels[t];
+            localStorage.setItem('theme', t);
+            currentTheme = t;
+        }
+        function toggleTheme() {
+            applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        }
+        applyTheme(currentTheme);
     </script>
 
 </body>

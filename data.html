@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data | Niccolò Ridi</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>(function(){var t=localStorage.getItem('theme');if(!t){var h=new Date().getHours();t=(h>=18||h<7)?'dark':'light';}if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
     <style>
         :root {
             --primary-color: #1a1a1a;
@@ -12,6 +13,28 @@
             --text-color: #333333;
             --border-color: #e0e0e0;
             --background-color: #ffffff;
+            --header-bg: #ffffff;
+            --accent-color: #1a1a1a;
+            --card-bg: #ffffff;
+            --subtle-border: #f0f0f0;
+            --summary-bg: #fafafa;
+            --controls-bg: rgba(255,255,255,0.95);
+            --sidebar-bg: #ffffff;
+        }
+
+        .dark-mode {
+            --primary-color: #e8eaed;
+            --secondary-color: #9aa0ab;
+            --text-color: #d0d0d0;
+            --border-color: #333333;
+            --background-color: #121212;
+            --header-bg: #1a1a1a;
+            --accent-color: #d4a574;
+            --card-bg: #1e1e1e;
+            --subtle-border: #2a2a2a;
+            --summary-bg: #1a1a1a;
+            --controls-bg: rgba(30,30,30,0.95);
+            --sidebar-bg: #1a1a1a;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -61,9 +84,46 @@
         a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
         a:hover { color: var(--secondary-color); }
 
+        /* Dark mode overrides */
+        .dark-mode a { color: var(--accent-color); }
+        .dark-mode a:hover { color: #e8c49a; }
+        .dark-mode .main-nav a { color: var(--primary-color); }
+        .dark-mode .main-nav .ext-link { color: var(--secondary-color); }
+        .dark-mode .main-nav .ext-link:hover { color: var(--primary-color); }
+        .dark-mode .main-footer a { color: var(--accent-color); }
+        .dark-mode .main-header { box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .dark-mode .node circle { stroke: #333; }
+        .dark-mode .link { stroke: #555; }
+        .dark-mode #sidebar-header { background: #2a2a2a; }
+        .dark-mode #sidebar-header .subtitle { color: #888; }
+        .dark-mode .citation-text { color: #999; }
+        .dark-mode .citation-item.basis { background: rgba(41, 128, 185, 0.15); }
+        .dark-mode .citation-item.aim { background: rgba(230, 126, 34, 0.15); }
+        .dark-mode .citation-item.continuity { background: rgba(39, 174, 96, 0.15); }
+        .dark-mode .tooltip { background: #2a2a2a; }
+        .dark-mode .node circle:hover { stroke: #e8eaed; }
+
+        /* Theme toggle */
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 2rem;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            font-family: inherit;
+        }
+        .theme-toggle:hover { color: var(--primary-color); border-color: var(--primary-color); }
+
         /* Header */
         .main-header {
-            background: var(--background-color);
+            background: var(--header-bg);
             padding: 1.5rem 0;
             position: sticky;
             top: 0;
@@ -76,6 +136,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 0 2rem;
+            gap: 1rem;
         }
 
         .main-header .logo {
@@ -142,7 +203,7 @@
 
         .dataset-list li {
             padding: 1rem 0;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid var(--subtle-border);
             line-height: 1.6;
         }
 
@@ -151,12 +212,16 @@
         .dataset-list .dataset-title { font-weight: bold; color: var(--primary-color); }
         .dataset-list .dataset-desc { font-size: 0.9rem; color: var(--secondary-color); }
 
-        /* Viz details panel */
+        /* Viz details panel — breaks out of container for more width */
         .viz-details {
             border: 1px solid var(--border-color);
             border-radius: 8px;
             overflow: hidden;
             margin-bottom: 2rem;
+            width: calc(100vw - 4rem);
+            max-width: 1400px;
+            margin-left: 50%;
+            transform: translateX(-50%);
         }
 
         .viz-details summary {
@@ -165,7 +230,7 @@
             font-size: 1.1rem;
             font-weight: bold;
             color: var(--primary-color);
-            background: #fafafa;
+            background: var(--summary-bg);
             list-style: none;
             display: flex;
             align-items: center;
@@ -194,41 +259,12 @@
         /* Viz wrapper: contains the SVG and controls */
         .viz-wrapper {
             position: relative;
-            height: 80vh;
-            min-height: 500px;
-            background: #fff;
+            height: 85vh;
+            min-height: 550px;
+            background: var(--card-bg);
         }
 
         .viz-wrapper svg { width: 100%; height: 100%; }
-
-        /* Expand button */
-        #expand-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            z-index: 150;
-            background: rgba(255,255,255,0.95);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 6px 14px;
-            font-family: inherit;
-            font-size: 12px;
-            color: var(--primary-color);
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: all 0.2s ease;
-        }
-
-        #expand-btn:hover { background: var(--primary-color); color: #fff; }
-
-        .viz-wrapper.expanded {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 2000;
-            min-height: 0;
-        }
 
         .link { stroke: #bbb; stroke-opacity: 0.3; }
         .node circle { stroke: #fff; stroke-width: 1px; cursor: pointer; }
@@ -241,7 +277,7 @@
             right: -420px;
             width: 400px;
             height: 100%;
-            background: #fff;
+            background: var(--sidebar-bg);
             box-shadow: -2px 0 15px rgba(0,0,0,0.15);
             transition: right 0.3s ease;
             z-index: 200;
@@ -251,7 +287,7 @@
         #sidebar.open { right: 0; }
 
         #sidebar-header {
-            background: var(--primary-color);
+            background: #1a1a1a;
             color: #fff;
             padding: 18px 20px;
             position: sticky;
@@ -276,7 +312,7 @@
 
         #sidebar-stats {
             padding: 14px 20px;
-            background: #f5f5f5;
+            background: var(--summary-bg);
             font-size: 13px;
             border-bottom: 1px solid var(--border-color);
         }
@@ -328,7 +364,7 @@
             position: absolute;
             bottom: 20px;
             left: 20px;
-            background: rgba(255,255,255,0.95);
+            background: var(--controls-bg);
             padding: 16px 20px;
             border-radius: 8px;
             box-shadow: 0 2px 15px rgba(0,0,0,0.12);
@@ -371,7 +407,7 @@
         /* Tooltip */
         .tooltip {
             position: absolute;
-            background: var(--primary-color);
+            background: #1a1a1a;
             color: #fff;
             padding: 10px 14px;
             border-radius: 6px;
@@ -431,7 +467,7 @@
                 position: fixed;
                 top: 0; left: 0;
                 width: 100%; height: 100vh;
-                background-color: rgba(255, 255, 255, 0.98);
+                background-color: var(--background-color);
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -448,6 +484,8 @@
             body.nav-open .hamburger-menu .line-2 { opacity: 0; }
             body.nav-open .hamburger-menu .line-3 { transform: rotate(-45deg) translate(5px, -5px); }
 
+            .viz-details { width: calc(100vw - 2rem); }
+            .viz-wrapper { height: 70vh; min-height: 400px; }
             #controls { bottom: 10px; left: 10px; right: 10px; max-width: none; }
             #sidebar { width: 100%; right: -100%; }
         }
@@ -471,6 +509,7 @@
                     <li><a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" class="ext-link">KCL</a></li>
                 </ul>
             </nav>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span id="theme-icon">◑</span> <span id="theme-label">Light</span></button>
             <button class="hamburger-menu" aria-label="Open navigation menu">
                 <span class="line line-1"></span>
                 <span class="line line-2"></span>
@@ -503,7 +542,6 @@
                     <span class="viz-desc">— 2,488 resolutions, 12,399 citations</span>
                 </summary>
                 <div class="viz-wrapper" id="viz-wrapper">
-                    <button id="expand-btn">Expand</button>
                     <div class="viz-loading" id="loading">
                         <div class="spinner"></div>
                         <p>Loading network data…</p>
@@ -887,15 +925,26 @@
             link.style('stroke-opacity', parseFloat(e.target.value));
         });
 
-        // Expand / collapse
-        document.getElementById('expand-btn').addEventListener('click', () => {
-            const wrapper = document.getElementById('viz-wrapper');
-            const btn = document.getElementById('expand-btn');
-            const isExpanded = wrapper.classList.toggle('expanded');
-            btn.textContent = isExpanded ? 'Exit fullscreen' : 'Expand';
-            document.body.style.overflow = isExpanded ? 'hidden' : '';
-        });
     }
+
+    // Theme
+    const icons = { light: '◑', dark: '◐' };
+    const labels = { light: 'Light', dark: 'Dark' };
+    function getDefaultTheme() { var h = new Date().getHours(); return (h >= 18 || h < 7) ? 'dark' : 'light'; }
+    let currentTheme = localStorage.getItem('theme') || getDefaultTheme();
+    function applyTheme(t) {
+        document.body.classList.remove('dark-mode');
+        document.documentElement.classList.remove('dark-mode');
+        if (t === 'dark') { document.body.classList.add('dark-mode'); document.documentElement.classList.add('dark-mode'); }
+        document.getElementById('theme-icon').textContent = icons[t];
+        document.getElementById('theme-label').textContent = labels[t];
+        localStorage.setItem('theme', t);
+        currentTheme = t;
+    }
+    function toggleTheme() {
+        applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    }
+    applyTheme(currentTheme);
     </script>
 
 </body>
