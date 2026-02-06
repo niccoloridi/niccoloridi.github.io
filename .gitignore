@@ -1,0 +1,6 @@
+# Folders to exclude
+cv_folder/
+Examples/
+
+# OS files
+.DS_Store
