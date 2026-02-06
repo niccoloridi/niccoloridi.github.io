@@ -462,7 +462,7 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
             });
-        }, { threshold: 0.15 });
+        }, { threshold: 0.01 });
         faders.forEach(f => observer.observe(f));
 
         // Publication filters
