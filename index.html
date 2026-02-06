@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Niccolò Ridi | Public International Law</title>
-    <script>(function(){var t=localStorage.getItem('theme');if(!t){var h=new Date().getHours();t=(h>=18||h<7)?'dark':'light';}if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>(function(){var t=localStorage.getItem('theme');if(!t)t='dark';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
     <style>
         :root {
             --primary-color: #1a1a1a;
@@ -14,6 +15,10 @@
             --background-color: #ffffff;
             --header-bg: #ffffff;
             --accent-color: #1a1a1a;
+            --net-node: rgba(150, 150, 150, 0.3);
+            --net-node-hub: rgba(100, 100, 100, 0.45);
+            --net-link: rgba(180, 180, 180, 0.12);
+            --net-pulse: rgba(100, 100, 100, 0.25);
         }
 
         /* Dark theme */
@@ -25,6 +30,10 @@
             --background-color: #121212;
             --header-bg: #1a1a1a;
             --accent-color: #d4a574;
+            --net-node: rgba(212, 165, 116, 0.25);
+            --net-node-hub: rgba(212, 165, 116, 0.5);
+            --net-link: rgba(150, 150, 150, 0.1);
+            --net-pulse: rgba(212, 165, 116, 0.4);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -71,6 +80,7 @@
             font-family: inherit;
         }
         .theme-toggle:hover { color: var(--primary-color); border-color: var(--primary-color); }
+
         /* Header */
         .main-header {
             background: var(--header-bg);
@@ -154,7 +164,7 @@
             transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
-        /* Page layout: header, hero, footer all in viewport */
+        /* Page layout */
         .page {
             height: 100vh;
             display: flex;
@@ -166,13 +176,28 @@
             flex: 1;
             display: flex;
             align-items: center;
+            overflow: hidden;
         }
 
         .hero .container {
             max-width: 960px;
+            width: 100%;
             margin: auto;
             padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
         }
+
+        .hero-text { flex: 1; z-index: 1; }
+
+        .hero-viz {
+            flex: 0 0 420px;
+            height: 380px;
+            position: relative;
+        }
+
+        .hero-viz svg { width: 100%; height: 100%; }
 
         .hero h1 {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -216,9 +241,12 @@
 
             .hero h1 { font-size: 2.5rem; }
             .hero { text-align: center; }
+            .hero .container { display: block; }
             .hero .subtitle { margin-left: auto; margin-right: auto; }
             .social-links { display: flex; flex-direction: column; gap: 0.5rem; align-items: center; }
             .social-links a { margin-right: 0; }
+
+            .hero-viz { display: none; }
 
             .hamburger-menu { display: block; }
 
@@ -248,6 +276,10 @@
             body.nav-open .hamburger-menu .line-1 { transform: rotate(45deg) translate(5px, 5px); }
             body.nav-open .hamburger-menu .line-2 { opacity: 0; }
             body.nav-open .hamburger-menu .line-3 { transform: rotate(-45deg) translate(5px, -5px); }
+        }
+
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .hero-viz { flex: 0 0 300px; height: 300px; }
         }
     </style>
 </head>
@@ -282,16 +314,19 @@
 
         <section class="hero">
             <div class="container">
-                <h1>Dr Niccolò Ridi</h1>
-                <p class="subtitle">
-                    Academic and practitioner in Public International Law, focusing on international dispute resolution and computational analysis of law.
-                </p>
-                <div class="social-links">
-                    <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank">LinkedIn</a>
-                    <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank">Google Scholar</a>
-                    <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank">SSRN</a>
-                    <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank">KCL Profile</a>
+                <div class="hero-text">
+                    <h1>Dr Niccolò Ridi</h1>
+                    <p class="subtitle">
+                        Academic and practitioner in Public International Law, focusing on international dispute resolution and computational analysis of law.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank">LinkedIn</a>
+                        <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank">Google Scholar</a>
+                        <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank">SSRN</a>
+                        <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank">KCL Profile</a>
+                    </div>
                 </div>
+                <div class="hero-viz" id="hero-viz"></div>
             </div>
         </section>
 
@@ -311,8 +346,9 @@
         // Theme
         const icons = { light: '◑', dark: '◐' };
         const labels = { light: 'Light', dark: 'Dark' };
-        function getDefaultTheme() { var h = new Date().getHours(); return (h >= 18 || h < 7) ? 'dark' : 'light'; }
+        function getDefaultTheme() { return 'dark'; }
         let currentTheme = localStorage.getItem('theme') || getDefaultTheme();
+
         function applyTheme(t) {
             document.body.classList.remove('dark-mode');
             document.documentElement.classList.remove('dark-mode');
@@ -321,11 +357,194 @@
             document.getElementById('theme-label').textContent = labels[t];
             localStorage.setItem('theme', t);
             currentTheme = t;
+            // Update network colors on theme change
+            updateNetworkColors(t);
         }
+
         function toggleTheme() {
             applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
         }
+
         applyTheme(currentTheme);
+
+        // ─── Animated Network ───
+        var netNodes, netLinks, netSvg;
+
+        function updateNetworkColors(theme) {
+            if (!netSvg) return;
+            var s = getComputedStyle(document.documentElement);
+            netSvg.selectAll('.net-node')
+                .transition().duration(600)
+                .attr('fill', s.getPropertyValue('--net-node').trim())
+                .attr('opacity', 1);
+            netSvg.selectAll('.net-node-hub')
+                .transition().duration(600)
+                .attr('fill', s.getPropertyValue('--net-node-hub').trim())
+                .attr('opacity', 1);
+            netSvg.selectAll('.net-link')
+                .transition().duration(600)
+                .attr('stroke', s.getPropertyValue('--net-link').trim());
+        }
+
+        (function initNetwork() {
+            var vizEl = document.getElementById('hero-viz');
+            if (!vizEl || window.innerWidth < 769) return;
+
+            var W = 420, H = 380;
+            var nodes = [], links = [];
+            var id = 0;
+
+            // 5 clusters
+            var centers = [[0.25,0.28],[0.72,0.22],[0.48,0.58],[0.18,0.78],[0.78,0.72]];
+            var sizes = [10, 9, 12, 8, 9]; // 48 nodes total
+
+            for (var c = 0; c < 5; c++) {
+                for (var i = 0; i < sizes[c]; i++) {
+                    nodes.push({
+                        id: id++,
+                        cluster: c,
+                        r: 1.5 + Math.random() * 3,
+                        hub: false,
+                        x: centers[c][0] * W + (Math.random() - 0.5) * W * 0.2,
+                        y: centers[c][1] * H + (Math.random() - 0.5) * H * 0.2
+                    });
+                }
+            }
+
+            // Promote a few nodes to hubs
+            [0, 10, 22, 35, 42].forEach(function(idx) {
+                if (nodes[idx]) { nodes[idx].r = 5 + Math.random() * 2; nodes[idx].hub = true; }
+            });
+
+            // Intra-cluster edges
+            for (var c = 0; c < 5; c++) {
+                var cn = nodes.filter(function(n) { return n.cluster === c; });
+                for (var i = 0; i < cn.length; i++) {
+                    for (var j = i + 1; j < cn.length; j++) {
+                        if (Math.random() < 0.3) {
+                            links.push({ source: cn[i].id, target: cn[j].id });
+                        }
+                    }
+                }
+            }
+
+            // Inter-cluster bridges (1-2 per pair)
+            for (var c1 = 0; c1 < 5; c1++) {
+                for (var c2 = c1 + 1; c2 < 5; c2++) {
+                    var n1 = nodes.filter(function(n) { return n.cluster === c1; });
+                    var n2 = nodes.filter(function(n) { return n.cluster === c2; });
+                    var bridges = 1 + Math.floor(Math.random() * 2);
+                    for (var b = 0; b < bridges; b++) {
+                        links.push({
+                            source: n1[Math.floor(Math.random() * n1.length)].id,
+                            target: n2[Math.floor(Math.random() * n2.length)].id
+                        });
+                    }
+                }
+            }
+
+            // Read initial colors from CSS variables
+            var s = getComputedStyle(document.documentElement);
+            var nodeColor = s.getPropertyValue('--net-node').trim();
+            var hubColor = s.getPropertyValue('--net-node-hub').trim();
+            var linkColor = s.getPropertyValue('--net-link').trim();
+            var pulseColor = s.getPropertyValue('--net-pulse').trim();
+
+            // Create SVG
+            netSvg = d3.select('#hero-viz').append('svg')
+                .attr('viewBox', '0 0 ' + W + ' ' + H)
+                .attr('preserveAspectRatio', 'xMidYMid meet');
+
+            // Links
+            var link = netSvg.append('g').selectAll('line')
+                .data(links).join('line')
+                .attr('class', 'net-link')
+                .attr('stroke', linkColor)
+                .attr('stroke-width', 0.6)
+                .attr('stroke-opacity', 0)
+                .attr('x1', function(d) { return nodes[d.source] ? nodes[d.source].x : 0; })
+                .attr('y1', function(d) { return nodes[d.source] ? nodes[d.source].y : 0; })
+                .attr('x2', function(d) { return nodes[d.target] ? nodes[d.target].x : 0; })
+                .attr('y2', function(d) { return nodes[d.target] ? nodes[d.target].y : 0; });
+
+            // Nodes
+            var node = netSvg.append('g').selectAll('circle')
+                .data(nodes).join('circle')
+                .attr('class', function(d) { return d.hub ? 'net-node-hub' : 'net-node'; })
+                .attr('r', function(d) { return d.r; })
+                .attr('fill', function(d) { return d.hub ? hubColor : nodeColor; })
+                .attr('opacity', 0)
+                .attr('cx', function(d) { return d.x; })
+                .attr('cy', function(d) { return d.y; });
+
+            // Force simulation
+            var simulation = d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(links).id(function(d) { return d.id; }).distance(50).strength(0.2))
+                .force('charge', d3.forceManyBody().strength(-20))
+                .force('center', d3.forceCenter(W / 2, H / 2).strength(0.05))
+                .force('collision', d3.forceCollide().radius(function(d) { return d.r + 3; }))
+                .force('x', d3.forceX(W / 2).strength(0.03))
+                .force('y', d3.forceY(H / 2).strength(0.03))
+                .alpha(0.4)
+                .alphaDecay(0.015)
+                .on('tick', function() {
+                    // Keep nodes in bounds
+                    nodes.forEach(function(d) {
+                        d.x = Math.max(d.r, Math.min(W - d.r, d.x));
+                        d.y = Math.max(d.r, Math.min(H - d.r, d.y));
+                    });
+                    link
+                        .attr('x1', function(d) { return d.source.x; })
+                        .attr('y1', function(d) { return d.source.y; })
+                        .attr('x2', function(d) { return d.target.x; })
+                        .attr('y2', function(d) { return d.target.y; });
+                    node
+                        .attr('cx', function(d) { return d.x; })
+                        .attr('cy', function(d) { return d.y; });
+                });
+
+            // ─── Entrance animation ───
+
+            // Nodes fade in, staggered by cluster
+            node.transition()
+                .delay(function(d) { return d.cluster * 350 + Math.random() * 250; })
+                .duration(900)
+                .ease(d3.easeCubicOut)
+                .attr('opacity', 1);
+
+            // Links draw in after a brief delay
+            link.transition()
+                .delay(function(d, i) { return 600 + i * 18; })
+                .duration(700)
+                .ease(d3.easeCubicOut)
+                .attr('stroke-opacity', 1);
+
+            // ─── Ambient pulse after settling ───
+            setTimeout(function() {
+                setInterval(function() {
+                    // Pulse a random node
+                    var ri = Math.floor(Math.random() * nodes.length);
+                    var sel = node.filter(function(d, i) { return i === ri; });
+                    var origR = nodes[ri].r;
+                    sel.transition().duration(1200).ease(d3.easeSinInOut)
+                        .attr('r', origR * 1.6)
+                        .attr('fill', pulseColor)
+                        .transition().duration(1200).ease(d3.easeSinInOut)
+                        .attr('r', origR)
+                        .attr('fill', nodes[ri].hub ? hubColor : nodeColor);
+
+                    // Pulse a random link
+                    var li = Math.floor(Math.random() * links.length);
+                    var lsel = link.filter(function(d, i) { return i === li; });
+                    lsel.transition().duration(900).ease(d3.easeSinInOut)
+                        .attr('stroke-opacity', 3)
+                        .attr('stroke-width', 1.5)
+                        .transition().duration(900).ease(d3.easeSinInOut)
+                        .attr('stroke-opacity', 1)
+                        .attr('stroke-width', 0.6);
+                }, 2500);
+            }, 4000);
+        })();
     </script>
 
 </body>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Practice & Consultancies | Niccolò Ridi</title>
-    <script>(function(){var t=localStorage.getItem('theme');if(!t){var h=new Date().getHours();t=(h>=18||h<7)?'dark':'light';}if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
+    <script>(function(){var t=localStorage.getItem('theme');if(!t)t='dark';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
     <style>
         :root {
             --primary-color: #1a1a1a;
@@ -314,7 +314,7 @@
         // Theme
         const icons = { light: '◑', dark: '◐' };
         const labels = { light: 'Light', dark: 'Dark' };
-        function getDefaultTheme() { var h = new Date().getHours(); return (h >= 18 || h < 7) ? 'dark' : 'light'; }
+        function getDefaultTheme() { return 'dark'; }
         let currentTheme = localStorage.getItem('theme') || getDefaultTheme();
         function applyTheme(t) {
             document.body.classList.remove('dark-mode');

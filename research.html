@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Research & Publications | Niccolò Ridi</title>
-    <script>(function(){var t=localStorage.getItem('theme');if(!t){var h=new Date().getHours();t=(h>=18||h<7)?'dark':'light';}if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
+    <script>(function(){var t=localStorage.getItem('theme');if(!t)t='dark';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
     <style>
         :root {
             --primary-color: #1a1a1a;
@@ -294,7 +294,12 @@
             body.nav-open .hamburger-menu .line-2 { opacity: 0; }
             body.nav-open .hamburger-menu .line-3 { transform: rotate(-45deg) translate(5px, -5px); }
 
+            .container { padding: 2.5rem 1.2rem; }
             .filters { gap: 0.5rem; }
+            .type-filters { gap: 0.3rem; }
+            .filter-btn { font-size: 0.75rem; padding: 0.25rem 0.7rem; }
+            .pub-list li { overflow-wrap: break-word; word-break: break-word; font-size: 0.88rem; }
+            .pub-chip { font-size: 0.65rem; }
         }
     </style>
 </head>
@@ -505,7 +510,7 @@
         // Theme
         const icons = { light: '◑', dark: '◐' };
         const labels = { light: 'Light', dark: 'Dark' };
-        function getDefaultTheme() { var h = new Date().getHours(); return (h >= 18 || h < 7) ? 'dark' : 'light'; }
+        function getDefaultTheme() { return 'dark'; }
         let currentTheme = localStorage.getItem('theme') || getDefaultTheme();
         function applyTheme(t) {
             document.body.classList.remove('dark-mode');
