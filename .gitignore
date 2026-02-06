@@ -1,6 +1,8 @@
 # Folders to exclude
 cv_folder/
 Examples/
+ai_images/
+.claude/
 
 # OS files
 .DS_Store

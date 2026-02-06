@@ -18,15 +18,46 @@
 
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            line-height: 1.6;
+            line-height: 1.8;
             background-color: var(--background-color);
             color: var(--text-color);
             -webkit-font-smoothing: antialiased;
-            overflow: hidden;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
+
+        main { flex: 1; }
 
         body.nav-open { overflow: hidden; }
 
+        .container {
+            max-width: 960px;
+            margin: auto;
+            padding: 4rem 2rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 2.5rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        h2::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+
+        p { margin-bottom: 1.5rem; max-width: 75ch; }
         a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
         a:hover { color: var(--secondary-color); }
 
@@ -34,19 +65,17 @@
         .main-header {
             background: var(--background-color);
             padding: 1.5rem 0;
-            position: fixed;
-            top: 0; left: 0; right: 0;
+            position: sticky;
+            top: 0;
             z-index: 1000;
             box-shadow: 0 2px 10px rgba(0,0,0,0.07);
         }
 
         .main-header .container {
-            max-width: 960px;
-            margin: auto;
-            padding: 0 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 0 2rem;
         }
 
         .main-header .logo {
@@ -104,14 +133,102 @@
             transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
-        /* Viz fills viewport below header */
-        #viz-container {
-            position: fixed;
-            top: 70px;
-            left: 0; right: 0; bottom: 0;
+        /* Dataset list */
+        .dataset-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2.5rem;
         }
 
-        #viz-container svg { width: 100%; height: 100%; }
+        .dataset-list li {
+            padding: 1rem 0;
+            border-bottom: 1px solid #f0f0f0;
+            line-height: 1.6;
+        }
+
+        .dataset-list li:last-child { border-bottom: none; }
+
+        .dataset-list .dataset-title { font-weight: bold; color: var(--primary-color); }
+        .dataset-list .dataset-desc { font-size: 0.9rem; color: var(--secondary-color); }
+
+        /* Viz details panel */
+        .viz-details {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .viz-details summary {
+            cursor: pointer;
+            padding: 1.2rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            background: #fafafa;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .viz-details summary::-webkit-details-marker { display: none; }
+
+        .viz-details summary::before {
+            content: '+';
+            font-size: 1.3rem;
+            font-weight: 300;
+            width: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .viz-details[open] > summary::before { content: '\2212'; }
+
+        .viz-details summary .viz-desc {
+            font-weight: normal;
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+            margin-left: 0.5rem;
+        }
+
+        /* Viz wrapper: contains the SVG and controls */
+        .viz-wrapper {
+            position: relative;
+            height: 80vh;
+            min-height: 500px;
+            background: #fff;
+        }
+
+        .viz-wrapper svg { width: 100%; height: 100%; }
+
+        /* Expand button */
+        #expand-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 150;
+            background: rgba(255,255,255,0.95);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px 14px;
+            font-family: inherit;
+            font-size: 12px;
+            color: var(--primary-color);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+
+        #expand-btn:hover { background: var(--primary-color); color: #fff; }
+
+        .viz-wrapper.expanded {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 2000;
+            min-height: 0;
+        }
 
         .link { stroke: #bbb; stroke-opacity: 0.3; }
         .node circle { stroke: #fff; stroke-width: 1px; cursor: pointer; }
@@ -119,11 +236,11 @@
 
         /* Sidebar */
         #sidebar {
-            position: fixed;
-            top: 70px;
+            position: absolute;
+            top: 0;
             right: -420px;
             width: 400px;
-            height: calc(100vh - 70px);
+            height: 100%;
             background: #fff;
             box-shadow: -2px 0 15px rgba(0,0,0,0.15);
             transition: right 0.3s ease;
@@ -142,16 +259,8 @@
             z-index: 1;
         }
 
-        #sidebar-header h3 {
-            margin: 0 0 4px 0;
-            font-size: 18px;
-        }
-
-        #sidebar-header .subtitle {
-            font-size: 12px;
-            color: #ccc;
-            font-weight: normal;
-        }
+        #sidebar-header h3 { margin: 0 0 4px 0; font-size: 18px; }
+        #sidebar-header .subtitle { font-size: 12px; color: #ccc; font-weight: normal; }
 
         #sidebar-header .close-btn {
             position: absolute;
@@ -174,15 +283,8 @@
 
         #sidebar-stats div { margin-bottom: 5px; }
 
-        #sidebar-citations {
-            padding: 16px 20px;
-        }
-
-        #sidebar-citations h4 {
-            font-size: 14px;
-            margin: 0 0 10px 0;
-            color: var(--primary-color);
-        }
+        #sidebar-citations { padding: 16px 20px; }
+        #sidebar-citations h4 { font-size: 14px; margin: 0 0 10px 0; color: var(--primary-color); }
 
         .citation-item {
             padding: 10px 12px;
@@ -192,20 +294,9 @@
             line-height: 1.5;
         }
 
-        .citation-item.basis {
-            border-left: 4px solid #2980b9;
-            background: rgba(41, 128, 185, 0.06);
-        }
-
-        .citation-item.aim {
-            border-left: 4px solid #e67e22;
-            background: rgba(230, 126, 34, 0.06);
-        }
-
-        .citation-item.continuity {
-            border-left: 4px solid #27ae60;
-            background: rgba(39, 174, 96, 0.06);
-        }
+        .citation-item.basis { border-left: 4px solid #2980b9; background: rgba(41, 128, 185, 0.06); }
+        .citation-item.aim { border-left: 4px solid #e67e22; background: rgba(230, 126, 34, 0.06); }
+        .citation-item.continuity { border-left: 4px solid #27ae60; background: rgba(39, 174, 96, 0.06); }
 
         .citation-item .type-chip {
             display: inline-block;
@@ -221,10 +312,7 @@
         .citation-item .type-chip.aim { background: #e67e22; }
         .citation-item .type-chip.continuity { background: #27ae60; }
 
-        .citation-item .res-label {
-            font-weight: bold;
-            color: var(--primary-color);
-        }
+        .citation-item .res-label { font-weight: bold; color: var(--primary-color); }
 
         .citation-text {
             margin-top: 6px;
@@ -237,7 +325,7 @@
 
         /* Controls */
         #controls {
-            position: fixed;
+            position: absolute;
             bottom: 20px;
             left: 20px;
             background: rgba(255,255,255,0.95);
@@ -249,11 +337,7 @@
             max-width: 300px;
         }
 
-        #controls h3 {
-            font-size: 14px;
-            margin-bottom: 4px;
-            color: var(--primary-color);
-        }
+        #controls h3 { font-size: 14px; margin-bottom: 4px; color: var(--primary-color); }
 
         #controls .source-link {
             font-size: 11px;
@@ -273,10 +357,7 @@
             letter-spacing: 0.05em;
         }
 
-        #controls select, #controls input[type="range"] {
-            width: 100%;
-            margin-bottom: 12px;
-        }
+        #controls select, #controls input[type="range"] { width: 100%; margin-bottom: 12px; }
 
         .stats {
             font-size: 11px;
@@ -304,15 +385,15 @@
         }
 
         /* Loading */
-        #loading {
-            position: fixed;
+        .viz-loading {
+            position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
             z-index: 50;
         }
 
-        #loading .spinner {
+        .viz-loading .spinner {
             width: 30px; height: 30px;
             border: 3px solid var(--border-color);
             border-top-color: var(--primary-color);
@@ -323,13 +404,27 @@
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        #loading p {
-            font-size: 0.95rem;
+        .viz-loading p { font-size: 0.95rem; color: var(--secondary-color); }
+
+        /* Footer */
+        .main-footer {
+            padding: 1.5rem 2rem;
+            text-align: center;
+            font-size: 0.9rem;
             color: var(--secondary-color);
         }
 
+        .main-footer a { color: var(--primary-color); }
+        .main-footer p { max-width: none; margin-bottom: 0; }
+
+        /* Animation */
+        .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
         /* Responsive */
         @media (max-width: 768px) {
+            h2 { font-size: 1.8rem; }
+
             .hamburger-menu { display: block; }
 
             .main-nav {
@@ -384,61 +479,116 @@
         </div>
     </header>
 
-    <div id="loading">
-        <div class="spinner"></div>
-        <p>Loading 2,488 resolutions…</p>
-    </div>
+    <main>
+        <div class="container fade-in">
+            <h2>Data</h2>
+            <p>
+                Datasets and interactive visualisations from my research on international law and institutions.
+            </p>
 
-    <div id="viz-container"></div>
-    <div class="tooltip" id="tooltip"></div>
+            <ul class="dataset-list">
+                <li>
+                    <div class="dataset-title"><a href="https://zenodo.org/doi/10.5281/zenodo.7319780" target="_blank">Corpus of Resolutions: UN Security Council (CR-UNSC)</a></div>
+                    <div class="dataset-desc">A comprehensive, machine-readable corpus of all UN Security Council resolutions. With Seán Fobbe and Lorenzo Gasbarri.</div>
+                </li>
+                <li>
+                    <div class="dataset-title"><a href="https://doi.org/10.5281/zenodo.15191557" target="_blank">Words of Power: UN Security Council Resolutions</a></div>
+                    <div class="dataset-desc">Companion dataset with full-text and metadata for computational analysis. With Seán Fobbe and Lorenzo Gasbarri.</div>
+                </li>
+            </ul>
 
-    <!-- Sidebar -->
-    <div id="sidebar">
-        <div id="sidebar-header">
-            <h3 id="sidebar-title"></h3>
-            <div class="subtitle" id="sidebar-subtitle"></div>
-            <button class="close-btn" onclick="closeSidebar()">&times;</button>
+            <details class="viz-details" id="viz-details">
+                <summary>
+                    UNSC Citation Network
+                    <span class="viz-desc">— 2,488 resolutions, 12,399 citations</span>
+                </summary>
+                <div class="viz-wrapper" id="viz-wrapper">
+                    <button id="expand-btn">Expand</button>
+                    <div class="viz-loading" id="loading">
+                        <div class="spinner"></div>
+                        <p>Loading network data…</p>
+                    </div>
+                    <div class="tooltip" id="tooltip"></div>
+
+                    <div id="sidebar">
+                        <div id="sidebar-header">
+                            <h3 id="sidebar-title"></h3>
+                            <div class="subtitle" id="sidebar-subtitle"></div>
+                            <button class="close-btn" id="close-sidebar">&times;</button>
+                        </div>
+                        <div id="sidebar-stats"></div>
+                        <div id="sidebar-citations"></div>
+                    </div>
+
+                    <div id="controls">
+                        <h3>SC Resolutions Network</h3>
+                        <a class="source-link" href="https://www.jtl.columbia.edu/volume-61/the-role-of-previous-resolutions-in-the-practice-of-the-security-council" target="_blank">Ridi &amp; Gasbarri, <i>Columbia JTL</i> (2023)</a>
+
+                        <label>Node Size</label>
+                        <select id="size-metric">
+                            <option value="degree">Connections (degree)</option>
+                            <option value="inDegree">Cited by (in-degree)</option>
+                            <option value="outDegree">Cites (out-degree)</option>
+                            <option value="betweenness">Betweenness centrality</option>
+                        </select>
+
+                        <label>Node Scale: <span id="node-scale-val">1.0</span>x</label>
+                        <input type="range" id="node-scale" min="0.3" max="3" step="0.1" value="1">
+
+                        <label>Link Opacity</label>
+                        <input type="range" id="link-opacity" min="0.02" max="0.8" step="0.02" value="0.3">
+
+                        <div class="stats">
+                            Resolutions: <span id="node-count">—</span> &nbsp;|&nbsp;
+                            Citations: <span id="edge-count">—</span>
+                        </div>
+                    </div>
+                </div>
+            </details>
         </div>
-        <div id="sidebar-stats"></div>
-        <div id="sidebar-citations"></div>
-    </div>
+    </main>
 
-    <!-- Controls -->
-    <div id="controls">
-        <h3>SC Resolutions Network</h3>
-        <a class="source-link" href="https://www.jtl.columbia.edu/volume-61/the-role-of-previous-resolutions-in-the-practice-of-the-security-council" target="_blank">Ridi &amp; Gasbarri, <i>Columbia JTL</i> (2023)</a>
-
-        <label>Node Size</label>
-        <select id="size-metric">
-            <option value="degree">Connections (degree)</option>
-            <option value="inDegree">Cited by (in-degree)</option>
-            <option value="outDegree">Cites (out-degree)</option>
-            <option value="betweenness">Betweenness centrality</option>
-        </select>
-
-        <label>Node Scale: <span id="node-scale-val">1.0</span>x</label>
-        <input type="range" id="node-scale" min="0.3" max="3" step="0.1" value="1">
-
-        <label>Link Opacity</label>
-        <input type="range" id="link-opacity" min="0.02" max="0.8" step="0.02" value="0.3">
-
-        <div class="stats">
-            Resolutions: <span id="node-count">—</span> &nbsp;|&nbsp;
-            Citations: <span id="edge-count">—</span>
-            <br>
-            <a href="https://zenodo.org/doi/10.5281/zenodo.7319780" target="_blank" style="font-weight: normal; font-size: 10px;">Dataset: CR-UNSC (Zenodo)</a>
-        </div>
-    </div>
+    <footer class="main-footer">
+        <p><a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a> &nbsp;|&nbsp; &copy; 2025 Niccolò Ridi. All Rights Reserved (probably).</p>
+    </footer>
 
     <script>
+    // Hamburger
+    const hamburger = document.querySelector('.hamburger-menu');
+    hamburger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
+    document.querySelectorAll('.main-nav a').forEach(link => {
+        link.addEventListener('click', () => document.body.classList.remove('nav-open'));
+    });
+
+    // Fade-in
+    const faders = document.querySelectorAll('.fade-in');
+    const obsrv = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
+        });
+    }, { threshold: 0.15 });
+    faders.forEach(f => obsrv.observe(f));
+
+    // Sidebar close
+    document.getElementById('close-sidebar').addEventListener('click', closeSidebar);
     function closeSidebar() {
         document.getElementById('sidebar').classList.remove('open');
     }
 
-    (async function() {
+    // Lazy-load visualization when details opens
+    const vizDetails = document.getElementById('viz-details');
+    let vizLoaded = false;
+
+    vizDetails.addEventListener('toggle', () => {
+        if (vizDetails.open && !vizLoaded) {
+            vizLoaded = true;
+            loadVisualization();
+        }
+    });
+
+    async function loadVisualization() {
         const GEXF_URL = 'https://gist.githubusercontent.com/niccoloridi/9f02add305bdd5af5861fd2bee624409/raw/cc20d9c3179fd4da76a498f4e1798a49ade9de8b/network-1497ffc9-4d5.gexf';
 
-        // Fetch and parse GEXF
         const response = await fetch(GEXF_URL);
         const text = await response.text();
         const parser = new DOMParser();
@@ -450,7 +600,6 @@
             attrDefs[a.getAttribute('id')] = a.getAttribute('title');
         });
 
-        // Attributes we care about for sidebar display
         const keepAttrs = new Set([
             'date_verbose', 'year', 'vote_verbose', 'concerns', 'topicshort',
             'indegree', 'outdegree', 'degree', 'betweenesscentrality',
@@ -464,7 +613,6 @@
             const id = n.getAttribute('id');
             const node = { id, label: id };
 
-            // Viz attributes
             const vizPos = n.getElementsByTagNameNS('*', 'position')[0];
             const vizColor = n.getElementsByTagNameNS('*', 'color')[0];
             const vizSize = n.getElementsByTagNameNS('*', 'size')[0];
@@ -480,7 +628,6 @@
                 node.vizSize = parseFloat(vizSize.getAttribute('value')) || 10;
             }
 
-            // Parse selected attvalues
             n.querySelectorAll('attvalue').forEach(av => {
                 const attrId = av.getAttribute('for') || av.getAttribute('id');
                 if (keepAttrs.has(attrId)) {
@@ -492,33 +639,26 @@
             nodeMap[id] = node;
         });
 
-        // Edge attributes we want
-        const edgeKeepAttrs = new Set([
-            'yearciting', 'yearcited', 'logistic regression', 'text'
-        ]);
-
         // Parse edges
+        const edgeKeepAttrs = new Set(['yearciting', 'yearcited', 'logistic regression', 'text']);
         const edges = [];
         xml.querySelectorAll('edge').forEach(e => {
             const source = e.getAttribute('source');
             const target = e.getAttribute('target');
             const weight = parseFloat(e.getAttribute('weight')) || 1;
-
             if (!nodeMap[source] || !nodeMap[target]) return;
 
             const edge = { source, target, weight };
-
             e.querySelectorAll('attvalue').forEach(av => {
                 const attrId = av.getAttribute('for') || av.getAttribute('id');
                 if (edgeKeepAttrs.has(attrId)) {
                     edge[attrId] = av.getAttribute('value');
                 }
             });
-
             edges.push(edge);
         });
 
-        // Compute degree from edges (more reliable than GEXF attrs)
+        // Compute degree
         nodes.forEach(n => { n.inDegree = 0; n.outDegree = 0; });
         edges.forEach(e => {
             const s = nodeMap[typeof e.source === 'object' ? e.source.id : e.source];
@@ -537,20 +677,19 @@
         document.getElementById('edge-count').textContent = edges.length.toLocaleString();
 
         // SVG setup
-        const container = document.getElementById('viz-container');
+        const container = document.getElementById('viz-wrapper');
         const width = container.clientWidth;
         const height = container.clientHeight;
 
-        const svg = d3.select('#viz-container').append('svg')
-            .attr('width', width)
-            .attr('height', height)
+        const svg = d3.select('#viz-wrapper').append('svg')
+            .attr('viewBox', `0 0 ${width} ${height}`)
             .call(d3.zoom().scaleExtent([0.05, 12]).on('zoom', (event) => {
                 g.attr('transform', event.transform);
             }));
 
         const g = svg.append('g');
 
-        // Scale original Gephi positions to fit viewport
+        // Scale Gephi positions to fit
         const xs = nodes.map(n => n.x || 0);
         const ys = nodes.map(n => n.y || 0);
         const xMin = Math.min(...xs), xMax = Math.max(...xs);
@@ -563,7 +702,7 @@
         nodes.forEach(n => {
             n.x = (n.x - xMin) * scaleF + (cx - dataW / 2);
             n.y = (n.y - yMin) * scaleF + (cy - dataH / 2);
-            n.fx = n.x; // fix position
+            n.fx = n.x;
             n.fy = n.y;
         });
 
@@ -586,7 +725,7 @@
             return (1.5 + (val / max) * 16) * scale;
         }
 
-        // Simulation (positions fixed, just for d3 link references)
+        // Simulation (positions fixed)
         const simulation = d3.forceSimulation(nodes)
             .force('link', d3.forceLink(edges).id(d => d.id).strength(0))
             .alphaDecay(1)
@@ -629,17 +768,18 @@
 
         // Tooltip
         const tooltip = d3.select('#tooltip');
+        const wrapperRect = container.getBoundingClientRect();
 
         node.on('mouseover', function(event, d) {
+            const rect = container.getBoundingClientRect();
             tooltip.style('opacity', 1)
                 .html(`<strong>Resolution ${d.label}</strong><br>
                     ${d.topicshort || d.concerns || ''}<br>
                     Cited by: ${d.inDegree} &nbsp;|&nbsp; Cites: ${d.outDegree}
                     <br><em>Click for details</em>`)
-                .style('left', (event.pageX + 14) + 'px')
-                .style('top', (event.pageY - 30) + 'px');
+                .style('left', (event.clientX - rect.left + 14) + 'px')
+                .style('top', (event.clientY - rect.top - 30) + 'px');
 
-            // Highlight connected
             const connected = new Set([d.id]);
             edges.forEach(e => {
                 if (e.source.id === d.id) connected.add(e.target.id);
@@ -652,8 +792,9 @@
             );
         })
         .on('mousemove', function(event) {
-            tooltip.style('left', (event.pageX + 14) + 'px')
-                .style('top', (event.pageY - 30) + 'px');
+            const rect = container.getBoundingClientRect();
+            tooltip.style('left', (event.clientX - rect.left + 14) + 'px')
+                .style('top', (event.clientY - rect.top - 30) + 'px');
         })
         .on('mouseout', function() {
             tooltip.style('opacity', 0);
@@ -675,7 +816,6 @@
             document.getElementById('sidebar-subtitle').textContent =
                 (d.date_verbose || '') + (d.topicshort ? ' · ' + d.topicshort : '');
 
-            // Stats
             const statsDiv = document.getElementById('sidebar-stats');
             let statsHtml = '';
             if (d.concerns) statsHtml += `<div><strong>Concerns:</strong> ${d.concerns}</div>`;
@@ -687,11 +827,9 @@
             if (d['res-link']) statsHtml += `<div style="margin-top: 8px;"><a href="${d['res-link']}" target="_blank">View resolution text →</a></div>`;
             statsDiv.innerHTML = statsHtml;
 
-            // Citations (edges involving this node)
             const citationsDiv = document.getElementById('sidebar-citations');
             let html = '';
 
-            // Outgoing: resolutions this one cites
             const outEdges = edges.filter(e => e.source.id === d.id);
             if (outEdges.length > 0) {
                 html += `<h4>Cites (${outEdges.length})</h4>`;
@@ -707,7 +845,6 @@
                 });
             }
 
-            // Incoming: resolutions that cite this one
             const inEdges = edges.filter(e => e.target.id === d.id);
             if (inEdges.length > 0) {
                 html += `<h4 style="margin-top: 16px;">Cited by (${inEdges.length})</h4>`;
@@ -750,13 +887,15 @@
             link.style('stroke-opacity', parseFloat(e.target.value));
         });
 
-        // Hamburger
-        const hamburger = document.querySelector('.hamburger-menu');
-        hamburger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
-        document.querySelectorAll('.main-nav a').forEach(l => {
-            l.addEventListener('click', () => document.body.classList.remove('nav-open'));
+        // Expand / collapse
+        document.getElementById('expand-btn').addEventListener('click', () => {
+            const wrapper = document.getElementById('viz-wrapper');
+            const btn = document.getElementById('expand-btn');
+            const isExpanded = wrapper.classList.toggle('expanded');
+            btn.textContent = isExpanded ? 'Exit fullscreen' : 'Expand';
+            document.body.style.overflow = isExpanded ? 'hidden' : '';
         });
-    })();
+    }
     </script>
 
 </body>

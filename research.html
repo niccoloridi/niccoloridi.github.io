@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Research | Niccolò Ridi</title>
+    <title>Research & Publications | Niccolò Ridi</title>
     <style>
         :root {
             --primary-color: #1a1a1a;
             --secondary-color: #555555;
-            --light-gray-bg: #f7f7f7;
             --text-color: #333333;
             --border-color: #e0e0e0;
             --background-color: #ffffff;
@@ -133,9 +132,73 @@
             transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
-        /* Section separator */
-        .section-light {
-            background: var(--light-gray-bg);
+        /* Filters */
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .type-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .filter-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+            font-family: inherit;
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover { border-color: var(--primary-color); color: var(--primary-color); }
+        .filter-btn.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+
+        .year-filter {
+            font-family: inherit;
+            font-size: 0.8rem;
+            padding: 0.3rem 0.6rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        .pub-count {
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            margin-left: auto;
+        }
+
+        /* Publication list */
+        .pub-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .pub-list li {
+            padding: 0.7rem 0;
+            border-bottom: 1px solid #f0f0f0;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .pub-list li:last-child { border-bottom: none; }
+
+        .pub-note {
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            font-style: italic;
         }
 
         /* Footer */
@@ -179,6 +242,9 @@
             body.nav-open .hamburger-menu .line-1 { transform: rotate(45deg) translate(5px, 5px); }
             body.nav-open .hamburger-menu .line-2 { opacity: 0; }
             body.nav-open .hamburger-menu .line-3 { transform: rotate(-45deg) translate(5px, -5px); }
+
+            .filters { gap: 0.5rem; }
+            .pub-count { margin-left: 0; width: 100%; }
         }
     </style>
 </head>
@@ -212,20 +278,114 @@
         <section class="container fade-in">
             <h2>Research & Publications</h2>
             <p>
-                My research on international adjudication, judicial reasoning, and computational law has been published in leading peer-reviewed journals and by major university presses.
+                My research on international adjudication, judicial reasoning, and computational law has been published in leading peer-reviewed journals and by major university presses. I also build tools and datasets for large-scale legal analysis — from OCR pipelines for court archives and citation mining across judicial decisions, to AI-powered legal research systems and comprehensive corpora of international legal materials.
             </p>
             <p>
-                A comprehensive list of publications is available on my <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank">Google Scholar profile</a>. I also welcome inquiries from prospective PhD students with innovative projects in my areas of expertise.
+                A comprehensive list is also available on my <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank">Google Scholar profile</a>. I welcome inquiries from prospective PhD students with innovative projects in my areas of expertise.
             </p>
-        </section>
 
-        <section class="section-light fade-in">
-            <div class="container">
-                <h2>Computation</h2>
-                <p>
-                    I build tools and datasets for large-scale legal analysis — from OCR pipelines for court archives and citation mining across judicial decisions, to AI-powered legal research systems and comprehensive corpora of international legal materials.
-                </p>
+            <div class="filters">
+                <div class="type-filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="book">Books</button>
+                    <button class="filter-btn" data-filter="article">Articles</button>
+                    <button class="filter-btn" data-filter="working">Working Papers</button>
+                    <button class="filter-btn" data-filter="dataset">Datasets</button>
+                    <button class="filter-btn" data-filter="other">Other</button>
+                </div>
+                <select class="year-filter" id="year-filter">
+                    <option value="all">All years</option>
+                </select>
+                <span class="pub-count" id="pub-count"></span>
             </div>
+
+            <ul class="pub-list" id="pub-list">
+                <!-- Forthcoming: Books -->
+                <li data-type="book" data-year="forthcoming">Niccolò Ridi, <i>Precedent in International Adjudication</i> (Oxford University Press, forthcoming)</li>
+                <li data-type="book" data-year="forthcoming">Thomas Schultz, Jason Mitchenson &amp; Niccolò Ridi, <i>The Principle of Comity in Public and Private International Law</i> (Cambridge University Press, forthcoming)</li>
+                <li data-type="book" data-year="forthcoming"><i>The Elgar Concise Encyclopedia of the Law of International Organizations</i> (Edward Elgar, forthcoming) (edited with Lorenzo Gasbarri and Christiane Ahlborn)</li>
+                <li data-type="book" data-year="forthcoming"><i>Theorizing Procedure in International Adjudication</i> (edited with Juliette McIntyre) <span class="pub-note">Proposal stage</span></li>
+                <li data-type="book" data-year="forthcoming">Special Issue: <i>Artificial Intelligence in International Dispute Settlement</i>, Journal of International Dispute Settlement (co-edited with Tomer Broude) <span class="pub-note">In progress</span></li>
+                <li data-type="book" data-year="forthcoming">Special Issue: <i>Scholarship in International Dispute Settlement</i>, Journal of International Dispute Settlement (co-edited with Thomas Schultz) <span class="pub-note">In progress</span></li>
+
+                <!-- Forthcoming: Articles -->
+                <li data-type="article" data-year="forthcoming">'Res judicata: A Typology of Issues before International Courts and Tribunals' <span class="pub-note">Draft</span></li>
+                <li data-type="article" data-year="forthcoming">'Evolving State Preferences in the Reform of Investor-State Dispute Settlement' (with Weijia Rao)</li>
+                <li data-type="article" data-year="forthcoming">'Consensus, Repetition, Networks: Norm Consumption and Norm Diffusion in the Security Council' (with Lorenzo Gasbarri) <span class="pub-note">Draft</span></li>
+                <li data-type="article" data-year="forthcoming">'Stone by Stone: The Distinctiveness of Precedential Reasoning by the European Court of Justice' (with Luigi Lonardo) <span class="pub-note">Draft</span></li>
+                <li data-type="article" data-year="forthcoming">'Deconstructing the <i>M/V Norstar</i> Case through the Lens of the Law of Jurisdiction' <span class="pub-note">Advanced draft</span></li>
+                <li data-type="article" data-year="forthcoming">'The Hardening of Soft Law at the European Court of Human Rights' (with Ezgi Yildiz) <span class="pub-note">Research stage</span></li>
+                <li data-type="article" data-year="forthcoming">'The World Bank Administrative Tribunal and the Internal Rule-Making in International Organizations' (with Lorenzo Gasbarri) <span class="pub-note">Research stage</span></li>
+                <li data-type="article" data-year="forthcoming">'The ICJ Statute Article 38(1) Is Not Exhaustive(?)' (with Sondre Torp Helmersen) <span class="pub-note">Draft</span></li>
+                <li data-type="article" data-year="forthcoming">'Asymmetry of Information in CAS Arbitration: An Empirical Analysis' (with Antoine Duval) <span class="pub-note">Research stage</span></li>
+
+                <!-- 2025 -->
+                <li data-type="working" data-year="2025">'GenAI as an International Lawyer: A Case Study with the Jessup International Law Moot Court' (2025) (with Damien Charlotin) <span class="pub-note">Working paper</span></li>
+                <li data-type="other" data-year="2025">'Instrumentalized Migration and Jurisdictional Challenges: Lithuania v. Belarus at the ICJ', <i>EJIL: Talk!</i> (2025) (with Matina Papadaki)</li>
+
+                <!-- 2024 -->
+                <li data-type="article" data-year="2024">'Res Judicata and Time', in Andrea Gattini (ed), <i>Time and International Litigation</i> (Brill 2024)</li>
+                <li data-type="article" data-year="2024">'Distantly Reading the <i>Recueil des cours</i>: A Quantitative Analysis of the Hague Academy Collected Courses' (2024) <i>European Journal of International Law</i> 247–262 (with Thomas Schultz)</li>
+                <li data-type="article" data-year="2024">'The Use of Scholarship by the European Court of Human Rights' (2024) <i>International and Comparative Law Quarterly</i> (with Kanstantsin Dzehtsiarou)</li>
+                <li data-type="article" data-year="2024">'Tracing the Footprints of International Law Ideas' (2024) 64(2) <i>Virginia Journal of International Law</i> 405–446 (with Thomas Schultz)</li>
+                <li data-type="article" data-year="2024">'The Use of Authorities by International Courts and Tribunals', in Joanna Gomula &amp; Stephan Wittich (eds), <i>Research Handbook of International Procedural Law</i> (Elgar 2024)</li>
+                <li data-type="article" data-year="2024">'Judicial Comity', in Hélène Ruiz Fabri (ed), <i>Max Planck Encyclopedia of International Procedural Law</i> (OUP 2024)</li>
+                <li data-type="article" data-year="2024">'Judicial Decisions – Article 38(1)(d) ICJ Statute', <i>Max Planck Encyclopedia of Public International Law</i> (2024)</li>
+                <li data-type="dataset" data-year="2024">Seán Fobbe, Lorenzo Gasbarri &amp; Niccolò Ridi, 'Corpus of Resolutions: UN Security Council (CR-UNSC)' (2024) Zenodo</li>
+                <li data-type="dataset" data-year="2024">Seán Fobbe, Lorenzo Gasbarri &amp; Niccolò Ridi, 'Words of Power: Introducing a Comprehensive Corpus of UN Security Council Resolutions' (2024) Zenodo</li>
+
+                <!-- 2023 -->
+                <li data-type="article" data-year="2023">'The Role of Previous Resolutions in the Practice of the Security Council' (2023) 61(3) <i>Columbia Journal of Transnational Law</i> 571 (with Lorenzo Gasbarri)</li>
+                <li data-type="other" data-year="2023">'Book Review: Rossana Deplano, <i>Empirical and Theoretical Perspectives on International Law</i>' (2023) <i>Australian Year Book of International Law</i></li>
+
+                <!-- 2022 -->
+                <li data-type="article" data-year="2022">'Sanctioning to Change State Behaviour' (2022) 13(2) <i>Journal of International Dispute Settlement</i> 210 (with Veronika Fikfak)</li>
+                <li data-type="article" data-year="2022">'Layers of Preclusion: <i>Res judicata</i> Issues in <i>Victor Pey Casado v Chile</i>' (2022) <i>ICSID Review</i></li>
+                <li data-type="article" data-year="2022">'GATT Article XX(d)', in Peter-Tobias Stoll &amp; Holger P. Hestermeyer (eds), <i>Commentaries on World Trade Law</i> (Brill 2022)</li>
+                <li data-type="other" data-year="2022">'Book Review: Jan Paulsson, <i>The Unruly Notion of Abuse of Rights</i>' (2022) <i>European Journal of International Law</i></li>
+
+                <!-- 2021 -->
+                <li data-type="article" data-year="2021">'Rule of Precedent and Rules on Precedent: Regulating the Use of the Past in International Adjudication and Arbitration', in Eric de Brabandere (ed), <i>International Procedure in Interstate Litigation and Arbitration: A Comparative Approach</i> (CUP 2021)</li>
+                <li data-type="other" data-year="2021">Evidence to the UK Parliament Lords Select Committee on International Relations and Defence, 'UNCLOS: Fit for Purpose in the 21st Century?' (2021) (with Massimo Fabio Lando)</li>
+
+                <!-- 2020 -->
+                <li data-type="article" data-year="2020">'United States — Anti-Dumping Measures Applying Differential Pricing Methodology to Softwood Lumber from Canada' (2020) 114 <i>American Journal of International Law</i> 735</li>
+                <li data-type="article" data-year="2020">'Empirically Mapping Investment Arbitration Scholarship: Networks, Authorities, and the Research Front', in Katia Fach Gomez (ed), <i>Private Actors in International Investment Law</i> (Springer 2020) 209 (with Thomas Schultz)</li>
+                <li data-type="article" data-year="2020">'Arbitration Literature', in Thomas Schultz &amp; Federico Ortino (eds), <i>The Oxford Handbook of International Arbitration</i> (OUP 2020) 1 (with Thomas Schultz)</li>
+                <li data-type="article" data-year="2020">'Mapping the "Invisible College of International Lawyers" through Obituaries' (2020) 34(1) <i>Leiden Journal of International Law</i> (with Luíza Leão Soares Pereira)</li>
+                <li data-type="article" data-year="2020">'Approaches to External Precedent: Invocation of International Decisions in Investment Arbitration and WTO Dispute Settlement', in Behn, Langford &amp; Gáspár-Szilágyi (eds), <i>Adjudicating Trade and Investment Law: Convergence or Divergence?</i> (CUP 2020)</li>
+                <li data-type="article" data-year="2020">'How Comity Makes Transnationalism Work', in Peer Zumbansen (ed), <i>The Many Lives of Transnational Law</i> (CUP 2020) 88–102 (with Thomas Schultz)</li>
+
+                <!-- 2019 -->
+                <li data-type="article" data-year="2019">'The Shape and Structure of the "Usable Past": An Empirical Analysis of the Use of Precedent in International Adjudication' (2019) 10 <i>Journal of International Dispute Settlement</i> 200 <span class="pub-note">Runner-up, James Crawford Prize</span></li>
+                <li data-type="article" data-year="2019">'"Mirages of an Intellectual Dreamland"? <i>Ratio</i>, <i>Obiter</i> and the Textualization of International Precedent' (2019) 10 <i>Journal of International Dispute Settlement</i> 361</li>
+
+                <!-- 2018 -->
+                <li data-type="article" data-year="2018">'Precarious Finality? Reflections on <i>Res Judicata</i> in the <i>Question of the Delimitation of the Continental Shelf</i> Case' (2018) <i>Leiden Journal of International Law</i> 383</li>
+                <li data-type="article" data-year="2018">'Comity in US Courts' (2018) 10(1) <i>Northeastern University Law Review</i> 281 (with Thomas Schultz)</li>
+
+                <!-- 2017 -->
+                <li data-type="article" data-year="2017">'Comity and International Courts and Tribunals' (2017) 50 <i>Cornell International Law Journal</i> 577 (with Thomas Schultz)</li>
+                <li data-type="article" data-year="2017">'Comity: The Narrative and Influence of a Core American Concept' (2017) <i>Yearbook of Private International Law</i> (with Thomas Schultz)</li>
+                <li data-type="article" data-year="2017">'Militias', in Grote, Lachenmann &amp; Wolfrum (eds), <i>Max Planck Encyclopedia of Comparative Constitutional Law</i> (2017)</li>
+                <li data-type="other" data-year="2017">'Book Review: Vadi, <i>Analogies in International Investment Law and Arbitration</i>' (2017) <i>British Yearbook of International Law</i> 222</li>
+
+                <!-- 2016 -->
+                <li data-type="other" data-year="2016">'The Last Page: Public International Law Limericks' (2016) <i>European Journal of International Law</i> (with Sondre Torp Helmersen)</li>
+                <li data-type="other" data-year="2016">'Book Review: Hindelang and Krajewski (eds), <i>Shifting Paradigms in International Investment Law</i>' (2016) <i>European Journal of International Law</i> 545</li>
+                <li data-type="other" data-year="2016">'Book Review: Bianchi, Peat, and Windsor (eds), <i>Interpretation in International Law</i>' (2016) <i>King's Law Journal</i></li>
+
+                <!-- 2015 -->
+                <li data-type="other" data-year="2015">'The Mediterranean Migrants Crisis and the Use of Force — Is There a Case for Destroying Smugglers' Boats?' (2015) <i>Opinio Juris</i> (with Sondre Torp Helmersen)</li>
+                <li data-type="other" data-year="2015">'All the Reasons Europe's Plan to Attack Migrant Boats Is a Bad Idea' (2015) <i>Quartz</i> (with Sondre Torp Helmersen)</li>
+
+                <!-- 2014 -->
+                <li data-type="other" data-year="2014">'Overview: Human Rights Law' (2014) 3(1) <i>Cambridge Journal of International and Comparative Law</i> 286</li>
+
+                <!-- 2013 -->
+                <li data-type="article" data-year="2013">'The Exercise of Diplomatic Protection on Behalf of Refugees', in Vasilka Sancin &amp; Maša Kovič Dine (eds), <i>Responsibility to Protect in Theory and Practice</i> (GV Založba 2013) 653</li>
+                <li data-type="other" data-year="2013">Paolo Caretti <i>et al.</i>, <i>L'iniziativa legislativa popolare in prospettiva comparata</i>, Report (Library of the Italian Senate)</li>
+            </ul>
         </section>
     </main>
 
@@ -234,12 +394,14 @@
     </footer>
 
     <script>
+        // Hamburger
         const hamburger = document.querySelector('.hamburger-menu');
         hamburger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
         document.querySelectorAll('.main-nav a').forEach(link => {
             link.addEventListener('click', () => document.body.classList.remove('nav-open'));
         });
 
+        // Fade-in
         const faders = document.querySelectorAll('.fade-in');
         const observer = new IntersectionObserver((entries, obs) => {
             entries.forEach(entry => {
@@ -247,6 +409,52 @@
             });
         }, { threshold: 0.15 });
         faders.forEach(f => observer.observe(f));
+
+        // Publication filters
+        const items = document.querySelectorAll('.pub-list li');
+        const typeBtns = document.querySelectorAll('.filter-btn');
+        const yearSelect = document.getElementById('year-filter');
+        const countEl = document.getElementById('pub-count');
+        let activeType = 'all';
+
+        // Populate year dropdown from data
+        const years = new Set();
+        items.forEach(li => years.add(li.dataset.year));
+        const sortedYears = [...years].sort((a, b) => {
+            if (a === 'forthcoming') return -1;
+            if (b === 'forthcoming') return 1;
+            return parseInt(b) - parseInt(a);
+        });
+        sortedYears.forEach(y => {
+            const opt = document.createElement('option');
+            opt.value = y;
+            opt.textContent = y === 'forthcoming' ? 'Forthcoming' : y;
+            yearSelect.appendChild(opt);
+        });
+
+        function updateList() {
+            const year = yearSelect.value;
+            let visible = 0;
+            items.forEach(item => {
+                const matchType = activeType === 'all' || item.dataset.type === activeType;
+                const matchYear = year === 'all' || item.dataset.year === year;
+                item.style.display = matchType && matchYear ? '' : 'none';
+                if (matchType && matchYear) visible++;
+            });
+            countEl.textContent = visible + ' publication' + (visible !== 1 ? 's' : '');
+        }
+
+        typeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                typeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeType = btn.dataset.filter;
+                updateList();
+            });
+        });
+
+        yearSelect.addEventListener('change', updateList);
+        updateList();
     </script>
 
 </body>
