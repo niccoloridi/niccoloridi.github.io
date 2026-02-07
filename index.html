@@ -16,8 +16,8 @@
             --header-bg: #ffffff;
             --accent-color: #1a1a1a;
             --net-node: rgba(150, 150, 150, 0.3);
-            --net-node-hub: rgba(100, 100, 100, 0.45);
-            --net-link: rgba(180, 180, 180, 0.12);
+            --net-node-hub: rgba(100, 100, 100, 0.4);
+            --net-link: rgba(180, 180, 180, 0.18);
             --net-pulse: rgba(100, 100, 100, 0.25);
         }
 
@@ -30,9 +30,9 @@
             --background-color: #121212;
             --header-bg: #1a1a1a;
             --accent-color: #d4a574;
-            --net-node: rgba(212, 165, 116, 0.25);
-            --net-node-hub: rgba(212, 165, 116, 0.5);
-            --net-link: rgba(150, 150, 150, 0.1);
+            --net-node: rgba(212, 165, 116, 0.28);
+            --net-node-hub: rgba(212, 165, 116, 0.45);
+            --net-link: rgba(150, 150, 150, 0.15);
             --net-pulse: rgba(212, 165, 116, 0.4);
         }
 
@@ -175,26 +175,32 @@
         .hero {
             flex: 1;
             display: flex;
-            align-items: center;
             overflow: hidden;
         }
 
         .hero .container {
-            max-width: 960px;
             width: 100%;
-            margin: auto;
-            padding: 0 2rem;
+            max-width: none;
+            padding: 6rem 2rem 1rem;
             display: flex;
-            align-items: center;
+            align-items: stretch;
             gap: 2rem;
         }
 
-        .hero-text { flex: 1; z-index: 1; }
+        .hero-text {
+            flex: 0 1 480px;
+            min-width: 280px;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-left: max(0px, calc((100% - 960px) / 2));
+        }
 
         .hero-viz {
-            flex: 0 0 420px;
-            height: 380px;
+            flex: 1;
             position: relative;
+            min-width: 0;
         }
 
         .hero-viz svg { width: 100%; height: 100%; }
@@ -225,6 +231,8 @@
 
         .social-links a:hover { color: var(--primary-color); }
 
+        .social-icon { display: none; }
+
         /* Footer */
         .main-footer {
             padding: 1.5rem 2rem;
@@ -241,12 +249,19 @@
 
             .hero h1 { font-size: 2.5rem; }
             .hero { text-align: center; }
-            .hero .container { display: block; }
+            .hero .container { flex-direction: column-reverse; padding-top: 6.5rem; padding-bottom: 1rem; }
+            .hero-text { flex: 0 0 auto; margin-left: 0; min-width: 0; }
             .hero .subtitle { margin-left: auto; margin-right: auto; }
-            .social-links { display: flex; flex-direction: column; gap: 0.5rem; align-items: center; }
-            .social-links a { margin-right: 0; }
 
-            .hero-viz { display: none; }
+            .social-links { display: flex; flex-direction: row; gap: 1.8rem; align-items: center; justify-content: center; }
+            .social-links a { margin-right: 0; }
+            .social-text { display: none; }
+            .social-icon { display: block; width: 24px; height: 24px; }
+
+            .hero-viz { flex: 1; }
+
+            :root { --net-link: rgba(180, 180, 180, 0.22); }
+            .dark-mode { --net-link: rgba(150, 150, 150, 0.2); }
 
             .hamburger-menu { display: block; }
 
@@ -278,9 +293,6 @@
             body.nav-open .hamburger-menu .line-3 { transform: rotate(-45deg) translate(5px, -5px); }
         }
 
-        @media (max-width: 1024px) and (min-width: 769px) {
-            .hero-viz { flex: 0 0 300px; height: 300px; }
-        }
     </style>
 </head>
 <body>
@@ -320,10 +332,10 @@
                         Academic and practitioner in Public International Law, focusing on international dispute resolution and computational analysis of law.
                     </p>
                     <div class="social-links">
-                        <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank">LinkedIn</a>
-                        <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank">Google Scholar</a>
-                        <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank">SSRN</a>
-                        <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank">KCL Profile</a>
+                        <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" title="LinkedIn"><svg class="social-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg><span class="social-text">LinkedIn</span></a>
+                        <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" title="Google Scholar"><svg class="social-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg><span class="social-text">Google Scholar</span></a>
+                        <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" title="SSRN"><svg class="social-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 15h8v2H8zm0-3h8v2H8z"/></svg><span class="social-text">SSRN</span></a>
+                        <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" title="KCL Profile"><svg class="social-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg><span class="social-text">KCL Profile</span></a>
                     </div>
                 </div>
                 <div class="hero-viz" id="hero-viz"></div>
@@ -388,22 +400,39 @@
 
         (function initNetwork() {
             var vizEl = document.getElementById('hero-viz');
-            if (!vizEl || window.innerWidth < 769) return;
+            if (!vizEl) return;
 
-            var W = 420, H = 380;
+            // Read actual container dimensions
+            var rect = vizEl.getBoundingClientRect();
+            var W = Math.floor(rect.width) || 420;
+            var H = Math.floor(rect.height) || 380;
+            if (W < 50 || H < 50) return;
+            var isMobile = window.innerWidth < 769;
+            var strokeW = isMobile ? 1.2 : 0.8;
             var nodes = [], links = [];
             var id = 0;
 
-            // 5 clusters
-            var centers = [[0.25,0.28],[0.72,0.22],[0.48,0.58],[0.18,0.78],[0.78,0.72]];
-            var sizes = [10, 9, 12, 8, 9]; // 48 nodes total
+            // Scale clusters and nodes to canvas size
+            var diag = Math.sqrt(W * W + H * H);
+            var nClusters = Math.min(9, Math.max(4, Math.round(diag / 140)));
+            var baseSize = Math.round(7 + diag / 180);
 
-            for (var c = 0; c < 5; c++) {
+            // Generate cluster centers with good spread
+            var centers = [];
+            for (var c = 0; c < nClusters; c++) {
+                centers.push([0.1 + Math.random() * 0.8, 0.1 + Math.random() * 0.8]);
+            }
+            var sizes = [];
+            for (var c = 0; c < nClusters; c++) {
+                sizes.push(baseSize + Math.floor(Math.random() * 5) - 2);
+            }
+
+            for (var c = 0; c < nClusters; c++) {
                 for (var i = 0; i < sizes[c]; i++) {
                     nodes.push({
                         id: id++,
                         cluster: c,
-                        r: 1.5 + Math.random() * 3,
+                        r: 2.5 + Math.random() * 4,
                         hub: false,
                         x: centers[c][0] * W + (Math.random() - 0.5) * W * 0.2,
                         y: centers[c][1] * H + (Math.random() - 0.5) * H * 0.2
@@ -411,13 +440,15 @@
                 }
             }
 
-            // Promote a few nodes to hubs
-            [0, 10, 22, 35, 42].forEach(function(idx) {
-                if (nodes[idx]) { nodes[idx].r = 5 + Math.random() * 2; nodes[idx].hub = true; }
-            });
+            // Promote first node of each cluster to hub
+            var hubIdx = 0;
+            for (var c = 0; c < nClusters; c++) {
+                if (nodes[hubIdx]) { nodes[hubIdx].r = 7 + Math.random() * 3; nodes[hubIdx].hub = true; }
+                hubIdx += sizes[c];
+            }
 
             // Intra-cluster edges
-            for (var c = 0; c < 5; c++) {
+            for (var c = 0; c < nClusters; c++) {
                 var cn = nodes.filter(function(n) { return n.cluster === c; });
                 for (var i = 0; i < cn.length; i++) {
                     for (var j = i + 1; j < cn.length; j++) {
@@ -429,8 +460,8 @@
             }
 
             // Inter-cluster bridges (1-2 per pair)
-            for (var c1 = 0; c1 < 5; c1++) {
-                for (var c2 = c1 + 1; c2 < 5; c2++) {
+            for (var c1 = 0; c1 < nClusters; c1++) {
+                for (var c2 = c1 + 1; c2 < nClusters; c2++) {
                     var n1 = nodes.filter(function(n) { return n.cluster === c1; });
                     var n2 = nodes.filter(function(n) { return n.cluster === c2; });
                     var bridges = 1 + Math.floor(Math.random() * 2);
@@ -460,7 +491,7 @@
                 .data(links).join('line')
                 .attr('class', 'net-link')
                 .attr('stroke', linkColor)
-                .attr('stroke-width', 0.6)
+                .attr('stroke-width', strokeW)
                 .attr('stroke-opacity', 0)
                 .attr('x1', function(d) { return nodes[d.source] ? nodes[d.source].x : 0; })
                 .attr('y1', function(d) { return nodes[d.source] ? nodes[d.source].y : 0; })
@@ -479,12 +510,12 @@
 
             // Force simulation
             var simulation = d3.forceSimulation(nodes)
-                .force('link', d3.forceLink(links).id(function(d) { return d.id; }).distance(50).strength(0.2))
-                .force('charge', d3.forceManyBody().strength(-20))
-                .force('center', d3.forceCenter(W / 2, H / 2).strength(0.05))
+                .force('link', d3.forceLink(links).id(function(d) { return d.id; }).distance(25 + diag / 25).strength(0.15))
+                .force('charge', d3.forceManyBody().strength(-12 - diag / 55))
+                .force('center', d3.forceCenter(W / 2, H / 2).strength(0.04))
                 .force('collision', d3.forceCollide().radius(function(d) { return d.r + 3; }))
-                .force('x', d3.forceX(W / 2).strength(0.03))
-                .force('y', d3.forceY(H / 2).strength(0.03))
+                .force('x', d3.forceX(W / 2).strength(0.02))
+                .force('y', d3.forceY(H / 2).strength(0.02))
                 .alpha(0.4)
                 .alphaDecay(0.015)
                 .on('tick', function() {
@@ -538,10 +569,10 @@
                     var lsel = link.filter(function(d, i) { return i === li; });
                     lsel.transition().duration(900).ease(d3.easeSinInOut)
                         .attr('stroke-opacity', 3)
-                        .attr('stroke-width', 1.5)
+                        .attr('stroke-width', 2)
                         .transition().duration(900).ease(d3.easeSinInOut)
                         .attr('stroke-opacity', 1)
-                        .attr('stroke-width', 0.6);
+                        .attr('stroke-width', strokeW);
                 }, 2500);
             }, 4000);
         })();
