@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data | Niccolò Ridi</title>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script>(function(){var t=localStorage.getItem('theme');if(!t)t='dark';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
     <style>
         :root {
@@ -18,8 +17,6 @@
             --card-bg: #ffffff;
             --subtle-border: #f0f0f0;
             --summary-bg: #fafafa;
-            --controls-bg: rgba(255,255,255,0.95);
-            --sidebar-bg: #ffffff;
         }
 
         .dark-mode {
@@ -33,8 +30,6 @@
             --card-bg: #1e1e1e;
             --subtle-border: #2a2a2a;
             --summary-bg: #1a1a1a;
-            --controls-bg: rgba(30,30,30,0.95);
-            --sidebar-bg: #1a1a1a;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -92,16 +87,6 @@
         .dark-mode .main-nav .ext-link:hover { color: var(--primary-color); }
         .dark-mode .main-footer a { color: var(--accent-color); }
         .dark-mode .main-header { box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
-        .dark-mode .node circle { stroke: #333; }
-        .dark-mode .link { stroke: #555; }
-        .dark-mode #sidebar-header { background: #2a2a2a; }
-        .dark-mode #sidebar-header .subtitle { color: #888; }
-        .dark-mode .citation-text { color: #999; }
-        .dark-mode .citation-item.basis { background: rgba(41, 128, 185, 0.15); }
-        .dark-mode .citation-item.aim { background: rgba(230, 126, 34, 0.15); }
-        .dark-mode .citation-item.continuity { background: rgba(39, 174, 96, 0.15); }
-        .dark-mode .tooltip { background: #2a2a2a; }
-        .dark-mode .node circle:hover { stroke: #e8eaed; }
 
         /* Theme toggle */
         .theme-toggle {
@@ -212,235 +197,35 @@
         .dataset-list .dataset-title { font-weight: bold; color: var(--primary-color); }
         .dataset-list .dataset-desc { font-size: 0.9rem; color: var(--secondary-color); }
 
-        /* Viz details panel — breaks out of container for more width */
-        .viz-details {
+        /* Essay link card */
+        .essay-card {
+            display: block;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 2rem;
-            width: calc(100vw - 4rem);
-            max-width: 1400px;
-            margin-left: 50%;
-            transform: translateX(-50%);
+            background: var(--summary-bg);
+            text-decoration: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
-
-        .viz-details summary {
-            cursor: pointer;
-            padding: 1.2rem 1.5rem;
-            font-size: 1.1rem;
+        .essay-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .dark-mode .essay-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+        .essay-card .essay-card-title {
             font-weight: bold;
+            font-size: 1.05rem;
             color: var(--primary-color);
-            background: var(--summary-bg);
-            list-style: none;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
+            margin-bottom: 0.3rem;
         }
-
-        .viz-details summary::-webkit-details-marker { display: none; }
-
-        .viz-details summary::before {
-            content: '+';
-            font-size: 1.3rem;
-            font-weight: 300;
-            width: 1.3rem;
-            flex-shrink: 0;
-        }
-
-        .viz-details[open] > summary::before { content: '\2212'; }
-
-        .viz-details summary .viz-desc {
+        .essay-card .essay-card-desc {
+            font-size: 0.88rem;
             font-weight: normal;
-            font-size: 0.85rem;
             color: var(--secondary-color);
-            margin-left: 0.5rem;
+            margin-bottom: 0;
         }
 
-        /* Viz wrapper: contains the SVG and controls */
-        .viz-wrapper {
-            position: relative;
-            height: 85vh;
-            min-height: 550px;
-            background: var(--card-bg);
-        }
-
-        .viz-wrapper svg { width: 100%; height: 100%; }
-
-        .link { stroke: #bbb; stroke-opacity: 0.3; }
-        .node circle { stroke: #fff; stroke-width: 1px; cursor: pointer; }
-        .node circle:hover { stroke: #333; stroke-width: 2px; }
-
-        /* Sidebar */
-        #sidebar {
-            position: absolute;
-            top: 0;
-            right: -420px;
-            width: 400px;
-            height: 100%;
-            background: var(--sidebar-bg);
-            box-shadow: -2px 0 15px rgba(0,0,0,0.15);
-            transition: right 0.3s ease;
-            z-index: 200;
-            overflow-y: auto;
-        }
-
-        #sidebar.open { right: 0; }
-
-        #sidebar-header {
-            background: #1a1a1a;
-            color: #fff;
-            padding: 18px 20px;
-            position: sticky;
-            top: 0;
-            z-index: 1;
-        }
-
-        #sidebar-header h3 { margin: 0 0 4px 0; font-size: 18px; }
-        #sidebar-header .subtitle { font-size: 12px; color: #ccc; font-weight: normal; }
-
-        #sidebar-header .close-btn {
-            position: absolute;
-            top: 12px; right: 18px;
-            cursor: pointer;
-            font-size: 24px;
-            color: #fff;
-            background: none;
-            border: none;
-        }
-
-        #sidebar-header .close-btn:hover { color: #e74c3c; }
-
-        #sidebar-stats {
-            padding: 14px 20px;
-            background: var(--summary-bg);
-            font-size: 13px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        #sidebar-stats div { margin-bottom: 5px; }
-
-        #sidebar-citations { padding: 16px 20px; }
-        #sidebar-citations h4 { font-size: 14px; margin: 0 0 10px 0; color: var(--primary-color); }
-
-        .citation-item {
-            padding: 10px 12px;
-            margin-bottom: 8px;
-            border-radius: 5px;
-            font-size: 12px;
-            line-height: 1.5;
-        }
-
-        .citation-item.basis { border-left: 4px solid #2980b9; background: rgba(41, 128, 185, 0.06); }
-        .citation-item.aim { border-left: 4px solid #e67e22; background: rgba(230, 126, 34, 0.06); }
-        .citation-item.continuity { border-left: 4px solid #27ae60; background: rgba(39, 174, 96, 0.06); }
-
-        .citation-item .type-chip {
-            display: inline-block;
-            padding: 1px 7px;
-            border-radius: 10px;
-            font-size: 10px;
-            font-weight: bold;
-            color: #fff;
-            margin-right: 6px;
-        }
-
-        .citation-item .type-chip.basis { background: #2980b9; }
-        .citation-item .type-chip.aim { background: #e67e22; }
-        .citation-item .type-chip.continuity { background: #27ae60; }
-
-        .citation-item .res-label { font-weight: bold; color: var(--primary-color); }
-
-        .citation-text {
-            margin-top: 6px;
-            font-size: 11px;
-            color: #666;
-            font-style: italic;
-            max-height: 60px;
-            overflow: hidden;
-        }
-
-        /* Controls */
-        #controls {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: var(--controls-bg);
-            padding: 16px 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.12);
-            z-index: 100;
-            font-size: 13px;
-            max-width: 300px;
-        }
-
-        #controls h3 { font-size: 14px; margin-bottom: 4px; color: var(--primary-color); }
-
-        #controls .source-link {
-            font-size: 11px;
-            color: var(--secondary-color);
-            font-weight: normal;
-            display: block;
-            margin-bottom: 12px;
-        }
-
-        #controls label {
-            display: block;
-            margin-bottom: 4px;
-            font-weight: 600;
-            font-size: 11px;
-            color: var(--secondary-color);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        #controls select, #controls input[type="range"] { width: 100%; margin-bottom: 12px; }
-
-        .stats {
-            font-size: 11px;
-            color: var(--secondary-color);
-            padding-top: 8px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .stats span { font-weight: 600; color: var(--primary-color); }
-
-        /* Tooltip */
-        .tooltip {
-            position: absolute;
-            background: #1a1a1a;
-            color: #fff;
-            padding: 10px 14px;
-            border-radius: 6px;
-            font-size: 12px;
-            pointer-events: none;
-            opacity: 0;
-            max-width: 300px;
-            z-index: 1000;
-            line-height: 1.5;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
-        /* Loading */
-        .viz-loading {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            z-index: 50;
-        }
-
-        .viz-loading .spinner {
-            width: 30px; height: 30px;
-            border: 3px solid var(--border-color);
-            border-top-color: var(--primary-color);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 12px;
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .viz-loading p { font-size: 0.95rem; color: var(--secondary-color); }
 
         /* Footer */
         .main-footer {
@@ -484,10 +269,6 @@
             body.nav-open .hamburger-menu .line-2 { opacity: 0; }
             body.nav-open .hamburger-menu .line-3 { transform: rotate(-45deg) translate(5px, -5px); }
 
-            .viz-details { width: calc(100vw - 2rem); }
-            .viz-wrapper { height: 70vh; min-height: 400px; }
-            #controls { bottom: 10px; left: 10px; right: 10px; max-width: none; }
-            #sidebar { width: 100%; right: -100%; }
         }
     </style>
 </head>
@@ -536,53 +317,10 @@
                 </li>
             </ul>
 
-            <details class="viz-details" id="viz-details">
-                <summary>
-                    UNSC Citation Network
-                    <span class="viz-desc">— 2,488 resolutions, 12,399 citations</span>
-                </summary>
-                <div class="viz-wrapper" id="viz-wrapper">
-                    <div class="viz-loading" id="loading">
-                        <div class="spinner"></div>
-                        <p>Loading network data…</p>
-                    </div>
-                    <div class="tooltip" id="tooltip"></div>
-
-                    <div id="sidebar">
-                        <div id="sidebar-header">
-                            <h3 id="sidebar-title"></h3>
-                            <div class="subtitle" id="sidebar-subtitle"></div>
-                            <button class="close-btn" id="close-sidebar">&times;</button>
-                        </div>
-                        <div id="sidebar-stats"></div>
-                        <div id="sidebar-citations"></div>
-                    </div>
-
-                    <div id="controls">
-                        <h3>SC Resolutions Network</h3>
-                        <a class="source-link" href="https://www.jtl.columbia.edu/volume-61/the-role-of-previous-resolutions-in-the-practice-of-the-security-council" target="_blank">Ridi &amp; Gasbarri, <i>Columbia JTL</i> (2023)</a>
-
-                        <label>Node Size</label>
-                        <select id="size-metric">
-                            <option value="degree">Connections (degree)</option>
-                            <option value="inDegree">Cited by (in-degree)</option>
-                            <option value="outDegree">Cites (out-degree)</option>
-                            <option value="betweenness">Betweenness centrality</option>
-                        </select>
-
-                        <label>Node Scale: <span id="node-scale-val">1.0</span>x</label>
-                        <input type="range" id="node-scale" min="0.3" max="3" step="0.1" value="1">
-
-                        <label>Link Opacity</label>
-                        <input type="range" id="link-opacity" min="0.02" max="0.8" step="0.02" value="0.3">
-
-                        <div class="stats">
-                            Resolutions: <span id="node-count">—</span> &nbsp;|&nbsp;
-                            Citations: <span id="edge-count">—</span>
-                        </div>
-                    </div>
-                </div>
-            </details>
+            <a class="essay-card" href="unsc-citations.html">
+                <div class="essay-card-title">The Law of Citations &ndash; UNSC Resolution Network</div>
+                <div class="essay-card-desc">Interactive data essay: 2,488 resolutions, 12,399 citations. Explore the full network, bridge animations, and citation functions.</div>
+            </a>
         </div>
     </main>
 
@@ -606,326 +344,6 @@
         });
     }, { threshold: 0.15 });
     faders.forEach(f => obsrv.observe(f));
-
-    // Sidebar close
-    document.getElementById('close-sidebar').addEventListener('click', closeSidebar);
-    function closeSidebar() {
-        document.getElementById('sidebar').classList.remove('open');
-    }
-
-    // Lazy-load visualization when details opens
-    const vizDetails = document.getElementById('viz-details');
-    let vizLoaded = false;
-
-    vizDetails.addEventListener('toggle', () => {
-        if (vizDetails.open && !vizLoaded) {
-            vizLoaded = true;
-            loadVisualization();
-        }
-    });
-
-    async function loadVisualization() {
-        const GEXF_URL = 'https://gist.githubusercontent.com/niccoloridi/9f02add305bdd5af5861fd2bee624409/raw/cc20d9c3179fd4da76a498f4e1798a49ade9de8b/network-1497ffc9-4d5.gexf';
-
-        const response = await fetch(GEXF_URL);
-        const text = await response.text();
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(text, 'text/xml');
-
-        // Parse attribute ID → title mapping
-        const attrDefs = {};
-        xml.querySelectorAll('attribute').forEach(a => {
-            attrDefs[a.getAttribute('id')] = a.getAttribute('title');
-        });
-
-        const keepAttrs = new Set([
-            'date_verbose', 'year', 'vote_verbose', 'concerns', 'topicshort',
-            'indegree', 'outdegree', 'degree', 'betweenesscentrality',
-            'modularity_class', 'is_ch_vii', 'res-link', 'sponsor'
-        ]);
-
-        // Parse nodes
-        const nodes = [];
-        const nodeMap = {};
-        xml.querySelectorAll('node').forEach(n => {
-            const id = n.getAttribute('id');
-            const node = { id, label: id };
-
-            const vizPos = n.getElementsByTagNameNS('*', 'position')[0];
-            const vizColor = n.getElementsByTagNameNS('*', 'color')[0];
-            const vizSize = n.getElementsByTagNameNS('*', 'size')[0];
-
-            if (vizPos) {
-                node.x = parseFloat(vizPos.getAttribute('x')) || 0;
-                node.y = parseFloat(vizPos.getAttribute('y')) || 0;
-            }
-            if (vizColor) {
-                node.color = `rgb(${vizColor.getAttribute('r')},${vizColor.getAttribute('g')},${vizColor.getAttribute('b')})`;
-            }
-            if (vizSize) {
-                node.vizSize = parseFloat(vizSize.getAttribute('value')) || 10;
-            }
-
-            n.querySelectorAll('attvalue').forEach(av => {
-                const attrId = av.getAttribute('for') || av.getAttribute('id');
-                if (keepAttrs.has(attrId)) {
-                    node[attrId] = av.getAttribute('value');
-                }
-            });
-
-            nodes.push(node);
-            nodeMap[id] = node;
-        });
-
-        // Parse edges
-        const edgeKeepAttrs = new Set(['yearciting', 'yearcited', 'logistic regression', 'text']);
-        const edges = [];
-        xml.querySelectorAll('edge').forEach(e => {
-            const source = e.getAttribute('source');
-            const target = e.getAttribute('target');
-            const weight = parseFloat(e.getAttribute('weight')) || 1;
-            if (!nodeMap[source] || !nodeMap[target]) return;
-
-            const edge = { source, target, weight };
-            e.querySelectorAll('attvalue').forEach(av => {
-                const attrId = av.getAttribute('for') || av.getAttribute('id');
-                if (edgeKeepAttrs.has(attrId)) {
-                    edge[attrId] = av.getAttribute('value');
-                }
-            });
-            edges.push(edge);
-        });
-
-        // Compute degree
-        nodes.forEach(n => { n.inDegree = 0; n.outDegree = 0; });
-        edges.forEach(e => {
-            const s = nodeMap[typeof e.source === 'object' ? e.source.id : e.source];
-            const t = nodeMap[typeof e.target === 'object' ? e.target.id : e.target];
-            if (s) s.outDegree++;
-            if (t) t.inDegree++;
-        });
-        nodes.forEach(n => {
-            n.degree = n.inDegree + n.outDegree;
-            n.betweenness = parseFloat(n['betweenesscentrality']) || 0;
-        });
-
-        // Hide loading, show stats
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('node-count').textContent = nodes.length.toLocaleString();
-        document.getElementById('edge-count').textContent = edges.length.toLocaleString();
-
-        // SVG setup
-        const container = document.getElementById('viz-wrapper');
-        const width = container.clientWidth;
-        const height = container.clientHeight;
-
-        const svg = d3.select('#viz-wrapper').append('svg')
-            .attr('viewBox', `0 0 ${width} ${height}`)
-            .call(d3.zoom().scaleExtent([0.05, 12]).on('zoom', (event) => {
-                g.attr('transform', event.transform);
-            }));
-
-        const g = svg.append('g');
-
-        // Scale Gephi positions to fit
-        const xs = nodes.map(n => n.x || 0);
-        const ys = nodes.map(n => n.y || 0);
-        const xMin = Math.min(...xs), xMax = Math.max(...xs);
-        const yMin = Math.min(...ys), yMax = Math.max(...ys);
-        const pad = 60;
-        const scaleF = Math.min((width - 2*pad) / (xMax - xMin || 1), (height - 2*pad) / (yMax - yMin || 1));
-        const cx = width / 2, cy = height / 2;
-        const dataW = (xMax - xMin) * scaleF, dataH = (yMax - yMin) * scaleF;
-
-        nodes.forEach(n => {
-            n.x = (n.x - xMin) * scaleF + (cx - dataW / 2);
-            n.y = (n.y - yMin) * scaleF + (cy - dataH / 2);
-            n.fx = n.x;
-            n.fy = n.y;
-        });
-
-        // Sizing
-        const maxDegree = Math.max(...nodes.map(n => n.degree), 1);
-        const maxIn = Math.max(...nodes.map(n => n.inDegree), 1);
-        const maxOut = Math.max(...nodes.map(n => n.outDegree), 1);
-        const maxBetw = Math.max(...nodes.map(n => n.betweenness), 1);
-
-        function getRadius(d) {
-            const metric = document.getElementById('size-metric').value;
-            const scale = parseFloat(document.getElementById('node-scale').value);
-            let val, max;
-            switch (metric) {
-                case 'inDegree': val = d.inDegree; max = maxIn; break;
-                case 'outDegree': val = d.outDegree; max = maxOut; break;
-                case 'betweenness': val = d.betweenness; max = maxBetw; break;
-                default: val = d.degree; max = maxDegree;
-            }
-            return (1.5 + (val / max) * 16) * scale;
-        }
-
-        // Simulation (positions fixed)
-        const simulation = d3.forceSimulation(nodes)
-            .force('link', d3.forceLink(edges).id(d => d.id).strength(0))
-            .alphaDecay(1)
-            .stop();
-        simulation.tick();
-
-        // Draw edges
-        const link = g.append('g').attr('class', 'links')
-            .selectAll('line')
-            .data(edges)
-            .enter().append('line')
-            .attr('class', 'link')
-            .attr('stroke-width', d => Math.max(0.3, Math.sqrt(d.weight) * 0.4))
-            .attr('x1', d => d.source.x)
-            .attr('y1', d => d.source.y)
-            .attr('x2', d => d.target.x)
-            .attr('y2', d => d.target.y);
-
-        // Draw nodes
-        const node = g.append('g').attr('class', 'nodes')
-            .selectAll('.node')
-            .data(nodes)
-            .enter().append('g')
-            .attr('class', 'node')
-            .attr('transform', d => `translate(${d.x},${d.y})`)
-            .call(d3.drag()
-                .on('start', (event, d) => { d.fx = d.x; d.fy = d.y; })
-                .on('drag', (event, d) => {
-                    d.fx = event.x; d.fy = event.y;
-                    d.x = event.x; d.y = event.y;
-                    d3.select(event.sourceEvent.target.parentNode).attr('transform', `translate(${d.x},${d.y})`);
-                    link.filter(e => e.source.id === d.id).attr('x1', d.x).attr('y1', d.y);
-                    link.filter(e => e.target.id === d.id).attr('x2', d.x).attr('y2', d.y);
-                })
-            );
-
-        node.append('circle')
-            .attr('r', d => getRadius(d))
-            .attr('fill', d => d.color || '#999');
-
-        // Tooltip
-        const tooltip = d3.select('#tooltip');
-        const wrapperRect = container.getBoundingClientRect();
-
-        node.on('mouseover', function(event, d) {
-            const rect = container.getBoundingClientRect();
-            tooltip.style('opacity', 1)
-                .html(`<strong>Resolution ${d.label}</strong><br>
-                    ${d.topicshort || d.concerns || ''}<br>
-                    Cited by: ${d.inDegree} &nbsp;|&nbsp; Cites: ${d.outDegree}
-                    <br><em>Click for details</em>`)
-                .style('left', (event.clientX - rect.left + 14) + 'px')
-                .style('top', (event.clientY - rect.top - 30) + 'px');
-
-            const connected = new Set([d.id]);
-            edges.forEach(e => {
-                if (e.source.id === d.id) connected.add(e.target.id);
-                if (e.target.id === d.id) connected.add(e.source.id);
-            });
-
-            node.select('circle').style('opacity', n => connected.has(n.id) ? 1 : 0.08);
-            link.style('stroke-opacity', e =>
-                (e.source.id === d.id || e.target.id === d.id) ? 0.7 : 0.02
-            );
-        })
-        .on('mousemove', function(event) {
-            const rect = container.getBoundingClientRect();
-            tooltip.style('left', (event.clientX - rect.left + 14) + 'px')
-                .style('top', (event.clientY - rect.top - 30) + 'px');
-        })
-        .on('mouseout', function() {
-            tooltip.style('opacity', 0);
-            node.select('circle').style('opacity', 1);
-            link.style('stroke-opacity', parseFloat(document.getElementById('link-opacity').value));
-        });
-
-        // Click → sidebar
-        node.on('click', function(event, d) {
-            event.stopPropagation();
-            openSidebar(d);
-        });
-
-        svg.on('click', closeSidebar);
-
-        function openSidebar(d) {
-            const sidebar = document.getElementById('sidebar');
-            document.getElementById('sidebar-title').textContent = 'Resolution ' + d.label;
-            document.getElementById('sidebar-subtitle').textContent =
-                (d.date_verbose || '') + (d.topicshort ? ' · ' + d.topicshort : '');
-
-            const statsDiv = document.getElementById('sidebar-stats');
-            let statsHtml = '';
-            if (d.concerns) statsHtml += `<div><strong>Concerns:</strong> ${d.concerns}</div>`;
-            if (d.vote_verbose) statsHtml += `<div><strong>Vote:</strong> ${d.vote_verbose}</div>`;
-            if (d['is_ch_vii'] === 'true') statsHtml += `<div><strong>Chapter VII:</strong> Yes</div>`;
-            if (d.sponsor) statsHtml += `<div><strong>Sponsors:</strong> ${d.sponsor}</div>`;
-            statsHtml += `<div style="margin-top: 8px;"><strong>In-degree:</strong> ${d.inDegree} &nbsp;|&nbsp; <strong>Out-degree:</strong> ${d.outDegree}</div>`;
-            if (d.betweenness > 0) statsHtml += `<div><strong>Betweenness:</strong> ${d.betweenness.toFixed(2)}</div>`;
-            if (d['res-link']) statsHtml += `<div style="margin-top: 8px;"><a href="${d['res-link']}" target="_blank">View resolution text →</a></div>`;
-            statsDiv.innerHTML = statsHtml;
-
-            const citationsDiv = document.getElementById('sidebar-citations');
-            let html = '';
-
-            const outEdges = edges.filter(e => e.source.id === d.id);
-            if (outEdges.length > 0) {
-                html += `<h4>Cites (${outEdges.length})</h4>`;
-                outEdges.sort((a, b) => (parseInt(b.yearcited) || 0) - (parseInt(a.yearcited) || 0));
-                outEdges.forEach(e => {
-                    const type = e['logistic regression'] || '';
-                    const typeClass = type === 'basis' ? 'basis' : type === 'aim' ? 'aim' : type === 'continuity' ? 'continuity' : 'basis';
-                    html += `<div class="citation-item ${typeClass}">
-                        <span class="type-chip ${typeClass}">${type || '—'}</span>
-                        <span class="res-label">${e.target.id || e.target}</span>
-                        ${e.text ? `<div class="citation-text">${truncate(e.text, 200)}</div>` : ''}
-                    </div>`;
-                });
-            }
-
-            const inEdges = edges.filter(e => e.target.id === d.id);
-            if (inEdges.length > 0) {
-                html += `<h4 style="margin-top: 16px;">Cited by (${inEdges.length})</h4>`;
-                inEdges.sort((a, b) => (parseInt(b.yearciting) || 0) - (parseInt(a.yearciting) || 0));
-                inEdges.forEach(e => {
-                    const type = e['logistic regression'] || '';
-                    const typeClass = type === 'basis' ? 'basis' : type === 'aim' ? 'aim' : type === 'continuity' ? 'continuity' : 'basis';
-                    html += `<div class="citation-item ${typeClass}">
-                        <span class="type-chip ${typeClass}">${type || '—'}</span>
-                        <span class="res-label">${e.source.id || e.source}</span>
-                        ${e.text ? `<div class="citation-text">${truncate(e.text, 200)}</div>` : ''}
-                    </div>`;
-                });
-            }
-
-            if (!outEdges.length && !inEdges.length) {
-                html = '<p style="padding: 0 20px; color: #999;">No citations recorded for this resolution.</p>';
-            }
-
-            citationsDiv.innerHTML = html;
-            sidebar.classList.add('open');
-        }
-
-        function truncate(str, len) {
-            if (str.length <= len) return str;
-            return str.substring(0, len) + '…';
-        }
-
-        // Controls
-        document.getElementById('size-metric').addEventListener('change', () => {
-            node.select('circle').transition().duration(400).attr('r', d => getRadius(d));
-        });
-
-        document.getElementById('node-scale').addEventListener('input', (e) => {
-            document.getElementById('node-scale-val').textContent = parseFloat(e.target.value).toFixed(1);
-            node.select('circle').attr('r', d => getRadius(d));
-        });
-
-        document.getElementById('link-opacity').addEventListener('input', (e) => {
-            link.style('stroke-opacity', parseFloat(e.target.value));
-        });
-
-    }
 
     // Theme
     const icons = { light: '◑', dark: '◐' };

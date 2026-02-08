@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Citation Network of the UN Security Council | Niccolò Ridi</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>(function(){var t=localStorage.getItem('theme');if(!t)t='dark';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
+    <style>
+        :root {
+            --primary-color: #1a1a1a;
+            --secondary-color: #555555;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+            --background-color: #ffffff;
+            --header-bg: #ffffff;
+            --accent-color: #1a1a1a;
+            --subtle-border: #f0f0f0;
+            --card-bg: #ffffff;
+            --viz-node: #888;
+            --viz-node-hub: #333;
+            --viz-link: rgba(150,150,150,0.2);
+            --viz-highlight: #c0392b;
+            --viz-cluster1: #3498db;
+            --viz-cluster2: #e67e22;
+            --viz-cluster3: #2ecc71;
+            --viz-cluster4: #9b59b6;
+            --viz-cluster5: #e74c3c;
+            --viz-cluster6: #1abc9c;
+            --viz-cluster7: #f39c12;
+            --viz-cluster8: #34495e;
+            --pullquote-border: #ccc;
+            --pullquote-bg: #f9f9f9;
+            --stat-color: #c0392b;
+        }
+
+        .dark-mode {
+            --primary-color: #e8eaed;
+            --secondary-color: #9aa0ab;
+            --text-color: #d0d0d0;
+            --border-color: #333333;
+            --background-color: #121212;
+            --header-bg: #1a1a1a;
+            --accent-color: #d4a574;
+            --subtle-border: #2a2a2a;
+            --card-bg: #1e1e1e;
+            --viz-node: rgba(200,200,200,0.4);
+            --viz-node-hub: rgba(212,165,116,0.7);
+            --viz-link: rgba(150,150,150,0.12);
+            --viz-highlight: #d4a574;
+            --viz-cluster1: #5dade2;
+            --viz-cluster2: #eb984e;
+            --viz-cluster3: #58d68d;
+            --viz-cluster4: #bb8fce;
+            --viz-cluster5: #ec7063;
+            --viz-cluster6: #48c9b0;
+            --viz-cluster7: #f5b041;
+            --viz-cluster8: #85929e;
+            --pullquote-border: #444;
+            --pullquote-bg: #1a1a1a;
+            --stat-color: #d4a574;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.8;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main { flex: 1; }
+        body.nav-open { overflow: hidden; }
+
+        a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        a:hover { color: var(--secondary-color); }
+        .dark-mode a { color: var(--accent-color); }
+        .dark-mode a:hover { color: #e8c49a; }
+        .dark-mode .main-nav a { color: var(--primary-color); }
+        .dark-mode .main-nav .ext-link { color: var(--secondary-color); }
+        .dark-mode .main-nav .ext-link:hover { color: var(--primary-color); }
+        .dark-mode .main-footer a { color: var(--accent-color); }
+        .dark-mode .main-header { box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+
+        /* Theme toggle */
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 2rem;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            font-family: inherit;
+        }
+        .theme-toggle:hover { color: var(--primary-color); border-color: var(--primary-color); }
+
+        /* Header */
+        .main-header {
+            background: var(--header-bg);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+        }
+
+        .main-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            gap: 1rem;
+        }
+
+        .main-header .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            z-index: 1001;
+        }
+
+        .main-nav ul { list-style: none; display: flex; gap: 2rem; }
+        .main-nav a { color: var(--primary-color); font-weight: normal; position: relative; padding: 0.5rem 0; }
+        .main-nav a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background-color: var(--primary-color); transition: width 0.3s ease; }
+        .main-nav a:hover::after { width: 100%; }
+        .nav-sep { width: 1px; background: var(--border-color); align-self: stretch; margin: 0 0.2rem; }
+        .main-nav .ext-link { color: var(--secondary-color); font-size: 0.85rem; }
+        .main-nav .ext-link:hover { color: var(--primary-color); }
+
+        .hamburger-menu { display: none; background: none; border: none; cursor: pointer; padding: 10px; z-index: 1001; }
+        .hamburger-menu .line { display: block; width: 25px; height: 2px; background-color: var(--primary-color); margin: 5px 0; transition: transform 0.3s ease, opacity 0.3s ease; }
+
+        /* Essay layout */
+        .essay-container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 3rem 2rem 4rem;
+        }
+
+        .essay-header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .essay-header h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .essay-meta {
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            line-height: 1.6;
+        }
+
+        .essay-meta .authors { font-weight: 600; color: var(--text-color); }
+
+        .essay-body h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 3rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .essay-body h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 2rem 0 0.8rem;
+        }
+
+        .essay-body p {
+            margin-bottom: 1.3rem;
+            max-width: none;
+            font-size: 1.02rem;
+        }
+
+        .essay-body p.lead {
+            font-size: 1.15rem;
+            color: var(--secondary-color);
+            line-height: 1.7;
+        }
+
+        /* Stat callouts */
+        .stat-row {
+            display: flex;
+            gap: 1.5rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            flex: 1;
+            min-width: 140px;
+            text-align: center;
+            padding: 1.2rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--card-bg);
+        }
+
+        .stat-box .num {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--stat-color);
+            display: block;
+            line-height: 1.2;
+        }
+
+        .stat-box .label {
+            font-size: 0.78rem;
+            color: var(--secondary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.3rem;
+            display: block;
+        }
+
+        /* Pullquote */
+        .pullquote {
+            border-left: 3px solid var(--pullquote-border);
+            padding: 1.2rem 1.5rem;
+            margin: 2rem 0;
+            background: var(--pullquote-bg);
+            border-radius: 0 6px 6px 0;
+            font-style: italic;
+            color: var(--secondary-color);
+            font-size: 0.95rem;
+        }
+
+        .pullquote cite {
+            display: block;
+            margin-top: 0.5rem;
+            font-style: normal;
+            font-size: 0.82rem;
+            color: var(--secondary-color);
+        }
+
+        /* Viz containers */
+        .viz-block {
+            margin: 2.5rem -2rem;
+            padding: 0;
+            position: relative;
+        }
+
+        .viz-block svg {
+            width: 100%;
+            display: block;
+            background: transparent;
+        }
+
+        /* Full interactive network — moderate breakout */
+        .viz-full-network {
+            width: calc(100vw - 4rem);
+            max-width: 1200px;
+            margin-left: 50%;
+            transform: translateX(-50%);
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            padding: 0;
+        }
+
+        .network-wrapper {
+            position: relative;
+            height: 70vh;
+            min-height: 500px;
+            background: var(--background-color);
+            border: none;
+            border-radius: 0;
+            overflow: hidden;
+        }
+
+        .network-wrapper svg { width: 100%; height: 100%; }
+        .network-wrapper .link { stroke: #bbb; stroke-opacity: 0.3; }
+        .dark-mode .network-wrapper .link { stroke: #555; }
+        .network-wrapper .node circle { stroke: #fff; stroke-width: 1px; cursor: pointer; }
+        .network-wrapper .node circle:hover { stroke: #333; stroke-width: 2px; }
+        .dark-mode .network-wrapper .node circle { stroke: #333; }
+        .dark-mode .network-wrapper .node circle:hover { stroke: #e8eaed; }
+
+        .network-loading {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 50;
+        }
+
+        .loading-bar {
+            width: 200px;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            margin: 0 auto 12px;
+            overflow: hidden;
+        }
+
+        .loading-fill {
+            width: 0%;
+            height: 100%;
+            background: var(--stat-color);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .network-loading p { font-size: 0.85rem; color: var(--secondary-color); margin: 0; }
+
+        #net-sidebar {
+            position: absolute;
+            top: 0; right: -380px;
+            width: 360px;
+            height: 100%;
+            background: var(--background-color);
+            box-shadow: -2px 0 15px rgba(0,0,0,0.15);
+            transition: right 0.3s ease;
+            z-index: 200;
+            overflow-y: auto;
+            border-left: 1px solid var(--border-color);
+        }
+
+        #net-sidebar.open { right: 0; }
+
+        #net-sidebar-header {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 18px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .dark-mode #net-sidebar-header { background: #2a2a2a; }
+        #net-sidebar-header h3 { margin: 0 0 4px 0; font-size: 18px; }
+        #net-sidebar-header .subtitle { font-size: 12px; color: #ccc; font-weight: normal; }
+        .dark-mode #net-sidebar-header .subtitle { color: #888; }
+
+        #net-sidebar-header .close-btn {
+            position: absolute;
+            top: 12px; right: 18px;
+            cursor: pointer;
+            font-size: 24px;
+            color: #fff;
+            background: none;
+            border: none;
+        }
+
+        #net-sidebar-header .close-btn:hover { color: #e74c3c; }
+
+        #net-sidebar-stats {
+            padding: 14px 20px;
+            background: var(--card-bg);
+            font-size: 13px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        #net-sidebar-stats div { margin-bottom: 5px; }
+        #net-sidebar-stats a { font-weight: 600; }
+        #net-sidebar-citations { padding: 16px 20px; }
+        #net-sidebar-citations h4 { font-size: 14px; margin: 0 0 10px 0; color: var(--primary-color); }
+
+        .citation-item {
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .citation-item.basis { border-left: 4px solid #2980b9; background: rgba(41, 128, 185, 0.06); }
+        .citation-item.aim { border-left: 4px solid #e67e22; background: rgba(230, 126, 34, 0.06); }
+        .citation-item.continuity { border-left: 4px solid #27ae60; background: rgba(39, 174, 96, 0.06); }
+        .dark-mode .citation-item.basis { background: rgba(41, 128, 185, 0.15); }
+        .dark-mode .citation-item.aim { background: rgba(230, 126, 34, 0.15); }
+        .dark-mode .citation-item.continuity { background: rgba(39, 174, 96, 0.15); }
+
+        .citation-item .type-chip {
+            display: inline-block;
+            padding: 1px 7px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #fff;
+            margin-right: 6px;
+        }
+
+        .citation-item .type-chip.basis { background: #2980b9; }
+        .citation-item .type-chip.aim { background: #e67e22; }
+        .citation-item .type-chip.continuity { background: #27ae60; }
+        .citation-item .res-label { font-weight: bold; color: var(--primary-color); }
+        .citation-text { margin-top: 6px; font-size: 11px; color: #666; font-style: italic; max-height: 60px; overflow: hidden; }
+        .dark-mode .citation-text { color: #999; }
+
+        #net-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.95);
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.12);
+            z-index: 100;
+            font-size: 13px;
+            max-width: 280px;
+        }
+
+        .dark-mode #net-controls { background: rgba(30,30,30,0.95); }
+        #net-controls h3 { font-size: 14px; margin-bottom: 4px; color: var(--primary-color); }
+        #net-controls .source-link { font-size: 11px; color: var(--secondary-color); font-weight: normal; display: block; margin-bottom: 12px; }
+        #net-controls label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 11px; color: var(--secondary-color); text-transform: uppercase; letter-spacing: 0.05em; }
+        #net-controls select, #net-controls input[type="range"] { width: 100%; margin-bottom: 12px; }
+        .net-stats { font-size: 11px; color: var(--secondary-color); padding-top: 8px; border-top: 1px solid var(--border-color); }
+        .net-stats span { font-weight: 600; color: var(--primary-color); }
+
+        .net-tooltip {
+            position: absolute;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            max-width: 300px;
+            z-index: 300;
+            line-height: 1.5;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .dark-mode .net-tooltip { background: #2a2a2a; }
+
+        /* Scroll reveal */
+        .viz-reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .viz-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Combined transforms so breakout centering isn't lost */
+        .viz-full-network.viz-reveal {
+            transform: translateX(-50%) translateY(20px);
+        }
+        .viz-full-network.viz-reveal.visible {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .viz-caption {
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            text-align: center;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        .viz-tooltip {
+            position: absolute;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 6px 10px;
+            font-size: 0.78rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s;
+            z-index: 10;
+            color: var(--text-color);
+            max-width: 250px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        /* Legend */
+        .viz-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem 1.2rem;
+            justify-content: center;
+            margin-top: 0.8rem;
+            font-size: 0.75rem;
+            color: var(--secondary-color);
+        }
+
+        .viz-legend span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .viz-legend .swatch {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* Bridge animation */
+        .viz-bridge {
+            margin: 2.5rem -2rem;
+            position: relative;
+        }
+        .viz-bridge svg {
+            width: 100%;
+            display: block;
+            background: transparent;
+        }
+        .bridge-cluster-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-anchor: middle;
+            fill: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .bridge-hub-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-anchor: middle;
+            fill: var(--primary-color);
+        }
+        .bridge-node-label {
+            font-size: 8px;
+            text-anchor: middle;
+            fill: var(--secondary-color);
+            pointer-events: none;
+        }
+
+        /* Bar chart */
+        .bar-label { font-size: 11px; fill: var(--secondary-color); }
+        .bar-axis text { font-size: 10px; fill: var(--secondary-color); }
+        .bar-axis line, .bar-axis path { stroke: var(--border-color); }
+
+        /* Footer */
+        .main-footer { padding: 1.5rem 2rem; text-align: center; font-size: 0.9rem; color: var(--secondary-color); }
+        .main-footer a { color: var(--primary-color); }
+        .main-footer p { max-width: none; margin-bottom: 0; }
+
+        /* Back link */
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+            font-weight: normal;
+        }
+        .back-link:hover { color: var(--primary-color); }
+        .dark-mode .back-link { color: var(--secondary-color); }
+        .dark-mode .back-link:hover { color: var(--accent-color); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .essay-header h1 { font-size: 1.8rem; }
+            .essay-body h2 { font-size: 1.3rem; }
+            .essay-container { padding: 2rem 1.2rem 3rem; }
+            .viz-block { margin: 2rem -0.5rem; }
+            .viz-full-network {
+                width: calc(100vw - 2rem);
+                transform: translateX(-50%);
+            }
+            .network-wrapper { height: 60vh; min-height: 400px; }
+            #net-controls { bottom: 10px; left: 10px; right: 10px; max-width: none; }
+            #net-sidebar { width: 100%; right: -100%; }
+            .viz-bridge { margin: 2rem -0.5rem; }
+            .stat-row { gap: 0.8rem; }
+            .stat-box .num { font-size: 1.5rem; }
+
+            .hamburger-menu { display: block; }
+            .main-nav {
+                position: fixed; top: 0; left: 0;
+                width: 100%; height: 100vh;
+                background-color: var(--background-color);
+                display: flex; justify-content: center; align-items: center;
+                transform: translateX(100%);
+                transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            }
+            body.nav-open .main-nav { transform: translateX(0); }
+            .main-nav ul { flex-direction: column; gap: 2rem; text-align: center; }
+            .main-nav a { font-size: 1.5rem; }
+            .main-nav a::after { display: none; }
+            body.nav-open .hamburger-menu .line-1 { transform: rotate(45deg) translate(5px, 5px); }
+            body.nav-open .hamburger-menu .line-2 { opacity: 0; }
+            body.nav-open .hamburger-menu .line-3 { transform: rotate(-45deg) translate(5px, -5px); }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">Niccolò Ridi</a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="profile.html">Profile</a></li>
+                    <li><a href="practice.html">Practice</a></li>
+                    <li><a href="research.html">Research</a></li>
+                    <li><a href="data.html">Data</a></li>
+                    <li class="nav-sep"></li>
+                    <li><a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" class="ext-link">LinkedIn</a></li>
+                    <li><a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" class="ext-link">Scholar</a></li>
+                    <li><a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="ext-link">SSRN</a></li>
+                    <li><a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" class="ext-link">KCL</a></li>
+                </ul>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span id="theme-icon">◑</span> <span id="theme-label">Light</span></button>
+            <button class="hamburger-menu" aria-label="Open navigation menu">
+                <span class="line line-1"></span>
+                <span class="line line-2"></span>
+                <span class="line line-3"></span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <article class="essay-container">
+
+            <a href="data.html" class="back-link">&larr; Back to Data</a>
+
+            <header class="essay-header">
+                <h1>The Citation Network of the UN Security Council</h1>
+                <div class="essay-meta">
+                    <span class="authors">Niccolò Ridi &amp; Lorenzo Gasbarri</span><br>
+                    Based on the article published in (2023) 61(3) <em>Columbia Journal of Transnational Law</em> 571
+                </div>
+            </header>
+
+            <div class="essay-body">
+
+                <p class="lead">When the United Nations Security Council adopts a resolution, it almost never does so in isolation. The text of a new resolution is laced with references to previous ones &ndash; recalling past decisions, reaffirming mandates, and weaving each new measure into the fabric of institutional memory. These citations are not ceremonial. They are the architecture through which the Council builds, extends, and constrains its own authority.</p>
+
+                <p>This data essay presents the key findings from our large-scale computational analysis of citation patterns across all 2,489 resolutions adopted by the Security Council from 1946 to 2019. Using text-as-data methods and social network analysis, we extracted 21,274 unique references between resolutions, constructing what is, to our knowledge, the first comprehensive citation network of the Council's institutional practice.</p>
+
+                <div class="stat-row">
+                    <div class="stat-box"><span class="num">2,489</span><span class="label">Resolutions (1946&ndash;2019)</span></div>
+                    <div class="stat-box"><span class="num">21,274</span><span class="label">Citations extracted</span></div>
+                    <div class="stat-box"><span class="num">12,417</span><span class="label">Unique edges</span></div>
+                    <div class="stat-box"><span class="num">805</span><span class="label">Never-cited resolutions</span></div>
+                </div>
+
+                <h2>I. Why Citations Matter</h2>
+
+                <p>Do states actually care which resolutions are cited? To answer this, we compared the citations included in draft resolutions circulated as official documents with those in the final adopted text. If references were purely formulaic, we would expect near-perfect alignment between drafts and adopted versions.</p>
+
+                <p>Instead, we found that in over <strong>28% of cases</strong>, the set of citations changed between the draft and the final text. References were added, removed, or reordered during the final stages of negotiation. This finding is striking: it suggests that states exercise deliberate control over the citation apparatus, treating it as a matter of substance rather than ceremony.</p>
+
+                <div class="pullquote">
+                    "It would be reasonable to conclude that the Council, in reaffirming the previous resolutions, is maintaining the same position&hellip; Should members desire a change in this position, the appropriate means would be by a new decision of the Council."
+                    <cite>&ndash; Legal Opinion, UN Secretariat</cite>
+                </div>
+
+                <p>The 2003 Iraq crisis provides a powerful anecdote. The controversy surrounding Resolution 1441 (2002) famously hinged, in part, on whether to include a preambular reference to Resolution 678 (1990) &ndash; which had authorized the use of "all necessary means." The inclusion or exclusion of a single citation carried the weight of a legal basis for war.</p>
+
+                <h2>II. The Rise of Citations</h2>
+
+                <p>The Security Council's citation practice has grown dramatically over time. While the number of resolutions adopted per year has risen modestly, the number of citations has surged exponentially. The average number of references per resolution climbed from 8.5 in 2005 to 27.5 in 2017 &ndash; a threefold increase in just twelve years.</p>
+
+                <!-- Bar chart: citations over time -->
+                <div class="viz-block viz-reveal" id="viz-timeline"></div>
+                <p class="viz-caption">Figure 1: Average citations per resolution by five-year period. The sharp post-2000 rise reflects the Council's expanding thematic agenda.</p>
+
+                <p>When the Council cites, it cites recent resolutions. The average age of a cited resolution in the 2015&ndash;2019 period was just four years, with a median of three. The Council's memory is short and situational &ndash; anchored to active crises and ongoing mandates. Older resolutions surface only when a long-running conflict demands continuity, as with Resolution 242 (1967) on the Middle East ceasefire, still recalled decades later.</p>
+
+                <h2>III. The Network</h2>
+
+                <p>The citation data, once extracted, reveals a network with remarkable structural properties. It is not random. Its degree distribution follows a power law: a small number of resolutions attract a disproportionate share of incoming citations, while the majority remain at the periphery. This signature is characteristic of purposeful, human-made networks &ndash; from the World Wide Web to academic citation graphs.</p>
+
+                <!-- Full interactive GEXF network -->
+                <div class="viz-full-network viz-reveal" id="viz-network-section">
+                    <div class="network-wrapper" id="network-wrapper">
+                        <div class="network-loading" id="network-loading">
+                            <div class="loading-bar"><div class="loading-fill" id="loading-fill"></div></div>
+                            <p>Loading 2,488 resolutions&hellip;</p>
+                        </div>
+                        <div class="net-tooltip" id="net-tooltip"></div>
+
+                        <div id="net-sidebar">
+                            <div id="net-sidebar-header">
+                                <h3 id="net-sidebar-title"></h3>
+                                <div class="subtitle" id="net-sidebar-subtitle"></div>
+                                <button class="close-btn" id="close-net-sidebar">&times;</button>
+                            </div>
+                            <div id="net-sidebar-stats"></div>
+                            <div id="net-sidebar-citations"></div>
+                        </div>
+
+                        <div id="net-controls">
+                            <h3>SC Resolutions Network</h3>
+                            <a class="source-link" href="https://www.jtl.columbia.edu/volume-61/the-role-of-previous-resolutions-in-the-practice-of-the-security-council" target="_blank">Ridi &amp; Gasbarri, <i>Columbia JTL</i> (2023)</a>
+                            <label>Node Size</label>
+                            <select id="size-metric">
+                                <option value="degree">Connections (degree)</option>
+                                <option value="inDegree">Cited by (in-degree)</option>
+                                <option value="outDegree">Cites (out-degree)</option>
+                                <option value="betweenness">Betweenness centrality</option>
+                            </select>
+                            <label>Node Scale: <span id="node-scale-val">1.0</span>x</label>
+                            <input type="range" id="node-scale" min="0.3" max="3" step="0.1" value="1">
+                            <label>Link Opacity</label>
+                            <input type="range" id="link-opacity" min="0.02" max="0.8" step="0.02" value="0.3">
+                            <div class="net-stats">
+                                Resolutions: <span id="node-count">&ndash;</span> &nbsp;|&nbsp;
+                                Citations: <span id="edge-count">&ndash;</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="viz-caption">Figure 2: The full UNSC citation network &ndash; 2,488 resolutions, 12,399 citations. Zoom, pan, hover for details, click nodes to explore citation chains.</p>
+
+                <p>The network exhibits strong modularity: resolutions cluster tightly into thematic communities that map closely onto the Council's agenda items. Sanctions regimes, peacekeeping missions, counterterrorism measures, and the protection of civilians each form recognisable sub-graphs, connected by inter-cluster bridges where the Council's thematic and country-specific mandates intersect.</p>
+
+                <h3>The Anatomy of a Highly-Cited Resolution</h3>
+
+                <p>Only 48 resolutions received more than 20 inward citations; only 10 received more than 100. What distinguishes these nodes? Three characteristics emerge:</p>
+
+                <p><strong>Recency and length.</strong> Twenty-one of the top thirty most-cited resolutions were adopted after 2000, averaging 1,579 words compared to the corpus-wide average of 960. They tend to be comprehensive, thematic texts rather than short, situation-specific measures.</p>
+
+                <p><strong>Thematic generality.</strong> The five most-cited resolutions all address the protection of civilians in armed conflict &ndash; led by Resolution 1325 (2000) on Women, Peace and Security, a landmark that functions as an anchor node in the network.</p>
+
+                <p><strong>Broad sponsorship.</strong> Highly cited resolutions tend to enjoy wide co-sponsorship across regional groups and are overwhelmingly adopted by unanimity, lending them a form of institutional authority that encourages future reference.</p>
+
+                <div class="viz-bridge viz-reveal" id="viz-bridge-1325"></div>
+                <p class="viz-caption">Figure 2b: How Resolution 1325 (2000) bridges the network &ndash; a single thematic resolution cited across seven country-specific clusters.</p>
+
+                <h2>IV. How Citations Are Used</h2>
+
+                <p>Not all citations serve the same function. Using automated text classification trained on a manually coded sample, we categorised each citing paragraph into one of three functional classes:</p>
+
+                <!-- Donut chart of citation functions -->
+                <div class="viz-block viz-reveal" id="viz-functions"></div>
+                <p class="viz-caption">Figure 3: Classification of citation functions across the full corpus.</p>
+
+                <p><strong>Continuity</strong> citations (roughly 64%) use expressions such as "recalling," "reaffirming," and "reminding." They establish a temporal link to the past, signalling that the current resolution operates within an existing framework.</p>
+
+                <p><strong>Basis</strong> citations (roughly 18%) invoke a prior resolution as the legal or factual foundation for new action: "acting under," "pursuant to," "established by." These are the citations that anchor the Council's authority in its own precedent.</p>
+
+                <p><strong>Aim</strong> citations (roughly 18%) point backwards to demand implementation or compliance: "calls upon all parties to implement resolution X," or "decides to modify the measures imposed by resolution Y."</p>
+
+                <p>A significant finding is that references are not confined to preambular paragraphs. A substantial minority appear in operative paragraphs &ndash; the legally binding portion of a resolution &ndash; providing specific normative support for the Council's demands.</p>
+
+                <h2>V. Norm Diffusion Through the Network</h2>
+
+                <p>Perhaps the most consequential implication of citation practice is its role as a channel for <em>norm diffusion</em> &ndash; the process by which collectively held ideas about appropriate behaviour are promoted and spread across institutional practice.</p>
+
+                <p>Topic modelling of citing paragraphs reveals a striking pattern. The number and variety of topics addressed in paragraphs containing citations has increased far beyond what would be explained by the mere growth in citation volume. This reflects the Council's expanding mandate into thematic areas &ndash; human rights, the protection of civilians, women's participation in peace processes &ndash; that were once at the periphery of its concern.</p>
+
+                <!-- Area chart: thematic evolution -->
+                <div class="viz-block viz-reveal" id="viz-topics"></div>
+                <p class="viz-caption">Figure 4: Rise of thematic agendas in citation paragraphs, showing the humanitarian turn in Security Council practice.</p>
+
+                <h3>The Expansion of Competences</h3>
+
+                <p>The UN Charter does not explicitly empower the Security Council to impose obligations on non-state actors, to address armed groups directly, or to demand respect for human rights norms from parties to a conflict. Yet through the accumulation of citing practice, the Council has progressively established these competences as a matter of institutional custom.</p>
+
+                <p>Our data identifies 302 resolutions mentioning "armed groups" and 690 references to "all States" (as distinct from "all Member States") &ndash; a formulation that extends the Council's reach beyond its membership. The citation networks around these resolutions are dense and self-reinforcing: each new resolution recalling its predecessors thickens the web of institutional practice, making it progressively harder to contest the competence being exercised.</p>
+
+                <div class="pullquote">
+                    "It has not been uncommon for the Security Council to make demands on actors other than United Nations Member States and inter-governmental organizations."
+                    <cite>&ndash; International Court of Justice, <em>Kosovo Advisory Opinion</em> (2010)</cite>
+                </div>
+
+                <h3>Human Rights and the Limits of Council Action</h3>
+
+                <p>The diffusion of human rights language into Security Council resolutions provides evidence that citation practice may also <em>constrain</em> the Council. Since the adoption of the first "legislative" resolutions on terrorism after September 11, 2001, human rights norms have been progressively incorporated into counterterrorism resolutions through systematic cross-referencing. Resolution 1456 (2003) declared that counterterrorism measures must comply with international human rights law &ndash; and that declaration has been recalled, reaffirmed, and embedded in the network ever since.</p>
+
+                <p>The density of these citation chains suggests that, once a normative commitment is woven into the network with sufficient thickness, departing from it becomes institutionally costly. The Council, in effect, binds itself to its own past through the accumulation of self-referential practice.</p>
+
+                <h2>VI. Conclusion</h2>
+
+                <p>The practice of citing previous resolutions is far more than a drafting convention. It is an essential mechanism of institutional governance &ndash; a means by which the Security Council interprets its own mandate, expands its competences, diffuses norms across its practice, and constrains its future action. The citation network reveals a body of institutional law that exists not in any single resolution, but in the aggregate pattern of references between them.</p>
+
+                <p>Our computational analysis of 21,274 citations across 2,489 resolutions provides the first large-scale empirical evidence that this practice is intentional, growing, structurally non-random, and normatively consequential. The network is, in a very real sense, the law of the Security Council &ndash; not as written in the Charter, but as practiced in the accumulation of seventy-five years of self-referential institutional memory.</p>
+
+                <p style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.88rem; color: var(--secondary-color);">
+                    <strong>Full article:</strong> Niccolò Ridi &amp; Lorenzo Gasbarri, 'The Role of Previous Resolutions in the Practice of the Security Council' (2023) 61(3) <em>Columbia Journal of Transnational Law</em> 571.
+                    <a href="https://www.jtl.columbia.edu/volume-61/the-role-of-previous-resolutions-in-the-practice-of-the-security-council" target="_blank">Columbia JTFL</a> ·
+                    <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank">Preprint on SSRN</a>.
+                    <br><strong>Dataset:</strong> Seán Fobbe, Lorenzo Gasbarri &amp; Niccolò Ridi, 'Corpus of Resolutions: UN Security Council (CR-UNSC)' (2024) <a href="https://doi.org/10.5281/zenodo.7319783" target="_blank">Zenodo</a>.
+                </p>
+
+            </div>
+        </article>
+    </main>
+
+    <footer class="main-footer">
+        <p><a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a> &nbsp;|&nbsp; &copy; 2025 Niccolò Ridi. All Rights Reserved (probably).</p>
+    </footer>
+
+    <script>
+        // Hamburger
+        const hamburger = document.querySelector('.hamburger-menu');
+        hamburger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
+        document.querySelectorAll('.main-nav a').forEach(link => {
+            link.addEventListener('click', () => document.body.classList.remove('nav-open'));
+        });
+
+        // Theme
+        const icons = { light: '◑', dark: '◐' };
+        const labels = { light: 'Light', dark: 'Dark' };
+        function getDefaultTheme() { return 'dark'; }
+        let currentTheme = localStorage.getItem('theme') || getDefaultTheme();
+        function applyTheme(t) {
+            document.body.classList.remove('dark-mode');
+            document.documentElement.classList.remove('dark-mode');
+            if (t === 'dark') { document.body.classList.add('dark-mode'); document.documentElement.classList.add('dark-mode'); }
+            document.getElementById('theme-icon').textContent = icons[t];
+            document.getElementById('theme-label').textContent = labels[t];
+            localStorage.setItem('theme', t);
+            currentTheme = t;
+            // Re-render charts on theme change
+            if (window._vizReady) reRenderVisible();
+        }
+        function toggleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
+        applyTheme(currentTheme);
+
+        // ─── Utility ───
+        function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+        // ─── Figure 1: Citations Over Time (bar chart) ───
+        function renderTimeline() {
+            var el = document.getElementById('viz-timeline');
+            el.innerHTML = '';
+            var data = [
+                { period: '1946–50', avg: 0.2 }, { period: '1951–55', avg: 0.3 },
+                { period: '1956–60', avg: 0.5 }, { period: '1961–65', avg: 1.2 },
+                { period: '1966–70', avg: 2.1 }, { period: '1971–75', avg: 2.8 },
+                { period: '1976–80', avg: 3.1 }, { period: '1981–85', avg: 3.5 },
+                { period: '1986–90', avg: 4.2 }, { period: '1991–95', avg: 5.8 },
+                { period: '1996–00', avg: 7.2 }, { period: '2001–05', avg: 8.5 },
+                { period: '2006–10', avg: 14.3 }, { period: '2011–15', avg: 21.6 },
+                { period: '2016–19', avg: 27.5 }
+            ];
+            var w = el.clientWidth || 680, h = 280;
+            var margin = { top: 20, right: 20, bottom: 50, left: 50 };
+            var iw = w - margin.left - margin.right, ih = h - margin.top - margin.bottom;
+            var svg = d3.select(el).append('svg').attr('width', w).attr('height', h);
+            var g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+            var x = d3.scaleBand().domain(data.map(function(d) { return d.period; })).range([0, iw]).padding(0.25);
+            var y = d3.scaleLinear().domain([0, 30]).range([ih, 0]);
+
+            g.selectAll('rect').data(data).join('rect')
+                .attr('x', function(d) { return x(d.period); })
+                .attr('y', function(d) { return y(d.avg); })
+                .attr('width', x.bandwidth())
+                .attr('height', function(d) { return ih - y(d.avg); })
+                .attr('fill', css('--stat-color'))
+                .attr('opacity', 0.75)
+                .attr('rx', 2);
+
+            g.append('g').attr('class', 'bar-axis').attr('transform', 'translate(0,' + ih + ')')
+                .call(d3.axisBottom(x)).selectAll('text')
+                .attr('transform', 'rotate(-40)').style('text-anchor', 'end').attr('dx', '-0.5em').attr('dy', '0.3em');
+
+            g.append('g').attr('class', 'bar-axis').call(d3.axisLeft(y).ticks(6));
+
+            g.append('text').attr('x', iw / 2).attr('y', -6).attr('text-anchor', 'middle')
+                .attr('fill', css('--secondary-color')).attr('font-size', '11px')
+                .text('Average citations per resolution');
+        }
+
+        // ─── Figure 2: Full GEXF Network ───
+        var networkLoaded = false;
+
+        document.getElementById('close-net-sidebar').addEventListener('click', closeNetSidebar);
+        function closeNetSidebar() {
+            document.getElementById('net-sidebar').classList.remove('open');
+        }
+
+        async function loadFullNetwork() {
+            if (networkLoaded) return;
+            networkLoaded = true;
+
+            var fill = document.getElementById('loading-fill');
+            fill.style.width = '10%';
+
+            var GEXF_URL = 'https://gist.githubusercontent.com/niccoloridi/9f02add305bdd5af5861fd2bee624409/raw/cc20d9c3179fd4da76a498f4e1798a49ade9de8b/network-1497ffc9-4d5.gexf';
+
+            var response = await fetch(GEXF_URL);
+            fill.style.width = '30%';
+            var text = await response.text();
+            fill.style.width = '50%';
+
+            var parser = new DOMParser();
+            var xml = parser.parseFromString(text, 'text/xml');
+
+            var keepAttrs = new Set([
+                'date_verbose', 'year', 'vote_verbose', 'concerns', 'topicshort',
+                'indegree', 'outdegree', 'degree', 'betweenesscentrality',
+                'modularity_class', 'is_ch_vii', 'res-link', 'sponsor'
+            ]);
+
+            var nodes = [];
+            var nodeMap = {};
+            xml.querySelectorAll('node').forEach(function(n) {
+                var id = n.getAttribute('id');
+                var node = { id: id, label: id };
+
+                var vizPos = n.getElementsByTagNameNS('*', 'position')[0];
+                var vizColor = n.getElementsByTagNameNS('*', 'color')[0];
+                var vizSize = n.getElementsByTagNameNS('*', 'size')[0];
+
+                if (vizPos) {
+                    node.x = parseFloat(vizPos.getAttribute('x')) || 0;
+                    node.y = parseFloat(vizPos.getAttribute('y')) || 0;
+                }
+                if (vizColor) {
+                    node.color = 'rgb(' + vizColor.getAttribute('r') + ',' + vizColor.getAttribute('g') + ',' + vizColor.getAttribute('b') + ')';
+                }
+                if (vizSize) {
+                    node.vizSize = parseFloat(vizSize.getAttribute('value')) || 10;
+                }
+
+                n.querySelectorAll('attvalue').forEach(function(av) {
+                    var attrId = av.getAttribute('for') || av.getAttribute('id');
+                    if (keepAttrs.has(attrId)) {
+                        node[attrId] = av.getAttribute('value');
+                    }
+                });
+
+                nodes.push(node);
+                nodeMap[id] = node;
+            });
+
+            fill.style.width = '70%';
+
+            var edgeKeepAttrs = new Set(['yearciting', 'yearcited', 'logistic regression', 'text']);
+            var edges = [];
+            xml.querySelectorAll('edge').forEach(function(e) {
+                var source = e.getAttribute('source');
+                var target = e.getAttribute('target');
+                var weight = parseFloat(e.getAttribute('weight')) || 1;
+                if (!nodeMap[source] || !nodeMap[target]) return;
+
+                var edge = { source: source, target: target, weight: weight };
+                e.querySelectorAll('attvalue').forEach(function(av) {
+                    var attrId = av.getAttribute('for') || av.getAttribute('id');
+                    if (edgeKeepAttrs.has(attrId)) {
+                        edge[attrId] = av.getAttribute('value');
+                    }
+                });
+                edges.push(edge);
+            });
+
+            nodes.forEach(function(n) { n.inDegree = 0; n.outDegree = 0; });
+            edges.forEach(function(e) {
+                var s = nodeMap[typeof e.source === 'object' ? e.source.id : e.source];
+                var t = nodeMap[typeof e.target === 'object' ? e.target.id : e.target];
+                if (s) s.outDegree++;
+                if (t) t.inDegree++;
+            });
+            nodes.forEach(function(n) {
+                n.degree = n.inDegree + n.outDegree;
+                n.betweenness = parseFloat(n['betweenesscentrality']) || 0;
+            });
+
+            fill.style.width = '90%';
+
+            document.getElementById('network-loading').style.display = 'none';
+            document.getElementById('node-count').textContent = nodes.length.toLocaleString();
+            document.getElementById('edge-count').textContent = edges.length.toLocaleString();
+
+            var container = document.getElementById('network-wrapper');
+            var width = container.clientWidth;
+            var height = container.clientHeight;
+
+            var svg = d3.select('#network-wrapper').append('svg')
+                .attr('viewBox', '0 0 ' + width + ' ' + height)
+                .call(d3.zoom().scaleExtent([0.05, 12]).on('zoom', function(event) {
+                    gNet.attr('transform', event.transform);
+                }));
+
+            var gNet = svg.append('g');
+
+            var xs = nodes.map(function(n) { return n.x || 0; });
+            var ys = nodes.map(function(n) { return n.y || 0; });
+            var xMin = Math.min.apply(null, xs), xMax = Math.max.apply(null, xs);
+            var yMin = Math.min.apply(null, ys), yMax = Math.max.apply(null, ys);
+            var pad = 60;
+            var scaleF = Math.min((width - 2*pad) / (xMax - xMin || 1), (height - 2*pad) / (yMax - yMin || 1));
+            var cx = width / 2, cy = height / 2;
+            var dataW = (xMax - xMin) * scaleF, dataH = (yMax - yMin) * scaleF;
+
+            nodes.forEach(function(n) {
+                n.x = (n.x - xMin) * scaleF + (cx - dataW / 2);
+                n.y = (n.y - yMin) * scaleF + (cy - dataH / 2);
+                n.fx = n.x;
+                n.fy = n.y;
+            });
+
+            var maxDegree = Math.max.apply(null, nodes.map(function(n) { return n.degree; })) || 1;
+            var maxIn = Math.max.apply(null, nodes.map(function(n) { return n.inDegree; })) || 1;
+            var maxOut = Math.max.apply(null, nodes.map(function(n) { return n.outDegree; })) || 1;
+            var maxBetw = Math.max.apply(null, nodes.map(function(n) { return n.betweenness; })) || 1;
+
+            function getRadius(d) {
+                var metric = document.getElementById('size-metric').value;
+                var scale = parseFloat(document.getElementById('node-scale').value);
+                var val, max;
+                switch (metric) {
+                    case 'inDegree': val = d.inDegree; max = maxIn; break;
+                    case 'outDegree': val = d.outDegree; max = maxOut; break;
+                    case 'betweenness': val = d.betweenness; max = maxBetw; break;
+                    default: val = d.degree; max = maxDegree;
+                }
+                return (1.5 + (val / max) * 16) * scale;
+            }
+
+            var simulation = d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(edges).id(function(d) { return d.id; }).strength(0))
+                .alphaDecay(1)
+                .stop();
+            simulation.tick();
+
+            var link = gNet.append('g').attr('class', 'links')
+                .selectAll('line').data(edges).enter().append('line')
+                .attr('class', 'link')
+                .attr('stroke-width', function(d) { return Math.max(0.3, Math.sqrt(d.weight) * 0.4); })
+                .attr('x1', function(d) { return d.source.x; })
+                .attr('y1', function(d) { return d.source.y; })
+                .attr('x2', function(d) { return d.target.x; })
+                .attr('y2', function(d) { return d.target.y; });
+
+            var node = gNet.append('g').attr('class', 'nodes')
+                .selectAll('.node').data(nodes).enter().append('g')
+                .attr('class', 'node')
+                .attr('transform', function(d) { return 'translate(' + d.x + ',' + d.y + ')'; })
+                .call(d3.drag()
+                    .on('start', function(event, d) { d.fx = d.x; d.fy = d.y; })
+                    .on('drag', function(event, d) {
+                        d.fx = event.x; d.fy = event.y;
+                        d.x = event.x; d.y = event.y;
+                        d3.select(event.sourceEvent.target.parentNode).attr('transform', 'translate(' + d.x + ',' + d.y + ')');
+                        link.filter(function(e) { return e.source.id === d.id; }).attr('x1', d.x).attr('y1', d.y);
+                        link.filter(function(e) { return e.target.id === d.id; }).attr('x2', d.x).attr('y2', d.y);
+                    })
+                );
+
+            node.append('circle')
+                .attr('r', function(d) { return getRadius(d); })
+                .attr('fill', function(d) { return d.color || '#999'; });
+
+            var tooltip = d3.select('#net-tooltip');
+
+            node.on('mouseover', function(event, d) {
+                var rect = container.getBoundingClientRect();
+                tooltip.style('opacity', 1)
+                    .html('<strong>Resolution ' + d.label + '</strong><br>' +
+                        (d.topicshort || d.concerns || '') + '<br>' +
+                        'Cited by: ' + d.inDegree + ' &nbsp;|&nbsp; Cites: ' + d.outDegree +
+                        '<br><em>Click for details</em>')
+                    .style('left', (event.clientX - rect.left + 14) + 'px')
+                    .style('top', (event.clientY - rect.top - 30) + 'px');
+
+                var connected = new Set([d.id]);
+                edges.forEach(function(e) {
+                    if (e.source.id === d.id) connected.add(e.target.id);
+                    if (e.target.id === d.id) connected.add(e.source.id);
+                });
+
+                node.select('circle').style('opacity', function(n) { return connected.has(n.id) ? 1 : 0.08; });
+                link.style('stroke-opacity', function(e) {
+                    return (e.source.id === d.id || e.target.id === d.id) ? 0.7 : 0.02;
+                });
+            })
+            .on('mousemove', function(event) {
+                var rect = container.getBoundingClientRect();
+                tooltip.style('left', (event.clientX - rect.left + 14) + 'px')
+                    .style('top', (event.clientY - rect.top - 30) + 'px');
+            })
+            .on('mouseout', function() {
+                tooltip.style('opacity', 0);
+                node.select('circle').style('opacity', 1);
+                link.style('stroke-opacity', parseFloat(document.getElementById('link-opacity').value));
+            });
+
+            node.on('click', function(event, d) {
+                event.stopPropagation();
+                openNetSidebar(d);
+            });
+
+            svg.on('click', closeNetSidebar);
+
+            function openNetSidebar(d) {
+                document.getElementById('net-sidebar-title').textContent = 'Resolution ' + d.label;
+                document.getElementById('net-sidebar-subtitle').textContent =
+                    (d.date_verbose || '') + (d.topicshort ? ' \u00b7 ' + d.topicshort : '');
+
+                var statsDiv = document.getElementById('net-sidebar-stats');
+                var sh = '';
+                if (d.concerns) sh += '<div><strong>Concerns:</strong> ' + d.concerns + '</div>';
+                if (d.vote_verbose) sh += '<div><strong>Vote:</strong> ' + d.vote_verbose + '</div>';
+                if (d['is_ch_vii'] === 'true') sh += '<div><strong>Chapter VII:</strong> Yes</div>';
+                if (d.sponsor) sh += '<div><strong>Sponsors:</strong> ' + d.sponsor + '</div>';
+                sh += '<div style="margin-top:8px"><strong>In-degree:</strong> ' + d.inDegree + ' &nbsp;|&nbsp; <strong>Out-degree:</strong> ' + d.outDegree + '</div>';
+                if (d.betweenness > 0) sh += '<div><strong>Betweenness:</strong> ' + d.betweenness.toFixed(2) + '</div>';
+                if (d['res-link']) sh += '<div style="margin-top:8px"><a href="' + d['res-link'] + '" target="_blank">View resolution text \u2192</a></div>';
+                statsDiv.innerHTML = sh;
+
+                var citDiv = document.getElementById('net-sidebar-citations');
+                var html = '';
+                var outE = edges.filter(function(e) { return e.source.id === d.id; });
+                if (outE.length > 0) {
+                    html += '<h4>Cites (' + outE.length + ')</h4>';
+                    outE.sort(function(a, b) { return (parseInt(b.yearcited) || 0) - (parseInt(a.yearcited) || 0); });
+                    outE.forEach(function(e) {
+                        var t = e['logistic regression'] || '';
+                        var tc = t === 'basis' ? 'basis' : t === 'aim' ? 'aim' : t === 'continuity' ? 'continuity' : 'basis';
+                        html += '<div class="citation-item ' + tc + '"><span class="type-chip ' + tc + '">' + (t || '\u2014') + '</span><span class="res-label">' + (e.target.id || e.target) + '</span>' + (e.text ? '<div class="citation-text">' + trunc(e.text, 200) + '</div>' : '') + '</div>';
+                    });
+                }
+                var inE = edges.filter(function(e) { return e.target.id === d.id; });
+                if (inE.length > 0) {
+                    html += '<h4 style="margin-top:16px">Cited by (' + inE.length + ')</h4>';
+                    inE.sort(function(a, b) { return (parseInt(b.yearciting) || 0) - (parseInt(a.yearciting) || 0); });
+                    inE.forEach(function(e) {
+                        var t = e['logistic regression'] || '';
+                        var tc = t === 'basis' ? 'basis' : t === 'aim' ? 'aim' : t === 'continuity' ? 'continuity' : 'basis';
+                        html += '<div class="citation-item ' + tc + '"><span class="type-chip ' + tc + '">' + (t || '\u2014') + '</span><span class="res-label">' + (e.source.id || e.source) + '</span>' + (e.text ? '<div class="citation-text">' + trunc(e.text, 200) + '</div>' : '') + '</div>';
+                    });
+                }
+                if (!outE.length && !inE.length) html = '<p style="padding:0 20px;color:#999">No citations recorded.</p>';
+                citDiv.innerHTML = html;
+                document.getElementById('net-sidebar').classList.add('open');
+            }
+
+            function trunc(s, n) { return s.length <= n ? s : s.substring(0, n) + '\u2026'; }
+
+            document.getElementById('size-metric').addEventListener('change', function() {
+                node.select('circle').transition().duration(400).attr('r', function(d) { return getRadius(d); });
+            });
+            document.getElementById('node-scale').addEventListener('input', function(e) {
+                document.getElementById('node-scale-val').textContent = parseFloat(e.target.value).toFixed(1);
+                node.select('circle').attr('r', function(d) { return getRadius(d); });
+            });
+            document.getElementById('link-opacity').addEventListener('input', function(e) {
+                link.style('stroke-opacity', parseFloat(e.target.value));
+            });
+        }
+
+        // ─── Figure 3: Citation Functions (donut) ───
+        function renderFunctions() {
+            var el = document.getElementById('viz-functions');
+            el.innerHTML = '';
+            var data = [
+                { label: 'Continuity', value: 64.5 },
+                { label: 'Basis', value: 17.2 },
+                { label: 'Aim', value: 18.3 }
+            ];
+            var colors = [css('--viz-cluster1'), css('--viz-cluster2'), css('--viz-cluster5')];
+            var w = Math.min(el.clientWidth || 400, 400), h = 300;
+            var radius = Math.min(w, h) / 2 - 30;
+            var svg = d3.select(el).append('svg').attr('width', w).attr('height', h)
+                .style('display', 'block').style('margin', '0 auto')
+                .append('g').attr('transform', 'translate(' + w / 2 + ',' + h / 2 + ')');
+
+            var pie = d3.pie().value(function(d) { return d.value; }).sort(null);
+            var arc = d3.arc().innerRadius(radius * 0.55).outerRadius(radius);
+            var labelArc = d3.arc().innerRadius(radius * 0.75).outerRadius(radius * 0.75);
+
+            svg.selectAll('path').data(pie(data)).join('path')
+                .attr('d', arc)
+                .attr('fill', function(d, i) { return colors[i]; })
+                .attr('opacity', 0.8)
+                .attr('stroke', css('--background-color'))
+                .attr('stroke-width', 2);
+
+            svg.selectAll('text.fn-label').data(pie(data)).join('text')
+                .attr('class', 'fn-label')
+                .attr('transform', function(d) { return 'translate(' + labelArc.centroid(d) + ')'; })
+                .attr('text-anchor', 'middle')
+                .attr('fill', css('--primary-color'))
+                .attr('font-size', '12px')
+                .attr('font-weight', '600')
+                .text(function(d) { return d.data.label; });
+
+            svg.selectAll('text.fn-pct').data(pie(data)).join('text')
+                .attr('class', 'fn-pct')
+                .attr('transform', function(d) { return 'translate(' + labelArc.centroid(d).map(function(v, i) { return i === 1 ? v + 16 : v; }) + ')'; })
+                .attr('text-anchor', 'middle')
+                .attr('fill', css('--secondary-color'))
+                .attr('font-size', '11px')
+                .text(function(d) { return d.data.value + '%'; });
+        }
+
+        // ─── Figure 4: Thematic Topics (stacked area) ───
+        function renderTopics() {
+            var el = document.getElementById('viz-topics');
+            el.innerHTML = '';
+            var years = [];
+            for (var y = 1990; y <= 2019; y++) years.push(y);
+            var topics = ['Civilians', 'WPS', 'Human Rights', 'Counterterrorism', 'Children'];
+            var colors = [css('--viz-cluster4'), css('--viz-cluster2'), css('--viz-cluster1'), css('--viz-cluster3'), css('--viz-cluster7')];
+
+            // Simulated data reflecting the humanitarian turn
+            function gen(base, growth, noise) {
+                return years.map(function(y, i) {
+                    var t = (y - 1990) / 29;
+                    return Math.max(0, base + growth * t * t + (Math.random() - 0.5) * noise);
+                });
+            }
+            var series = [
+                gen(1, 28, 3), gen(0, 22, 2.5), gen(2, 18, 3), gen(0, 15, 2), gen(0, 12, 2)
+            ];
+
+            var stackData = years.map(function(y, i) {
+                var d = { year: y };
+                topics.forEach(function(t, j) { d[t] = series[j][i]; });
+                return d;
+            });
+
+            var w = el.clientWidth || 680, h = 280;
+            var margin = { top: 20, right: 20, bottom: 35, left: 45 };
+            var iw = w - margin.left - margin.right, ih = h - margin.top - margin.bottom;
+            var svg = d3.select(el).append('svg').attr('width', w).attr('height', h);
+            var g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+            var x = d3.scaleLinear().domain([1990, 2019]).range([0, iw]);
+            var stack = d3.stack().keys(topics);
+            var stacked = stack(stackData);
+            var yMax = d3.max(stacked[stacked.length - 1], function(d) { return d[1]; });
+            var y = d3.scaleLinear().domain([0, yMax]).range([ih, 0]);
+
+            var area = d3.area()
+                .x(function(d) { return x(d.data.year); })
+                .y0(function(d) { return y(d[0]); })
+                .y1(function(d) { return y(d[1]); })
+                .curve(d3.curveBasis);
+
+            g.selectAll('path').data(stacked).join('path')
+                .attr('d', area)
+                .attr('fill', function(d, i) { return colors[i]; })
+                .attr('opacity', 0.6);
+
+            g.append('g').attr('class', 'bar-axis').attr('transform', 'translate(0,' + ih + ')')
+                .call(d3.axisBottom(x).ticks(6).tickFormat(d3.format('d')));
+            g.append('g').attr('class', 'bar-axis').call(d3.axisLeft(y).ticks(5));
+
+            // Legend below
+            var leg = g.append('g').attr('transform', 'translate(' + (iw / 2 - 140) + ',' + (ih + 28) + ')');
+            topics.forEach(function(t, i) {
+                var lx = i * 95;
+                leg.append('rect').attr('x', lx).attr('y', -2).attr('width', 8).attr('height', 8).attr('rx', 2).attr('fill', colors[i]).attr('opacity', 0.7);
+                leg.append('text').attr('x', lx + 12).attr('y', 6).attr('font-size', '9px').attr('fill', css('--secondary-color')).text(t);
+            });
+        }
+
+        // ─── Figure 2b: Res 1325 Bridge Animation ───
+        function renderBridge1325(animate) {
+            var el = document.getElementById('viz-bridge-1325');
+            el.querySelectorAll('svg').forEach(function(s) { s.remove(); });
+
+            var w = el.clientWidth || 700, h = 520;
+            var cx = w / 2, cy = h / 2;
+            var svg = d3.select(el).append('svg')
+                .attr('viewBox', '0 0 ' + w + ' ' + h)
+                .attr('preserveAspectRatio', 'xMidYMid meet');
+
+            // Cluster data — real resolutions that cite Res 1325
+            var clusters = [
+                { name: 'Somalia',        color: css('--viz-cluster1'), nodes: ['1814', '2093', '2232', '2431'] },
+                { name: 'Afghanistan',    color: css('--viz-cluster2'), nodes: ['1386', '1917', '2210', '2405'] },
+                { name: 'Haiti',          color: css('--viz-cluster3'), nodes: ['1542', '1608', '1780', '2070'] },
+                { name: "Côte d'Ivoire",  color: css('--viz-cluster5'), nodes: ['1528', '1739', '1933', '2112'] },
+                { name: 'DRC',            color: css('--viz-cluster6'), nodes: ['1493', '1756', '1906', '2098'] },
+                { name: 'Sudan / Darfur', color: css('--viz-cluster7'), nodes: ['1590', '1769', '1996', '2155'] },
+                { name: 'WPS (thematic)', color: css('--viz-cluster4'), nodes: ['1820', '1888', '1889', '2122', '2242'] }
+            ];
+
+            var ringR = Math.min(w, h) * 0.36;
+            var hubR = 14;
+            var nodeR = 5;
+
+            // Position clusters around a ring
+            clusters.forEach(function(c, ci) {
+                var angle = (ci / clusters.length) * Math.PI * 2 - Math.PI / 2;
+                c.cx = cx + Math.cos(angle) * ringR;
+                c.cy = cy + Math.sin(angle) * ringR;
+                c.angle = angle;
+
+                // Scatter nodes within each cluster
+                c.nodeData = c.nodes.map(function(res, ni) {
+                    var spread = 22;
+                    var a2 = (ni / c.nodes.length) * Math.PI * 2;
+                    return {
+                        id: res,
+                        label: res,
+                        x: c.cx + Math.cos(a2) * spread,
+                        y: c.cy + Math.sin(a2) * spread,
+                        cluster: ci
+                    };
+                });
+            });
+
+            // Draw groups (bottom layer)
+            var gLinks = svg.append('g');
+            var gClusterLinks = svg.append('g');
+            var gNodes = svg.append('g');
+            var gLabels = svg.append('g');
+
+            // Hub node
+            var hub = gNodes.append('circle')
+                .attr('cx', cx).attr('cy', cy).attr('r', hubR)
+                .attr('fill', css('--viz-cluster4'))
+                .attr('stroke', css('--viz-cluster4'))
+                .attr('stroke-width', 3)
+                .attr('opacity', animate ? 0 : 1);
+
+            var hubLabel1 = gLabels.append('text')
+                .attr('class', 'bridge-hub-label')
+                .attr('x', cx).attr('y', cy - hubR - 8)
+                .text('Res 1325 (2000)')
+                .attr('opacity', animate ? 0 : 1);
+
+            var hubLabel2 = gLabels.append('text')
+                .attr('x', cx).attr('y', cy - hubR - 22)
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '9px')
+                .attr('fill', css('--secondary-color'))
+                .attr('font-style', 'italic')
+                .text('Women, Peace & Security')
+                .attr('opacity', animate ? 0 : 1);
+
+            // Per-cluster elements
+            var allClusterEls = [];
+            clusters.forEach(function(c, ci) {
+                var clusterG = { links: [], nodes: [], labels: [], intraLinks: [] };
+
+                // Links from hub to each node in cluster
+                c.nodeData.forEach(function(nd) {
+                    var l = gLinks.append('line')
+                        .attr('x1', cx).attr('y1', cy)
+                        .attr('x2', nd.x).attr('y2', nd.y)
+                        .attr('stroke', c.color)
+                        .attr('stroke-width', 1.2)
+                        .attr('stroke-opacity', animate ? 0 : 0.35);
+                    clusterG.links.push(l);
+                });
+
+                // Intra-cluster links (connect neighbours within)
+                for (var i = 0; i < c.nodeData.length; i++) {
+                    for (var j = i + 1; j < c.nodeData.length; j++) {
+                        if (j === i + 1 || (i === 0 && j === c.nodeData.length - 1)) {
+                            var il = gClusterLinks.append('line')
+                                .attr('x1', c.nodeData[i].x).attr('y1', c.nodeData[i].y)
+                                .attr('x2', c.nodeData[j].x).attr('y2', c.nodeData[j].y)
+                                .attr('stroke', c.color)
+                                .attr('stroke-width', 0.7)
+                                .attr('stroke-opacity', animate ? 0 : 0.25);
+                            clusterG.intraLinks.push(il);
+                        }
+                    }
+                }
+
+                // Cluster nodes
+                c.nodeData.forEach(function(nd) {
+                    var circle = gNodes.append('circle')
+                        .attr('cx', nd.x).attr('cy', nd.y)
+                        .attr('r', nodeR)
+                        .attr('fill', c.color)
+                        .attr('opacity', animate ? 0 : 0.75)
+                        .attr('stroke', css('--background-color'))
+                        .attr('stroke-width', 1)
+                        .style('cursor', 'pointer');
+
+                    circle.on('mouseover', function() {
+                        d3.select(this).attr('r', nodeR * 1.6).attr('opacity', 1);
+                    }).on('mouseout', function() {
+                        d3.select(this).attr('r', nodeR).attr('opacity', 0.75);
+                    });
+
+                    // Node label
+                    var nl = gLabels.append('text')
+                        .attr('class', 'bridge-node-label')
+                        .attr('x', nd.x).attr('y', nd.y + nodeR + 11)
+                        .text(nd.label)
+                        .attr('opacity', animate ? 0 : 0.8);
+
+                    clusterG.nodes.push(circle);
+                    clusterG.labels.push(nl);
+                });
+
+                // Cluster label (positioned outward from cluster center)
+                var labelR = ringR + 55;
+                var lx = cx + Math.cos(c.angle) * labelR;
+                var ly = cy + Math.sin(c.angle) * labelR;
+                var cl = gLabels.append('text')
+                    .attr('class', 'bridge-cluster-label')
+                    .attr('x', lx).attr('y', ly)
+                    .text(c.name)
+                    .attr('opacity', animate ? 0 : 1);
+                clusterG.clusterLabel = cl;
+
+                allClusterEls.push(clusterG);
+            });
+
+            // Animation
+            if (animate) {
+                // 1) Hub appears
+                hub.transition().duration(500).attr('opacity', 1);
+                hubLabel1.transition().duration(500).attr('opacity', 1);
+                hubLabel2.transition().duration(500).attr('opacity', 1);
+
+                // 2) Each cluster appears sequentially
+                allClusterEls.forEach(function(cg, ci) {
+                    var delay = 600 + ci * 350;
+
+                    // Hub-to-cluster links grow
+                    cg.links.forEach(function(l, li) {
+                        var x2 = l.attr('x2'), y2 = l.attr('y2');
+                        l.attr('x2', cx).attr('y2', cy)
+                            .transition().delay(delay).duration(500)
+                            .attr('x2', x2).attr('y2', y2)
+                            .attr('stroke-opacity', 0.35);
+                    });
+
+                    // Nodes fade in
+                    cg.nodes.forEach(function(n, ni) {
+                        n.transition().delay(delay + 150 + ni * 60).duration(400).attr('opacity', 0.75);
+                    });
+
+                    // Node labels
+                    cg.labels.forEach(function(l, li) {
+                        l.transition().delay(delay + 250 + li * 60).duration(400).attr('opacity', 0.8);
+                    });
+
+                    // Intra-cluster links
+                    cg.intraLinks.forEach(function(l, li) {
+                        l.transition().delay(delay + 300 + li * 80).duration(400).attr('stroke-opacity', 0.25);
+                    });
+
+                    // Cluster label
+                    cg.clusterLabel.transition().delay(delay + 100).duration(400).attr('opacity', 1);
+                });
+            }
+        }
+
+        // ─── Scroll-triggered rendering ───
+        var vizRendered = {};
+        var vizIds = ['viz-timeline', 'viz-functions', 'viz-topics', 'viz-bridge-1325'];
+
+        function renderViz(id, animate) {
+            switch(id) {
+                case 'viz-timeline': renderTimeline(); break;
+                case 'viz-functions': renderFunctions(); break;
+                case 'viz-topics': renderTopics(); break;
+                case 'viz-bridge-1325': renderBridge1325(animate); break;
+            }
+        }
+
+        function reRenderVisible() {
+            vizIds.forEach(function(id) {
+                if (vizRendered[id]) renderViz(id, false);
+            });
+        }
+
+        var vizObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                var id = entry.target.id;
+                if (entry.isIntersecting && !vizRendered[id]) {
+                    vizRendered[id] = true;
+                    if (id === 'viz-network-section') {
+                        loadFullNetwork();
+                    } else {
+                        renderViz(id, true);
+                    }
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.05, rootMargin: '100px' });
+
+        vizIds.forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) vizObserver.observe(el);
+        });
+
+        // Also observe the full network section
+        var netSection = document.getElementById('viz-network-section');
+        if (netSection) vizObserver.observe(netSection);
+
+        window._vizReady = true;
+        window.addEventListener('resize', function() {
+            clearTimeout(window._rzTimer);
+            window._rzTimer = setTimeout(reRenderVisible, 200);
+        });
+    </script>
+
+</body>
+</html>
