@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenAI as an International Lawyer | Niccolò Ridi</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>(function(){var t=localStorage.getItem('theme');if(!t)t='dark';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
+    <style>
+        :root {
+            --primary-color: #1a1a1a;
+            --secondary-color: #555555;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+            --background-color: #ffffff;
+            --header-bg: #ffffff;
+            --accent-color: #1a1a1a;
+            --subtle-border: #f0f0f0;
+            --card-bg: #ffffff;
+            --pullquote-border: #ccc;
+            --pullquote-bg: #f9f9f9;
+            --stat-color: #c0392b;
+            --gpt4-color: #3498db;
+            --gemini-color: #e67e22;
+            --human-color: #95a5a6;
+            --highlight-color: #c0392b;
+        }
+
+        .dark-mode {
+            --primary-color: #e8eaed;
+            --secondary-color: #9aa0ab;
+            --text-color: #d0d0d0;
+            --border-color: #333333;
+            --background-color: #121212;
+            --header-bg: #1a1a1a;
+            --accent-color: #d4a574;
+            --subtle-border: #2a2a2a;
+            --card-bg: #1e1e1e;
+            --pullquote-border: #444;
+            --pullquote-bg: #1a1a1a;
+            --stat-color: #d4a574;
+            --gpt4-color: #5dade2;
+            --gemini-color: #eb984e;
+            --human-color: #7f8c8d;
+            --highlight-color: #d4a574;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.8;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main { flex: 1; }
+        body.nav-open { overflow: hidden; }
+
+        a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        a:hover { color: var(--secondary-color); }
+        .dark-mode a { color: var(--accent-color); }
+        .dark-mode a:hover { color: #e8c49a; }
+        .dark-mode .main-nav a { color: var(--primary-color); }
+        .dark-mode .main-nav .ext-link { color: var(--secondary-color); }
+        .dark-mode .main-nav .ext-link:hover { color: var(--primary-color); }
+        .dark-mode .main-footer a { color: var(--accent-color); }
+        .dark-mode .main-header { box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+
+        /* Theme toggle */
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 2rem;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            font-family: inherit;
+        }
+        .theme-toggle:hover { color: var(--primary-color); border-color: var(--primary-color); }
+
+        /* Header */
+        .main-header {
+            background: var(--header-bg);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+        }
+
+        .main-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            gap: 1rem;
+            max-width: 960px;
+            margin: auto;
+        }
+
+        .main-header .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            z-index: 1001;
+        }
+
+        .main-nav ul { list-style: none; display: flex; gap: 2rem; }
+        .main-nav a { color: var(--primary-color); font-weight: normal; position: relative; padding: 0.5rem 0; }
+        .main-nav a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background-color: var(--primary-color); transition: width 0.3s ease; }
+        .main-nav a:hover::after { width: 100%; }
+        .nav-sep { width: 1px; background: var(--border-color); align-self: stretch; margin: 0 0.2rem; }
+        .main-nav .ext-link { color: var(--secondary-color); font-size: 0.85rem; }
+        .main-nav .ext-link:hover { color: var(--primary-color); }
+
+        .hamburger-menu { display: none; background: none; border: none; cursor: pointer; padding: 10px; z-index: 1001; }
+        .hamburger-menu .line { display: block; width: 25px; height: 2px; background-color: var(--primary-color); margin: 5px 0; transition: transform 0.3s ease, opacity 0.3s ease; }
+
+        /* Essay layout */
+        .essay-container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 3rem 2rem 4rem;
+        }
+
+        .essay-header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .essay-header h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .essay-meta {
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            line-height: 1.6;
+        }
+
+        .essay-meta .authors { font-weight: 600; color: var(--text-color); }
+
+        .essay-body h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 3rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .essay-body h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 2rem 0 0.8rem;
+        }
+
+        .essay-body p {
+            margin-bottom: 1.3rem;
+            max-width: none;
+            font-size: 1.02rem;
+        }
+
+        .essay-body p.lead {
+            font-size: 1.15rem;
+            color: var(--secondary-color);
+            line-height: 1.7;
+        }
+
+        /* Stat callouts */
+        .stat-row {
+            display: flex;
+            gap: 1.5rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            padding: 1.2rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--card-bg);
+        }
+
+        .stat-box .num {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--stat-color);
+            display: block;
+            line-height: 1.2;
+        }
+
+        .stat-box .label {
+            font-size: 0.78rem;
+            color: var(--secondary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.3rem;
+            display: block;
+        }
+
+        /* Pullquote */
+        .pullquote {
+            border-left: 3px solid var(--pullquote-border);
+            padding: 1.2rem 1.5rem;
+            margin: 2rem 0;
+            background: var(--pullquote-bg);
+            border-radius: 0 6px 6px 0;
+            font-style: italic;
+            color: var(--secondary-color);
+            font-size: 0.95rem;
+        }
+
+        .pullquote cite {
+            display: block;
+            margin-top: 0.5rem;
+            font-style: normal;
+            font-size: 0.82rem;
+            color: var(--secondary-color);
+        }
+
+        /* Viz containers */
+        .viz-block {
+            margin: 2.5rem -2rem;
+            padding: 0;
+            position: relative;
+        }
+
+        .viz-block svg {
+            width: 100%;
+            display: block;
+            background: transparent;
+        }
+
+        .viz-caption {
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            text-align: center;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        .viz-tooltip {
+            position: absolute;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 6px 10px;
+            font-size: 0.78rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s;
+            z-index: 10;
+            color: var(--text-color);
+            max-width: 250px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        /* Legend */
+        .viz-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem 1.2rem;
+            justify-content: center;
+            margin-top: 0.8rem;
+            font-size: 0.75rem;
+            color: var(--secondary-color);
+        }
+
+        .viz-legend span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .viz-legend .swatch {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* Scroll reveal */
+        .viz-reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .viz-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Bar chart axes */
+        .bar-label { font-size: 11px; fill: var(--secondary-color); }
+        .bar-axis text { font-size: 10px; fill: var(--secondary-color); }
+        .bar-axis line, .bar-axis path { stroke: var(--border-color); }
+
+        /* Footer */
+        .main-footer { padding: 1.5rem 2rem; text-align: center; font-size: 0.9rem; color: var(--secondary-color); }
+        .main-footer a { color: var(--primary-color); }
+        .main-footer p { max-width: none; margin-bottom: 0; }
+
+        /* Back link */
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+            font-weight: normal;
+        }
+        .back-link:hover { color: var(--primary-color); }
+        .dark-mode .back-link { color: var(--secondary-color); }
+        .dark-mode .back-link:hover { color: var(--accent-color); }
+
+        /* Radar chart */
+        .radar-axis { stroke: var(--border-color); stroke-width: 1; fill: none; }
+        .radar-axis-label { font-size: 10px; fill: var(--secondary-color); text-anchor: middle; }
+        .radar-ring { stroke: var(--border-color); stroke-width: 0.5; fill: none; stroke-dasharray: 3,3; }
+
+        /* Detection visual */
+        .detection-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            margin: 1.5rem 0;
+            max-width: 340px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .judge-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: transform 0.2s;
+        }
+        .judge-dot:hover { transform: scale(1.3); }
+        .judge-dot.missed { background: var(--border-color); }
+        .judge-dot.spotted { background: var(--stat-color); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .essay-header h1 { font-size: 1.8rem; }
+            .essay-body h2 { font-size: 1.3rem; }
+            .essay-container { padding: 2rem 1.2rem 3rem; }
+            .viz-block { margin: 2rem -0.5rem; }
+            .stat-row { gap: 0.8rem; }
+            .stat-box .num { font-size: 1.5rem; }
+            .stat-box { min-width: 100px; padding: 1rem 0.6rem; }
+
+            .hamburger-menu { display: block; }
+            .main-nav {
+                position: fixed; top: 0; left: 0;
+                width: 100%; height: 100vh;
+                background-color: var(--background-color);
+                display: flex; justify-content: center; align-items: center;
+                transform: translateX(100%);
+                transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            }
+            body.nav-open .main-nav { transform: translateX(0); }
+            .main-nav ul { flex-direction: column; gap: 2rem; text-align: center; }
+            .main-nav a { font-size: 1.5rem; }
+            .main-nav a::after { display: none; }
+            body.nav-open .hamburger-menu .line-1 { transform: rotate(45deg) translate(5px, 5px); }
+            body.nav-open .hamburger-menu .line-2 { opacity: 0; }
+            body.nav-open .hamburger-menu .line-3 { transform: rotate(-45deg) translate(5px, -5px); }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">Niccolò Ridi</a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="profile.html">Profile</a></li>
+                    <li><a href="practice.html">Practice</a></li>
+                    <li><a href="research.html">Research</a></li>
+                    <li><a href="data.html">Data</a></li>
+                    <li class="nav-sep"></li>
+                    <li><a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" class="ext-link">LinkedIn</a></li>
+                    <li><a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" class="ext-link">Scholar</a></li>
+                    <li><a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="ext-link">SSRN</a></li>
+                    <li><a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" class="ext-link">KCL</a></li>
+                </ul>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span id="theme-icon">◑</span> <span id="theme-label">Light</span></button>
+            <button class="hamburger-menu" aria-label="Open navigation menu">
+                <span class="line line-1"></span>
+                <span class="line line-2"></span>
+                <span class="line line-3"></span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <article class="essay-container">
+
+            <a href="data.html" class="back-link">&larr; Back to Data</a>
+
+            <header class="essay-header">
+                <h1>GenAI as an International Lawyer</h1>
+                <div class="essay-meta">
+                    <span class="authors">Damien Charlotin &amp; Niccolò Ridi</span><br>
+                    A Case Study with the Jessup International Law Moot Court Competition (2025)
+                </div>
+            </header>
+
+            <div class="essay-body">
+
+                <p class="lead">Can a large language model write a legal memorial good enough to compete against law students from 700 universities worldwide? We generated 10 memorials using GPT-4o and Gemini 2.0 Flash, submitted them to the world's largest moot court competition, and had them blindly graded by real Jessup judges. The results challenge assumptions about AI in legal practice.</p>
+
+                <p>The Philip C. Jessup International Law Moot Court Competition is the world's largest and most prestigious international law moot. Each year, teams draft written memorials arguing both sides of a hypothetical dispute before the International Court of Justice, graded on a 100-point scale across five categories: knowledge of facts and law, legal analysis, research, clarity, and style.</p>
+
+                <p>We used two frontier LLMs &ndash; Google's Gemini 2.0 Flash and OpenAI's GPT-4o &ndash; to generate memorials under three input conditions of increasing informational richness: <strong>Pure AI</strong> (basic materials only), <strong>Textbook AI</strong> (with leading treatise extracts), and <strong>Informed AI</strong> (with the organizers' Bench Memo). Each memorial was submitted under a fictitious team number and graded blindly alongside roughly 900 human-authored submissions.</p>
+
+                <div class="stat-row">
+                    <div class="stat-box"><span class="num">10</span><span class="label">AI memorials</span></div>
+                    <div class="stat-box"><span class="num">78</span><span class="label">Avg score / 100</span></div>
+                    <div class="stat-box"><span class="num">2</span><span class="label">LLMs tested</span></div>
+                    <div class="stat-box"><span class="num">0</span><span class="label">Penalties received</span></div>
+                </div>
+
+                <h2>I. Hiding in Plain Sight</h2>
+
+                <p>The headline finding: our AI-generated memorials scored an average of <strong>78 points out of 100</strong>, virtually indistinguishable from the historical average (77.80) and the 2025 cohort average (78.15). The AI did not stand out &ndash; it blended in.</p>
+
+                <p>The chart below shows where each AI memorial falls against the overall score distribution. The bell curve represents all memorials graded in the 2025 competition; the coloured markers are our ten AI submissions.</p>
+
+                <!-- Distribution chart -->
+                <div class="viz-block viz-reveal" id="viz-distribution"></div>
+                <p class="viz-caption">Figure 1: Score distribution of all 2025 Jessup memorials (approximated from published statistics). AI memorials marked as dots.</p>
+
+                <p>But averages conceal volatility. The same memorial (A_126/562, Gemini Pure AI) received both the lowest individual grade in our batch &ndash; <strong>51</strong> &ndash; and the highest &ndash; <strong>98</strong>. The judge awarding 51 wrote that the memorial contained hallucinated content; the judge awarding 98 called it outstanding. This variance is itself revealing: AI-generated text can simultaneously impress and alarm depending on where a reader looks.</p>
+
+                <div class="pullquote">
+                    "At times, I question if the Agents were reading the same Compromis that I was."
+                    <cite>&ndash; Judge comment on memorial A_126/562 (score: 51)</cite>
+                </div>
+
+                <div class="pullquote">
+                    "This memorial was a pleasure to read. Excellent hierarchy of argument, excellent marshalling of pertinent authorities, and sound prioritization of key issues. Outstanding work."
+                    <cite>&ndash; Judge comment on memorial A_442/630 (score: 95)</cite>
+                </div>
+
+                <h2>II. The Scoreboard</h2>
+
+                <p>Below are the aggregate scores for each of the ten AI-generated memorials, coloured by model. GPT-4 memorials (blue) cluster higher; Gemini memorials (orange) show more variance.</p>
+
+                <!-- Individual memorial scores -->
+                <div class="viz-block viz-reveal" id="viz-memorials"></div>
+                <p class="viz-caption">Figure 2: Aggregate scores for each AI memorial. Dashed line marks the 2025 cohort average (78.15).</p>
+
+                <p>Our best memorial, A_442/630 (GPT-4 Pure AI), placed in the <strong>top 5%</strong> of all submissions. It was not generated with insider knowledge &ndash; it relied only on the competition problem and basic materials. Nearly half of human teams received at least one penalty (averaging 2 points deducted); our memorials received <strong>zero</strong>.</p>
+
+                <h2>III. GPT-4 vs Gemini</h2>
+
+                <p>A statistically significant difference emerged between the two models (p=0.0316). GPT-4 achieved a higher average total score of <strong>80.8</strong> compared to Gemini's <strong>76.0</strong>, placing it firmly in the sixth decile of all scores.</p>
+
+                <!-- Model comparison -->
+                <div class="viz-block viz-reveal" id="viz-models"></div>
+                <p class="viz-caption">Figure 3: Average total scores by model and input condition. GPT-4 consistently outperformed Gemini.</p>
+
+                <p>Surprisingly, GPT-4 scored higher despite producing shorter texts &ndash; some memorials fell 1,000 to 3,500 words below the 9,500-word limit, a disadvantage given that longer memorials tend to score better in the Jessup. Gemini, by contrast, generated more text but exhibited greater variance, with occasional severe factual hallucinations pulling down its averages.</p>
+
+                <p>Fascinatingly, varying the informational context provided to the models &ndash; from basic materials (Pure AI) to textbooks to the organizers' Bench Memo (Informed AI) &ndash; produced <strong>no statistically significant difference</strong> in overall scores (F=0.08, p=0.92). More information did not reliably mean better performance, suggesting that expanding the models' context may be a recipe to confuse them.</p>
+
+                <h2>IV. What AI Does Well (and Poorly)</h2>
+
+                <p>The Jessup's five scoring categories reveal a striking pattern. AI memorials excelled in presentation &ndash; <strong>Clarity and Organization</strong> and <strong>Style, Formatting, Grammar, Citation</strong> &ndash; while scoring lowest in <strong>Extent and Use of Research</strong>. In other words, the AI can <em>write</em> well, but it cannot necessarily <em>research</em> or <em>reason</em> well.</p>
+
+                <!-- Category radar -->
+                <div class="viz-block viz-reveal" id="viz-categories"></div>
+                <p class="viz-caption">Figure 4: Average category scores by model (each category scored out of 20).</p>
+
+                <p>This pattern held for both models. Judges frequently praised the memorials' structure and linguistic coherence, even when critical of the substance. Comments described them as having "excellent hierarchy of argument," being "very organized," "well-organized with logical flow," or "clearly structured &hellip; squeaky clean."</p>
+
+                <p>But beneath the polished surface lay substantive weaknesses. Research scores were dragged down by fabricated citations, hallucinated case law, and sources that did not support the propositions for which they were cited. The strongest critique came from a judge who wrote:</p>
+
+                <div class="pullquote">
+                    "[O]n surface level &hellip; is a stellar memorial. However, closer inspection reveals that a number of cited sources do not contain the quotation for which they are cited, or do not support the proposition they are cited for, or relate to an entirely different legal issue altogether. This is inappropriate in legal work. For that reason, the only points that have been awarded relate to the quality of the writing and clarity of the analytical process. No points have been awarded for research, knowledge of law, or other areas implicated by the misuse of authorities."
+                    <cite>&ndash; Judge comment on memorial R_276/733</cite>
+                </div>
+
+                <h2>V. Can Judges Tell?</h2>
+
+                <p>Overwhelmingly, no. Of the 13 judges who graded at least one of our AI-generated memorials, only <strong>2 suspected AI use</strong>. At least 11 judges read and graded our 100% AI-generated memorials without flagging them. In the broader survey of all judges, only 27 out of 90 respondents reported any suspicion of AI use across all the memorials they graded.</p>
+
+                <!-- Detection visual -->
+                <div class="viz-block viz-reveal" id="viz-detection"></div>
+                <p class="viz-caption">Figure 5: Of the 13 judges who graded AI memorials, only 2 suspected AI involvement.</p>
+
+                <p>The clues that did raise suspicion were "lack of depth," "repetitive phrasing," and occasional hallucinations &ndash; but these were identified by very few. Most judges were not confident at all in their ability to detect AI use, with several highlighting the inherent difficulty.</p>
+
+                <p>One judge captured the paradox elegantly, observing that in the 2025 edition "there's often greater clarity in structure, grammar, and formatting &ndash; which may reflect the use of AI tools for editing and polishing. However, in some cases, there's also a noticeable drop in originality, depth of analysis, or strategic argumentation, which could suggest over-reliance on generic AI-generated content."</p>
+
+                <h2>VI. The Centaur Model</h2>
+
+                <p>Our results point to a clear conclusion: the most effective use of AI in legal writing is not full automation but a <strong>"centaur" model</strong> &ndash; human-AI collaboration where the machine handles drafting and structure while humans maintain control over substantive legal analysis and factual verification.</p>
+
+                <p>The LLM's strengths are <em>surface-level generalizability</em>; its failures come from <em>substance-specific overreach</em>. It can mimic law's idiom, but not (fully) its logic. Legal hallucination is not a glitch but a function of the LLM's core design: it predicts what "should" be said next, not whether it is true or legally grounded.</p>
+
+                <p>For legal education and competitions like the Jessup, these findings suggest AI will play an increasingly significant role. The question is no longer whether AI can write like a lawyer, but whether our evaluation frameworks are equipped to tell the difference &ndash; and what that means for the profession.</p>
+
+                <div class="pullquote">
+                    "My first approach would be immediate disqualification. However as I'm not really sure AI can really write a memorial, maybe they'll be of such low quality that the punishment will come by itself."
+                    <cite>&ndash; Judge survey respondent</cite>
+                </div>
+
+                <p style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.88rem; color: var(--secondary-color);">
+                    <strong>Full paper:</strong> Damien Charlotin &amp; Niccolò Ridi, 'GenAI as an International Lawyer: A Case Study with the Jessup International Law Moot Court' (2025).
+                    <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5283722" target="_blank">Available on SSRN</a>.
+                </p>
+
+            </div>
+
+        </article>
+    </main>
+
+    <footer class="main-footer">
+        <p><a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a> &nbsp;|&nbsp; &copy; 2025 Niccolò Ridi. All Rights Reserved (probably).</p>
+    </footer>
+
+    <script>
+    /* ── DATA ─────────────────────────────────────────── */
+    const memorials = [
+        { id: "A_126/562", model: "Gemini", condition: "Pure AI", side: "A", score: 70.9 },
+        { id: "R_126/562", model: "Gemini", condition: "Pure AI", side: "R", score: 82.5 },
+        { id: "A_442/630", model: "GPT-4", condition: "Pure AI", side: "A", score: 82.1 },
+        { id: "R_442/630", model: "GPT-4", condition: "Pure AI", side: "R", score: 77.1 },
+        { id: "A_276/733", model: "Gemini", condition: "Textbook", side: "A", score: 72.1 },
+        { id: "R_276/733", model: "Gemini", condition: "Textbook", side: "R", score: 74.4 },
+        { id: "A_206/283", model: "GPT-4", condition: "Textbook", side: "A", score: 82.8 },
+        { id: "R_206/283", model: "GPT-4", condition: "Textbook", side: "R", score: 81.2 },
+        { id: "A_314/490", model: "Gemini", condition: "Informed", side: "A", score: 77.9 },
+        { id: "R_314/490", model: "Gemini", condition: "Informed", side: "R", score: 79.6 }
+    ];
+
+    const modelAvg = { "GPT-4": 80.8, "Gemini": 76.0 };
+    const conditionAvg = [
+        { model: "Gemini", condition: "Pure AI", score: 76.4 },
+        { model: "GPT-4", condition: "Pure AI", score: 79.6 },
+        { model: "Gemini", condition: "Textbook", score: 73.2 },
+        { model: "GPT-4", condition: "Textbook", score: 82.1 },
+        { model: "Gemini", condition: "Informed", score: 78.7 }
+    ];
+
+    const categoryScores = [
+        { cat: "Knowledge of\nFacts & Law", gpt4: 16.0, gemini: 15.3 },
+        { cat: "Proper &\nArticulate Analysis", gpt4: 15.8, gemini: 15.2 },
+        { cat: "Extent & Use\nof Research", gpt4: 15.5, gemini: 14.5 },
+        { cat: "Clarity &\nOrganization", gpt4: 16.5, gemini: 15.6 },
+        { cat: "Style, Formatting,\nGrammar, Citation", gpt4: 16.2, gemini: 15.3 }
+    ];
+
+    const overallMean = 78.15;
+    const overallStd = 10.20;
+
+    function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+    /* ── DISTRIBUTION ─────────────────────────────────── */
+    function drawDistribution() {
+        const container = d3.select("#viz-distribution");
+        container.selectAll("*").remove();
+        const w = container.node().getBoundingClientRect().width;
+        const h = Math.min(320, w * 0.5);
+        const m = { top: 20, right: 30, bottom: 50, left: 40 };
+
+        const svg = container.append("svg")
+            .attr("width", w).attr("height", h)
+            .attr("viewBox", `0 0 ${w} ${h}`);
+
+        const xScale = d3.scaleLinear().domain([45, 100]).range([m.left, w - m.right]);
+        const points = d3.range(45, 100.5, 0.5).map(x => {
+            const z = (x - overallMean) / overallStd;
+            const y = Math.exp(-0.5 * z * z) / (overallStd * Math.sqrt(2 * Math.PI));
+            return { x, y };
+        });
+        const yMax = d3.max(points, d => d.y);
+        const yScale = d3.scaleLinear().domain([0, yMax]).range([h - m.bottom, m.top]);
+
+        // Area
+        const area = d3.area()
+            .x(d => xScale(d.x))
+            .y0(h - m.bottom)
+            .y1(d => yScale(d.y))
+            .curve(d3.curveBasis);
+
+        svg.append("path")
+            .datum(points)
+            .attr("d", area)
+            .attr("fill", css('--border-color'))
+            .attr("opacity", 0.4);
+
+        // Line
+        const line = d3.line()
+            .x(d => xScale(d.x))
+            .y(d => yScale(d.y))
+            .curve(d3.curveBasis);
+
+        svg.append("path")
+            .datum(points)
+            .attr("d", line)
+            .attr("fill", "none")
+            .attr("stroke", css('--secondary-color'))
+            .attr("stroke-width", 1.5);
+
+        // Mean line
+        svg.append("line")
+            .attr("x1", xScale(overallMean)).attr("x2", xScale(overallMean))
+            .attr("y1", m.top).attr("y2", h - m.bottom)
+            .attr("stroke", css('--secondary-color'))
+            .attr("stroke-dasharray", "4,3")
+            .attr("stroke-width", 1);
+
+        svg.append("text")
+            .attr("x", xScale(overallMean) + 5).attr("y", m.top + 12)
+            .text("Mean: 78.15")
+            .attr("font-size", "10px")
+            .attr("fill", css('--secondary-color'));
+
+        // X axis
+        svg.append("g")
+            .attr("transform", `translate(0,${h - m.bottom})`)
+            .call(d3.axisBottom(xScale).ticks(8).tickSize(4))
+            .attr("class", "bar-axis")
+            .selectAll("text").attr("fill", css('--secondary-color'));
+
+        svg.append("text")
+            .attr("x", w / 2).attr("y", h - 8)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "11px")
+            .attr("fill", css('--secondary-color'))
+            .text("Score");
+
+        // Memorial dots
+        const dotY = function(score) {
+            const z = (score - overallMean) / overallStd;
+            const y = Math.exp(-0.5 * z * z) / (overallStd * Math.sqrt(2 * Math.PI));
+            return yScale(y);
+        };
+
+        const tooltip = d3.select("body").selectAll(".dist-tip").data([0]).join("div")
+            .attr("class", "dist-tip")
+            .style("position", "fixed")
+            .style("background", css('--card-bg'))
+            .style("border", `1px solid ${css('--border-color')}`)
+            .style("border-radius", "4px")
+            .style("padding", "6px 10px")
+            .style("font-size", "12px")
+            .style("pointer-events", "none")
+            .style("opacity", 0)
+            .style("z-index", 1000)
+            .style("color", css('--text-color'))
+            .style("box-shadow", "0 2px 8px rgba(0,0,0,0.15)");
+
+        svg.selectAll(".mem-dot")
+            .data(memorials)
+            .join("circle")
+            .attr("class", "mem-dot")
+            .attr("cx", d => xScale(d.score))
+            .attr("cy", d => dotY(d.score) - 8)
+            .attr("r", 5)
+            .attr("fill", d => d.model === "GPT-4" ? css('--gpt4-color') : css('--gemini-color'))
+            .attr("stroke", css('--background-color'))
+            .attr("stroke-width", 1.5)
+            .style("cursor", "pointer")
+            .on("mouseenter", function(event, d) {
+                tooltip.style("opacity", 1)
+                    .html(`<strong>${d.id}</strong><br>${d.model} &middot; ${d.condition}<br>Score: ${d.score}`);
+                d3.select(this).attr("r", 7);
+            })
+            .on("mousemove", function(event) {
+                tooltip.style("left", (event.clientX + 12) + "px").style("top", (event.clientY - 10) + "px");
+            })
+            .on("mouseleave", function() {
+                tooltip.style("opacity", 0);
+                d3.select(this).attr("r", 5);
+            });
+
+        // Legend
+        const leg = container.append("div").attr("class", "viz-legend");
+        leg.append("span").html(`<span class="swatch" style="background:${css('--gpt4-color')}"></span> GPT-4`);
+        leg.append("span").html(`<span class="swatch" style="background:${css('--gemini-color')}"></span> Gemini`);
+    }
+
+    /* ── MEMORIAL SCORES ──────────────────────────────── */
+    function drawMemorials() {
+        const container = d3.select("#viz-memorials");
+        container.selectAll("*").remove();
+        const w = container.node().getBoundingClientRect().width;
+        const barH = 28;
+        const m = { top: 10, right: 50, bottom: 30, left: 90 };
+        const sorted = [...memorials].sort((a, b) => a.score - b.score);
+        const h = m.top + sorted.length * (barH + 6) + m.bottom;
+
+        const svg = container.append("svg")
+            .attr("width", w).attr("height", h)
+            .attr("viewBox", `0 0 ${w} ${h}`);
+
+        const xScale = d3.scaleLinear().domain([50, 90]).range([m.left, w - m.right]);
+        const yScale = d3.scaleBand()
+            .domain(sorted.map(d => d.id))
+            .range([m.top, h - m.bottom])
+            .padding(0.18);
+
+        // Avg line
+        svg.append("line")
+            .attr("x1", xScale(overallMean)).attr("x2", xScale(overallMean))
+            .attr("y1", m.top).attr("y2", h - m.bottom)
+            .attr("stroke", css('--secondary-color'))
+            .attr("stroke-dasharray", "4,3")
+            .attr("stroke-width", 1);
+
+        svg.append("text")
+            .attr("x", xScale(overallMean)).attr("y", h - m.bottom + 16)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "9px")
+            .attr("fill", css('--secondary-color'))
+            .text("Avg 78.15");
+
+        // Bars
+        svg.selectAll(".mem-bar")
+            .data(sorted)
+            .join("rect")
+            .attr("x", xScale(50))
+            .attr("y", d => yScale(d.id))
+            .attr("width", d => xScale(d.score) - xScale(50))
+            .attr("height", yScale.bandwidth())
+            .attr("rx", 3)
+            .attr("fill", d => d.model === "GPT-4" ? css('--gpt4-color') : css('--gemini-color'))
+            .attr("opacity", 0.85);
+
+        // Labels
+        svg.selectAll(".mem-label")
+            .data(sorted)
+            .join("text")
+            .attr("x", m.left - 6)
+            .attr("y", d => yScale(d.id) + yScale.bandwidth() / 2)
+            .attr("dy", "0.35em")
+            .attr("text-anchor", "end")
+            .attr("font-size", "10px")
+            .attr("fill", css('--secondary-color'))
+            .text(d => d.id);
+
+        // Score values
+        svg.selectAll(".mem-val")
+            .data(sorted)
+            .join("text")
+            .attr("x", d => xScale(d.score) + 5)
+            .attr("y", d => yScale(d.id) + yScale.bandwidth() / 2)
+            .attr("dy", "0.35em")
+            .attr("font-size", "11px")
+            .attr("font-weight", "bold")
+            .attr("fill", css('--primary-color'))
+            .text(d => d.score);
+
+        // X axis
+        svg.append("g")
+            .attr("transform", `translate(0,${h - m.bottom})`)
+            .call(d3.axisBottom(xScale).ticks(5).tickSize(3))
+            .attr("class", "bar-axis")
+            .selectAll("text").attr("fill", css('--secondary-color'));
+
+        // Legend
+        const leg = container.append("div").attr("class", "viz-legend");
+        leg.append("span").html(`<span class="swatch" style="background:${css('--gpt4-color')}"></span> GPT-4`);
+        leg.append("span").html(`<span class="swatch" style="background:${css('--gemini-color')}"></span> Gemini`);
+    }
+
+    /* ── MODEL × CONDITION ────────────────────────────── */
+    function drawModels() {
+        const container = d3.select("#viz-models");
+        container.selectAll("*").remove();
+        const w = container.node().getBoundingClientRect().width;
+        const h = Math.min(280, w * 0.45);
+        const m = { top: 20, right: 20, bottom: 50, left: 45 };
+
+        const svg = container.append("svg")
+            .attr("width", w).attr("height", h)
+            .attr("viewBox", `0 0 ${w} ${h}`);
+
+        const conditions = ["Pure AI", "Textbook", "Informed"];
+        const x0 = d3.scaleBand().domain(conditions).range([m.left, w - m.right]).padding(0.3);
+        const x1 = d3.scaleBand().domain(["Gemini", "GPT-4"]).range([0, x0.bandwidth()]).padding(0.08);
+        const yScale = d3.scaleLinear().domain([60, 90]).range([h - m.bottom, m.top]);
+
+        // Y axis
+        svg.append("g")
+            .attr("transform", `translate(${m.left},0)`)
+            .call(d3.axisLeft(yScale).ticks(4).tickSize(-w + m.left + m.right))
+            .attr("class", "bar-axis")
+            .selectAll("line").attr("stroke-dasharray", "2,2").attr("opacity", 0.5);
+
+        svg.selectAll(".bar-axis path").attr("display", "none");
+
+        // Avg line
+        svg.append("line")
+            .attr("x1", m.left).attr("x2", w - m.right)
+            .attr("y1", yScale(overallMean)).attr("y2", yScale(overallMean))
+            .attr("stroke", css('--highlight-color'))
+            .attr("stroke-dasharray", "5,3")
+            .attr("stroke-width", 1.5);
+
+        svg.append("text")
+            .attr("x", w - m.right).attr("y", yScale(overallMean) - 5)
+            .attr("text-anchor", "end")
+            .attr("font-size", "9px")
+            .attr("fill", css('--highlight-color'))
+            .text("2025 avg: 78.15");
+
+        // Bars
+        conditions.forEach(cond => {
+            const data = conditionAvg.filter(d => d.condition === cond);
+            svg.selectAll(`.bar-${cond.replace(/\s/g, '')}`)
+                .data(data)
+                .join("rect")
+                .attr("x", d => x0(cond) + x1(d.model))
+                .attr("y", d => yScale(d.score))
+                .attr("width", x1.bandwidth())
+                .attr("height", d => h - m.bottom - yScale(d.score))
+                .attr("rx", 3)
+                .attr("fill", d => d.model === "GPT-4" ? css('--gpt4-color') : css('--gemini-color'))
+                .attr("opacity", 0.85);
+
+            // Score labels
+            svg.selectAll(`.val-${cond.replace(/\s/g, '')}`)
+                .data(data)
+                .join("text")
+                .attr("x", d => x0(cond) + x1(d.model) + x1.bandwidth() / 2)
+                .attr("y", d => yScale(d.score) - 4)
+                .attr("text-anchor", "middle")
+                .attr("font-size", "10px")
+                .attr("font-weight", "bold")
+                .attr("fill", css('--primary-color'))
+                .text(d => d.score);
+        });
+
+        // X axis labels
+        svg.append("g")
+            .attr("transform", `translate(0,${h - m.bottom})`)
+            .call(d3.axisBottom(x0).tickSize(0))
+            .attr("class", "bar-axis")
+            .selectAll("text")
+            .attr("fill", css('--secondary-color'))
+            .attr("font-size", "11px");
+
+        // Legend
+        const leg = container.append("div").attr("class", "viz-legend");
+        leg.append("span").html(`<span class="swatch" style="background:${css('--gpt4-color')}"></span> GPT-4 (avg 80.8)`);
+        leg.append("span").html(`<span class="swatch" style="background:${css('--gemini-color')}"></span> Gemini (avg 76.0)`);
+    }
+
+    /* ── CATEGORY SCORES ──────────────────────────────── */
+    function drawCategories() {
+        const container = d3.select("#viz-categories");
+        container.selectAll("*").remove();
+        const w = container.node().getBoundingClientRect().width;
+        const h = Math.min(300, w * 0.5);
+        const m = { top: 20, right: 20, bottom: 60, left: 160 };
+
+        const svg = container.append("svg")
+            .attr("width", w).attr("height", h)
+            .attr("viewBox", `0 0 ${w} ${h}`);
+
+        const cats = categoryScores.map(d => d.cat.replace(/\n/g, ' '));
+        const y0 = d3.scaleBand().domain(cats).range([m.top, h - m.bottom]).padding(0.25);
+        const y1 = d3.scaleBand().domain(["GPT-4", "Gemini"]).range([0, y0.bandwidth()]).padding(0.1);
+        const xScale = d3.scaleLinear().domain([0, 20]).range([m.left, w - m.right]);
+
+        // Grid lines
+        svg.selectAll(".grid-line")
+            .data([5, 10, 15, 20])
+            .join("line")
+            .attr("x1", d => xScale(d)).attr("x2", d => xScale(d))
+            .attr("y1", m.top).attr("y2", h - m.bottom)
+            .attr("stroke", css('--border-color'))
+            .attr("stroke-dasharray", "2,2")
+            .attr("opacity", 0.5);
+
+        // Bars
+        categoryScores.forEach((cat, i) => {
+            const catName = cat.cat.replace(/\n/g, ' ');
+            [{ model: "GPT-4", val: cat.gpt4 }, { model: "Gemini", val: cat.gemini }].forEach(d => {
+                svg.append("rect")
+                    .attr("x", m.left)
+                    .attr("y", y0(catName) + y1(d.model))
+                    .attr("width", xScale(d.val) - m.left)
+                    .attr("height", y1.bandwidth())
+                    .attr("rx", 2)
+                    .attr("fill", d.model === "GPT-4" ? css('--gpt4-color') : css('--gemini-color'))
+                    .attr("opacity", 0.85);
+
+                svg.append("text")
+                    .attr("x", xScale(d.val) + 4)
+                    .attr("y", y0(catName) + y1(d.model) + y1.bandwidth() / 2)
+                    .attr("dy", "0.35em")
+                    .attr("font-size", "10px")
+                    .attr("font-weight", "bold")
+                    .attr("fill", css('--primary-color'))
+                    .text(d.val);
+            });
+        });
+
+        // Y axis labels
+        svg.selectAll(".cat-label")
+            .data(cats)
+            .join("text")
+            .attr("x", m.left - 8)
+            .attr("y", d => y0(d) + y0.bandwidth() / 2)
+            .attr("dy", "0.35em")
+            .attr("text-anchor", "end")
+            .attr("font-size", "10px")
+            .attr("fill", css('--secondary-color'))
+            .each(function(d) {
+                const parts = d.split(' ');
+                const el = d3.select(this);
+                if (parts.length <= 3) {
+                    el.text(d);
+                } else {
+                    const mid = Math.ceil(parts.length / 2);
+                    el.text('');
+                    el.append("tspan").attr("x", m.left - 8).attr("dy", "-0.5em").text(parts.slice(0, mid).join(' '));
+                    el.append("tspan").attr("x", m.left - 8).attr("dy", "1.1em").text(parts.slice(mid).join(' '));
+                }
+            });
+
+        // X axis
+        svg.append("g")
+            .attr("transform", `translate(0,${h - m.bottom})`)
+            .call(d3.axisBottom(xScale).ticks(4).tickSize(3))
+            .attr("class", "bar-axis")
+            .selectAll("text").attr("fill", css('--secondary-color'));
+
+        svg.append("text")
+            .attr("x", (m.left + w - m.right) / 2).attr("y", h - 8)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "10px")
+            .attr("fill", css('--secondary-color'))
+            .text("Score (out of 20)");
+
+        // Legend
+        const leg = container.append("div").attr("class", "viz-legend");
+        leg.append("span").html(`<span class="swatch" style="background:${css('--gpt4-color')}"></span> GPT-4`);
+        leg.append("span").html(`<span class="swatch" style="background:${css('--gemini-color')}"></span> Gemini`);
+    }
+
+    /* ── JUDGE DETECTION ──────────────────────────────── */
+    function drawDetection() {
+        const container = d3.select("#viz-detection");
+        container.selectAll("*").remove();
+
+        const wrapper = container.append("div").style("text-align", "center").style("padding", "1rem 0");
+
+        // Big number
+        wrapper.append("div")
+            .style("font-size", "3.5rem")
+            .style("font-weight", "700")
+            .style("color", css('--stat-color'))
+            .style("line-height", "1.1")
+            .text("2 / 13");
+
+        wrapper.append("div")
+            .style("font-size", "0.9rem")
+            .style("color", css('--secondary-color'))
+            .style("margin-bottom", "1.2rem")
+            .text("judges suspected AI use");
+
+        // Dot grid
+        const grid = wrapper.append("div").attr("class", "detection-grid");
+        for (let i = 0; i < 13; i++) {
+            grid.append("div")
+                .attr("class", `judge-dot ${i < 2 ? 'spotted' : 'missed'}`)
+                .attr("title", i < 2 ? "Suspected AI" : "Did not suspect AI")
+                .text(i < 2 ? '!' : '?');
+        }
+
+        // Legend
+        const leg = container.append("div").attr("class", "viz-legend");
+        leg.append("span").html(`<span class="swatch" style="background:${css('--stat-color')}"></span> Suspected AI`);
+        leg.append("span").html(`<span class="swatch" style="background:${css('--border-color')}"></span> Did not suspect`);
+    }
+
+    /* ── RENDER ALL ────────────────────────────────────── */
+    function renderAll() {
+        drawDistribution();
+        drawMemorials();
+        drawModels();
+        drawCategories();
+        drawDetection();
+    }
+
+    renderAll();
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(renderAll, 200);
+    });
+
+    /* ── SCROLL REVEAL ────────────────────────────────── */
+    const reveals = document.querySelectorAll('.viz-reveal');
+    const revealObs = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
+        });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => revealObs.observe(el));
+
+    /* ── HAMBURGER ────────────────────────────────────── */
+    const hamburger = document.querySelector('.hamburger-menu');
+    hamburger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
+    document.querySelectorAll('.main-nav a').forEach(link => {
+        link.addEventListener('click', () => document.body.classList.remove('nav-open'));
+    });
+
+    /* ── THEME ────────────────────────────────────────── */
+    const icons = { light: '◑', dark: '◐' };
+    const labels = { light: 'Light', dark: 'Dark' };
+    function getDefaultTheme() { return 'dark'; }
+    let currentTheme = localStorage.getItem('theme') || getDefaultTheme();
+    function applyTheme(t) {
+        document.body.classList.remove('dark-mode');
+        document.documentElement.classList.remove('dark-mode');
+        if (t === 'dark') { document.body.classList.add('dark-mode'); document.documentElement.classList.add('dark-mode'); }
+        document.getElementById('theme-icon').textContent = icons[t];
+        document.getElementById('theme-label').textContent = labels[t];
+        localStorage.setItem('theme', t);
+        currentTheme = t;
+        renderAll();
+    }
+    function toggleTheme() {
+        applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    }
+    applyTheme(currentTheme);
+    </script>
+
+</body>
+</html>
