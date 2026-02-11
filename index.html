@@ -15,9 +15,9 @@
             --background-color: #ffffff;
             --header-bg: #ffffff;
             --accent-color: #1a1a1a;
-            --net-node: rgba(150, 150, 150, 0.3);
-            --net-node-hub: rgba(100, 100, 100, 0.4);
-            --net-link: rgba(180, 180, 180, 0.18);
+            --net-node: rgba(130, 130, 130, 0.45);
+            --net-node-hub: rgba(80, 80, 80, 0.6);
+            --net-link: rgba(150, 150, 150, 0.3);
             --net-pulse: rgba(100, 100, 100, 0.25);
         }
 
@@ -30,9 +30,9 @@
             --background-color: #121212;
             --header-bg: #1a1a1a;
             --accent-color: #d4a574;
-            --net-node: rgba(212, 165, 116, 0.28);
-            --net-node-hub: rgba(212, 165, 116, 0.45);
-            --net-link: rgba(150, 150, 150, 0.15);
+            --net-node: rgba(212, 165, 116, 0.42);
+            --net-node-hub: rgba(212, 165, 116, 0.62);
+            --net-link: rgba(150, 150, 150, 0.28);
             --net-pulse: rgba(212, 165, 116, 0.4);
         }
 
@@ -260,8 +260,8 @@
 
             .hero-viz { flex: 1; }
 
-            :root { --net-link: rgba(180, 180, 180, 0.22); }
-            .dark-mode { --net-link: rgba(150, 150, 150, 0.2); }
+            :root { --net-link: rgba(160, 160, 160, 0.3); }
+            .dark-mode { --net-link: rgba(150, 150, 150, 0.26); }
 
             .hamburger-menu { display: block; }
 
@@ -408,7 +408,7 @@
             var H = Math.floor(rect.height) || 380;
             if (W < 50 || H < 50) return;
             var isMobile = window.innerWidth < 769;
-            var strokeW = isMobile ? 1.2 : 0.8;
+            var strokeW = isMobile ? 1.4 : 1.0;
             var nodes = [], links = [];
             var id = 0;
 
@@ -543,9 +543,12 @@
                 .ease(d3.easeCubicOut)
                 .attr('opacity', 1);
 
-            // Links draw in after a brief delay
+            // Links draw in alongside their source node's cluster
             link.transition()
-                .delay(function(d, i) { return 600 + i * 18; })
+                .delay(function(d) {
+                    var srcCluster = (typeof d.source === 'object') ? d.source.cluster : nodes[d.source].cluster;
+                    return srcCluster * 350 + 200 + Math.random() * 300;
+                })
                 .duration(700)
                 .ease(d3.easeCubicOut)
                 .attr('stroke-opacity', 1);
