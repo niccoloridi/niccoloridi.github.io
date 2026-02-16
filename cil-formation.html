@@ -515,9 +515,13 @@
 
             <div class="essay-body">
 
-                <p class="lead">How does customary international law form? Not by decree, but through the decentralised interactions of states &ndash; practising, observing, believing. This agent-based model simulates 100 state agents embedded in observation networks, making decisions about practice, public statements, and legal conviction. Under certain conditions, their interactions cross the thresholds that doctrine requires. The model reveals that CIL formation operates near a critical phase boundary where small structural factors tip outcomes.</p>
+                <p class="lead">How does customary international law form? The ILC's Draft Conclusions describe what custom <em>requires</em> &ndash; general practice accepted as law &ndash; but not how scattered state behaviours crystallise into binding obligation. The dominant account is static, taxonomic, almost archaeological: lawyers sift through evidence of practice and <em>opinio juris</em> to determine whether a norm <em>exists</em>. The process by which it comes to exist is left to hand-waving about "gradual emergence."</p>
 
-                <p>The ILC's Draft Conclusions describe what custom <em>requires</em> &ndash; general practice accepted as law &ndash; but not how scattered state behaviours crystallise into binding obligation. This model addresses that gap, operationalising the two-element test as computational thresholds: widespread practice (&ge;60% of states), representative across regions and power tiers, consistent over time, and accompanied by <em>opinio juris</em> (&ge;60% mean belief).</p>
+                <p>This Article tries something different. It builds an agent-based model &ndash; a computational simulation &ndash; that treats CIL formation as a dynamic process with identifiable mechanisms. One hundred state agents, embedded in observation networks, make decisions about whether to engage in a practice, whether to publicly affirm its legality, and whether to update their beliefs. No central authority coordinates them. No legislature votes. Norms emerge &ndash; or fail to emerge &ndash; from the bottom up, through the accumulation of decentralised interactions.</p>
+
+                <p>The exercise forces a kind of intellectual honesty that doctrinal analysis can avoid. What exactly does "representative" practice mean? How does <em>opinio juris</em> update &ndash; gradually or in jumps? When does a norm count as "established"? Building a simulation requires answering these questions with numerical precision. Ambiguities that doctrine tolerates become choices that the model must resolve.</p>
+
+                <p>The payoff is a set of findings that challenge conventional wisdom in ways that purely doctrinal reasoning could not. The idealised "international community" turns out to be the worst environment for norm formation. Hypocrisy facilitates the emergence of genuine legal conviction. Treaties catalyse custom among non-parties. And the entire system operates near a critical phase boundary &ndash; borrowed from physics &ndash; where small structural factors tip outcomes between crystallisation and failure.</p>
 
                 <div class="stat-row">
                     <div class="stat-box"><span class="num">100</span><span class="label">State agents</span></div>
@@ -525,6 +529,12 @@
                     <div class="stat-box"><span class="num">33&ndash;58%</span><span class="label">Crystallisation range</span></div>
                     <div class="stat-box"><span class="num">6</span><span class="label">Experiments</span></div>
                 </div>
+
+                <h2>Why Simulate?</h2>
+
+                <p>Agent-based modelling offers three advantages for studying CIL formation that no amount of case-law analysis can replicate. First, it captures <strong>emergence</strong>: the way macro-level legal order arises from micro-level state interactions without central coordination. Traditional doctrinal analysis treats CIL as a binary status &ndash; either a norm exists or it does not &ndash; rather than as a dynamic process with tipping points, feedback loops, and path dependence. Second, ABM permits <strong>systematic experimentation</strong>. Questions that cannot be answered through case studies &ndash; such as whether the persistent objector rule destabilises norm formation, or whether treaties crowd out or catalyse custom &ndash; can be tested by toggling mechanisms on and off across thousands of simulated runs. Third, the method forces <strong>theoretical precision</strong>. Translating doctrinal concepts into code requires specifying exactly what "widespread" means, how belief updates, and when a norm counts as established.</p>
+
+                <p>The model operationalises the ILC's two-element test as computational thresholds: widespread practice (&ge;60% of states), representative across regions and power tiers, consistent over 10 timesteps, and accompanied by <em>opinio juris</em> (&ge;60% mean belief among non-treaty states). Each agent possesses heterogeneous attributes &ndash; power drawn from a Pareto distribution, intrinsic preference, conformity weight, inertia &ndash; and updates beliefs through an evidence signal combining observed practice, observed statements, and duration.</p>
 
                 <h2>I. The Phase Boundary</h2>
 
@@ -548,7 +558,9 @@
                 <div class="viz-block viz-reveal" id="viz-topologies"></div>
                 <p class="viz-caption">Figure 2: Crystallisation rates across five observation structures. Each topology was run 100 times at boundary parameters. Mini-networks illustrate each structure.</p>
 
-                <p>The mechanism is signal aggregation. On a complete network, each state's evidence signal averages across 99 neighbours. Local momentum &ndash; a cluster of states practising and reinforcing each other &ndash; is diluted by the global average. Structured networks permit local cascades to build before encountering global resistance. <strong>Small-world networks</strong> perform best (58%) because bridging ties allow successful local cascades to jump between clusters.</p>
+                <p>The mechanism is signal aggregation. On a complete network, each state's evidence signal averages across 99 equally weighted neighbours. Local momentum &ndash; a cluster of states beginning to practise and reinforce each other &ndash; is diluted by the global average. A European state developing conviction observes not just its practising neighbours but also the 80 non-practising states elsewhere, dampening the signal. Structured networks permit local cascades to build before encountering global resistance. <strong>Small-world networks</strong> perform best (58%) because bridging ties allow successful local cascades to jump between clusters without requiring universal diffusion first.</p>
+
+                <p>This reveals observation as a <strong>hidden variable</strong> in CIL doctrine. Crystallisation rates vary by 25 percentage points depending solely on who observes whom &ndash; yet current doctrine says nothing about observation structure. The ILC's requirement that practice be "representative" (Conclusion 8) takes on new significance: representative practice may matter not only because it demonstrates breadth of acceptance, but because it ensures the practice is <em>visible</em> across different network segments, enabling the bridging dynamics that facilitate global crystallisation.</p>
 
                 <!-- TOPOLOGY BAR CHART -->
                 <div class="viz-block viz-reveal" id="viz-topo-bars"></div>
@@ -577,10 +589,12 @@
                 <div class="viz-block viz-reveal" id="viz-sincerity"></div>
                 <p class="viz-caption">Figure 4: Crystallisation rate and mean <em>opinio juris</em> by sincerity level. 50 runs per condition, boundary parameters.</p>
 
-                <p>At full sincerity, states honestly report their doubts. The candid acknowledgment that practice lacks legal status prevents the feedback loop from gaining traction. Paradoxically, the honest-communication condition produces the fewest genuine customs.</p>
+                <p>At full sincerity, states honestly report their doubts. The candid acknowledgment that practice lacks legal status prevents the feedback loop from gaining traction. And here is the deepest paradox: the 6% of norms that <em>do</em> form under full sincerity have the highest hollow practitioner rates (37.7%) &ndash; states practising without genuine conviction. The honest-communication condition produces the fewest and the <em>least genuine</em> customs.</p>
+
+                <p>This finding resonates with constructivist accounts in international relations that emphasise the performative dimension of legal claims. States that "act as if" a norm exists may, through their performance, bring it into existence &ndash; not as pretense but as a self-fulfilling dynamic where the performance generates the reality it describes.</p>
 
                 <div class="pullquote">
-                    The process that generates custom requires a phase where statements outrun conviction. Demanding strict correspondence throughout the formation process would prevent custom from emerging in the first place.
+                    The ILC's Conclusion 3(2) requires that practice and <em>opinio juris</em> be "separately ascertained." But the process that generates custom requires a phase where statements outrun conviction. Demanding strict correspondence throughout the formation process would prevent custom from emerging in the first place. The two-element test describes the <em>endpoint</em> of a dynamic process, not constraints that must hold throughout.
                 </div>
 
                 <h2>IV. Speed, Stability, and the Consistency Requirement</h2>
@@ -598,13 +612,15 @@
                 <p>The remaining experiments test three structural mechanisms: the preferences of powerful states, the persistent objector rule, and the treaty channel. Each operates most dramatically at the boundary &ndash; where norms are contested and outcomes uncertain.</p>
 
                 <h3>Power alignment</h3>
-                <p>When the top 10% most powerful states support the practice, crystallisation jumps from 38% to <strong>80%</strong>. When they oppose it, crystallisation collapses to <strong>2%</strong>. The 78 percentage-point swing is the largest effect observed in any experiment. The mechanism operates through the observation channel: powerful states' practice and statements carry disproportionate weight, shifting the informational environment for all 100 agents.</p>
+                <p>When the top 10% most powerful states support the practice, crystallisation jumps from 38% to <strong>80%</strong>. When they oppose it, crystallisation collapses to <strong>2%</strong>. The 78 percentage-point swing is the largest effect observed in any experiment. The mechanism operates through the observation channel: powerful states' practice and statements carry disproportionate weight in other states' evidence signals, shifting the informational environment for all 100 agents.</p>
+
+                <p>This gives precision to the ILC's reference to "specially affected states." They matter not because their practice counts more toward a legal threshold but because it is <em>observed</em> more. The distinction is important: if specially affected states' practice counted more, a norm could crystallise over their objection if enough other states participated. But if their practice is <em>observed</em> more, their opposition can prevent crystallisation regardless of what others do &ndash; not by vetoing the legal standard but by shaping the informational environment in which beliefs form. The model's 2% rate means that even when 90% of states favour a practice, opposition by the top 10% can prevent its emergence as law.</p>
 
                 <h3>Persistent objection</h3>
                 <p>The persistent objector rule (ILC Conclusion 15) acts as a <strong>quality filter</strong>. At the boundary, objection devastates norm formation: crystallisation drops from 38% to 4%. But at favourable parameters, it produces only a modest drag (100% to 90%). The rule filters out fragile norms while permitting robust ones to bind all but the most committed dissenters.</p>
 
                 <h3>Treaties</h3>
-                <p>Introducing a treaty channel at the boundary increases crystallisation from 38% to <strong>100%</strong> &ndash; the largest facilitation effect. The mechanism is indirect: treaty signatories create an observational environment in which non-signatories develop genuine customary conviction. Approximately 63 states ratify; the remaining 37 observe their consistent practice and affirmation, and develop genuine belief.</p>
+                <p>Introducing a treaty channel at the boundary increases crystallisation from 38% to <strong>100%</strong> &ndash; the largest facilitation effect observed in any experiment. The mechanism is indirect: treaty signatories are locked into consistent practice and affirmation, creating a stable bloc whose behaviour is no longer subject to stochastic fluctuation. The remaining ~37 non-signatories observe this elevated practice environment, and their <em>opinio juris</em> rises in response. Crucially, the crystallisation check excludes signatories' beliefs &ndash; it requires genuine customary conviction among non-parties. The treaty functions as a stepping stone, not a substitute: it does not replace customary obligation but creates the conditions under which customary obligation emerges among those not bound by the treaty.</p>
 
                 <!-- STRUCTURAL FACTORS CHART -->
                 <div class="viz-block viz-reveal" id="viz-structural"></div>
@@ -618,9 +634,13 @@
                     Network topology produces a 25 percentage-point swing in crystallisation (33% to 58%), but only at the boundary. Treaty channels increase crystallisation from 38% to 100% at the boundary, but have no effect where crystallisation already occurs. Objection devastates norm formation at the boundary (38% to 4%) but produces only modest drag at favourable parameters (100% to 90%). Power alignment swings crystallisation from 2% to 80%.
                 </div>
 
-                <p>The implication is that structural factors matter precisely where legal and political stakes are highest &ndash; for contested norms where state preferences are divided. Institutional design should be calibrated to the underlying preference landscape. A treaty channel is transformative for a practice with moderate support but superfluous for one with strong support. The persistent objector rule is devastating for fragile norms but tolerable for robust ones.</p>
+                <p>The implication is that structural factors matter precisely where legal and political stakes are highest &ndash; for contested norms where state preferences are divided. Norms with overwhelming support need no institutional facilitation; they will emerge regardless. Norms with negligible support will not emerge regardless. The interesting cases are those in between, and the model identifies which structural factors push contested practices toward or away from crystallisation. Institutional design should be calibrated to the underlying preference landscape: a treaty channel is transformative for a practice with moderate support but superfluous for one with strong support; the persistent objector rule is devastating for fragile norms but tolerable for robust ones.</p>
 
-                <p>Custom is not merely found; it is <em>made</em> &ndash; through observation, feedback, and the accumulation of practice and belief across a decentralised system of states.</p>
+                <p>The model is deliberately stylised. It simulates a single norm with static networks and unitary states; its parameters are theoretically motivated rather than empirically calibrated. These limitations define an agenda: norm competition, dynamic networks, domestic politics, empirical validation against historical episodes.</p>
+
+                <p>But even within these constraints, the model demonstrates something that doctrinal analysis alone cannot: the ILC's two-element test describes a genuine dynamic process with identifiable mechanisms. Practice and <em>opinio juris</em> evolve at different rates, can decouple, and exhibit tipping-point dynamics. Observation structure is a hidden variable that shapes whether norms form. Cheap talk bootstraps the very conviction it initially lacks. Treaties catalyse custom among non-parties through indirect observation effects. And the persistent objector rule, rather than destabilising the system, filters out fragile norms while permitting robust ones to bind.</p>
+
+                <p>Custom is not merely found; it is <em>made</em> &ndash; through observation, feedback, and the accumulation of practice and belief across a decentralised system of states. Understanding how it is made requires understanding the boundary dynamics where structural factors determine whether emerging practices crystallise into binding law or dissipate into mere behaviour.</p>
 
                 <p style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.88rem; color: var(--secondary-color);">
                     <strong>Full paper:</strong> Niccolò Ridi, 'Custom in the Making: An Agent-Based Model of Customary International Law Formation' (2026).
