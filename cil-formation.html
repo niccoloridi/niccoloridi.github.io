@@ -861,7 +861,7 @@
             if (topo.name === "Complete") {
                 for (let i = 0; i < N; i++)
                     for (let j = i + 1; j < N; j++)
-                        if (Math.random() < 0.15) links.push({ source: i, target: j });
+                        links.push({ source: i, target: j });
             } else if (topo.name === "Regional Clusters") {
                 for (let i = 0; i < N; i++)
                     for (let j = i + 1; j < N; j++) {
@@ -920,10 +920,13 @@
                 d.y = Math.max(8, Math.min(size - 8, d.y));
             });
 
+            const isComplete = topo.name === "Complete";
             svg.selectAll("line").data(links).join("line")
                 .attr("x1", d => d.source.x).attr("y1", d => d.source.y)
                 .attr("x2", d => d.target.x).attr("y2", d => d.target.y)
-                .attr("stroke", col).attr("stroke-opacity", 0.3).attr("stroke-width", 0.8);
+                .attr("stroke", col)
+                .attr("stroke-opacity", isComplete ? 0.12 : 0.3)
+                .attr("stroke-width", isComplete ? 0.4 : 0.8);
 
             svg.selectAll("circle").data(nodes).join("circle")
                 .attr("cx", d => d.x).attr("cy", d => d.y)
