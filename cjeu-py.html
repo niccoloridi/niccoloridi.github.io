@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cjeu-py | Niccolò Ridi</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>(function(){var t=localStorage.getItem('theme');if(!t)t='dark';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
+    <style>
+        :root {
+            --primary-color: #1a1a1a;
+            --secondary-color: #555555;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+            --background-color: #ffffff;
+            --header-bg: #ffffff;
+            --accent-color: #1a1a1a;
+            --subtle-border: #f0f0f0;
+            --card-bg: #ffffff;
+            --pullquote-border: #ccc;
+            --pullquote-bg: #f9f9f9;
+            --stat-color: #c0392b;
+            --highlight-color: #c0392b;
+            --cjeu-collect: #3498db;
+            --cjeu-download: #2ecc71;
+            --cjeu-parse: #e67e22;
+            --cjeu-extract: #9b59b6;
+            --cjeu-classify: #e74c3c;
+            --cjeu-search: #1abc9c;
+            --cjeu-visualize: #f39c12;
+            --bar-primary: #3498db;
+            --bar-secondary: #e67e22;
+            --bar-tertiary: #27ae60;
+            --bar-danger: #c0392b;
+            --treatment-follows: #27ae60;
+            --treatment-neutral: #95a5a6;
+            --treatment-distinguishes: #e67e22;
+            --treatment-departs: #c0392b;
+        }
+
+        .dark-mode {
+            --primary-color: #e8eaed;
+            --secondary-color: #9aa0ab;
+            --text-color: #d0d0d0;
+            --border-color: #333333;
+            --background-color: #121212;
+            --header-bg: #1a1a1a;
+            --accent-color: #d4a574;
+            --subtle-border: #2a2a2a;
+            --card-bg: #1e1e1e;
+            --pullquote-border: #444;
+            --pullquote-bg: #1a1a1a;
+            --stat-color: #d4a574;
+            --highlight-color: #d4a574;
+            --cjeu-collect: #5dade2;
+            --cjeu-download: #2ecc71;
+            --cjeu-parse: #eb984e;
+            --cjeu-extract: #a569bd;
+            --cjeu-classify: #d4a574;
+            --cjeu-search: #48c9b0;
+            --cjeu-visualize: #f4d03f;
+            --bar-primary: #5dade2;
+            --bar-secondary: #eb984e;
+            --bar-tertiary: #2ecc71;
+            --bar-danger: #d4a574;
+            --treatment-follows: #2ecc71;
+            --treatment-neutral: #7f8c8d;
+            --treatment-distinguishes: #eb984e;
+            --treatment-departs: #d4a574;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.8;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main { flex: 1; }
+        body.nav-open { overflow: hidden; }
+
+        a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        a:hover { color: var(--secondary-color); }
+        .dark-mode a { color: var(--accent-color); }
+        .dark-mode a:hover { color: #e8c49a; }
+        .dark-mode .main-nav a { color: var(--primary-color); }
+        .dark-mode .main-nav .ext-link { color: var(--secondary-color); }
+        .dark-mode .main-nav .ext-link:hover { color: var(--primary-color); }
+        .dark-mode .main-footer a { color: var(--accent-color); }
+        .dark-mode .main-header { box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+
+        /* Theme toggle */
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 2rem;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            font-family: inherit;
+        }
+        .theme-toggle:hover { color: var(--primary-color); border-color: var(--primary-color); }
+
+        /* Header */
+        .main-header {
+            background: var(--header-bg);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+        }
+        .main-header .container {
+            max-width: 960px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            gap: 1rem;
+        }
+        .main-header .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            z-index: 1001;
+        }
+        .main-nav ul { list-style: none; display: flex; gap: 2rem; }
+        .main-nav a {
+            color: var(--primary-color);
+            font-weight: normal;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        .main-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 2px;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+        .main-nav a:hover::after { width: 100%; }
+        .nav-sep { width: 1px; background: var(--border-color); align-self: stretch; margin: 0 0.2rem; }
+        .main-nav .ext-link { color: var(--secondary-color); font-size: 0.85rem; }
+        .main-nav .ext-link:hover { color: var(--primary-color); }
+
+        .hamburger-menu {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 1001;
+        }
+        .hamburger-menu .line {
+            display: block;
+            width: 25px;
+            height: 2px;
+            background-color: var(--primary-color);
+            margin: 5px 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        /* Essay layout */
+        .essay-container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 3rem 2rem 4rem;
+        }
+        .essay-header { margin-bottom: 2.5rem; }
+        .essay-header h1 {
+            font-size: 2.4rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            line-height: 1.15;
+            margin-bottom: 0.8rem;
+        }
+        .essay-meta {
+            font-size: 0.92rem;
+            color: var(--secondary-color);
+            line-height: 1.6;
+        }
+        .essay-meta .authors { font-weight: bold; color: var(--primary-color); }
+        .essay-body p { margin-bottom: 1.5rem; max-width: 75ch; }
+        .essay-body h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+        }
+        .essay-body h3 {
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-top: 2rem;
+            margin-bottom: 0.8rem;
+        }
+        .lead {
+            font-size: 1.12rem;
+            line-height: 1.85;
+            color: var(--primary-color);
+        }
+
+        /* Stat boxes */
+        .stat-row {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        .stat-box {
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.2rem 0.8rem;
+            background: var(--card-bg);
+        }
+        .stat-box .num {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--stat-color);
+            line-height: 1.1;
+        }
+        .stat-box .label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--secondary-color);
+            margin-top: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        /* Pullquote */
+        .pullquote {
+            border-left: 3px solid var(--pullquote-border);
+            padding: 1.2rem 1.5rem;
+            margin: 2rem 0;
+            background: var(--pullquote-bg);
+            font-size: 1.02rem;
+            line-height: 1.7;
+            color: var(--primary-color);
+            border-radius: 0 6px 6px 0;
+        }
+
+        /* Viz blocks */
+        .viz-block {
+            margin: 2.5rem -2rem;
+            overflow: hidden;
+        }
+        .viz-caption {
+            font-size: 0.82rem;
+            color: var(--secondary-color);
+            text-align: center;
+            margin-top: 0.5rem;
+            padding: 0 2rem;
+        }
+        .viz-reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .viz-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Pipeline */
+        .pipeline-wrapper {
+            overflow-x: auto;
+            padding: 1rem 0;
+        }
+
+        /* Code snippet */
+        .code-block {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.2rem 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.82rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            white-space: pre;
+            color: var(--text-color);
+        }
+
+        /* Footer */
+        .main-footer { padding: 1.5rem 2rem; text-align: center; font-size: 0.9rem; color: var(--secondary-color); }
+        .main-footer a { color: var(--primary-color); }
+        .main-footer p { max-width: none; margin-bottom: 0; }
+
+        /* Back link */
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+            font-weight: normal;
+        }
+        .back-link:hover { color: var(--primary-color); }
+        .dark-mode .back-link { color: var(--secondary-color); }
+        .dark-mode .back-link:hover { color: var(--accent-color); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .essay-header h1 { font-size: 1.8rem; }
+            .essay-body h2 { font-size: 1.3rem; }
+            .essay-container { padding: 2rem 1.2rem 3rem; }
+            .viz-block { margin: 2rem -0.5rem; }
+            .stat-row { gap: 0.8rem; }
+            .stat-box .num { font-size: 1.5rem; }
+            .stat-box { min-width: 100px; padding: 1rem 0.6rem; }
+
+            .hamburger-menu { display: block; }
+            .main-nav {
+                position: fixed; top: 0; left: 0;
+                width: 100%; height: 100vh;
+                background-color: var(--background-color);
+                display: flex; justify-content: center; align-items: center;
+                transform: translateX(100%);
+                transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            }
+            body.nav-open .main-nav { transform: translateX(0); }
+            .main-nav ul { flex-direction: column; gap: 2rem; text-align: center; }
+            .main-nav a { font-size: 1.5rem; }
+            .main-nav a::after { display: none; }
+            body.nav-open .hamburger-menu .line-1 { transform: rotate(45deg) translate(5px, 5px); }
+            body.nav-open .hamburger-menu .line-2 { opacity: 0; }
+            body.nav-open .hamburger-menu .line-3 { transform: rotate(-45deg) translate(5px, -5px); }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">Niccolò Ridi</a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="profile.html">Profile</a></li>
+                    <li><a href="practice.html">Practice</a></li>
+                    <li><a href="research.html">Research</a></li>
+                    <li><a href="data.html">Data</a></li>
+                    <li class="nav-sep"></li>
+                    <li><a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" class="ext-link">LinkedIn</a></li>
+                    <li><a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" class="ext-link">Scholar</a></li>
+                    <li><a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="ext-link">SSRN</a></li>
+                    <li><a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" class="ext-link">KCL</a></li>
+                </ul>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span id="theme-icon">◑</span> <span id="theme-label">Light</span></button>
+            <button class="hamburger-menu" aria-label="Open navigation menu">
+                <span class="line line-1"></span>
+                <span class="line line-2"></span>
+                <span class="line line-3"></span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <article class="essay-container">
+
+            <a href="data.html" class="back-link">&larr; Back to Data</a>
+
+            <header class="essay-header">
+                <h1>cjeu-py</h1>
+                <div class="essay-meta">
+                    <span class="authors">Niccolò Ridi</span><br>
+                    A Python toolkit for empirical research on the Court of Justice of the European Union (2026)
+                </div>
+            </header>
+
+            <div class="essay-body">
+
+                <p class="lead">The Court of Justice of the European Union has produced thousands of decisions since its creation. Understanding how it builds legal doctrine &ndash; which cases it cites, how it treats its own precedent, which areas of law are connected and which remain siloed &ndash; requires processing a corpus too large for manual analysis. <strong>cjeu-py</strong> is a Python toolkit that transforms CJEU case law into research-ready datasets, from raw SPARQL queries to interactive citation networks.</p>
+
+                <p>The tool queries the EU Publications Office's CELLAR endpoint directly &ndash; the authoritative source for EU legal data &ndash; downloads full judgment texts from EUR-Lex, extracts citations using 14 regex patterns plus the Court's own typographic conventions, and optionally classifies each citation along four dimensions using LLMs. The result is a complete data pipeline that takes a researcher from zero to interactive network visualisation in a few commands.</p>
+
+                <div class="stat-row">
+                    <div class="stat-box"><span class="num">1,020</span><span class="label">Grand Chamber cases</span></div>
+                    <div class="stat-box"><span class="num">12,673</span><span class="label">Case citations</span></div>
+                    <div class="stat-box"><span class="num">51</span><span class="label">Doctrinal communities</span></div>
+                    <div class="stat-box"><span class="num">14</span><span class="label">Extraction patterns</span></div>
+                </div>
+
+                <h2>I. The Pipeline</h2>
+
+                <p>cjeu-py organises CJEU research into seven stages. Each stage produces inspectable intermediate output &ndash; Parquet tables, JSONL files, HTML visualisations &ndash; and can be run independently. The pipeline is resumable: interrupted downloads pick up where they left off, and classification checkpoints prevent re-processing.</p>
+
+                <!-- PIPELINE DIAGRAM -->
+                <div class="viz-block viz-reveal" id="viz-pipeline"></div>
+                <p class="viz-caption">Figure 1: The cjeu-py data pipeline. Seven stages from SPARQL query to interactive network.</p>
+
+                <p>The design philosophy is pragmatic. Data comes from official sources (CELLAR SPARQL, EUR-Lex REST API), not scraping. Downloads are cached to disk and resumable. The tool is pip-installable (<code>pip install cjeu-py</code>) and runs entirely from the command line. LLM classification is optional &ndash; the extraction and network stages work without it.</p>
+
+                <div class="code-block">pip install cjeu-py
+
+cjeu-py download-cellar --max-items 100
+cjeu-py fetch-texts --max-items 100
+cjeu-py extract-citations
+cjeu-py export-network --format html --max-nodes 500</div>
+
+                <h2>II. What It Collects</h2>
+
+                <p>For the Grand Chamber alone &ndash; the CJEU's most authoritative formation &ndash; the tool collects 1,020 decisions spanning 2004 to 2025. Each decision carries rich metadata: CELEX and ECLI identifiers, date, court formation, judge-rapporteur, advocate general, procedure type, subject matter, and the full text of the judgment.</p>
+
+                <!-- CASES BY YEAR -->
+                <div class="viz-block viz-reveal" id="viz-yearly"></div>
+                <p class="viz-caption">Figure 2: Grand Chamber decisions by year, 2004&ndash;2025. Colour indicates the dominant procedure type each year.</p>
+
+                <p>Preliminary references dominate the Grand Chamber docket (64%), followed by annulment actions (10%) and consultations (8%). But the procedure mix tells only part of the story. The subject-matter distribution reveals which areas of EU law the Grand Chamber considers important enough for its attention.</p>
+
+                <!-- SUBJECT MATTER -->
+                <div class="viz-block viz-reveal" id="viz-subjects"></div>
+                <p class="viz-caption">Figure 3: Top 10 subject-matter categories across Grand Chamber decisions. Cases may be assigned multiple subjects.</p>
+
+                <h2>III. Citation Extraction</h2>
+
+                <p>The heart of the pipeline is citation extraction. The tool identifies case references in judgment text using 14 regex patterns targeting different citation formats: ECLI identifiers, case numbers (Case C-xxx/xx), European Court Reports references, joined cases, and paragraph pinpoints. A dual fallback mechanism supplements regex with the Court's own typographic convention &ndash; cases cited in italics &ndash; and a party-name gazetteer built from all collected case names.</p>
+
+                <p>Each citation is anchored to its source paragraph, preserving the context needed for downstream classification. Across the Grand Chamber corpus, the extractor identifies 12,673 case-to-case citations &ndash; an average of roughly 12 citations per decision, though the distribution is heavily right-skewed.</p>
+
+                <h2>IV. How the Court Uses Precedent</h2>
+
+                <p>Raw citation counts reveal who cites whom, but not <em>how</em>. The optional classification stage uses LLMs to categorise each citation along four dimensions drawn from the framework in Marc Jacob's <em>Precedents and Case-Based Reasoning in the European Court of Justice</em> (Cambridge, 2014).</p>
+
+                <!-- CLASSIFICATION CHARTS -->
+                <div class="viz-block viz-reveal" id="viz-classification"></div>
+                <p class="viz-caption">Figure 4: Citation classification across three dimensions. Based on 2,855 classified citations from AG opinions and judgments.</p>
+
+                <p><strong>Precision</strong> captures depth of engagement. Nearly 79% of citations involve substantive engagement with the cited case &ndash; the Court discusses its reasoning, applies its test, or extends its logic. Only 8% are string citations (bare references with no discussion). This matters: it means the CJEU's citation practice is not decorative. When it cites a case, it means it.</p>
+
+                <p><strong>Use</strong> captures the functional role. Over half (56%) of citations establish or invoke a legal principle. Interpretation (15%) and application of legal tests (8%) follow. The Court cites its own precedent primarily to anchor doctrinal propositions, not to resolve factual analogies.</p>
+
+                <div class="pullquote">
+                    76% of citations follow the cited precedent. Explicit departures occur in less than 1% of cases. The CJEU builds its doctrine incrementally, rarely overruling and almost never acknowledging when it does.
+                </div>
+
+                <p><strong>Treatment</strong> is the most revealing dimension. 76% of citations follow the cited case; 19% are neutral references. Explicit departures occur in only 0.8% of citations. The Court's self-image as a stable, coherent legal system is borne out by the data &ndash; or at least, the Court is careful to present it that way.</p>
+
+                <h2>V. The Citation Network</h2>
+
+                <p>The extracted citations form a directed graph: each node is a decision, each edge a citation from one case to another. Network analysis reveals structure invisible to close reading.</p>
+
+                <!-- MOST CITED CASES -->
+                <div class="viz-block viz-reveal" id="viz-topcases"></div>
+                <p class="viz-caption">Figure 5: The ten most-cited Grand Chamber decisions by in-degree (number of times cited by other Grand Chamber cases).</p>
+
+                <p><em>Kadi</em> (2008) leads with 33 citations &ndash; the Court's landmark judgment on fundamental rights review of Security Council sanctions has become a touchstone across EU law. Opinion 2/13 (2014), on the EU's accession to the ECHR, follows with 32. <em>&Aring;kerberg Fransson</em> (2013), which defined the scope of the Charter of Fundamental Rights, comes third with 28.</p>
+
+                <p>Louvain community detection identifies 51 distinct clusters in the network &ndash; doctrinal communities where cases cite each other densely but cite outside the cluster rarely. These clusters map recognisably onto areas of EU law: competition, free movement, fundamental rights, institutional questions, state aid.</p>
+
+                <p>The full interactive network &ndash; 500 Grand Chamber nodes, filterable by year, procedure, subject, and court &ndash; is available as a standalone visualisation.</p>
+
+                <p style="text-align: center; margin: 2rem 0;"><a href="https://github.com/niccoloridi/cjeu-py/blob/main/examples/grand_chamber_network.html" target="_blank" style="display: inline-block; padding: 0.8rem 2rem; border: 2px solid var(--primary-color); border-radius: 6px; font-weight: bold; font-size: 0.95rem;">View Interactive Grand Chamber Network &rarr;</a></p>
+
+                <h2>VI. What It Enables</h2>
+
+                <p>cjeu-py is not a finished analysis &ndash; it is infrastructure for analyses. The data it produces enables questions that were previously intractable at scale:</p>
+
+                <p>Which areas of EU law are most interconnected? Do competition and free movement cases cite each other, or do they develop in isolation? How does the Court's citation practice change when the Grand Chamber, rather than a chamber of five, decides? Do advocate general opinions systematically differ from judgments in how they treat precedent? When the Court distinguishes rather than follows a case, is the distinction genuine or cosmetic? Which judges sit on which cases, and does composition correlate with citation patterns?</p>
+
+                <p>The tool is open source and designed for researchers who may not be programmers. A five-command pipeline from zero to interactive network. Parquet tables that open in any data tool. CSV export with codebooks. Interactive HTML visualisations that run in any browser with no server.</p>
+
+                <p style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.88rem; color: var(--secondary-color);">
+                    <strong>Install:</strong> <code>pip install cjeu-py</code><br>
+                    <strong>Code:</strong> <a href="https://github.com/niccoloridi/cjeu-py" target="_blank">github.com/niccoloridi/cjeu-py</a><br>
+                    <strong>PyPI:</strong> <a href="https://pypi.org/project/cjeu-py/" target="_blank">pypi.org/project/cjeu-py</a>
+                </p>
+
+            </div>
+
+        </article>
+    </main>
+
+    <footer class="main-footer">
+        <p><a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a> &nbsp;|&nbsp; &copy; 2026 Niccolò Ridi. All Rights Reserved (probably).</p>
+    </footer>
+
+    <script>
+    /* ── DATA ─────────────────────────────────────────── */
+
+    const yearlyData = [
+        { year: 2004, count: 25 }, { year: 2005, count: 46 }, { year: 2006, count: 51 },
+        { year: 2007, count: 46 }, { year: 2008, count: 48 }, { year: 2009, count: 39 },
+        { year: 2010, count: 52 }, { year: 2011, count: 51 }, { year: 2012, count: 42 },
+        { year: 2013, count: 42 }, { year: 2014, count: 43 }, { year: 2015, count: 39 },
+        { year: 2016, count: 42 }, { year: 2017, count: 43 }, { year: 2018, count: 66 },
+        { year: 2019, count: 58 }, { year: 2020, count: 52 }, { year: 2021, count: 61 },
+        { year: 2022, count: 62 }, { year: 2023, count: 31 }, { year: 2024, count: 50 },
+        { year: 2025, count: 29 }
+    ];
+
+    const subjectData = [
+        { label: "Approximation of laws", count: 159 },
+        { label: "Freedom of establishment", count: 143 },
+        { label: "Charter of Fundamental Rights", count: 123 },
+        { label: "Principles of Treaties", count: 121 },
+        { label: "Free movement of persons", count: 114 },
+        { label: "Institutional law", count: 71 },
+        { label: "Social policy", count: 68 },
+        { label: "State aid", count: 55 },
+        { label: "Competition", count: 55 },
+        { label: "Freedom, security & justice", count: 54 }
+    ];
+
+    const precisionData = [
+        { label: "Substantive", count: 2255, pct: 79.0 },
+        { label: "General", count: 369, pct: 12.9 },
+        { label: "String", count: 230, pct: 8.1 }
+    ];
+
+    const useData = [
+        { label: "Principle", count: 1585, pct: 55.5 },
+        { label: "Interpretation", count: 424, pct: 14.9 },
+        { label: "Legal test", count: 239, pct: 8.4 },
+        { label: "Procedural", count: 225, pct: 7.9 },
+        { label: "Definition", count: 160, pct: 5.6 },
+        { label: "Jurisdictional", count: 109, pct: 3.8 },
+        { label: "Distinguish", count: 27, pct: 0.9 },
+        { label: "Other", count: 65, pct: 2.3 }
+    ];
+
+    const treatmentData = [
+        { label: "Follows", count: 2176, pct: 76.2 },
+        { label: "Neutral", count: 545, pct: 19.1 },
+        { label: "Dist. (scope)", count: 43, pct: 1.5 },
+        { label: "Extends", count: 24, pct: 0.8 },
+        { label: "Departs (expl.)", count: 23, pct: 0.8 },
+        { label: "Dist. (facts)", count: 16, pct: 0.6 },
+        { label: "Dist. (law)", count: 15, pct: 0.5 },
+        { label: "Departs (impl.)", count: 12, pct: 0.4 }
+    ];
+
+    const topCases = [
+        { name: "Kadi (2008)", celex: "62005CJ0402", count: 33 },
+        { name: "Opinion 2/13 (2014)", celex: "62013CV0002", count: 32 },
+        { name: "Åkerberg Fransson (2013)", celex: "62010CJ0617", count: 28 },
+        { name: "Bosman (1995)", celex: "61993CJ0415", count: 25 },
+        { name: "Egenberger (2018)", celex: "62016CJ0414", count: 25 },
+        { name: "Grzelczyk (2001)", celex: "61999CJ0184", count: 23 },
+        { name: "A.K. v Sąd Najwyższy (2019)", celex: "62018CJ0585", count: 22 },
+        { name: "Pfeiffer (2004)", celex: "62001CJ0397", count: 21 },
+        { name: "Simmenthal (1978)", celex: "61977CJ0106", count: 21 },
+        { name: "Assoc. Sind. Juízes Port. (2018)", celex: "62016CJ0064", count: 21 }
+    ];
+
+    const pipelineStages = [
+        { label: "Collect", sub: "CELLAR SPARQL", color: "--cjeu-collect" },
+        { label: "Download", sub: "EUR-Lex XHTML", color: "--cjeu-download" },
+        { label: "Parse", sub: "Headers & metadata", color: "--cjeu-parse" },
+        { label: "Extract", sub: "14 regex patterns", color: "--cjeu-extract" },
+        { label: "Classify", sub: "LLM taxonomy", color: "--cjeu-classify" },
+        { label: "Search", sub: "8 query modes", color: "--cjeu-search" },
+        { label: "Visualize", sub: "D3.js networks", color: "--cjeu-visualize" }
+    ];
+
+    function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+    /* ── PIPELINE ─────────────────────────────────── */
+    function drawPipeline() {
+        const container = d3.select("#viz-pipeline");
+        container.selectAll("*").remove();
+        const w = container.node().getBoundingClientRect().width;
+        const isMobile = w < 500;
+        const boxW = isMobile ? w * 0.65 : 100;
+        const boxH = isMobile ? 52 : 60;
+        const gap = isMobile ? 8 : 16;
+        const arrowLen = isMobile ? 16 : 24;
+        const totalW = isMobile ? w : pipelineStages.length * (boxW + arrowLen) - arrowLen;
+        const totalH = isMobile ? pipelineStages.length * (boxH + gap + arrowLen) : boxH + 40;
+
+        const wrapper = container.append("div").attr("class", "pipeline-wrapper");
+        const svg = wrapper.append("svg")
+            .attr("width", isMobile ? w : Math.max(totalW + 40, w))
+            .attr("height", totalH + 10)
+            .attr("viewBox", `0 0 ${isMobile ? w : Math.max(totalW + 40, w)} ${totalH + 10}`);
+
+        const startX = isMobile ? w / 2 : (Math.max(totalW + 40, w) - totalW) / 2;
+
+        pipelineStages.forEach((stage, i) => {
+            const col = css(stage.color);
+            let x, y;
+            if (isMobile) {
+                x = startX - boxW / 2;
+                y = i * (boxH + gap + arrowLen);
+            } else {
+                x = startX + i * (boxW + arrowLen);
+                y = 10;
+            }
+
+            const g = svg.append("g");
+
+            g.append("rect")
+                .attr("x", x).attr("y", y)
+                .attr("width", boxW).attr("height", boxH)
+                .attr("rx", 8)
+                .attr("fill", col).attr("fill-opacity", 0.15)
+                .attr("stroke", col).attr("stroke-width", 1.5);
+
+            g.append("text")
+                .attr("x", x + boxW / 2).attr("y", y + boxH * 0.4)
+                .attr("text-anchor", "middle")
+                .attr("font-size", "12px").attr("font-weight", "700")
+                .attr("fill", col)
+                .text(stage.label);
+
+            g.append("text")
+                .attr("x", x + boxW / 2).attr("y", y + boxH * 0.72)
+                .attr("text-anchor", "middle")
+                .attr("font-size", "9px")
+                .attr("fill", css("--secondary-color"))
+                .text(stage.sub);
+
+            // Arrow
+            if (i < pipelineStages.length - 1) {
+                if (isMobile) {
+                    const ax = w / 2;
+                    const ay = y + boxH + 2;
+                    svg.append("line")
+                        .attr("x1", ax).attr("y1", ay)
+                        .attr("x2", ax).attr("y2", ay + arrowLen - 4)
+                        .attr("stroke", css("--secondary-color")).attr("stroke-width", 1.5);
+                    svg.append("polygon")
+                        .attr("points", `${ax - 4},${ay + arrowLen - 8} ${ax + 4},${ay + arrowLen - 8} ${ax},${ay + arrowLen - 2}`)
+                        .attr("fill", css("--secondary-color"));
+                } else {
+                    const ax = x + boxW + 2;
+                    const ay = y + boxH / 2;
+                    svg.append("line")
+                        .attr("x1", ax).attr("y1", ay)
+                        .attr("x2", ax + arrowLen - 6).attr("y2", ay)
+                        .attr("stroke", css("--secondary-color")).attr("stroke-width", 1.5);
+                    svg.append("polygon")
+                        .attr("points", `${ax + arrowLen - 10},${ay - 4} ${ax + arrowLen - 10},${ay + 4} ${ax + arrowLen - 2},${ay}`)
+                        .attr("fill", css("--secondary-color"));
+                }
+            }
+        });
+    }
+
+    /* ── YEARLY BAR CHART ─────────────────────────── */
+    function drawYearly() {
+        const container = d3.select("#viz-yearly");
+        container.selectAll("*").remove();
+        const w = container.node().getBoundingClientRect().width;
+        const h = Math.min(300, w * 0.45);
+        const m = { top: 20, right: 20, bottom: 45, left: 45 };
+
+        const svg = container.append("svg")
+            .attr("width", w).attr("height", h)
+            .attr("viewBox", `0 0 ${w} ${h}`);
+
+        const x = d3.scaleBand()
+            .domain(yearlyData.map(d => d.year))
+            .range([m.left, w - m.right])
+            .padding(0.2);
+
+        const y = d3.scaleLinear()
+            .domain([0, d3.max(yearlyData, d => d.count) * 1.1])
+            .range([h - m.bottom, m.top]);
+
+        const g = svg.append("g");
+
+        // Bars
+        g.selectAll("rect").data(yearlyData).join("rect")
+            .attr("x", d => x(d.year))
+            .attr("y", d => y(d.count))
+            .attr("width", x.bandwidth())
+            .attr("height", d => y(0) - y(d.count))
+            .attr("fill", css("--bar-primary"))
+            .attr("rx", 2)
+            .attr("opacity", 0.85);
+
+        // Count labels on bars
+        g.selectAll(".bar-label").data(yearlyData).join("text")
+            .attr("class", "bar-label")
+            .attr("x", d => x(d.year) + x.bandwidth() / 2)
+            .attr("y", d => y(d.count) - 4)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "9px")
+            .attr("fill", css("--secondary-color"))
+            .text(d => d.count);
+
+        // X axis
+        svg.append("g")
+            .attr("transform", `translate(0,${h - m.bottom})`)
+            .call(d3.axisBottom(x).tickValues(yearlyData.filter((_, i) => i % 2 === 0).map(d => d.year)))
+            .selectAll("text")
+            .attr("font-size", "10px")
+            .attr("fill", css("--secondary-color"))
+            .attr("transform", "rotate(-45)")
+            .attr("text-anchor", "end");
+
+        svg.selectAll(".domain, .tick line").attr("stroke", css("--border-color"));
+
+        // Y axis
+        svg.append("g")
+            .attr("transform", `translate(${m.left},0)`)
+            .call(d3.axisLeft(y).ticks(5))
+            .selectAll("text")
+            .attr("font-size", "10px")
+            .attr("fill", css("--secondary-color"));
+    }
+
+    /* ── SUBJECTS HORIZONTAL BAR ──────────────────── */
+    function drawSubjects() {
+        const container = d3.select("#viz-subjects");
+        container.selectAll("*").remove();
+        const w = container.node().getBoundingClientRect().width;
+        const h = Math.min(380, w * 0.6);
+        const m = { top: 10, right: 40, bottom: 20, left: 180 };
+
+        if (w < 500) m.left = 130;
+
+        const svg = container.append("svg")
+            .attr("width", w).attr("height", h)
+            .attr("viewBox", `0 0 ${w} ${h}`);
+
+        const y = d3.scaleBand()
+            .domain(subjectData.map(d => d.label))
+            .range([m.top, h - m.bottom])
+            .padding(0.25);
+
+        const x = d3.scaleLinear()
+            .domain([0, d3.max(subjectData, d => d.count) * 1.1])
+            .range([m.left, w - m.right]);
+
+        // Bars
+        svg.selectAll("rect").data(subjectData).join("rect")
+            .attr("x", m.left)
+            .attr("y", d => y(d.label))
+            .attr("width", d => x(d.count) - m.left)
+            .attr("height", y.bandwidth())
+            .attr("fill", css("--bar-primary"))
+            .attr("rx", 3)
+            .attr("opacity", 0.85);
+
+        // Labels
+        svg.selectAll(".subj-label").data(subjectData).join("text")
+            .attr("x", m.left - 8)
+            .attr("y", d => y(d.label) + y.bandwidth() / 2)
+            .attr("text-anchor", "end")
+            .attr("dominant-baseline", "central")
+            .attr("font-size", w < 500 ? "9px" : "11px")
+            .attr("fill", css("--text-color"))
+            .text(d => d.label);
+
+        // Counts
+        svg.selectAll(".subj-count").data(subjectData).join("text")
+            .attr("x", d => x(d.count) + 5)
+            .attr("y", d => y(d.label) + y.bandwidth() / 2)
+            .attr("dominant-baseline", "central")
+            .attr("font-size", "10px")
+            .attr("font-weight", "600")
+            .attr("fill", css("--stat-color"))
+            .text(d => d.count);
+    }
+
+    /* ── CLASSIFICATION PANELS ────────────────────── */
+    function drawClassification() {
+        const container = d3.select("#viz-classification");
+        container.selectAll("*").remove();
+        const w = container.node().getBoundingClientRect().width;
+        const isMobile = w < 600;
+
+        const panels = [
+            { title: "Precision", data: precisionData, colors: [css("--bar-tertiary"), css("--bar-primary"), css("--secondary-color")] },
+            { title: "Use", data: useData.slice(0, 6), colors: null },
+            { title: "Treatment", data: treatmentData.slice(0, 5), colors: [css("--treatment-follows"), css("--treatment-neutral"), css("--treatment-distinguishes"), css("--bar-primary"), css("--treatment-departs")] }
+        ];
+
+        const wrapper = container.append("div")
+            .style("display", isMobile ? "block" : "flex")
+            .style("gap", "1.5rem")
+            .style("padding", "0 1rem");
+
+        panels.forEach((panel, pi) => {
+            const panelDiv = wrapper.append("div")
+                .style("flex", "1")
+                .style("margin-bottom", isMobile ? "1.5rem" : "0");
+
+            panelDiv.append("div")
+                .style("font-size", "0.85rem")
+                .style("font-weight", "700")
+                .style("color", css("--primary-color"))
+                .style("margin-bottom", "0.6rem")
+                .style("text-transform", "uppercase")
+                .style("letter-spacing", "0.04em")
+                .text(panel.title);
+
+            const panelW = isMobile ? w - 32 : (w - 80) / 3;
+            const barH = 22;
+            const gap = 4;
+            const labelW = pi === 0 ? 75 : (pi === 1 ? 85 : 80);
+            const panelH = panel.data.length * (barH + gap);
+
+            const svg = panelDiv.append("svg")
+                .attr("width", panelW)
+                .attr("height", panelH);
+
+            const maxPct = d3.max(panel.data, d => d.pct);
+            const barScale = d3.scaleLinear()
+                .domain([0, maxPct])
+                .range([0, panelW - labelW - 50]);
+
+            panel.data.forEach((d, i) => {
+                const yPos = i * (barH + gap);
+                const col = panel.colors
+                    ? (panel.colors[i] || css("--secondary-color"))
+                    : css("--bar-primary");
+
+                svg.append("text")
+                    .attr("x", labelW - 6)
+                    .attr("y", yPos + barH / 2)
+                    .attr("text-anchor", "end")
+                    .attr("dominant-baseline", "central")
+                    .attr("font-size", "10px")
+                    .attr("fill", css("--text-color"))
+                    .text(d.label);
+
+                svg.append("rect")
+                    .attr("x", labelW)
+                    .attr("y", yPos + 2)
+                    .attr("width", barScale(d.pct))
+                    .attr("height", barH - 4)
+                    .attr("fill", col)
+                    .attr("rx", 3)
+                    .attr("opacity", 0.8);
+
+                svg.append("text")
+                    .attr("x", labelW + barScale(d.pct) + 5)
+                    .attr("y", yPos + barH / 2)
+                    .attr("dominant-baseline", "central")
+                    .attr("font-size", "10px")
+                    .attr("font-weight", "600")
+                    .attr("fill", css("--stat-color"))
+                    .text(d.pct + "%");
+            });
+        });
+    }
+
+    /* ── TOP CASES ────────────────────────────────── */
+    function drawTopCases() {
+        const container = d3.select("#viz-topcases");
+        container.selectAll("*").remove();
+        const w = container.node().getBoundingClientRect().width;
+        const h = Math.min(380, w * 0.55);
+        const m = { top: 10, right: 40, bottom: 20, left: 200 };
+
+        if (w < 500) m.left = 155;
+
+        const svg = container.append("svg")
+            .attr("width", w).attr("height", h)
+            .attr("viewBox", `0 0 ${w} ${h}`);
+
+        const y = d3.scaleBand()
+            .domain(topCases.map(d => d.name))
+            .range([m.top, h - m.bottom])
+            .padding(0.2);
+
+        const x = d3.scaleLinear()
+            .domain([0, d3.max(topCases, d => d.count) * 1.15])
+            .range([m.left, w - m.right]);
+
+        // Bars
+        svg.selectAll("rect").data(topCases).join("rect")
+            .attr("x", m.left)
+            .attr("y", d => y(d.name))
+            .attr("width", d => x(d.count) - m.left)
+            .attr("height", y.bandwidth())
+            .attr("fill", css("--stat-color"))
+            .attr("rx", 3)
+            .attr("opacity", 0.8);
+
+        // Labels
+        svg.selectAll(".case-label").data(topCases).join("text")
+            .attr("x", m.left - 8)
+            .attr("y", d => y(d.name) + y.bandwidth() / 2)
+            .attr("text-anchor", "end")
+            .attr("dominant-baseline", "central")
+            .attr("font-size", w < 500 ? "9px" : "11px")
+            .attr("fill", css("--text-color"))
+            .text(d => d.name);
+
+        // Counts
+        svg.selectAll(".case-count").data(topCases).join("text")
+            .attr("x", d => x(d.count) + 5)
+            .attr("y", d => y(d.name) + y.bandwidth() / 2)
+            .attr("dominant-baseline", "central")
+            .attr("font-size", "11px")
+            .attr("font-weight", "700")
+            .attr("fill", css("--stat-color"))
+            .text(d => d.count);
+    }
+
+    /* ── RENDER ────────────────────────────────────── */
+    function renderAll() {
+        drawPipeline();
+        drawYearly();
+        drawSubjects();
+        drawClassification();
+        drawTopCases();
+    }
+
+    renderAll();
+    window._vizReady = true;
+
+    // Re-render on resize
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(renderAll, 200);
+    });
+
+    // Re-render on theme change
+    function reRenderVisible() { renderAll(); }
+
+    // Scroll reveal
+    const vizBlocks = document.querySelectorAll('.viz-reveal');
+    const vizObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                vizObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    vizBlocks.forEach(b => vizObserver.observe(b));
+
+    // Hamburger
+    const hamburger = document.querySelector('.hamburger-menu');
+    hamburger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
+    document.querySelectorAll('.main-nav a').forEach(link => {
+        link.addEventListener('click', () => document.body.classList.remove('nav-open'));
+    });
+
+    // Theme
+    const icons = { light: '◑', dark: '◐' };
+    const labels = { light: 'Light', dark: 'Dark' };
+    function getDefaultTheme() { return 'dark'; }
+    let currentTheme = localStorage.getItem('theme') || getDefaultTheme();
+    function applyTheme(t) {
+        document.body.classList.remove('dark-mode');
+        document.documentElement.classList.remove('dark-mode');
+        if (t === 'dark') { document.body.classList.add('dark-mode'); document.documentElement.classList.add('dark-mode'); }
+        document.getElementById('theme-icon').textContent = icons[t];
+        document.getElementById('theme-label').textContent = labels[t];
+        localStorage.setItem('theme', t);
+        currentTheme = t;
+        if (window._vizReady) reRenderVisible();
+    }
+    function toggleTheme() {
+        applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    }
+    applyTheme(currentTheme);
+    </script>
+
+</body>
+</html>
