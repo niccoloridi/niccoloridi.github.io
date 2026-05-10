@@ -15,10 +15,10 @@
             --background-color: #ffffff;
             --header-bg: #ffffff;
             --accent-color: #1a1a1a;
-            --net-node: rgba(130, 130, 130, 0.45);
-            --net-node-hub: rgba(80, 80, 80, 0.6);
-            --net-link: rgba(150, 150, 150, 0.3);
-            --net-pulse: rgba(100, 100, 100, 0.25);
+            --net-node: rgba(110, 110, 115, 0.55);
+            --net-node-hub: rgba(50, 50, 55, 0.78);
+            --net-link: rgba(140, 140, 145, 0.32);
+            --net-pulse: rgba(60, 60, 70, 0.85);
         }
 
         /* Dark theme */
@@ -30,10 +30,10 @@
             --background-color: #121212;
             --header-bg: #1a1a1a;
             --accent-color: #d4a574;
-            --net-node: rgba(212, 165, 116, 0.42);
-            --net-node-hub: rgba(212, 165, 116, 0.62);
-            --net-link: rgba(150, 150, 150, 0.28);
-            --net-pulse: rgba(212, 165, 116, 0.4);
+            --net-node: rgba(212, 165, 116, 0.55);
+            --net-node-hub: rgba(232, 188, 140, 0.85);
+            --net-link: rgba(180, 165, 145, 0.30);
+            --net-pulse: rgba(255, 218, 170, 0.95);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -260,8 +260,8 @@
 
             .hero-viz { flex: 1; }
 
-            :root { --net-link: rgba(160, 160, 160, 0.3); }
-            .dark-mode { --net-link: rgba(150, 150, 150, 0.26); }
+            :root { --net-link: rgba(140, 140, 145, 0.36); }
+            .dark-mode { --net-link: rgba(180, 165, 145, 0.34); }
 
             .hamburger-menu { display: block; }
 
@@ -474,12 +474,27 @@
                 }
             }
 
-            // Read initial colors from CSS variables
+            // Connect any orphan node (degree 0) to its cluster's hub
+            (function fixOrphans() {
+                var degree = {};
+                nodes.forEach(function(n) { degree[n.id] = 0; });
+                links.forEach(function(l) { degree[l.source]++; degree[l.target]++; });
+                nodes.forEach(function(n) {
+                    if (degree[n.id] !== 0) return;
+                    var hub = nodes.find(function(m) { return m.hub && m.cluster === n.cluster && m.id !== n.id; });
+                    if (!hub) hub = nodes.find(function(m) { return m.id !== n.id; });
+                    if (hub) {
+                        links.push({ source: n.id, target: hub.id });
+                        degree[n.id]++; degree[hub.id]++;
+                    }
+                });
+            })();
+
+            // Read initial colors from CSS variables (pulse color is read per pulse)
             var s = getComputedStyle(document.documentElement);
             var nodeColor = s.getPropertyValue('--net-node').trim();
             var hubColor = s.getPropertyValue('--net-node-hub').trim();
             var linkColor = s.getPropertyValue('--net-link').trim();
-            var pulseColor = s.getPropertyValue('--net-pulse').trim();
 
             // Create SVG
             netSvg = d3.select('#hero-viz').append('svg')
@@ -507,6 +522,9 @@
                 .attr('opacity', 0)
                 .attr('cx', function(d) { return d.x; })
                 .attr('cy', function(d) { return d.y; });
+
+            // Shine overlay layer — temporary lines that slide a bright dash along an edge
+            var shineLayer = netSvg.append('g').attr('class', 'shine-layer').attr('pointer-events', 'none');
 
             // Force simulation
             var simulation = d3.forceSimulation(nodes)
@@ -554,30 +572,66 @@
                 .attr('stroke-opacity', 1);
 
             // ─── Ambient pulse after settling ───
-            setTimeout(function() {
-                setInterval(function() {
-                    // Pulse a random node
-                    var ri = Math.floor(Math.random() * nodes.length);
-                    var sel = node.filter(function(d, i) { return i === ri; });
-                    var origR = nodes[ri].r;
-                    sel.transition().duration(1200).ease(d3.easeSinInOut)
-                        .attr('r', origR * 1.6)
-                        .attr('fill', pulseColor)
-                        .transition().duration(1200).ease(d3.easeSinInOut)
-                        .attr('r', origR)
-                        .attr('fill', nodes[ri].hub ? hubColor : nodeColor);
+            // Pulse color refreshed per tick so theme toggles are reflected,
+            // and the timer is paused while the tab is hidden.
+            var pulseTimer = null;
+            function shineEdge(d, pc) {
+                if (!d || !d.source || typeof d.source !== 'object') return;
+                var x1 = d.source.x, y1 = d.source.y;
+                var x2 = d.target.x, y2 = d.target.y;
+                var dx = x2 - x1, dy = y2 - y1;
+                var len = Math.sqrt(dx*dx + dy*dy);
+                if (len < 8) return;
+                var dashLen = Math.min(18, len * 0.35);
+                shineLayer.append('line')
+                    .attr('x1', x1).attr('y1', y1).attr('x2', x2).attr('y2', y2)
+                    .attr('stroke', pc)
+                    .attr('stroke-width', 1.6)
+                    .attr('stroke-linecap', 'round')
+                    .attr('stroke-opacity', 0.9)
+                    .attr('stroke-dasharray', dashLen + ' ' + (len + dashLen + 4))
+                    .attr('stroke-dashoffset', len + dashLen)
+                  .transition().duration(820).ease(d3.easeQuadInOut)
+                    .attr('stroke-dashoffset', -dashLen)
+                  .transition().duration(140).attr('stroke-opacity', 0)
+                    .remove();
+            }
+            function pulseTick() {
+                var pc = getComputedStyle(document.documentElement).getPropertyValue('--net-pulse').trim();
 
-                    // Pulse a random link
-                    var li = Math.floor(Math.random() * links.length);
-                    var lsel = link.filter(function(d, i) { return i === li; });
-                    lsel.transition().duration(900).ease(d3.easeSinInOut)
-                        .attr('stroke-opacity', 3)
-                        .attr('stroke-width', 2)
-                        .transition().duration(900).ease(d3.easeSinInOut)
-                        .attr('stroke-opacity', 1)
-                        .attr('stroke-width', strokeW);
-                }, 2500);
-            }, 4000);
+                // Pulse a random node
+                var ri = Math.floor(Math.random() * nodes.length);
+                var sel = node.filter(function(d, i) { return i === ri; });
+                var origR = nodes[ri].r;
+                sel.transition().duration(1200).ease(d3.easeSinInOut)
+                    .attr('r', origR * 1.6)
+                    .attr('fill', pc)
+                    .transition().duration(1200).ease(d3.easeSinInOut)
+                    .attr('r', origR)
+                    .attr('fill', nodes[ri].hub ? hubColor : nodeColor);
+
+                // Pulse a random link + slide a shine along it
+                var li = Math.floor(Math.random() * links.length);
+                var lsel = link.filter(function(d, i) { return i === li; });
+                lsel.transition().duration(900).ease(d3.easeSinInOut)
+                    .attr('stroke-width', 1.8)
+                    .transition().duration(900).ease(d3.easeSinInOut)
+                    .attr('stroke-width', strokeW);
+                shineEdge(links[li], pc);
+            }
+            function startPulses() {
+                if (pulseTimer) return;
+                pulseTimer = setInterval(pulseTick, 2500);
+            }
+            function stopPulses() {
+                if (!pulseTimer) return;
+                clearInterval(pulseTimer);
+                pulseTimer = null;
+            }
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) stopPulses(); else startPulses();
+            });
+            setTimeout(function() { if (!document.hidden) startPulses(); }, 4000);
         })();
     </script>
 
