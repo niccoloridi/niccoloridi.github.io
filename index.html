@@ -6,6 +6,11 @@
     <title>Niccolò Ridi | Public International Law</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script>(function(){var t=localStorage.getItem('theme');if(!t)t='dark';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
+    <script type="importmap">
+    {
+      "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" }
+    }
+    </script>
     <style>
         :root {
             --primary-color: #1a1a1a;
@@ -21,7 +26,6 @@
             --net-pulse: rgba(60, 60, 70, 0.85);
         }
 
-        /* Dark theme */
         .dark-mode {
             --primary-color: #e8eaed;
             --secondary-color: #9aa0ab;
@@ -52,7 +56,6 @@
         a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
         a:hover { color: var(--secondary-color); }
 
-        /* Dark mode link accent */
         .dark-mode a { color: var(--accent-color); }
         .dark-mode a:hover { color: #e8c49a; }
         .dark-mode .main-nav a { color: var(--primary-color); }
@@ -60,10 +63,9 @@
         .dark-mode .main-nav .ext-link:hover { color: var(--primary-color); }
         .dark-mode .main-footer a { color: var(--accent-color); }
         .dark-mode .social-links a { color: var(--secondary-color); }
-        .dark-mode .social-links a:hover { color: var(--accent-color); }
+        .dark-mode .social-links a:hover { color: var(--primary-color); }
         .dark-mode .main-header { box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
 
-        /* Theme toggle */
         .theme-toggle {
             background: none;
             border: 1px solid var(--border-color);
@@ -81,18 +83,14 @@
         }
         .theme-toggle:hover { color: var(--primary-color); border-color: var(--primary-color); }
 
-        /* Header */
         .main-header {
             background: var(--header-bg);
             padding: 1.5rem 0;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             z-index: 1000;
             box-shadow: 0 2px 10px rgba(0,0,0,0.07);
         }
-
         .main-header .container {
             max-width: 960px;
             margin: auto;
@@ -102,82 +100,26 @@
             align-items: center;
             gap: 1rem;
         }
+        .main-header .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary-color); }
 
-        .main-header .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-
-        .main-nav ul {
-            list-style: none;
-            display: flex;
-            gap: 2rem;
-        }
-
-        .main-nav a {
-            color: var(--primary-color);
-            font-weight: normal;
-            position: relative;
-            padding: 0.5rem 0;
-        }
-
+        .main-nav ul { list-style: none; display: flex; gap: 2rem; }
+        .main-nav a { color: var(--primary-color); font-weight: normal; position: relative; padding: 0.5rem 0; }
         .main-nav a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--primary-color);
+            content: ''; position: absolute; bottom: 0; left: 0;
+            width: 0; height: 2px; background-color: var(--primary-color);
             transition: width 0.3s ease;
         }
-
         .main-nav a:hover::after { width: 100%; }
-
-        .nav-sep {
-            width: 1px;
-            background: var(--border-color);
-            align-self: stretch;
-            margin: 0 0.2rem;
-        }
-
+        .nav-sep { width: 1px; background: var(--border-color); align-self: stretch; margin: 0 0.2rem; }
         .main-nav .ext-link { color: var(--secondary-color); font-size: 0.85rem; }
         .main-nav .ext-link:hover { color: var(--primary-color); }
 
-        /* Hamburger */
-        .hamburger-menu {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 10px;
-            z-index: 1001;
-        }
+        .hamburger-menu { display: none; background: none; border: none; cursor: pointer; padding: 10px; z-index: 1001; }
+        .hamburger-menu .line { display: block; width: 25px; height: 2px; background-color: var(--primary-color); margin: 5px 0; transition: transform 0.3s ease, opacity 0.3s ease; }
 
-        .hamburger-menu .line {
-            display: block;
-            width: 25px;
-            height: 2px;
-            background-color: var(--primary-color);
-            margin: 5px 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
+        .page { height: 100vh; display: flex; flex-direction: column; }
 
-        /* Page layout */
-        .page {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Hero */
-        .hero {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
-        }
-
+        .hero { flex: 1; display: flex; overflow: hidden; }
         .hero .container {
             width: 100%;
             max-width: none;
@@ -197,13 +139,8 @@
             margin-left: max(0px, calc((100% - 960px) / 2));
         }
 
-        .hero-viz {
-            flex: 1;
-            position: relative;
-            min-width: 0;
-        }
-
-        .hero-viz svg { width: 100%; height: 100%; }
+        .hero-viz { flex: 1; position: relative; min-width: 0; }
+        .hero-viz canvas, .hero-viz svg { width: 100%; height: 100%; display: block; }
 
         .hero h1 {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -228,71 +165,43 @@
             color: var(--secondary-color);
             transition: color 0.3s ease;
         }
-
         .social-links a:hover { color: var(--primary-color); }
-
         .social-icon { display: none; }
 
-        /* Footer */
-        .main-footer {
-            padding: 1.5rem 2rem;
-            text-align: center;
-            font-size: 0.9rem;
-            color: var(--secondary-color);
-        }
-
+        .main-footer { padding: 1.5rem 2rem; text-align: center; font-size: 0.9rem; color: var(--secondary-color); }
         .main-footer a { color: var(--primary-color); }
 
-        /* Responsive */
         @media (max-width: 768px) {
             body.nav-open { overflow: hidden; }
-
             .hero h1 { font-size: 2.5rem; }
             .hero { text-align: center; }
             .hero .container { flex-direction: column-reverse; padding-top: 6.5rem; padding-bottom: 1rem; }
             .hero-text { flex: 0 0 auto; margin-left: 0; min-width: 0; }
             .hero .subtitle { margin-left: auto; margin-right: auto; }
-
             .social-links { display: flex; flex-direction: row; gap: 1.8rem; align-items: center; justify-content: center; }
             .social-links a { margin-right: 0; }
             .social-text { display: none; }
             .social-icon { display: block; width: 24px; height: 24px; }
-
             .hero-viz { flex: 1; }
-
             :root { --net-link: rgba(140, 140, 145, 0.36); }
             .dark-mode { --net-link: rgba(180, 165, 145, 0.34); }
-
             .hamburger-menu { display: block; }
-
             .main-nav {
-                position: fixed;
-                top: 0; left: 0;
+                position: fixed; top: 0; left: 0;
                 width: 100%; height: 100vh;
                 background-color: var(--background-color);
-                display: flex;
-                justify-content: center;
-                align-items: center;
+                display: flex; justify-content: center; align-items: center;
                 transform: translateX(100%);
                 transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
             }
-
             body.nav-open .main-nav { transform: translateX(0); }
-
-            .main-nav ul {
-                flex-direction: column;
-                gap: 2rem;
-                text-align: center;
-            }
-
+            .main-nav ul { flex-direction: column; gap: 2rem; text-align: center; }
             .main-nav a { font-size: 1.5rem; }
             .main-nav a::after { display: none; }
-
             body.nav-open .hamburger-menu .line-1 { transform: rotate(45deg) translate(5px, 5px); }
             body.nav-open .hamburger-menu .line-2 { opacity: 0; }
             body.nav-open .hamburger-menu .line-3 { transform: rotate(-45deg) translate(5px, -5px); }
         }
-
     </style>
 </head>
 <body>
@@ -355,12 +264,10 @@
             link.addEventListener('click', () => document.body.classList.remove('nav-open'));
         });
 
-        // Theme
         const icons = { light: '◑', dark: '◐' };
         const labels = { light: 'Light', dark: 'Dark' };
-        function getDefaultTheme() { return 'dark'; }
-        let currentTheme = localStorage.getItem('theme') || getDefaultTheme();
-
+        let currentTheme = localStorage.getItem('theme') || 'dark';
+        window.__themeListeners = [];
         function applyTheme(t) {
             document.body.classList.remove('dark-mode');
             document.documentElement.classList.remove('dark-mode');
@@ -369,270 +276,540 @@
             document.getElementById('theme-label').textContent = labels[t];
             localStorage.setItem('theme', t);
             currentTheme = t;
-            // Update network colors on theme change
-            updateNetworkColors(t);
+            window.__themeListeners.forEach(fn => { try { fn(t); } catch(e) {} });
         }
-
-        function toggleTheme() {
-            applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
-        }
-
+        function toggleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
         applyTheme(currentTheme);
+    </script>
 
-        // ─── Animated Network ───
-        var netNodes, netLinks, netSvg;
+    <script type="module">
+        // ─── Flat WebGL Network (mirrors index.html behavior with halos + traveling shine particle) ───
+        const container = document.getElementById('hero-viz');
 
-        function updateNetworkColors(theme) {
-            if (!netSvg) return;
-            var s = getComputedStyle(document.documentElement);
-            netSvg.selectAll('.net-node')
-                .transition().duration(600)
-                .attr('fill', s.getPropertyValue('--net-node').trim())
-                .attr('opacity', 1);
-            netSvg.selectAll('.net-node-hub')
-                .transition().duration(600)
-                .attr('fill', s.getPropertyValue('--net-node-hub').trim())
-                .attr('opacity', 1);
-            netSvg.selectAll('.net-link')
-                .transition().duration(600)
-                .attr('stroke', s.getPropertyValue('--net-link').trim());
+        function hasWebGL() {
+            try {
+                const c = document.createElement('canvas');
+                return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl')));
+            } catch (e) { return false; }
         }
 
-        (function initNetwork() {
-            var vizEl = document.getElementById('hero-viz');
-            if (!vizEl) return;
-
-            // Read actual container dimensions
-            var rect = vizEl.getBoundingClientRect();
-            var W = Math.floor(rect.width) || 420;
-            var H = Math.floor(rect.height) || 380;
-            if (W < 50 || H < 50) return;
-            var isMobile = window.innerWidth < 769;
-            var strokeW = isMobile ? 1.4 : 1.0;
-            var nodes = [], links = [];
-            var id = 0;
-
-            // Scale clusters and nodes to canvas size
-            var diag = Math.sqrt(W * W + H * H);
-            var nClusters = Math.min(9, Math.max(4, Math.round(diag / 140)));
-            var baseSize = Math.round(7 + diag / 180);
-
-            // Generate cluster centers with good spread
-            var centers = [];
-            for (var c = 0; c < nClusters; c++) {
-                centers.push([0.1 + Math.random() * 0.8, 0.1 + Math.random() * 0.8]);
+        if (!hasWebGL()) {
+            initSVGFallback();
+        } else {
+            try {
+                const THREE = await import('three');
+                initWebGL(THREE);
+            } catch (err) {
+                console.warn('three.js failed to load, falling back to SVG', err);
+                initSVGFallback();
             }
-            var sizes = [];
-            for (var c = 0; c < nClusters; c++) {
-                sizes.push(baseSize + Math.floor(Math.random() * 5) - 2);
+        }
+
+        function initWebGL(THREE) {
+            const rect = container.getBoundingClientRect();
+            let W = Math.max(50, Math.floor(rect.width));
+            let H = Math.max(50, Math.floor(rect.height));
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+            renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+            renderer.setSize(W, H);
+            renderer.setClearColor(0x000000, 0);
+            container.appendChild(renderer.domElement);
+
+            const scene = new THREE.Scene();
+            // Orthographic camera — true "flat" projection, 1 world unit = 1 CSS pixel
+            const camera = new THREE.OrthographicCamera(-W/2, W/2, H/2, -H/2, -1000, 1000);
+
+            // ─── Theme colors ───
+            function readColors() {
+                const s = getComputedStyle(document.documentElement);
+                const parse = (k, fb) => {
+                    const v = s.getPropertyValue(k).trim();
+                    const c = new THREE.Color();
+                    try { c.setStyle(v); } catch(e) { c.setHex(fb); }
+                    return c;
+                };
+                return {
+                    node:  parse('--net-node',     0xd4a574),
+                    hub:   parse('--net-node-hub', 0xf4c891),
+                    link:  parse('--net-link',     0xd4a574),
+                    pulse: parse('--net-pulse',    0xffddaa)
+                };
+            }
+            let theme = readColors();
+
+            // ─── Graph data (mirroring index.html sizing and clustering) ───
+            const diag = Math.sqrt(W*W + H*H);
+            const nClusters = Math.min(9, Math.max(4, Math.round(diag / 140)));
+            const baseClusterSize = Math.round(7 + diag / 180);
+
+            const centers = [];
+            for (let c = 0; c < nClusters; c++) {
+                centers.push([
+                    (Math.random() - 0.5) * W * 0.8,
+                    (Math.random() - 0.5) * H * 0.8
+                ]);
             }
 
-            for (var c = 0; c < nClusters; c++) {
-                for (var i = 0; i < sizes[c]; i++) {
+            const nodes = [];
+            for (let c = 0; c < nClusters; c++) {
+                const count = baseClusterSize + Math.floor(Math.random() * 5) - 2;
+                for (let i = 0; i < count; i++) {
+                    const isHub = i === 0;
                     nodes.push({
-                        id: id++,
+                        id: nodes.length,
                         cluster: c,
-                        r: 2.5 + Math.random() * 4,
-                        hub: false,
-                        x: centers[c][0] * W + (Math.random() - 0.5) * W * 0.2,
-                        y: centers[c][1] * H + (Math.random() - 0.5) * H * 0.2
+                        hub: isHub,
+                        // d3 collision radius (mirror SVG node radii)
+                        r: isHub ? 7 + Math.random() * 3 : 2.5 + Math.random() * 4,
+                        // Shader point size (with room for halo around the disc)
+                        baseSize: isHub ? 32 + Math.random() * 12 : 13 + Math.random() * 9,
+                        x: centers[c][0] + (Math.random() - 0.5) * 60,
+                        y: centers[c][1] + (Math.random() - 0.5) * 50,
+                        flash: 0, flashStart: 0, flashDur: 0,
+                        entranceDelay: c * 350 + Math.random() * 250,
+                        entranceDur: 900
                     });
                 }
             }
 
-            // Promote first node of each cluster to hub
-            var hubIdx = 0;
-            for (var c = 0; c < nClusters; c++) {
-                if (nodes[hubIdx]) { nodes[hubIdx].r = 7 + Math.random() * 3; nodes[hubIdx].hub = true; }
-                hubIdx += sizes[c];
-            }
-
             // Intra-cluster edges
-            for (var c = 0; c < nClusters; c++) {
-                var cn = nodes.filter(function(n) { return n.cluster === c; });
-                for (var i = 0; i < cn.length; i++) {
-                    for (var j = i + 1; j < cn.length; j++) {
-                        if (Math.random() < 0.3) {
-                            links.push({ source: cn[i].id, target: cn[j].id });
-                        }
+            const edges = [];
+            for (let c = 0; c < nClusters; c++) {
+                const ci = nodes.map((n, i) => n.cluster === c ? i : -1).filter(i => i >= 0);
+                for (let a = 0; a < ci.length; a++) {
+                    for (let b = a+1; b < ci.length; b++) {
+                        if (Math.random() < 0.3) edges.push({ s: ci[a], t: ci[b], boostStart: 0, boostDur: 0 });
                     }
                 }
             }
-
-            // Inter-cluster bridges (1-2 per pair)
-            for (var c1 = 0; c1 < nClusters; c1++) {
-                for (var c2 = c1 + 1; c2 < nClusters; c2++) {
-                    var n1 = nodes.filter(function(n) { return n.cluster === c1; });
-                    var n2 = nodes.filter(function(n) { return n.cluster === c2; });
-                    var bridges = 1 + Math.floor(Math.random() * 2);
-                    for (var b = 0; b < bridges; b++) {
-                        links.push({
-                            source: n1[Math.floor(Math.random() * n1.length)].id,
-                            target: n2[Math.floor(Math.random() * n2.length)].id
+            // Inter-cluster bridges
+            for (let c1 = 0; c1 < nClusters; c1++) {
+                for (let c2 = c1+1; c2 < nClusters; c2++) {
+                    const n1 = nodes.map((n, i) => n.cluster === c1 ? i : -1).filter(i => i >= 0);
+                    const n2 = nodes.map((n, i) => n.cluster === c2 ? i : -1).filter(i => i >= 0);
+                    const bridges = 1 + Math.floor(Math.random() * 2);
+                    for (let b = 0; b < bridges; b++) {
+                        edges.push({
+                            s: n1[Math.floor(Math.random() * n1.length)],
+                            t: n2[Math.floor(Math.random() * n2.length)],
+                            boostStart: 0, boostDur: 0
                         });
                     }
                 }
             }
-
-            // Connect any orphan node (degree 0) to its cluster's hub
+            // Orphan fix
             (function fixOrphans() {
-                var degree = {};
-                nodes.forEach(function(n) { degree[n.id] = 0; });
-                links.forEach(function(l) { degree[l.source]++; degree[l.target]++; });
-                nodes.forEach(function(n) {
-                    if (degree[n.id] !== 0) return;
-                    var hub = nodes.find(function(m) { return m.hub && m.cluster === n.cluster && m.id !== n.id; });
-                    if (!hub) hub = nodes.find(function(m) { return m.id !== n.id; });
-                    if (hub) {
-                        links.push({ source: n.id, target: hub.id });
-                        degree[n.id]++; degree[hub.id]++;
-                    }
+                const degree = new Array(nodes.length).fill(0);
+                edges.forEach(e => { degree[e.s]++; degree[e.t]++; });
+                nodes.forEach((n, i) => {
+                    if (degree[i] !== 0) return;
+                    let hubIdx = nodes.findIndex(m => m.hub && m.cluster === n.cluster && m.id !== n.id);
+                    if (hubIdx < 0) hubIdx = nodes.findIndex(m => m.id !== n.id);
+                    if (hubIdx >= 0) { edges.push({ s: i, t: hubIdx, boostStart: 0, boostDur: 0 }); degree[i]++; degree[hubIdx]++; }
                 });
             })();
+            // Edge entrance delays
+            edges.forEach(e => {
+                const sc = nodes[e.s].cluster;
+                e.entranceDelay = sc * 350 + 200 + Math.random() * 300;
+                e.entranceDur = 700;
+            });
 
-            // Read initial colors from CSS variables (pulse color is read per pulse)
-            var s = getComputedStyle(document.documentElement);
-            var nodeColor = s.getPropertyValue('--net-node').trim();
-            var hubColor = s.getPropertyValue('--net-node-hub').trim();
-            var linkColor = s.getPropertyValue('--net-link').trim();
-
-            // Create SVG
-            netSvg = d3.select('#hero-viz').append('svg')
-                .attr('viewBox', '0 0 ' + W + ' ' + H)
-                .attr('preserveAspectRatio', 'xMidYMid meet');
-
-            // Links
-            var link = netSvg.append('g').selectAll('line')
-                .data(links).join('line')
-                .attr('class', 'net-link')
-                .attr('stroke', linkColor)
-                .attr('stroke-width', strokeW)
-                .attr('stroke-opacity', 0)
-                .attr('x1', function(d) { return nodes[d.source] ? nodes[d.source].x : 0; })
-                .attr('y1', function(d) { return nodes[d.source] ? nodes[d.source].y : 0; })
-                .attr('x2', function(d) { return nodes[d.target] ? nodes[d.target].x : 0; })
-                .attr('y2', function(d) { return nodes[d.target] ? nodes[d.target].y : 0; });
-
-            // Nodes
-            var node = netSvg.append('g').selectAll('circle')
-                .data(nodes).join('circle')
-                .attr('class', function(d) { return d.hub ? 'net-node-hub' : 'net-node'; })
-                .attr('r', function(d) { return d.r; })
-                .attr('fill', function(d) { return d.hub ? hubColor : nodeColor; })
-                .attr('opacity', 0)
-                .attr('cx', function(d) { return d.x; })
-                .attr('cy', function(d) { return d.y; });
-
-            // Shine overlay layer — temporary lines that slide a bright dash along an edge
-            var shineLayer = netSvg.append('g').attr('class', 'shine-layer').attr('pointer-events', 'none');
-
-            // Force simulation
-            var simulation = d3.forceSimulation(nodes)
-                .force('link', d3.forceLink(links).id(function(d) { return d.id; }).distance(25 + diag / 25).strength(0.15))
+            // ─── Live d3 force simulation (same parameters as index.html) ───
+            const simLinks = edges.map(e => ({ source: e.s, target: e.t }));
+            const simulation = d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(simLinks).distance(25 + diag / 25).strength(0.15))
                 .force('charge', d3.forceManyBody().strength(-12 - diag / 55))
-                .force('center', d3.forceCenter(W / 2, H / 2).strength(0.04))
-                .force('collision', d3.forceCollide().radius(function(d) { return d.r + 3; }))
-                .force('x', d3.forceX(W / 2).strength(0.02))
-                .force('y', d3.forceY(H / 2).strength(0.02))
+                .force('center', d3.forceCenter(0, 0).strength(0.04))
+                .force('collision', d3.forceCollide().radius(d => d.r + 3))
+                .force('x', d3.forceX(0).strength(0.02))
+                .force('y', d3.forceY(0).strength(0.02))
                 .alpha(0.4)
                 .alphaDecay(0.015)
-                .on('tick', function() {
-                    // Keep nodes in bounds
-                    nodes.forEach(function(d) {
-                        d.x = Math.max(d.r, Math.min(W - d.r, d.x));
-                        d.y = Math.max(d.r, Math.min(H - d.r, d.y));
-                    });
-                    link
-                        .attr('x1', function(d) { return d.source.x; })
-                        .attr('y1', function(d) { return d.source.y; })
-                        .attr('x2', function(d) { return d.target.x; })
-                        .attr('y2', function(d) { return d.target.y; });
-                    node
-                        .attr('cx', function(d) { return d.x; })
-                        .attr('cy', function(d) { return d.y; });
-                });
+                .stop();  // we tick manually in the rAF loop
 
-            // ─── Entrance animation ───
-
-            // Nodes fade in, staggered by cluster
-            node.transition()
-                .delay(function(d) { return d.cluster * 350 + Math.random() * 250; })
-                .duration(900)
-                .ease(d3.easeCubicOut)
-                .attr('opacity', 1);
-
-            // Links draw in alongside their source node's cluster
-            link.transition()
-                .delay(function(d) {
-                    var srcCluster = (typeof d.source === 'object') ? d.source.cluster : nodes[d.source].cluster;
-                    return srcCluster * 350 + 200 + Math.random() * 300;
-                })
-                .duration(700)
-                .ease(d3.easeCubicOut)
-                .attr('stroke-opacity', 1);
-
-            // ─── Ambient pulse after settling ───
-            // Pulse color refreshed per tick so theme toggles are reflected,
-            // and the timer is paused while the tab is hidden.
-            var pulseTimer = null;
-            function shineEdge(d, pc) {
-                if (!d || !d.source || typeof d.source !== 'object') return;
-                var x1 = d.source.x, y1 = d.source.y;
-                var x2 = d.target.x, y2 = d.target.y;
-                var dx = x2 - x1, dy = y2 - y1;
-                var len = Math.sqrt(dx*dx + dy*dy);
-                if (len < 8) return;
-                var dashLen = Math.min(18, len * 0.35);
-                shineLayer.append('line')
-                    .attr('x1', x1).attr('y1', y1).attr('x2', x2).attr('y2', y2)
-                    .attr('stroke', pc)
-                    .attr('stroke-width', 1.6)
-                    .attr('stroke-linecap', 'round')
-                    .attr('stroke-opacity', 0.9)
-                    .attr('stroke-dasharray', dashLen + ' ' + (len + dashLen + 4))
-                    .attr('stroke-dashoffset', len + dashLen)
-                  .transition().duration(820).ease(d3.easeQuadInOut)
-                    .attr('stroke-dashoffset', -dashLen)
-                  .transition().duration(140).attr('stroke-opacity', 0)
-                    .remove();
+            // ─── Node mesh ───
+            const nodeGeom = new THREE.BufferGeometry();
+            const nodePos = new Float32Array(nodes.length * 3);
+            const nodeSize = new Float32Array(nodes.length);
+            const nodeColor = new Float32Array(nodes.length * 3);
+            const nodeFlash = new Float32Array(nodes.length);
+            const nodeOpacity = new Float32Array(nodes.length);
+            for (let i = 0; i < nodes.length; i++) {
+                nodePos[i*3] = nodes[i].x; nodePos[i*3+1] = nodes[i].y; nodePos[i*3+2] = 0;
+                nodeSize[i] = nodes[i].baseSize;
+                const col = nodes[i].hub ? theme.hub : theme.node;
+                nodeColor[i*3] = col.r; nodeColor[i*3+1] = col.g; nodeColor[i*3+2] = col.b;
+                nodeFlash[i] = 0;
+                nodeOpacity[i] = 0;
             }
+            nodeGeom.setAttribute('position', new THREE.BufferAttribute(nodePos, 3));
+            nodeGeom.setAttribute('aSize', new THREE.BufferAttribute(nodeSize, 1));
+            nodeGeom.setAttribute('aColor', new THREE.BufferAttribute(nodeColor, 3));
+            nodeGeom.setAttribute('aFlash', new THREE.BufferAttribute(nodeFlash, 1));
+            nodeGeom.setAttribute('aOpacity', new THREE.BufferAttribute(nodeOpacity, 1));
+
+            const nodeMat = new THREE.ShaderMaterial({
+                uniforms: {
+                    uPulse:   { value: theme.pulse.clone() },
+                    uPxRatio: { value: renderer.getPixelRatio() }
+                },
+                vertexShader: `
+                    attribute float aSize;
+                    attribute vec3 aColor;
+                    attribute float aFlash;
+                    attribute float aOpacity;
+                    varying vec3 vColor;
+                    varying float vFlash;
+                    varying float vOpacity;
+                    uniform float uPxRatio;
+                    void main() {
+                        vColor = aColor;
+                        vFlash = aFlash;
+                        vOpacity = aOpacity;
+                        // Orthographic — no perspective scaling needed
+                        gl_PointSize = aSize * (1.0 + aFlash * 0.6) * uPxRatio;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    varying vec3 vColor;
+                    varying float vFlash;
+                    varying float vOpacity;
+                    uniform vec3 uPulse;
+                    void main() {
+                        if (vOpacity < 0.01) discard;
+                        vec2 p = gl_PointCoord - 0.5;
+                        float d = length(p);
+                        if (d > 0.5) discard;
+                        // Tight disc + soft halo (this is the "particle with halo" effect)
+                        float core = smoothstep(0.42, 0.0, d);
+                        float halo = smoothstep(0.5, 0.18, d) * 0.45;
+                        vec3 c = mix(vColor, uPulse, vFlash);
+                        gl_FragColor = vec4(c * (0.95 + vFlash * 0.6), (core + halo) * vOpacity);
+                    }
+                `,
+                transparent: true,
+                depthWrite: false,
+                blending: THREE.AdditiveBlending
+            });
+            const nodePoints = new THREE.Points(nodeGeom, nodeMat);
+            scene.add(nodePoints);
+
+            // ─── Edge mesh ───
+            const edgeGeom = new THREE.BufferGeometry();
+            const edgePos = new Float32Array(edges.length * 6);
+            const edgeBoost = new Float32Array(edges.length * 2);
+            const edgeOpacity = new Float32Array(edges.length * 2);
+            for (let i = 0; i < edges.length; i++) {
+                const a = nodes[edges[i].s], b = nodes[edges[i].t];
+                edgePos[i*6] = a.x; edgePos[i*6+1] = a.y; edgePos[i*6+2] = 0;
+                edgePos[i*6+3] = b.x; edgePos[i*6+4] = b.y; edgePos[i*6+5] = 0;
+            }
+            edgeGeom.setAttribute('position', new THREE.BufferAttribute(edgePos, 3));
+            edgeGeom.setAttribute('aBoost', new THREE.BufferAttribute(edgeBoost, 1));
+            edgeGeom.setAttribute('aOpacity', new THREE.BufferAttribute(edgeOpacity, 1));
+
+            const edgeMat = new THREE.ShaderMaterial({
+                uniforms: {
+                    uColor: { value: theme.link.clone() },
+                    uPulse: { value: theme.pulse.clone() }
+                },
+                vertexShader: `
+                    attribute float aBoost;
+                    attribute float aOpacity;
+                    varying float vB;
+                    varying float vO;
+                    void main() {
+                        vB = aBoost;
+                        vO = aOpacity;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    uniform vec3 uColor;
+                    uniform vec3 uPulse;
+                    varying float vB;
+                    varying float vO;
+                    void main() {
+                        vec3 c = mix(uColor, uPulse, vB);
+                        gl_FragColor = vec4(c * (1.0 + vB * 0.5), (0.6 + vB * 0.35) * vO);
+                    }
+                `,
+                transparent: true,
+                depthWrite: false,
+                blending: THREE.AdditiveBlending
+            });
+            const edgeLines = new THREE.LineSegments(edgeGeom, edgeMat);
+            scene.add(edgeLines);
+
+            // ─── Shine particle pool (small glowing dot travels the pulsed edge) ───
+            const PARTICLE_POOL = 4;
+            const particleStates = [];  // active: {edgeIdx, startTime, duration}
+            const particleGeom = new THREE.BufferGeometry();
+            const particlePos = new Float32Array(PARTICLE_POOL * 3);
+            const particleAlpha = new Float32Array(PARTICLE_POOL);
+            particleGeom.setAttribute('position', new THREE.BufferAttribute(particlePos, 3));
+            particleGeom.setAttribute('aAlpha', new THREE.BufferAttribute(particleAlpha, 1));
+
+            const particleMat = new THREE.ShaderMaterial({
+                uniforms: {
+                    uColor:   { value: theme.pulse.clone() },
+                    uPxRatio: { value: renderer.getPixelRatio() }
+                },
+                vertexShader: `
+                    attribute float aAlpha;
+                    varying float vA;
+                    uniform float uPxRatio;
+                    void main() {
+                        vA = aAlpha;
+                        // Particle size pulses with alpha so it grows/shrinks across the edge
+                        gl_PointSize = 22.0 * aAlpha * uPxRatio + 6.0 * uPxRatio;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    uniform vec3 uColor;
+                    varying float vA;
+                    void main() {
+                        if (vA < 0.01) discard;
+                        vec2 p = gl_PointCoord - 0.5;
+                        float d = length(p);
+                        if (d > 0.5) discard;
+                        float core = smoothstep(0.45, 0.0, d);
+                        float halo = smoothstep(0.5, 0.10, d) * 0.55;
+                        gl_FragColor = vec4(uColor * 1.45, (core + halo) * vA);
+                    }
+                `,
+                transparent: true,
+                depthWrite: false,
+                blending: THREE.AdditiveBlending
+            });
+            const particlePoints = new THREE.Points(particleGeom, particleMat);
+            scene.add(particlePoints);
+
+            function spawnShineParticle(edgeIdx) {
+                if (particleStates.length >= PARTICLE_POOL) return;
+                particleStates.push({ edgeIdx, startTime: performance.now(), duration: 880 });
+            }
+
+            // ─── Theme reactivity ───
+            function pushTheme() {
+                theme = readColors();
+                nodeMat.uniforms.uPulse.value.copy(theme.pulse);
+                edgeMat.uniforms.uColor.value.copy(theme.link);
+                edgeMat.uniforms.uPulse.value.copy(theme.pulse);
+                particleMat.uniforms.uColor.value.copy(theme.pulse);
+                const a = nodeGeom.getAttribute('aColor');
+                for (let i = 0; i < nodes.length; i++) {
+                    const c = nodes[i].hub ? theme.hub : theme.node;
+                    a.array[i*3] = c.r; a.array[i*3+1] = c.g; a.array[i*3+2] = c.b;
+                }
+                a.needsUpdate = true;
+            }
+            window.__themeListeners.push(pushTheme);
+
+            // ─── Resize ───
+            const ro = new ResizeObserver(() => {
+                const r = container.getBoundingClientRect();
+                const w = Math.max(50, Math.floor(r.width));
+                const h = Math.max(50, Math.floor(r.height));
+                if (w === W && h === H) return;
+                W = w; H = h;
+                renderer.setSize(W, H);
+                camera.left = -W/2; camera.right = W/2;
+                camera.top = H/2; camera.bottom = -H/2;
+                camera.updateProjectionMatrix();
+            });
+            ro.observe(container);
+
+            // ─── Visibility pause ───
+            let paused = false;
+            document.addEventListener('visibilitychange', () => { paused = document.hidden; });
+
+            // ─── Pulses (same cadence as index.html: 1 node + 1 edge every 2.5s) ───
+            let pulseTimer = null;
             function pulseTick() {
-                var pc = getComputedStyle(document.documentElement).getPropertyValue('--net-pulse').trim();
-
-                // Pulse a random node
-                var ri = Math.floor(Math.random() * nodes.length);
-                var sel = node.filter(function(d, i) { return i === ri; });
-                var origR = nodes[ri].r;
-                sel.transition().duration(1200).ease(d3.easeSinInOut)
-                    .attr('r', origR * 1.6)
-                    .attr('fill', pc)
-                    .transition().duration(1200).ease(d3.easeSinInOut)
-                    .attr('r', origR)
-                    .attr('fill', nodes[ri].hub ? hubColor : nodeColor);
-
-                // Pulse a random link + slide a shine along it
-                var li = Math.floor(Math.random() * links.length);
-                var lsel = link.filter(function(d, i) { return i === li; });
-                lsel.transition().duration(900).ease(d3.easeSinInOut)
-                    .attr('stroke-width', 1.8)
-                    .transition().duration(900).ease(d3.easeSinInOut)
-                    .attr('stroke-width', strokeW);
-                shineEdge(links[li], pc);
+                const now = performance.now();
+                const ni = Math.floor(Math.random() * nodes.length);
+                nodes[ni].flashStart = now;
+                nodes[ni].flashDur = 2400;
+                const ei = Math.floor(Math.random() * edges.length);
+                edges[ei].boostStart = now;
+                edges[ei].boostDur = 1800;
+                spawnShineParticle(ei);
             }
-            function startPulses() {
-                if (pulseTimer) return;
-                pulseTimer = setInterval(pulseTick, 2500);
-            }
-            function stopPulses() {
-                if (!pulseTimer) return;
-                clearInterval(pulseTimer);
-                pulseTimer = null;
-            }
-            document.addEventListener('visibilitychange', function() {
+            function startPulses() { if (!pulseTimer) pulseTimer = setInterval(pulseTick, 2500); }
+            function stopPulses() { if (pulseTimer) { clearInterval(pulseTimer); pulseTimer = null; } }
+            document.addEventListener('visibilitychange', () => {
                 if (document.hidden) stopPulses(); else startPulses();
             });
-            setTimeout(function() { if (!document.hidden) startPulses(); }, 4000);
-        })();
+            setTimeout(() => { if (!document.hidden) startPulses(); }, 4000);
+
+            // ─── Main loop ───
+            const startT = performance.now();
+            function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+            function tick(now) {
+                if (paused) { requestAnimationFrame(tick); return; }
+                const elapsed = now - startT;
+
+                // Step the force simulation by one tick (mirrors index.html's d3 internal tick)
+                simulation.tick();
+
+                // Bounds clamp (mirror SVG version's behavior)
+                nodes.forEach(n => {
+                    const margin = (n.hub ? 14 : 8);
+                    n.x = Math.max(-W/2 + margin, Math.min(W/2 - margin, n.x));
+                    n.y = Math.max(-H/2 + margin, Math.min(H/2 - margin, n.y));
+                });
+
+                // Push node positions + pulse/entrance attributes
+                const np = nodeGeom.getAttribute('position');
+                const nf = nodeGeom.getAttribute('aFlash');
+                const no = nodeGeom.getAttribute('aOpacity');
+                for (let i = 0; i < nodes.length; i++) {
+                    const n = nodes[i];
+                    np.array[i*3] = n.x; np.array[i*3+1] = n.y;
+                    if (n.flashStart) {
+                        const k = (now - n.flashStart) / n.flashDur;
+                        if (k >= 1) { nf.array[i] = 0; n.flashStart = 0; }
+                        else nf.array[i] = Math.sin(Math.PI * k);
+                    }
+                    if (no.array[i] < 1) {
+                        const t = (elapsed - n.entranceDelay) / n.entranceDur;
+                        no.array[i] = (t <= 0) ? 0 : (t >= 1) ? 1 : easeOutCubic(t);
+                    }
+                }
+                np.needsUpdate = true;
+                nf.needsUpdate = true;
+                no.needsUpdate = true;
+
+                // Push edge positions + boost/entrance
+                const ep = edgeGeom.getAttribute('position');
+                const eb = edgeGeom.getAttribute('aBoost');
+                const eo = edgeGeom.getAttribute('aOpacity');
+                for (let i = 0; i < edges.length; i++) {
+                    const e = edges[i];
+                    const a = nodes[e.s], b = nodes[e.t];
+                    ep.array[i*6] = a.x; ep.array[i*6+1] = a.y;
+                    ep.array[i*6+3] = b.x; ep.array[i*6+4] = b.y;
+                    if (e.boostStart) {
+                        const k = (now - e.boostStart) / e.boostDur;
+                        const v = (k >= 1) ? 0 : Math.sin(Math.PI * k);
+                        if (k >= 1) e.boostStart = 0;
+                        eb.array[i*2] = v; eb.array[i*2+1] = v;
+                    }
+                    if (eo.array[i*2] < 1) {
+                        const t = (elapsed - e.entranceDelay) / e.entranceDur;
+                        const o = (t <= 0) ? 0 : (t >= 1) ? 1 : easeOutCubic(t);
+                        eo.array[i*2] = o; eo.array[i*2+1] = o;
+                    }
+                }
+                ep.needsUpdate = true;
+                eb.needsUpdate = true;
+                eo.needsUpdate = true;
+
+                // Shine particles
+                const pp = particleGeom.getAttribute('position');
+                const pa = particleGeom.getAttribute('aAlpha');
+                for (let i = 0; i < PARTICLE_POOL; i++) {
+                    if (i < particleStates.length) {
+                        const ps = particleStates[i];
+                        const t = Math.max(0, Math.min(1, (now - ps.startTime) / ps.duration));
+                        const e = edges[ps.edgeIdx];
+                        const a = nodes[e.s], b = nodes[e.t];
+                        pp.array[i*3]   = a.x + (b.x - a.x) * t;
+                        pp.array[i*3+1] = a.y + (b.y - a.y) * t;
+                        pp.array[i*3+2] = 1;
+                        // Bell curve over t — fades in mid-edge and out by the other end
+                        pa.array[i] = Math.sin(Math.PI * t);
+                    } else {
+                        pa.array[i] = 0;
+                    }
+                }
+                // Cull finished particles
+                for (let i = particleStates.length - 1; i >= 0; i--) {
+                    if ((now - particleStates[i].startTime) >= particleStates[i].duration) {
+                        particleStates.splice(i, 1);
+                    }
+                }
+                pp.needsUpdate = true;
+                pa.needsUpdate = true;
+
+                renderer.render(scene, camera);
+                requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════
+        // SVG fallback (used if WebGL is unavailable)
+        // ═══════════════════════════════════════════════════════════════════
+        function initSVGFallback() {
+            const vizEl = container;
+            if (!vizEl || typeof d3 === 'undefined') return;
+            const rect = vizEl.getBoundingClientRect();
+            const W = Math.floor(rect.width) || 420;
+            const H = Math.floor(rect.height) || 380;
+            if (W < 50 || H < 50) return;
+            const diag = Math.sqrt(W*W + H*H);
+            const nClusters = Math.min(9, Math.max(4, Math.round(diag / 140)));
+            const baseSize = Math.round(7 + diag / 180);
+            const nodes = [], links = [];
+            let id = 0;
+            const centers = [];
+            for (let c = 0; c < nClusters; c++) centers.push([0.1 + Math.random() * 0.8, 0.1 + Math.random() * 0.8]);
+            const sizes = [];
+            for (let c = 0; c < nClusters; c++) sizes.push(baseSize + Math.floor(Math.random() * 5) - 2);
+            for (let c = 0; c < nClusters; c++) {
+                for (let i = 0; i < sizes[c]; i++) {
+                    nodes.push({ id: id++, cluster: c, hub: false, r: 2.5 + Math.random() * 4,
+                        x: centers[c][0] * W + (Math.random() - 0.5) * W * 0.2,
+                        y: centers[c][1] * H + (Math.random() - 0.5) * H * 0.2 });
+                }
+            }
+            let hubIdx = 0;
+            for (let c = 0; c < nClusters; c++) {
+                if (nodes[hubIdx]) { nodes[hubIdx].r = 7 + Math.random() * 3; nodes[hubIdx].hub = true; }
+                hubIdx += sizes[c];
+            }
+            for (let c = 0; c < nClusters; c++) {
+                const cn = nodes.filter(n => n.cluster === c);
+                for (let i = 0; i < cn.length; i++) for (let j = i + 1; j < cn.length; j++)
+                    if (Math.random() < 0.3) links.push({ source: cn[i].id, target: cn[j].id });
+            }
+            for (let c1 = 0; c1 < nClusters; c1++) for (let c2 = c1 + 1; c2 < nClusters; c2++) {
+                const n1 = nodes.filter(n => n.cluster === c1), n2 = nodes.filter(n => n.cluster === c2);
+                const bridges = 1 + Math.floor(Math.random() * 2);
+                for (let b = 0; b < bridges; b++) links.push({
+                    source: n1[Math.floor(Math.random() * n1.length)].id,
+                    target: n2[Math.floor(Math.random() * n2.length)].id
+                });
+            }
+            const s = getComputedStyle(document.documentElement);
+            const svg = d3.select('#hero-viz').append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('preserveAspectRatio', 'xMidYMid meet');
+            const link = svg.append('g').selectAll('line').data(links).join('line')
+                .attr('stroke', s.getPropertyValue('--net-link').trim()).attr('stroke-width', 1)
+                .attr('x1', d => nodes[d.source].x).attr('y1', d => nodes[d.source].y)
+                .attr('x2', d => nodes[d.target].x).attr('y2', d => nodes[d.target].y);
+            const node = svg.append('g').selectAll('circle').data(nodes).join('circle')
+                .attr('r', d => d.r)
+                .attr('fill', d => (d.hub ? s.getPropertyValue('--net-node-hub') : s.getPropertyValue('--net-node')).trim())
+                .attr('cx', d => d.x).attr('cy', d => d.y);
+            d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(links).id(d => d.id).distance(25 + diag/25).strength(0.15))
+                .force('charge', d3.forceManyBody().strength(-12 - diag/55))
+                .force('center', d3.forceCenter(W/2, H/2).strength(0.04))
+                .force('collision', d3.forceCollide().radius(d => d.r + 3))
+                .alpha(0.4).alphaDecay(0.015)
+                .on('tick', () => {
+                    nodes.forEach(d => { d.x = Math.max(d.r, Math.min(W - d.r, d.x)); d.y = Math.max(d.r, Math.min(H - d.r, d.y)); });
+                    link.attr('x1', d => d.source.x).attr('y1', d => d.source.y).attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+                    node.attr('cx', d => d.x).attr('cy', d => d.y);
+                });
+        }
     </script>
 
 </body>
