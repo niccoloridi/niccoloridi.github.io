@@ -213,6 +213,21 @@
             min-width: 0;
             min-height: 0;
             overflow: hidden;
+            /* Hidden at rest. Revealed on first user input or after a short delay. */
+            opacity: 0;
+            transition: opacity 1.6s ease;
+        }
+        body.networks-revealed .net-cell { opacity: 1; }
+
+        .bridges-layer {
+            opacity: 0;
+            transition: opacity 1.6s ease;
+        }
+        body.networks-revealed .bridges-layer { opacity: 1; }
+
+        /* Touch devices: skip the hidden state */
+        @media (hover: none) {
+            .net-cell, .bridges-layer { opacity: 1 !important; transition: none; }
         }
         .net-cell canvas, .net-cell svg {
             width: 100%; height: 100%; display: block;
@@ -447,7 +462,6 @@
             <div class="net-cell" data-net="3"></div>
 
             <div class="frontispiece-center">
-                <p class="hero-imprint-mark">NR</p>
                 <h1 class="hero-wordmark">Dr Niccolò Ridi</h1>
                 <p class="hero-strands">public international law &middot; computational analysis</p>
                 <div class="hero-social">
@@ -494,6 +508,28 @@
         }
         function toggleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
         applyTheme(currentTheme);
+
+        // Reveal the constellations after the page has settled: on first user input,
+        // or after a short delay, whichever comes first. They stay visible after that.
+        // Touch devices reveal immediately (no hover, single network shown).
+        (function networksReveal() {
+            let revealed = false;
+            function reveal() {
+                if (revealed) return;
+                revealed = true;
+                document.body.classList.add('networks-revealed');
+            }
+            if (window.matchMedia('(hover: none)').matches) {
+                reveal();
+                return;
+            }
+            const opts = { once: true, passive: true };
+            window.addEventListener('mousemove', reveal, opts);
+            window.addEventListener('scroll', reveal, opts);
+            window.addEventListener('touchstart', reveal, opts);
+            window.addEventListener('keydown', reveal, opts);
+            setTimeout(reveal, 1800);
+        })();
 
         // Inline the plate SVG so currentColor tints it via CSS
         (function loadPlate() {
@@ -910,12 +946,19 @@
             });
             setTimeout(() => { if (!document.hidden) startPulses(); }, 3500 + seed * 250);
 
-            // Main loop
-            const startT = performance.now();
+            // Main loop. We hold the simulation + entrance clock until the page is "revealed"
+            // (first user input or 1.8s timeout), so the formation animation plays out as the
+            // networks fade in rather than running invisibly behind the curtain.
+            let startT = null;
             function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 
             function tick(now) {
                 if (paused) { requestAnimationFrame(tick); return; }
+                if (!document.body.classList.contains('networks-revealed')) {
+                    requestAnimationFrame(tick);
+                    return;
+                }
+                if (startT === null) startT = now;
                 const elapsed = now - startT;
                 simulation.tick();
                 nodes.forEach(n => {
