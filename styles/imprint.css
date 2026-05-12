@@ -55,6 +55,27 @@
     --pullquote-border: var(--rule);
 }
 
+/* Specific essay panels that hardcoded a dark background — retype them in imprint tokens
+   so the sidebar and tooltip read on cream paper. */
+#net-sidebar-header,
+.net-tooltip {
+    background-color: var(--ink) !important;
+    color: var(--page) !important;
+}
+#net-sidebar-header .subtitle,
+#net-sidebar-header .close-btn {
+    color: var(--page) !important;
+}
+.dark-mode #net-sidebar-header,
+.dark-mode .net-tooltip {
+    background-color: var(--rule) !important;
+    color: var(--ink) !important;
+}
+.dark-mode #net-sidebar-header .subtitle,
+.dark-mode #net-sidebar-header .close-btn {
+    color: var(--ink) !important;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html {

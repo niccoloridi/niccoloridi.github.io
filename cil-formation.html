@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custom in the Making | Niccolò Ridi</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script>(function(){var t=localStorage.getItem('theme');if(!t)t='light';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
+    <script>(function(){var t=localStorage.getItem('imprint-theme');if(!t)t='light';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
     <style>
         :root {
             --primary-color: #1a1a1a;
@@ -1505,13 +1505,13 @@
         link.addEventListener('click', () => document.body.classList.remove('nav-open'));
     });
 
-    let currentTheme = localStorage.getItem('theme') || 'light';
+    let currentTheme = localStorage.getItem('imprint-theme') || 'light';
     function applyTheme(t) {
         document.documentElement.classList.toggle('dark-mode', t === 'dark');
         document.body.classList.toggle('dark-mode', t === 'dark');
         var lbl = document.getElementById('theme-label');
         if (lbl) lbl.textContent = t === 'dark' ? 'light' : 'dark';
-        localStorage.setItem('theme', t);
+        localStorage.setItem('imprint-theme', t);
         currentTheme = t;
     }
     function toggleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }

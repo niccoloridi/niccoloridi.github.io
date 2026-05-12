@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Research | Niccolò Ridi</title>
-    <script>(function(){var t=localStorage.getItem('theme');if(!t)t='light';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
+    <script>(function(){var t=localStorage.getItem('imprint-theme');if(!t)t='light';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Spectral:ital,wght@0,300;0,400;0,500;1,400&family=Spectral+SC:wght@400;600&display=swap">
@@ -192,12 +192,12 @@
         yearSelect.addEventListener('change', updateList);
         updateList();
 
-        let currentTheme = localStorage.getItem('theme') || 'light';
+        let currentTheme = localStorage.getItem('imprint-theme') || 'light';
         function applyTheme(t) {
             document.documentElement.classList.toggle('dark-mode', t === 'dark');
             document.body.classList.toggle('dark-mode', t === 'dark');
             document.getElementById('theme-label').textContent = t === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('theme', t);
+            localStorage.setItem('imprint-theme', t);
             currentTheme = t;
         }
         function toggleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
