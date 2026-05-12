@@ -4,396 +4,148 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile | Niccolò Ridi</title>
-    <script>(function(){var t=localStorage.getItem('theme');if(!t)t='dark';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
+    <script>(function(){var t=localStorage.getItem('theme');if(!t)t='light';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Spectral:ital,wght@0,300;0,400;0,500;1,400&family=Spectral+SC:wght@400;600&display=swap">
+    <link rel="stylesheet" href="styles/imprint.css">
     <style>
-        :root {
-            --primary-color: #1a1a1a;
-            --secondary-color: #555555;
-            --text-color: #333333;
-            --border-color: #e0e0e0;
-            --background-color: #ffffff;
-            --header-bg: #ffffff;
-            --accent-color: #1a1a1a;
-        }
-
-        .dark-mode {
-            --primary-color: #e8eaed;
-            --secondary-color: #9aa0ab;
-            --text-color: #d0d0d0;
-            --border-color: #333333;
-            --background-color: #121212;
-            --header-bg: #1a1a1a;
-            --accent-color: #d4a574;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            line-height: 1.8;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        main { flex: 1; }
-
-        body.nav-open { overflow: hidden; }
-
-        .container {
-            max-width: 960px;
-            margin: auto;
-            padding: 4rem 2rem;
-        }
-
-        h2 {
-            font-size: 2.2rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-bottom: 2.5rem;
-            position: relative;
-            padding-bottom: 1rem;
-        }
-
-        h2::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background-color: var(--primary-color);
-        }
-
-        p { margin-bottom: 1.5rem; max-width: 75ch; }
-        a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
-        a:hover { color: var(--secondary-color); }
-
-        /* Dark mode overrides */
-        .dark-mode a { color: var(--accent-color); }
-        .dark-mode a:hover { color: #e8c49a; }
-        .dark-mode .main-nav a { color: var(--primary-color); }
-        .dark-mode .main-nav .ext-link { color: var(--secondary-color); }
-        .dark-mode .main-nav .ext-link:hover { color: var(--primary-color); }
-        .dark-mode .main-footer a { color: var(--accent-color); }
-        .dark-mode .main-header { box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
-
-        /* Theme toggle */
-        .theme-toggle {
-            background: none;
-            border: 1px solid var(--border-color);
-            border-radius: 2rem;
-            padding: 4px 12px;
-            cursor: pointer;
-            font-size: 12px;
-            color: var(--secondary-color);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-            font-family: inherit;
-        }
-        .theme-toggle:hover { color: var(--primary-color); border-color: var(--primary-color); }
-
-        /* Header */
-        .main-header {
-            background: var(--header-bg);
-            padding: 1.5rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-        }
-
-        .main-header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-            gap: 1rem;
-        }
-
-        .main-header .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            z-index: 1001;
-        }
-
-        .main-nav ul { list-style: none; display: flex; gap: 2rem; }
-
-        .main-nav a {
-            color: var(--primary-color);
-            font-weight: normal;
-            position: relative;
-            padding: 0.5rem 0;
-        }
-
-        .main-nav a::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0;
-            width: 0; height: 2px;
-            background-color: var(--primary-color);
-            transition: width 0.3s ease;
-        }
-
-        .main-nav a:hover::after { width: 100%; }
-
-        .nav-sep {
-            width: 1px;
-            background: var(--border-color);
-            align-self: stretch;
-            margin: 0 0.2rem;
-        }
-
-        .main-nav .ext-link { color: var(--secondary-color); font-size: 0.85rem; }
-        .main-nav .ext-link:hover { color: var(--primary-color); }
-
-        .hamburger-menu {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 10px;
-            z-index: 1001;
-        }
-
-        .hamburger-menu .line {
-            display: block;
-            width: 25px;
-            height: 2px;
-            background-color: var(--primary-color);
-            margin: 5px 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        /* Layout */
-        .two-column-layout {
-            display: flex;
-            align-items: flex-start;
-            gap: 3rem;
-        }
-
-        .text-column { flex: 1.2; }
-        .image-column { flex: 0.8; }
-
-        .profile-photo {
-            width: 100%;
-            height: 300px;
-            border-radius: 8px;
-            object-fit: cover;
-            object-position: 40% 50%;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-        }
-
-        .section-divider {
-            border: none;
-            border-top: 1px solid var(--border-color);
-            margin: 3rem 0;
-        }
-
-        .bottom-grid {
-            display: grid;
-            grid-template-columns: 1.4fr 1fr;
-            gap: 3rem;
-        }
-
-        h3 {
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--secondary-color);
-            margin: 0 0 1.2rem;
-        }
-
-        .position-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .position-list li {
-            padding: 0.6rem 0 0.6rem 1rem;
-            font-size: 0.92rem;
-            line-height: 1.5;
-            border-left: 2px solid var(--border-color);
-            position: relative;
-        }
-
-        .position-list li:first-child { border-left-color: var(--primary-color); }
-        .dark-mode .position-list li:first-child { border-left-color: var(--accent-color); }
-
-        .position-list li strong { color: var(--primary-color); }
-
-        .position-list .year {
-            display: block;
-            font-size: 0.78rem;
-            color: var(--secondary-color);
-        }
-
-        /* Footer */
-        .main-footer {
-            padding: 1.5rem 2rem;
-            text-align: center;
-            font-size: 0.9rem;
-            color: var(--secondary-color);
-        }
-
-        .main-footer a { color: var(--primary-color); }
-        .main-footer p { max-width: none; margin-bottom: 0; }
-
-        /* Animation */
-        .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
-        .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            h2 { font-size: 1.8rem; }
-            .two-column-layout { flex-direction: column; align-items: center; text-align: center; }
-            .text-column, .image-column { width: 100%; }
-            .bottom-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-
-            .hamburger-menu { display: block; }
-
-            .main-nav {
-                position: fixed;
-                top: 0; left: 0;
-                width: 100%; height: 100vh;
-                background-color: var(--background-color);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                transform: translateX(100%);
-                transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
-            }
-
-            body.nav-open .main-nav { transform: translateX(0); }
-            .main-nav ul { flex-direction: column; gap: 2rem; text-align: center; }
-            .main-nav a { font-size: 1.5rem; }
-            .main-nav a::after { display: none; }
-
-            body.nav-open .hamburger-menu .line-1 { transform: rotate(45deg) translate(5px, 5px); }
-            body.nav-open .hamburger-menu .line-2 { opacity: 0; }
-            body.nav-open .hamburger-menu .line-3 { transform: rotate(-45deg) translate(5px, -5px); }
-        }
+        /* Profile needs a wider measure so the two-column photo+bio and positions+education fit cleanly */
+        .page-body { max-width: 60rem; }
+        article { max-width: 100%; }
     </style>
 </head>
 <body>
 
-    <header class="main-header">
-        <div class="container">
-            <a href="index.html" class="logo">Niccolò Ridi</a>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="profile.html">Profile</a></li>
-                    <li><a href="practice.html">Practice</a></li>
-                    <li><a href="research.html">Research</a></li>
-                    <li><a href="data.html">Data</a></li>
-                    <li class="nav-sep"></li>
-                    <li><a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" class="ext-link">LinkedIn</a></li>
-                    <li><a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" class="ext-link">Scholar</a></li>
-                    <li><a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="ext-link">SSRN</a></li>
-                    <li><a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" class="ext-link">KCL</a></li>
-                </ul>
-            </nav>
-            <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span id="theme-icon">◑</span> <span id="theme-label">Light</span></button>
-            <button class="hamburger-menu" aria-label="Open navigation menu">
-                <span class="line line-1"></span>
-                <span class="line line-2"></span>
-                <span class="line line-3"></span>
-            </button>
-        </div>
+    <header class="page-header">
+        <a class="home" href="index.html">Niccolò Ridi</a>
+        <nav>
+            <a href="profile.html">profile</a>
+            <a href="practice.html">practice</a>
+            <a href="research.html">research</a>
+            <a href="data.html">data</a>
+            <span class="ext-group">
+                <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" rel="noopener">linkedin</a>
+                <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" rel="noopener">scholar</a>
+                <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" rel="noopener">ssrn</a>
+                <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" rel="noopener">kcl</a>
+            </span>
+        </nav>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span id="theme-label">dark</span></button>
+        <button class="hamburger-menu" aria-label="Open navigation menu">
+            <span class="line line-1"></span>
+            <span class="line line-2"></span>
+            <span class="line line-3"></span>
+        </button>
     </header>
 
     <main>
-        <div class="container fade-in">
-            <h2>Profile</h2>
-            <div class="two-column-layout">
-                <div class="image-column">
-                    <img src="images/IMG_18.jpg" alt="A photo of Niccolò Ridi" class="profile-photo">
-                </div>
-                <div class="text-column">
-                    <p>
-                        I am a Senior Lecturer (Associate Professor) in Public International Law at The Dickson Poon School of Law, King's College London. I serve as Associate Director of the Centre for International Governance and Dispute Resolution (CIGAD), Associate Dean for Doctoral Studies, and Faculty Affiliate at the Centre for Data Futures. I am also a liaison between the Dickson Poon School of Law and King's Institute for Artificial Intelligence.
-                    </p>
-                    <p>
-                        My research focuses on the authority and effectiveness of international law, as well as the processes through which it is produced and undergoes change. I apply empirical and computational methodologies to both legal argumentation and actor behaviour.
-                    </p>
-                </div>
-            </div>
+        <div class="page-body">
+            <article>
+                <h1 class="section">profile</h1>
+                <p class="subtitle">Senior Lecturer in Public International Law &middot; King's College London</p>
 
-            <hr class="section-divider">
+                <div class="two-col photo-left">
+                    <div class="col-photo">
+                        <img src="images/IMG_18.jpg" alt="Photograph of Niccolò Ridi">
+                    </div>
+                    <div class="col-text">
+                        <p class="dropcap">I am a Senior Lecturer (Associate Professor) in Public International Law at The Dickson Poon School of Law, King's College London. I serve as Associate Director of the Centre for International Governance and Dispute Resolution (CIGAD), Associate Dean for Doctoral Studies, and Faculty Affiliate at the Centre for Data Futures. I am also a liaison between the Dickson Poon School of Law and King's Institute for Artificial Intelligence.</p>
+                        <p>My research focuses on the authority and effectiveness of international law, and on the processes through which it is produced and undergoes change. I apply empirical and computational methodologies to both legal argumentation and actor behaviour.</p>
+                    </div>
+                </div>
 
-            <div class="bottom-grid">
-                <div>
-                    <h3>Positions & Affiliations</h3>
-                    <ul class="position-list">
-                        <li><strong>Senior Lecturer (Associate Professor)</strong>, King's College London <span class="year">2021–present</span></li>
-                        <li><strong>Senior Fellow</strong>, University of Melbourne <span class="year">2026</span></li>
-                        <li><strong>Visiting Professor</strong>, University of Florence <span class="year">2025</span></li>
-                        <li><strong>Faculty Member</strong>, Centre for Transnational Legal Studies – Georgetown Law <span class="year">2024–2025</span></li>
-                        <li><strong>Academic Fellow</strong>, The Honourable Society of the Middle Temple <span class="year">2023–present</span></li>
-                        <li><strong>Research Fellow</strong>, iCourts – University of Copenhagen <span class="year">2020–2023</span></li>
-                        <li><strong>Lecturer (Assistant Professor)</strong>, University of Liverpool <span class="year">2019–2021</span></li>
-                        <li><strong>Postdoctoral Research Fellow</strong>, King's College London <span class="year">2018–2019</span></li>
-                        <li><strong>Doctoral Research Fellow</strong>, Graduate Institute, Geneva <span class="year">2014–2018</span></li>
-                    </ul>
+                <hr class="rule">
+
+                <div class="bottom-grid">
+                    <div>
+                        <h2 class="section">positions &amp; affiliations</h2>
+                        <ul class="position-list">
+                            <li>
+                                <span class="pos-title"><strong>Senior Lecturer (Associate Professor)</strong>, <span class="pos-where">King's College London</span></span>
+                                <span class="pos-year">2021&ndash;present</span>
+                            </li>
+                            <li>
+                                <span class="pos-title"><strong>Senior Fellow</strong>, <span class="pos-where">University of Melbourne</span></span>
+                                <span class="pos-year">2026</span>
+                            </li>
+                            <li>
+                                <span class="pos-title"><strong>Visiting Professor</strong>, <span class="pos-where">University of Florence</span></span>
+                                <span class="pos-year">2025</span>
+                            </li>
+                            <li>
+                                <span class="pos-title"><strong>Faculty Member</strong>, <span class="pos-where">Centre for Transnational Legal Studies &mdash; Georgetown Law</span></span>
+                                <span class="pos-year">2024&ndash;2025</span>
+                            </li>
+                            <li>
+                                <span class="pos-title"><strong>Academic Fellow</strong>, <span class="pos-where">The Honourable Society of the Middle Temple</span></span>
+                                <span class="pos-year">2023&ndash;present</span>
+                            </li>
+                            <li>
+                                <span class="pos-title"><strong>Research Fellow</strong>, <span class="pos-where">iCourts &mdash; University of Copenhagen</span></span>
+                                <span class="pos-year">2020&ndash;2023</span>
+                            </li>
+                            <li>
+                                <span class="pos-title"><strong>Lecturer (Assistant Professor)</strong>, <span class="pos-where">University of Liverpool</span></span>
+                                <span class="pos-year">2019&ndash;2021</span>
+                            </li>
+                            <li>
+                                <span class="pos-title"><strong>Postdoctoral Research Fellow</strong>, <span class="pos-where">King's College London</span></span>
+                                <span class="pos-year">2018&ndash;2019</span>
+                            </li>
+                            <li>
+                                <span class="pos-title"><strong>Doctoral Research Fellow</strong>, <span class="pos-where">Graduate Institute, Geneva</span></span>
+                                <span class="pos-year">2014&ndash;2018</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h2 class="section">education</h2>
+                        <ul class="position-list">
+                            <li>
+                                <span class="pos-title"><strong>PhD in Public International Law</strong>, <span class="pos-where">King's College London</span></span>
+                                <span class="pos-year">2019</span>
+                            </li>
+                            <li>
+                                <span class="pos-title"><strong>LLM in International Law</strong>, <span class="pos-where">University of Cambridge</span></span>
+                                <span class="pos-year">2014</span>
+                            </li>
+                            <li>
+                                <span class="pos-title"><strong>Laurea Magistrale in Law</strong>, <span class="pos-where">University of Florence</span></span>
+                                <span class="pos-year">2012</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div>
-                    <h3>Education</h3>
-                    <ul class="position-list">
-                        <li><strong>PhD in Public International Law</strong>, King's College London <span class="year">2019</span></li>
-                        <li><strong>LLM in International Law</strong>, University of Cambridge <span class="year">2014</span></li>
-                        <li><strong>Laurea Magistrale in Law</strong>, University of Florence <span class="year">2012</span></li>
-                    </ul>
-                </div>
-            </div>
+
+                <div class="fleuron"></div>
+
+                <p>Inquiries by <a href="mailto:niccolo.ridi@kcl.ac.uk">correspondence</a>. A selection of work appears under <a href="practice.html">practice</a>, <a href="research.html">research</a>, and <a href="data.html">data</a>.</p>
+            </article>
         </div>
     </main>
 
-    <footer class="main-footer">
-        <p><a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a> &nbsp;|&nbsp; &copy; 2025 Niccolò Ridi. All Rights Reserved (probably).</p>
+    <footer class="page-footer">
+        <a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a>
+        <span class="rights">&copy; 2025 Niccolò Ridi. All Rights Reserved (probably).</span>
     </footer>
 
     <script>
         const hamburger = document.querySelector('.hamburger-menu');
         hamburger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
-        document.querySelectorAll('.main-nav a').forEach(link => {
+        document.querySelectorAll('.page-header nav a').forEach(link => {
             link.addEventListener('click', () => document.body.classList.remove('nav-open'));
         });
 
-        const faders = document.querySelectorAll('.fade-in');
-        const observer = new IntersectionObserver((entries, obs) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
-            });
-        }, { threshold: 0.15 });
-        faders.forEach(f => observer.observe(f));
-
-        // Theme
-        const icons = { light: '◑', dark: '◐' };
-        const labels = { light: 'Light', dark: 'Dark' };
-        function getDefaultTheme() { return 'dark'; }
-        let currentTheme = localStorage.getItem('theme') || getDefaultTheme();
+        let currentTheme = localStorage.getItem('theme') || 'light';
         function applyTheme(t) {
-            document.body.classList.remove('dark-mode');
-            document.documentElement.classList.remove('dark-mode');
-            if (t === 'dark') { document.body.classList.add('dark-mode'); document.documentElement.classList.add('dark-mode'); }
-            document.getElementById('theme-icon').textContent = icons[t];
-            document.getElementById('theme-label').textContent = labels[t];
+            document.documentElement.classList.toggle('dark-mode', t === 'dark');
+            document.body.classList.toggle('dark-mode', t === 'dark');
+            document.getElementById('theme-label').textContent = t === 'dark' ? 'light' : 'dark';
             localStorage.setItem('theme', t);
             currentTheme = t;
         }
-        function toggleTheme() {
-            applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
-        }
+        function toggleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
         applyTheme(currentTheme);
     </script>
 

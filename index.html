@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Niccolò Ridi | Public International Law</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script>(function(){var t=localStorage.getItem('theme');if(!t)t='dark';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
+    <script>(function(){var t=localStorage.getItem('theme');if(!t)t='light';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Spectral:ital,wght@0,300;0,400;0,500;1,400&family=Spectral+SC:wght@400;600&display=swap">
     <script type="importmap">
     {
       "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" }
@@ -13,191 +16,384 @@
     </script>
     <style>
         :root {
-            --primary-color: #1a1a1a;
-            --secondary-color: #555555;
-            --text-color: #333333;
-            --border-color: #e0e0e0;
-            --background-color: #ffffff;
-            --header-bg: #ffffff;
-            --accent-color: #1a1a1a;
-            --net-node: rgba(110, 110, 115, 0.55);
-            --net-node-hub: rgba(50, 50, 55, 0.78);
-            --net-link: rgba(140, 140, 145, 0.32);
-            --net-pulse: rgba(60, 60, 70, 0.85);
+            --page: #f4ede0;
+            --ink: #1a1410;
+            --ink-secondary: #5a4d3f;
+            --rule: #c9bfa7;
+            --gold: #a8893a;
+            --vermilion: #a73d28;
+
+            --serif: "Spectral", Georgia, "Times New Roman", serif;
+            --serif-sc: "Spectral SC", "Spectral", Georgia, serif;
+            --display: "Cormorant Garamond", "Spectral", Georgia, serif;
+
+            --t-smallcaps: 0.76rem;
+            --t-meta: 0.85rem;
+
+            --gutter: clamp(1rem, 3vw, 2.5rem);
+
+            --net-node: rgba(168, 137, 58, 0.52);
+            --net-node-hub: rgba(167, 61, 40, 0.72);
+            --net-link: rgba(168, 137, 58, 0.26);
+            --net-pulse: rgba(167, 61, 40, 0.95);
         }
 
+        /* Dark mode reuses the original committed homepage's copper-on-near-black palette
+           for the chrome/networks. Vermilion stays vermilion: the plate engraving keeps its
+           imprint colour even in dark mode rather than inverting to copper. */
         .dark-mode {
-            --primary-color: #e8eaed;
-            --secondary-color: #9aa0ab;
-            --text-color: #d0d0d0;
-            --border-color: #333333;
-            --background-color: #121212;
-            --header-bg: #1a1a1a;
-            --accent-color: #d4a574;
+            --page: #121212;
+            --ink: #e8eaed;
+            --ink-secondary: #9aa0ab;
+            --rule: #2a2622;
+            --gold: #d4a574;
+            --vermilion: #b54732;
             --net-node: rgba(212, 165, 116, 0.55);
             --net-node-hub: rgba(232, 188, 140, 0.85);
-            --net-link: rgba(180, 165, 145, 0.30);
+            --net-link: rgba(180, 165, 145, 0.28);
             --net-pulse: rgba(255, 218, 170, 0.95);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            line-height: 1.8;
-            background-color: var(--background-color);
-            color: var(--text-color);
+        html {
+            font-family: var(--serif);
+            font-size: 17px;
+            font-weight: 300;
+            color: var(--ink);
+            background: var(--page);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            text-rendering: geometricPrecision;
+            font-feature-settings: "kern", "liga", "onum";
+        }
+
+        body {
+            line-height: 1.7;
             height: 100vh;
             overflow: hidden;
-        }
-
-        a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
-        a:hover { color: var(--secondary-color); }
-
-        .dark-mode a { color: var(--accent-color); }
-        .dark-mode a:hover { color: #e8c49a; }
-        .dark-mode .main-nav a { color: var(--primary-color); }
-        .dark-mode .main-nav .ext-link { color: var(--secondary-color); }
-        .dark-mode .main-nav .ext-link:hover { color: var(--primary-color); }
-        .dark-mode .main-footer a { color: var(--accent-color); }
-        .dark-mode .social-links a { color: var(--secondary-color); }
-        .dark-mode .social-links a:hover { color: var(--primary-color); }
-        .dark-mode .main-header { box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
-
-        .theme-toggle {
-            background: none;
-            border: 1px solid var(--border-color);
-            border-radius: 2rem;
-            padding: 4px 12px;
-            cursor: pointer;
-            font-size: 12px;
-            color: var(--secondary-color);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-            font-family: inherit;
-        }
-        .theme-toggle:hover { color: var(--primary-color); border-color: var(--primary-color); }
-
-        .main-header {
-            background: var(--header-bg);
-            padding: 1.5rem 0;
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-        }
-        .main-header .container {
-            max-width: 960px;
-            margin: auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-        }
-        .main-header .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary-color); }
-
-        .main-nav ul { list-style: none; display: flex; gap: 2rem; }
-        .main-nav a { color: var(--primary-color); font-weight: normal; position: relative; padding: 0.5rem 0; }
-        .main-nav a::after {
-            content: ''; position: absolute; bottom: 0; left: 0;
-            width: 0; height: 2px; background-color: var(--primary-color);
-            transition: width 0.3s ease;
-        }
-        .main-nav a:hover::after { width: 100%; }
-        .nav-sep { width: 1px; background: var(--border-color); align-self: stretch; margin: 0 0.2rem; }
-        .main-nav .ext-link { color: var(--secondary-color); font-size: 0.85rem; }
-        .main-nav .ext-link:hover { color: var(--primary-color); }
-
-        .hamburger-menu { display: none; background: none; border: none; cursor: pointer; padding: 10px; z-index: 1001; }
-        .hamburger-menu .line { display: block; width: 25px; height: 2px; background-color: var(--primary-color); margin: 5px 0; transition: transform 0.3s ease, opacity 0.3s ease; }
-
-        .page { height: 100vh; display: flex; flex-direction: column; }
-
-        .hero { flex: 1; display: flex; overflow: hidden; }
-        .hero .container {
-            width: 100%;
-            max-width: none;
-            padding: 6rem 2rem 1rem;
-            display: flex;
-            align-items: stretch;
-            gap: 2rem;
-        }
-
-        .hero-text {
-            flex: 0 1 480px;
-            min-width: 280px;
-            z-index: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            margin-left: max(0px, calc((100% - 960px) / 2));
+            background: var(--page);
+            color: var(--ink);
+            transition: background-color 400ms ease, color 400ms ease;
         }
 
-        .hero-viz { flex: 1; position: relative; min-width: 0; }
-        .hero-viz canvas, .hero-viz svg { width: 100%; height: 100%; display: block; }
-
-        .hero h1 {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            font-weight: bold;
-            color: var(--primary-color);
-            font-size: 3.2rem;
-            margin-bottom: 1.5rem;
-            line-height: 1.3;
+        a {
+            color: inherit;
+            text-decoration: underline;
+            text-decoration-color: var(--gold);
+            text-decoration-thickness: 1px;
+            text-underline-offset: 0.2em;
         }
+        a:hover { text-decoration-thickness: 2px; }
+        ::selection { background: var(--gold); color: var(--page); }
 
-        .hero .subtitle {
+        /* ─── Header ─── */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 1rem var(--gutter);
+            background: var(--page);
+            border-bottom: 1px solid var(--rule);
+            font-family: var(--serif-sc);
+            font-size: var(--t-smallcaps);
+            letter-spacing: 0.12em;
+            text-transform: lowercase;
+            color: var(--ink-secondary);
+            flex-shrink: 0;
+            z-index: 50;
+            gap: 1rem;
+        }
+        .page-header a { text-decoration: none; color: var(--ink-secondary); }
+        .page-header a:hover { color: var(--ink); text-decoration: underline; text-decoration-color: var(--gold); }
+        .page-header .home {
+            color: var(--ink);
+            font-family: var(--display);
             font-size: 1.3rem;
-            max-width: 600px;
-            margin: 0 0 2.5rem 0;
-            color: var(--secondary-color);
-            line-height: 1.6;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: none;
+        }
+        .page-header nav { display: flex; gap: 1.5rem; align-items: baseline; flex-wrap: wrap; }
+        .page-header nav .ext-group {
+            display: flex; gap: 1.1rem;
+            padding-left: 1.1rem;
+            border-left: 1px solid var(--rule);
+            opacity: 0.85;
+        }
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--rule);
+            border-radius: 999px;
+            padding: 0.28rem 0.75rem;
+            cursor: pointer;
+            font-family: var(--serif-sc);
+            font-size: 0.68rem;
+            letter-spacing: 0.12em;
+            text-transform: lowercase;
+            color: var(--ink-secondary);
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        .theme-toggle:hover { color: var(--ink); border-color: var(--gold); }
+
+        .hamburger-menu { display: none; background: none; border: none; cursor: pointer; padding: 6px; z-index: 51; }
+        .hamburger-menu .line {
+            display: block; width: 22px; height: 1.5px;
+            background-color: var(--ink); margin: 5px 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
-        .social-links a {
-            margin-right: 1.5rem;
-            font-weight: bold;
-            color: var(--secondary-color);
-            transition: color 0.3s ease;
+        /* ─── Frontispiece grid (3x3, center = title plate, 8 around = mini networks) ─── */
+        main { flex: 1; min-height: 0; display: flex; overflow: hidden; }
+
+        .frontispiece-grid {
+            display: grid;
+            /* Center column slightly narrower so side networks step back from the wordmark;
+               center row taller so the centre block has breathing room. */
+            grid-template-columns: 1fr 0.85fr 1fr;
+            grid-template-rows: 0.78fr 1.44fr 0.78fr;
+            /* Asymmetric gap: tighter vertically, generous horizontally — keeps side networks off the centre */
+            row-gap: clamp(0.4rem, 1vh, 0.8rem);
+            column-gap: clamp(1.4rem, 3.2vw, 3rem);
+            width: 100%;
+            height: 100%;
+            /* Minimal horizontal padding + no max-width: lets the grid use the full viewport so the
+               side cells can sit as far left/right as possible. */
+            padding: clamp(0.6rem, 1.5vh, 1.25rem) clamp(0.4rem, 1vw, 1rem);
+            max-width: none;
+            margin: 0 auto;
+            overflow: hidden;
+            position: relative;
         }
-        .social-links a:hover { color: var(--primary-color); }
-        .social-icon { display: none; }
 
-        .main-footer { padding: 1.5rem 2rem; text-align: center; font-size: 0.9rem; color: var(--secondary-color); }
-        .main-footer a { color: var(--primary-color); }
+        /* Bridge layer — thin lines drawn between the nearest nodes of adjacent network cells */
+        .bridges-layer {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .bridges-layer .bridge {
+            stroke: var(--gold);
+            stroke-width: 0.7;
+            stroke-opacity: 0;
+            transition: stroke-opacity 800ms ease;
+        }
+        .bridges-layer.ready .bridge {
+            stroke-opacity: 0.42;
+        }
 
+        .net-cell {
+            position: relative;
+            min-width: 0;
+            min-height: 0;
+            overflow: hidden;
+        }
+        .net-cell canvas, .net-cell svg {
+            width: 100%; height: 100%; display: block;
+        }
+
+        /* Mid-row side networks: hugged to the outer edges so the wordmark's horizontal
+           range is clear of nodes, even though they sit on the same vertical band.
+           Using `width` (not `max-width`) so the grid item keeps its size despite justify-self.
+           The smaller this %, the more breathing room around the central writing. */
+        .net-cell[data-net="3"] {
+            width: 50%;
+            justify-self: start;
+        }
+        .net-cell[data-net="4"] {
+            width: 50%;
+            justify-self: end;
+        }
+
+        /* Center cell — mirrors the twelve-vigils frontispiece structure:
+           small vermilion mark · big uppercase wordmark · small-caps strands · nav · large plate engraving.
+           overflow:visible so the wordmark can extend over the adjacent network cells (it's the page's anchor). */
+        .frontispiece-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0.5rem clamp(0.5rem, 1.5vw, 1rem);
+            min-width: 0;
+            min-height: 0;
+            overflow: visible;
+            position: relative;
+            z-index: 3;
+        }
+
+        .hero-imprint-mark {
+            color: var(--vermilion);
+            font-family: var(--display);
+            font-style: normal;
+            font-weight: 500;
+            font-size: clamp(0.78rem, 0.95vw, 0.95rem);
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            margin: 0;
+            transition: color 400ms ease;
+        }
+
+        .hero-wordmark {
+            font-family: var(--display);
+            font-style: normal;
+            font-weight: 500;
+            font-size: clamp(2rem, 5.4vw, 3.6rem);
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            line-height: 1.15;
+            margin: clamp(1.25rem, 3vh, 2.25rem) 0 0;
+            color: var(--ink);
+            white-space: nowrap;
+        }
+
+        .hero-strands {
+            font-family: var(--serif-sc);
+            font-style: normal;
+            font-size: clamp(0.72rem, 0.88vw, 0.9rem);
+            letter-spacing: 0.12em;
+            text-transform: lowercase;
+            color: var(--ink-secondary);
+            margin: clamp(0.6rem, 1.2vh, 1rem) 0 0;
+        }
+
+        .hero-social {
+            font-family: var(--serif-sc);
+            font-size: clamp(0.7rem, 0.82vw, 0.82rem);
+            letter-spacing: 0.12em;
+            text-transform: lowercase;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem 1.4rem;
+            justify-content: center;
+            margin: clamp(1.1rem, 2.2vh, 1.8rem) 0 0;
+        }
+        .hero-social a {
+            color: var(--ink-secondary);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .hero-social a:hover {
+            color: var(--ink);
+            text-decoration: underline;
+            text-decoration-color: var(--gold);
+        }
+
+        .hero-plate {
+            display: block;
+            width: clamp(110px, 11.5vw, 156px);
+            height: clamp(164px, 17.1vw, 232px);
+            color: var(--ink);   /* matches Twelve Vigils frontispiece: plate is in ink, not vermilion */
+            margin: clamp(1.25rem, 2.6vh, 2rem) 0 0;
+            transition: color 400ms ease, background-color 400ms ease;
+            flex-shrink: 0;
+        }
+        .hero-plate svg { width: 100%; height: 100%; display: block; }
+
+        /* Dark mode: inverted treatment — vermilion becomes the "paper", ink is the engraving.
+           Crop a few pixels off each side of the SVG so its natural inner padding doesn't read
+           as a vermilion "border" around the figure. */
+        .dark-mode .hero-plate {
+            background-color: #a73d28;
+            color: #1a1410;
+            overflow: hidden;
+        }
+        .dark-mode .hero-plate svg {
+            transform: scale(1.1);
+            transform-origin: center center;
+        }
+
+        /* ─── Footer ─── */
+        .page-footer {
+            border-top: 1px solid var(--rule);
+            padding: 0.9rem var(--gutter);
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-family: var(--serif-sc);
+            font-size: var(--t-meta);
+            color: var(--ink-secondary);
+            letter-spacing: 0.06em;
+            text-transform: lowercase;
+            flex-shrink: 0;
+            gap: 1rem;
+        }
+        .page-footer a { color: var(--ink-secondary); text-decoration: none; }
+        .page-footer a:hover { color: var(--ink); text-decoration: underline; text-decoration-color: var(--gold); }
+        .page-footer .mark {
+            color: var(--vermilion);
+            font-family: var(--display);
+            font-weight: 500;
+            letter-spacing: 0.3em;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+        }
+
+        /* ─── Mobile: stack centred content + one mini-network below ─── */
         @media (max-width: 768px) {
+            body { height: auto; overflow: auto; }
             body.nav-open { overflow: hidden; }
-            .hero h1 { font-size: 2.5rem; }
-            .hero { text-align: center; }
-            .hero .container { flex-direction: column-reverse; padding-top: 6.5rem; padding-bottom: 1rem; }
-            .hero-text { flex: 0 0 auto; margin-left: 0; min-width: 0; }
-            .hero .subtitle { margin-left: auto; margin-right: auto; }
-            .social-links { display: flex; flex-direction: row; gap: 1.8rem; align-items: center; justify-content: center; }
-            .social-links a { margin-right: 0; }
-            .social-text { display: none; }
-            .social-icon { display: block; width: 24px; height: 24px; }
-            .hero-viz { flex: 1; }
-            :root { --net-link: rgba(140, 140, 145, 0.36); }
-            .dark-mode { --net-link: rgba(180, 165, 145, 0.34); }
+            main { overflow: visible; flex: 1 0 auto; }
+            .page-header { padding: 0.9rem var(--gutter); }
+            .page-header .home { font-size: 1.15rem; }
+
+            .frontispiece-grid {
+                display: flex;
+                flex-direction: column;
+                height: auto;
+                padding: 2rem var(--gutter) 2rem;
+                row-gap: 1.5rem;
+                column-gap: 0;
+                overflow: visible;
+            }
+            .net-cell { display: none; }
+            .net-cell[data-net="6"] { display: block; height: 30vh; min-height: 200px; order: 2; width: 100%; justify-self: stretch; }
+            .frontispiece-center { order: 1; padding: 1rem 0; overflow: visible; }
+
+            /* Bridges layer not relevant when only one network shows */
+            .bridges-layer { display: none; }
+
+            .hero-imprint-mark { font-size: 0.78rem; }
+            .hero-wordmark {
+                font-size: clamp(1.55rem, 7vw, 2.3rem);
+                letter-spacing: 0.16em;
+                white-space: normal;          /* allow it to wrap on narrow viewports if needed */
+                word-spacing: 0.05em;
+            }
+            .hero-strands { font-size: 0.85rem; letter-spacing: 0.12em; }
+            .hero-social { font-size: 0.8rem; gap: 0.5rem 1.2rem; }
+            .hero-plate { width: 122px; height: 182px; margin-top: 1.75rem; }
+
             .hamburger-menu { display: block; }
-            .main-nav {
+            .page-header nav {
                 position: fixed; top: 0; left: 0;
                 width: 100%; height: 100vh;
-                background-color: var(--background-color);
-                display: flex; justify-content: center; align-items: center;
+                background-color: var(--page);
+                display: flex; flex-direction: column;
+                justify-content: center; align-items: center;
+                gap: 1.5rem;
                 transform: translateX(100%);
                 transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+                font-size: 1.05rem;
+                letter-spacing: 0.18em;
+                z-index: 49;
             }
-            body.nav-open .main-nav { transform: translateX(0); }
-            .main-nav ul { flex-direction: column; gap: 2rem; text-align: center; }
-            .main-nav a { font-size: 1.5rem; }
-            .main-nav a::after { display: none; }
+            .page-header nav .ext-group {
+                flex-direction: column;
+                border-left: 0;
+                border-top: 1px solid var(--rule);
+                padding-left: 0; padding-top: 1.5rem;
+                margin-top: 0.5rem; gap: 1rem;
+                align-items: center;
+            }
+            body.nav-open .page-header nav { transform: translateX(0); }
             body.nav-open .hamburger-menu .line-1 { transform: rotate(45deg) translate(5px, 5px); }
             body.nav-open .hamburger-menu .line-2 { opacity: 0; }
             body.nav-open .hamburger-menu .line-3 { transform: rotate(-45deg) translate(5px, -5px); }
@@ -206,85 +402,103 @@
 </head>
 <body>
 
-    <div class="page">
+    <header class="page-header">
+        <a class="home" href="index.html">Niccolò Ridi</a>
+        <nav>
+            <a href="profile.html">profile</a>
+            <a href="practice.html">practice</a>
+            <a href="research.html">research</a>
+            <a href="data.html">data</a>
+            <span class="ext-group">
+                <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" rel="noopener">linkedin</a>
+                <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" rel="noopener">scholar</a>
+                <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" rel="noopener">ssrn</a>
+                <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" rel="noopener">kcl</a>
+            </span>
+        </nav>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span id="theme-label">dark</span></button>
+        <button class="hamburger-menu" aria-label="Open navigation menu">
+            <span class="line line-1"></span>
+            <span class="line line-2"></span>
+            <span class="line line-3"></span>
+        </button>
+    </header>
 
-        <header class="main-header">
-            <div class="container">
-                <a href="index.html" class="logo">Niccolò Ridi</a>
-                <nav class="main-nav">
-                    <ul>
-                        <li><a href="profile.html">Profile</a></li>
-                        <li><a href="practice.html">Practice</a></li>
-                        <li><a href="research.html">Research</a></li>
-                        <li><a href="data.html">Data</a></li>
-                        <li class="nav-sep"></li>
-                        <li><a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" class="ext-link">LinkedIn</a></li>
-                        <li><a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" class="ext-link">Scholar</a></li>
-                        <li><a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="ext-link">SSRN</a></li>
-                        <li><a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" class="ext-link">KCL</a></li>
-                    </ul>
-                </nav>
-                <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span id="theme-icon">◑</span> <span id="theme-label">Light</span></button>
-                <button class="hamburger-menu" aria-label="Open navigation menu">
-                    <span class="line line-1"></span>
-                    <span class="line line-2"></span>
-                    <span class="line line-3"></span>
-                </button>
-            </div>
-        </header>
+    <main>
+        <div class="frontispiece-grid">
+            <div class="net-cell" data-net="0"></div>
+            <div class="net-cell" data-net="1"></div>
+            <div class="net-cell" data-net="2"></div>
+            <div class="net-cell" data-net="3"></div>
 
-        <section class="hero">
-            <div class="container">
-                <div class="hero-text">
-                    <h1>Dr Niccolò Ridi</h1>
-                    <p class="subtitle">
-                        Academic and practitioner in Public International Law, focusing on international dispute resolution and computational analysis of law.
-                    </p>
-                    <div class="social-links">
-                        <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" title="LinkedIn"><svg class="social-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg><span class="social-text">LinkedIn</span></a>
-                        <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" title="Google Scholar"><svg class="social-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg><span class="social-text">Google Scholar</span></a>
-                        <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" title="SSRN"><svg class="social-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 15h8v2H8zm0-3h8v2H8z"/></svg><span class="social-text">SSRN</span></a>
-                        <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" title="KCL Profile"><svg class="social-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg><span class="social-text">KCL Profile</span></a>
-                    </div>
+            <div class="frontispiece-center">
+                <p class="hero-imprint-mark">NR</p>
+                <h1 class="hero-wordmark">Dr Niccolò Ridi</h1>
+                <p class="hero-strands">public international law &middot; computational analysis</p>
+                <div class="hero-social">
+                    <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" rel="noopener">linkedin</a>
+                    <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" rel="noopener">scholar</a>
+                    <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" rel="noopener">ssrn</a>
+                    <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" rel="noopener">kcl</a>
+                    <a href="mailto:niccolo.ridi@kcl.ac.uk">mail</a>
                 </div>
-                <div class="hero-viz" id="hero-viz"></div>
+                <span class="hero-plate" id="hero-plate" aria-hidden="true"></span>
             </div>
-        </section>
 
-        <footer class="main-footer">
-            <p><a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a> &nbsp;|&nbsp; &copy; 2025 Niccolò Ridi. All Rights Reserved (probably).</p>
-        </footer>
+            <div class="net-cell" data-net="4"></div>
+            <div class="net-cell" data-net="5"></div>
+            <div class="net-cell" data-net="6"></div>
+            <div class="net-cell" data-net="7"></div>
 
-    </div>
+            <svg class="bridges-layer" id="bridges-layer" preserveAspectRatio="none" aria-hidden="true"></svg>
+        </div>
+    </main>
+
+    <footer class="page-footer">
+        <a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a>
+        <span class="rights">&copy; 2025 Niccolò Ridi. All Rights Reserved (probably).</span>
+    </footer>
 
     <script>
         const hamburger = document.querySelector('.hamburger-menu');
         hamburger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
-        document.querySelectorAll('.main-nav a').forEach(link => {
+        document.querySelectorAll('.page-header nav a').forEach(link => {
             link.addEventListener('click', () => document.body.classList.remove('nav-open'));
         });
 
-        const icons = { light: '◑', dark: '◐' };
-        const labels = { light: 'Light', dark: 'Dark' };
-        let currentTheme = localStorage.getItem('theme') || 'dark';
+        // Theme — light default
+        let currentTheme = localStorage.getItem('theme') || 'light';
         window.__themeListeners = [];
         function applyTheme(t) {
-            document.body.classList.remove('dark-mode');
-            document.documentElement.classList.remove('dark-mode');
-            if (t === 'dark') { document.body.classList.add('dark-mode'); document.documentElement.classList.add('dark-mode'); }
-            document.getElementById('theme-icon').textContent = icons[t];
-            document.getElementById('theme-label').textContent = labels[t];
+            document.documentElement.classList.toggle('dark-mode', t === 'dark');
+            document.body.classList.toggle('dark-mode', t === 'dark');
+            document.getElementById('theme-label').textContent = t === 'dark' ? 'light' : 'dark';
             localStorage.setItem('theme', t);
             currentTheme = t;
             window.__themeListeners.forEach(fn => { try { fn(t); } catch(e) {} });
         }
         function toggleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
         applyTheme(currentTheme);
+
+        // Inline the plate SVG so currentColor tints it via CSS
+        (function loadPlate() {
+            const el = document.getElementById('hero-plate');
+            if (!el) return;
+            fetch('images/illustrations/plate-10.svg')
+                .then(r => r.ok ? r.text() : Promise.reject(r.status))
+                .then(svg => {
+                    el.innerHTML = svg;
+                    const inner = el.querySelector('svg');
+                    if (inner) { inner.removeAttribute('width'); inner.removeAttribute('height'); }
+                })
+                .catch(err => console.warn('plate-10 load failed', err));
+        })();
     </script>
 
     <script type="module">
-        // ─── Flat WebGL Network (mirrors index.html behavior with halos + traveling shine particle) ───
-        const container = document.getElementById('hero-viz');
+        // ─── 8 small WebGL constellations + bridges between their closest nodes ───
+        const cells = Array.from(document.querySelectorAll('.net-cell'));
+        const NETWORK_REGISTRY = [];
 
         function hasWebGL() {
             try {
@@ -294,33 +508,116 @@
         }
 
         if (!hasWebGL()) {
-            initSVGFallback();
+            // Quiet fallback — leave the cells empty.
         } else {
             try {
                 const THREE = await import('three');
-                initWebGL(THREE);
+                cells.forEach((cell, i) => {
+                    const rect = cell.getBoundingClientRect();
+                    if (rect.width < 30 || rect.height < 30) return;
+                    const handle = createMiniNetwork(THREE, cell, i);
+                    if (handle) NETWORK_REGISTRY[i] = handle;
+                });
+                setupBridges();
             } catch (err) {
-                console.warn('three.js failed to load, falling back to SVG', err);
-                initSVGFallback();
+                console.warn('three.js failed to load', err);
             }
         }
 
-        function initWebGL(THREE) {
+        // ─── Bridges: connect each cell to its grid neighbours via the closest node pair ───
+        function setupBridges() {
+            const svg = document.getElementById('bridges-layer');
+            const grid = document.querySelector('.frontispiece-grid');
+            if (!svg || !grid) return;
+
+            const adjacency = [
+                [0, 1], [1, 2],   // top row
+                [0, 3], [2, 4],   // sides up
+                [3, 5], [4, 7],   // sides down
+                [5, 6], [6, 7]    // bottom row
+            ];
+            const svgns = 'http://www.w3.org/2000/svg';
+
+            function nodePagePos(net, idx) {
+                const rect = net.container.getBoundingClientRect();
+                const n = net.nodes[idx];
+                return {
+                    x: rect.left + (n.x + net.getW() / 2),
+                    y: rect.top + (net.getH() / 2 - n.y)
+                };
+            }
+
+            function findClosestPair(netA, netB) {
+                let minD2 = Infinity, bestA = 0, bestB = 0;
+                for (let i = 0; i < netA.nodes.length; i++) {
+                    for (let j = 0; j < netB.nodes.length; j++) {
+                        const a = nodePagePos(netA, i);
+                        const b = nodePagePos(netB, j);
+                        const dx = a.x - b.x, dy = a.y - b.y;
+                        const d2 = dx*dx + dy*dy;
+                        if (d2 < minD2) { minD2 = d2; bestA = i; bestB = j; }
+                    }
+                }
+                return { aIdx: bestA, bIdx: bestB };
+            }
+
+            const bridges = [];
+
+            // Hold off until the entrance animation has placed nodes — then build & fade in.
+            setTimeout(() => {
+                adjacency.forEach(([a, b]) => {
+                    const netA = NETWORK_REGISTRY[a];
+                    const netB = NETWORK_REGISTRY[b];
+                    if (!netA || !netB) return;
+                    const pair = findClosestPair(netA, netB);
+                    const line = document.createElementNS(svgns, 'line');
+                    line.setAttribute('class', 'bridge');
+                    svg.appendChild(line);
+                    bridges.push({ netA, netB, aIdx: pair.aIdx, bIdx: pair.bIdx, line });
+                });
+                svg.classList.add('ready');
+
+                let lastReeval = performance.now();
+                function frame(now) {
+                    const gridRect = grid.getBoundingClientRect();
+
+                    // Periodically re-pick the closest pair — networks drift, so the bridge follows
+                    if (now - lastReeval > 2200) {
+                        lastReeval = now;
+                        for (const b of bridges) {
+                            const pair = findClosestPair(b.netA, b.netB);
+                            b.aIdx = pair.aIdx; b.bIdx = pair.bIdx;
+                        }
+                    }
+
+                    for (const b of bridges) {
+                        const a = nodePagePos(b.netA, b.aIdx);
+                        const c = nodePagePos(b.netB, b.bIdx);
+                        b.line.setAttribute('x1', a.x - gridRect.left);
+                        b.line.setAttribute('y1', a.y - gridRect.top);
+                        b.line.setAttribute('x2', c.x - gridRect.left);
+                        b.line.setAttribute('y2', c.y - gridRect.top);
+                    }
+                    requestAnimationFrame(frame);
+                }
+                requestAnimationFrame(frame);
+            }, 3200);
+        }
+
+        function createMiniNetwork(THREE, container, seed) {
             const rect = container.getBoundingClientRect();
             let W = Math.max(50, Math.floor(rect.width));
             let H = Math.max(50, Math.floor(rect.height));
 
-            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'low-power' });
             renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
             renderer.setSize(W, H);
             renderer.setClearColor(0x000000, 0);
             container.appendChild(renderer.domElement);
 
             const scene = new THREE.Scene();
-            // Orthographic camera — true "flat" projection, 1 world unit = 1 CSS pixel
             const camera = new THREE.OrthographicCamera(-W/2, W/2, H/2, -H/2, -1000, 1000);
 
-            // ─── Theme colors ───
             function readColors() {
                 const s = getComputedStyle(document.documentElement);
                 const parse = (k, fb) => {
@@ -330,118 +627,75 @@
                     return c;
                 };
                 return {
-                    node:  parse('--net-node',     0xd4a574),
-                    hub:   parse('--net-node-hub', 0xf4c891),
-                    link:  parse('--net-link',     0xd4a574),
-                    pulse: parse('--net-pulse',    0xffddaa)
+                    node:  parse('--net-node',     0xa8893a),
+                    hub:   parse('--net-node-hub', 0xa73d28),
+                    link:  parse('--net-link',     0xa8893a),
+                    pulse: parse('--net-pulse',    0xa73d28)
                 };
             }
             let theme = readColors();
 
-            // ─── Graph data (mirroring index.html sizing and clustering) ───
-            const diag = Math.sqrt(W*W + H*H);
-            const nClusters = Math.min(9, Math.max(4, Math.round(diag / 140)));
-            const baseClusterSize = Math.round(7 + diag / 180);
-
-            const centers = [];
-            for (let c = 0; c < nClusters; c++) {
-                centers.push([
-                    (Math.random() - 0.5) * W * 0.8,
-                    (Math.random() - 0.5) * H * 0.8
-                ]);
-            }
-
+            // ─── Build a small graph (11–14 nodes, single cluster) — restrained so the centre carries the page ───
+            const N = 11 + Math.floor(Math.random() * 4);
             const nodes = [];
-            for (let c = 0; c < nClusters; c++) {
-                const count = baseClusterSize + Math.floor(Math.random() * 5) - 2;
-                for (let i = 0; i < count; i++) {
-                    const isHub = i === 0;
-                    nodes.push({
-                        id: nodes.length,
-                        cluster: c,
-                        hub: isHub,
-                        // d3 collision radius (mirror SVG node radii)
-                        r: isHub ? 7 + Math.random() * 3 : 2.5 + Math.random() * 4,
-                        // Shader point size (with room for halo around the disc)
-                        baseSize: isHub ? 32 + Math.random() * 12 : 13 + Math.random() * 9,
-                        x: centers[c][0] + (Math.random() - 0.5) * 60,
-                        y: centers[c][1] + (Math.random() - 0.5) * 50,
-                        flash: 0, flashStart: 0, flashDur: 0,
-                        entranceDelay: c * 350 + Math.random() * 250,
-                        entranceDur: 900
-                    });
-                }
+            for (let i = 0; i < N; i++) {
+                const isHub = i === 0;
+                nodes.push({
+                    id: i,
+                    hub: isHub,
+                    r: isHub ? 5 + Math.random() * 2 : 2.3 + Math.random() * 2.2,
+                    baseSize: isHub ? 18 + Math.random() * 6 : 8 + Math.random() * 5,
+                    x: (Math.random() - 0.5) * W * 0.6,
+                    y: (Math.random() - 0.5) * H * 0.6,
+                    flashStart: 0, flashDur: 0,
+                    entranceDelay: 250 + seed * 90 + i * 40 + Math.random() * 200,
+                    entranceDur: 800
+                });
             }
-
-            // Intra-cluster edges
             const edges = [];
-            for (let c = 0; c < nClusters; c++) {
-                const ci = nodes.map((n, i) => n.cluster === c ? i : -1).filter(i => i >= 0);
-                for (let a = 0; a < ci.length; a++) {
-                    for (let b = a+1; b < ci.length; b++) {
-                        if (Math.random() < 0.3) edges.push({ s: ci[a], t: ci[b], boostStart: 0, boostDur: 0 });
-                    }
-                }
-            }
-            // Inter-cluster bridges
-            for (let c1 = 0; c1 < nClusters; c1++) {
-                for (let c2 = c1+1; c2 < nClusters; c2++) {
-                    const n1 = nodes.map((n, i) => n.cluster === c1 ? i : -1).filter(i => i >= 0);
-                    const n2 = nodes.map((n, i) => n.cluster === c2 ? i : -1).filter(i => i >= 0);
-                    const bridges = 1 + Math.floor(Math.random() * 2);
-                    for (let b = 0; b < bridges; b++) {
-                        edges.push({
-                            s: n1[Math.floor(Math.random() * n1.length)],
-                            t: n2[Math.floor(Math.random() * n2.length)],
-                            boostStart: 0, boostDur: 0
-                        });
-                    }
+            for (let i = 0; i < N; i++) {
+                for (let j = i + 1; j < N; j++) {
+                    if (Math.random() < 0.28) edges.push({ s: i, t: j, boostStart: 0, boostDur: 0 });
                 }
             }
             // Orphan fix
-            (function fixOrphans() {
-                const degree = new Array(nodes.length).fill(0);
-                edges.forEach(e => { degree[e.s]++; degree[e.t]++; });
-                nodes.forEach((n, i) => {
-                    if (degree[i] !== 0) return;
-                    let hubIdx = nodes.findIndex(m => m.hub && m.cluster === n.cluster && m.id !== n.id);
-                    if (hubIdx < 0) hubIdx = nodes.findIndex(m => m.id !== n.id);
-                    if (hubIdx >= 0) { edges.push({ s: i, t: hubIdx, boostStart: 0, boostDur: 0 }); degree[i]++; degree[hubIdx]++; }
-                });
+            (function fix() {
+                const deg = new Array(N).fill(0);
+                edges.forEach(e => { deg[e.s]++; deg[e.t]++; });
+                for (let i = 0; i < N; i++) {
+                    if (deg[i] === 0) {
+                        const target = (i === 0) ? 1 : 0;
+                        edges.push({ s: i, t: target, boostStart: 0, boostDur: 0 });
+                        deg[i]++; deg[target]++;
+                    }
+                }
             })();
-            // Edge entrance delays
-            edges.forEach(e => {
-                const sc = nodes[e.s].cluster;
-                e.entranceDelay = sc * 350 + 200 + Math.random() * 300;
-                e.entranceDur = 700;
-            });
+            edges.forEach((e, i) => { e.entranceDelay = 400 + seed * 90 + i * 40 + Math.random() * 200; e.entranceDur = 700; });
 
-            // ─── Live d3 force simulation (same parameters as index.html) ───
             const simLinks = edges.map(e => ({ source: e.s, target: e.t }));
             const simulation = d3.forceSimulation(nodes)
-                .force('link', d3.forceLink(simLinks).distance(25 + diag / 25).strength(0.15))
-                .force('charge', d3.forceManyBody().strength(-12 - diag / 55))
-                .force('center', d3.forceCenter(0, 0).strength(0.04))
+                .force('link', d3.forceLink(simLinks).distance(Math.min(W, H) * 0.16).strength(0.18))
+                .force('charge', d3.forceManyBody().strength(-Math.min(W, H) * 0.12))
+                .force('center', d3.forceCenter(0, 0).strength(0.06))
                 .force('collision', d3.forceCollide().radius(d => d.r + 3))
-                .force('x', d3.forceX(0).strength(0.02))
-                .force('y', d3.forceY(0).strength(0.02))
-                .alpha(0.4)
-                .alphaDecay(0.015)
-                .stop();  // we tick manually in the rAF loop
+                .force('x', d3.forceX(0).strength(0.04))
+                .force('y', d3.forceY(0).strength(0.04))
+                .alpha(0.5)
+                .alphaDecay(0.018)
+                .stop();
 
             // ─── Node mesh ───
             const nodeGeom = new THREE.BufferGeometry();
-            const nodePos = new Float32Array(nodes.length * 3);
-            const nodeSize = new Float32Array(nodes.length);
-            const nodeColor = new Float32Array(nodes.length * 3);
-            const nodeFlash = new Float32Array(nodes.length);
-            const nodeOpacity = new Float32Array(nodes.length);
-            for (let i = 0; i < nodes.length; i++) {
-                nodePos[i*3] = nodes[i].x; nodePos[i*3+1] = nodes[i].y; nodePos[i*3+2] = 0;
+            const nodePos = new Float32Array(N * 3);
+            const nodeSize = new Float32Array(N);
+            const nodeColor = new Float32Array(N * 3);
+            const nodeFlash = new Float32Array(N);
+            const nodeOpacity = new Float32Array(N);
+            for (let i = 0; i < N; i++) {
+                nodePos[i*3] = nodes[i].x; nodePos[i*3+1] = nodes[i].y;
                 nodeSize[i] = nodes[i].baseSize;
                 const col = nodes[i].hub ? theme.hub : theme.node;
                 nodeColor[i*3] = col.r; nodeColor[i*3+1] = col.g; nodeColor[i*3+2] = col.b;
-                nodeFlash[i] = 0;
                 nodeOpacity[i] = 0;
             }
             nodeGeom.setAttribute('position', new THREE.BufferAttribute(nodePos, 3));
@@ -465,11 +719,8 @@
                     varying float vOpacity;
                     uniform float uPxRatio;
                     void main() {
-                        vColor = aColor;
-                        vFlash = aFlash;
-                        vOpacity = aOpacity;
-                        // Orthographic — no perspective scaling needed
-                        gl_PointSize = aSize * (1.0 + aFlash * 0.6) * uPxRatio;
+                        vColor = aColor; vFlash = aFlash; vOpacity = aOpacity;
+                        gl_PointSize = aSize * (1.0 + aFlash * 0.55) * uPxRatio;
                         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
                     }
                 `,
@@ -483,16 +734,15 @@
                         vec2 p = gl_PointCoord - 0.5;
                         float d = length(p);
                         if (d > 0.5) discard;
-                        // Tight disc + soft halo (this is the "particle with halo" effect)
-                        float core = smoothstep(0.42, 0.0, d);
-                        float halo = smoothstep(0.5, 0.18, d) * 0.45;
+                        float core = smoothstep(0.40, 0.0, d);
+                        float halo = smoothstep(0.50, 0.20, d) * 0.55;
                         vec3 c = mix(vColor, uPulse, vFlash);
-                        gl_FragColor = vec4(c * (0.95 + vFlash * 0.6), (core + halo) * vOpacity);
+                        gl_FragColor = vec4(c, (core + halo) * vOpacity);
                     }
                 `,
                 transparent: true,
                 depthWrite: false,
-                blending: THREE.AdditiveBlending
+                blending: THREE.NormalBlending
             });
             const nodePoints = new THREE.Points(nodeGeom, nodeMat);
             scene.add(nodePoints);
@@ -504,8 +754,8 @@
             const edgeOpacity = new Float32Array(edges.length * 2);
             for (let i = 0; i < edges.length; i++) {
                 const a = nodes[edges[i].s], b = nodes[edges[i].t];
-                edgePos[i*6] = a.x; edgePos[i*6+1] = a.y; edgePos[i*6+2] = 0;
-                edgePos[i*6+3] = b.x; edgePos[i*6+4] = b.y; edgePos[i*6+5] = 0;
+                edgePos[i*6] = a.x; edgePos[i*6+1] = a.y;
+                edgePos[i*6+3] = b.x; edgePos[i*6+4] = b.y;
             }
             edgeGeom.setAttribute('position', new THREE.BufferAttribute(edgePos, 3));
             edgeGeom.setAttribute('aBoost', new THREE.BufferAttribute(edgeBoost, 1));
@@ -522,8 +772,7 @@
                     varying float vB;
                     varying float vO;
                     void main() {
-                        vB = aBoost;
-                        vO = aOpacity;
+                        vB = aBoost; vO = aOpacity;
                         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
                     }
                 `,
@@ -534,19 +783,19 @@
                     varying float vO;
                     void main() {
                         vec3 c = mix(uColor, uPulse, vB);
-                        gl_FragColor = vec4(c * (1.0 + vB * 0.5), (0.6 + vB * 0.35) * vO);
+                        gl_FragColor = vec4(c, (0.55 + vB * 0.4) * vO);
                     }
                 `,
                 transparent: true,
                 depthWrite: false,
-                blending: THREE.AdditiveBlending
+                blending: THREE.NormalBlending
             });
             const edgeLines = new THREE.LineSegments(edgeGeom, edgeMat);
             scene.add(edgeLines);
 
-            // ─── Shine particle pool (small glowing dot travels the pulsed edge) ───
-            const PARTICLE_POOL = 4;
-            const particleStates = [];  // active: {edgeIdx, startTime, duration}
+            // ─── Shine particle pool ───
+            const PARTICLE_POOL = 2;
+            const particleStates = [];
             const particleGeom = new THREE.BufferGeometry();
             const particlePos = new Float32Array(PARTICLE_POOL * 3);
             const particleAlpha = new Float32Array(PARTICLE_POOL);
@@ -564,8 +813,7 @@
                     uniform float uPxRatio;
                     void main() {
                         vA = aAlpha;
-                        // Particle size pulses with alpha so it grows/shrinks across the edge
-                        gl_PointSize = 22.0 * aAlpha * uPxRatio + 6.0 * uPxRatio;
+                        gl_PointSize = 14.0 * aAlpha * uPxRatio + 5.0 * uPxRatio;
                         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
                     }
                 `,
@@ -579,22 +827,20 @@
                         if (d > 0.5) discard;
                         float core = smoothstep(0.45, 0.0, d);
                         float halo = smoothstep(0.5, 0.10, d) * 0.55;
-                        gl_FragColor = vec4(uColor * 1.45, (core + halo) * vA);
+                        gl_FragColor = vec4(uColor, (core + halo) * vA);
                     }
                 `,
-                transparent: true,
-                depthWrite: false,
-                blending: THREE.AdditiveBlending
+                transparent: true, depthWrite: false, blending: THREE.NormalBlending
             });
             const particlePoints = new THREE.Points(particleGeom, particleMat);
             scene.add(particlePoints);
 
-            function spawnShineParticle(edgeIdx) {
+            function spawnShine(edgeIdx) {
                 if (particleStates.length >= PARTICLE_POOL) return;
-                particleStates.push({ edgeIdx, startTime: performance.now(), duration: 880 });
+                particleStates.push({ edgeIdx, startTime: performance.now(), duration: 900 });
             }
 
-            // ─── Theme reactivity ───
+            // Theme update
             function pushTheme() {
                 theme = readColors();
                 nodeMat.uniforms.uPulse.value.copy(theme.pulse);
@@ -602,7 +848,7 @@
                 edgeMat.uniforms.uPulse.value.copy(theme.pulse);
                 particleMat.uniforms.uColor.value.copy(theme.pulse);
                 const a = nodeGeom.getAttribute('aColor');
-                for (let i = 0; i < nodes.length; i++) {
+                for (let i = 0; i < N; i++) {
                     const c = nodes[i].hub ? theme.hub : theme.node;
                     a.array[i*3] = c.r; a.array[i*3+1] = c.g; a.array[i*3+2] = c.b;
                 }
@@ -610,7 +856,7 @@
             }
             window.__themeListeners.push(pushTheme);
 
-            // ─── Resize ───
+            // Resize
             const ro = new ResizeObserver(() => {
                 const r = container.getBoundingClientRect();
                 const w = Math.max(50, Math.floor(r.width));
@@ -624,52 +870,49 @@
             });
             ro.observe(container);
 
-            // ─── Visibility pause ───
+            // Pulses — each network on its own offset cadence so they don't all sync
             let paused = false;
             document.addEventListener('visibilitychange', () => { paused = document.hidden; });
 
-            // ─── Pulses (same cadence as index.html: 1 node + 1 edge every 2.5s) ───
             let pulseTimer = null;
+            const pulsePeriod = 3000 + Math.random() * 1500;
             function pulseTick() {
                 const now = performance.now();
-                const ni = Math.floor(Math.random() * nodes.length);
+                const ni = Math.floor(Math.random() * N);
                 nodes[ni].flashStart = now;
-                nodes[ni].flashDur = 2400;
-                const ei = Math.floor(Math.random() * edges.length);
-                edges[ei].boostStart = now;
-                edges[ei].boostDur = 1800;
-                spawnShineParticle(ei);
+                nodes[ni].flashDur = 2200;
+                if (edges.length) {
+                    const ei = Math.floor(Math.random() * edges.length);
+                    edges[ei].boostStart = now;
+                    edges[ei].boostDur = 1700;
+                    spawnShine(ei);
+                }
             }
-            function startPulses() { if (!pulseTimer) pulseTimer = setInterval(pulseTick, 2500); }
+            function startPulses() { if (!pulseTimer) pulseTimer = setInterval(pulseTick, pulsePeriod); }
             function stopPulses() { if (pulseTimer) { clearInterval(pulseTimer); pulseTimer = null; } }
             document.addEventListener('visibilitychange', () => {
                 if (document.hidden) stopPulses(); else startPulses();
             });
-            setTimeout(() => { if (!document.hidden) startPulses(); }, 4000);
+            setTimeout(() => { if (!document.hidden) startPulses(); }, 3500 + seed * 250);
 
-            // ─── Main loop ───
+            // Main loop
             const startT = performance.now();
             function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 
             function tick(now) {
                 if (paused) { requestAnimationFrame(tick); return; }
                 const elapsed = now - startT;
-
-                // Step the force simulation by one tick (mirrors index.html's d3 internal tick)
                 simulation.tick();
-
-                // Bounds clamp (mirror SVG version's behavior)
                 nodes.forEach(n => {
-                    const margin = (n.hub ? 14 : 8);
+                    const margin = (n.hub ? 10 : 6);
                     n.x = Math.max(-W/2 + margin, Math.min(W/2 - margin, n.x));
                     n.y = Math.max(-H/2 + margin, Math.min(H/2 - margin, n.y));
                 });
 
-                // Push node positions + pulse/entrance attributes
                 const np = nodeGeom.getAttribute('position');
                 const nf = nodeGeom.getAttribute('aFlash');
                 const no = nodeGeom.getAttribute('aOpacity');
-                for (let i = 0; i < nodes.length; i++) {
+                for (let i = 0; i < N; i++) {
                     const n = nodes[i];
                     np.array[i*3] = n.x; np.array[i*3+1] = n.y;
                     if (n.flashStart) {
@@ -682,11 +925,8 @@
                         no.array[i] = (t <= 0) ? 0 : (t >= 1) ? 1 : easeOutCubic(t);
                     }
                 }
-                np.needsUpdate = true;
-                nf.needsUpdate = true;
-                no.needsUpdate = true;
+                np.needsUpdate = true; nf.needsUpdate = true; no.needsUpdate = true;
 
-                // Push edge positions + boost/entrance
                 const ep = edgeGeom.getAttribute('position');
                 const eb = edgeGeom.getAttribute('aBoost');
                 const eo = edgeGeom.getAttribute('aOpacity');
@@ -707,11 +947,8 @@
                         eo.array[i*2] = o; eo.array[i*2+1] = o;
                     }
                 }
-                ep.needsUpdate = true;
-                eb.needsUpdate = true;
-                eo.needsUpdate = true;
+                ep.needsUpdate = true; eb.needsUpdate = true; eo.needsUpdate = true;
 
-                // Shine particles
                 const pp = particleGeom.getAttribute('position');
                 const pa = particleGeom.getAttribute('aAlpha');
                 for (let i = 0; i < PARTICLE_POOL; i++) {
@@ -720,95 +957,31 @@
                         const t = Math.max(0, Math.min(1, (now - ps.startTime) / ps.duration));
                         const e = edges[ps.edgeIdx];
                         const a = nodes[e.s], b = nodes[e.t];
-                        pp.array[i*3]   = a.x + (b.x - a.x) * t;
+                        pp.array[i*3] = a.x + (b.x - a.x) * t;
                         pp.array[i*3+1] = a.y + (b.y - a.y) * t;
-                        pp.array[i*3+2] = 1;
-                        // Bell curve over t — fades in mid-edge and out by the other end
                         pa.array[i] = Math.sin(Math.PI * t);
-                    } else {
-                        pa.array[i] = 0;
-                    }
+                    } else { pa.array[i] = 0; }
                 }
-                // Cull finished particles
                 for (let i = particleStates.length - 1; i >= 0; i--) {
                     if ((now - particleStates[i].startTime) >= particleStates[i].duration) {
                         particleStates.splice(i, 1);
                     }
                 }
-                pp.needsUpdate = true;
-                pa.needsUpdate = true;
+                pp.needsUpdate = true; pa.needsUpdate = true;
 
                 renderer.render(scene, camera);
                 requestAnimationFrame(tick);
             }
             requestAnimationFrame(tick);
-        }
 
-        // ═══════════════════════════════════════════════════════════════════
-        // SVG fallback (used if WebGL is unavailable)
-        // ═══════════════════════════════════════════════════════════════════
-        function initSVGFallback() {
-            const vizEl = container;
-            if (!vizEl || typeof d3 === 'undefined') return;
-            const rect = vizEl.getBoundingClientRect();
-            const W = Math.floor(rect.width) || 420;
-            const H = Math.floor(rect.height) || 380;
-            if (W < 50 || H < 50) return;
-            const diag = Math.sqrt(W*W + H*H);
-            const nClusters = Math.min(9, Math.max(4, Math.round(diag / 140)));
-            const baseSize = Math.round(7 + diag / 180);
-            const nodes = [], links = [];
-            let id = 0;
-            const centers = [];
-            for (let c = 0; c < nClusters; c++) centers.push([0.1 + Math.random() * 0.8, 0.1 + Math.random() * 0.8]);
-            const sizes = [];
-            for (let c = 0; c < nClusters; c++) sizes.push(baseSize + Math.floor(Math.random() * 5) - 2);
-            for (let c = 0; c < nClusters; c++) {
-                for (let i = 0; i < sizes[c]; i++) {
-                    nodes.push({ id: id++, cluster: c, hub: false, r: 2.5 + Math.random() * 4,
-                        x: centers[c][0] * W + (Math.random() - 0.5) * W * 0.2,
-                        y: centers[c][1] * H + (Math.random() - 0.5) * H * 0.2 });
-                }
-            }
-            let hubIdx = 0;
-            for (let c = 0; c < nClusters; c++) {
-                if (nodes[hubIdx]) { nodes[hubIdx].r = 7 + Math.random() * 3; nodes[hubIdx].hub = true; }
-                hubIdx += sizes[c];
-            }
-            for (let c = 0; c < nClusters; c++) {
-                const cn = nodes.filter(n => n.cluster === c);
-                for (let i = 0; i < cn.length; i++) for (let j = i + 1; j < cn.length; j++)
-                    if (Math.random() < 0.3) links.push({ source: cn[i].id, target: cn[j].id });
-            }
-            for (let c1 = 0; c1 < nClusters; c1++) for (let c2 = c1 + 1; c2 < nClusters; c2++) {
-                const n1 = nodes.filter(n => n.cluster === c1), n2 = nodes.filter(n => n.cluster === c2);
-                const bridges = 1 + Math.floor(Math.random() * 2);
-                for (let b = 0; b < bridges; b++) links.push({
-                    source: n1[Math.floor(Math.random() * n1.length)].id,
-                    target: n2[Math.floor(Math.random() * n2.length)].id
-                });
-            }
-            const s = getComputedStyle(document.documentElement);
-            const svg = d3.select('#hero-viz').append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('preserveAspectRatio', 'xMidYMid meet');
-            const link = svg.append('g').selectAll('line').data(links).join('line')
-                .attr('stroke', s.getPropertyValue('--net-link').trim()).attr('stroke-width', 1)
-                .attr('x1', d => nodes[d.source].x).attr('y1', d => nodes[d.source].y)
-                .attr('x2', d => nodes[d.target].x).attr('y2', d => nodes[d.target].y);
-            const node = svg.append('g').selectAll('circle').data(nodes).join('circle')
-                .attr('r', d => d.r)
-                .attr('fill', d => (d.hub ? s.getPropertyValue('--net-node-hub') : s.getPropertyValue('--net-node')).trim())
-                .attr('cx', d => d.x).attr('cy', d => d.y);
-            d3.forceSimulation(nodes)
-                .force('link', d3.forceLink(links).id(d => d.id).distance(25 + diag/25).strength(0.15))
-                .force('charge', d3.forceManyBody().strength(-12 - diag/55))
-                .force('center', d3.forceCenter(W/2, H/2).strength(0.04))
-                .force('collision', d3.forceCollide().radius(d => d.r + 3))
-                .alpha(0.4).alphaDecay(0.015)
-                .on('tick', () => {
-                    nodes.forEach(d => { d.x = Math.max(d.r, Math.min(W - d.r, d.x)); d.y = Math.max(d.r, Math.min(H - d.r, d.y)); });
-                    link.attr('x1', d => d.source.x).attr('y1', d => d.source.y).attr('x2', d => d.target.x).attr('y2', d => d.target.y);
-                    node.attr('cx', d => d.x).attr('cy', d => d.y);
-                });
+            // Expose this network so the bridges manager can read its current node positions
+            return {
+                container,
+                nodes,
+                seed,
+                getW: () => W,
+                getH: () => H
+            };
         }
     </script>
 

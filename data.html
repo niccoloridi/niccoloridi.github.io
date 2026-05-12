@@ -4,395 +4,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data | Niccolò Ridi</title>
-    <script>(function(){var t=localStorage.getItem('theme');if(!t)t='dark';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
-    <style>
-        :root {
-            --primary-color: #1a1a1a;
-            --secondary-color: #555555;
-            --text-color: #333333;
-            --border-color: #e0e0e0;
-            --background-color: #ffffff;
-            --header-bg: #ffffff;
-            --accent-color: #1a1a1a;
-            --card-bg: #ffffff;
-            --subtle-border: #f0f0f0;
-            --summary-bg: #fafafa;
-        }
-
-        .dark-mode {
-            --primary-color: #e8eaed;
-            --secondary-color: #9aa0ab;
-            --text-color: #d0d0d0;
-            --border-color: #333333;
-            --background-color: #121212;
-            --header-bg: #1a1a1a;
-            --accent-color: #d4a574;
-            --card-bg: #1e1e1e;
-            --subtle-border: #2a2a2a;
-            --summary-bg: #1a1a1a;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            line-height: 1.8;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        main { flex: 1; }
-
-        body.nav-open { overflow: hidden; }
-
-        .container {
-            max-width: 960px;
-            margin: auto;
-            padding: 4rem 2rem;
-        }
-
-        h2 {
-            font-size: 2.2rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-bottom: 2.5rem;
-            position: relative;
-            padding-bottom: 1rem;
-        }
-
-        h2::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background-color: var(--primary-color);
-        }
-
-        p { margin-bottom: 1.5rem; max-width: 75ch; }
-        a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
-        a:hover { color: var(--secondary-color); }
-
-        /* Dark mode overrides */
-        .dark-mode a { color: var(--accent-color); }
-        .dark-mode a:hover { color: #e8c49a; }
-        .dark-mode .main-nav a { color: var(--primary-color); }
-        .dark-mode .main-nav .ext-link { color: var(--secondary-color); }
-        .dark-mode .main-nav .ext-link:hover { color: var(--primary-color); }
-        .dark-mode .main-footer a { color: var(--accent-color); }
-        .dark-mode .main-header { box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
-
-        /* Theme toggle */
-        .theme-toggle {
-            background: none;
-            border: 1px solid var(--border-color);
-            border-radius: 2rem;
-            padding: 4px 12px;
-            cursor: pointer;
-            font-size: 12px;
-            color: var(--secondary-color);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-            font-family: inherit;
-        }
-        .theme-toggle:hover { color: var(--primary-color); border-color: var(--primary-color); }
-
-        /* Header */
-        .main-header {
-            background: var(--header-bg);
-            padding: 1.5rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-        }
-
-        .main-header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-            gap: 1rem;
-        }
-
-        .main-header .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            z-index: 1001;
-        }
-
-        .main-nav ul { list-style: none; display: flex; gap: 2rem; }
-
-        .main-nav a {
-            color: var(--primary-color);
-            font-weight: normal;
-            position: relative;
-            padding: 0.5rem 0;
-        }
-
-        .main-nav a::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0;
-            width: 0; height: 2px;
-            background-color: var(--primary-color);
-            transition: width 0.3s ease;
-        }
-
-        .main-nav a:hover::after { width: 100%; }
-
-        .nav-sep {
-            width: 1px;
-            background: var(--border-color);
-            align-self: stretch;
-            margin: 0 0.2rem;
-        }
-
-        .main-nav .ext-link { color: var(--secondary-color); font-size: 0.85rem; }
-        .main-nav .ext-link:hover { color: var(--primary-color); }
-
-        .hamburger-menu {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 10px;
-            z-index: 1001;
-        }
-
-        .hamburger-menu .line {
-            display: block;
-            width: 25px;
-            height: 2px;
-            background-color: var(--primary-color);
-            margin: 5px 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        /* Dataset list */
-        .dataset-list {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 2.5rem;
-        }
-
-        .dataset-list li {
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--subtle-border);
-            line-height: 1.6;
-        }
-
-        .dataset-list li:last-child { border-bottom: none; }
-
-        .dataset-list .dataset-title { font-weight: bold; color: var(--primary-color); }
-        .dataset-list .dataset-desc { font-size: 0.9rem; color: var(--secondary-color); }
-
-        /* Essay link card */
-        .essay-card {
-            display: block;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background: var(--summary-bg);
-            text-decoration: none;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-        .essay-card:hover {
-            border-color: var(--primary-color);
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-        }
-        .dark-mode .essay-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
-        .essay-card .essay-card-title {
-            font-weight: bold;
-            font-size: 1.05rem;
-            color: var(--primary-color);
-            margin-bottom: 0.3rem;
-        }
-        .essay-card .essay-card-desc {
-            font-size: 0.88rem;
-            font-weight: normal;
-            color: var(--secondary-color);
-            margin-bottom: 0;
-        }
-
-
-        /* Footer */
-        .main-footer {
-            padding: 1.5rem 2rem;
-            text-align: center;
-            font-size: 0.9rem;
-            color: var(--secondary-color);
-        }
-
-        .main-footer a { color: var(--primary-color); }
-        .main-footer p { max-width: none; margin-bottom: 0; }
-
-        /* Animation */
-        .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
-        .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            h2 { font-size: 1.8rem; }
-
-            .hamburger-menu { display: block; }
-
-            .main-nav {
-                position: fixed;
-                top: 0; left: 0;
-                width: 100%; height: 100vh;
-                background-color: var(--background-color);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                transform: translateX(100%);
-                transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
-            }
-
-            body.nav-open .main-nav { transform: translateX(0); }
-            .main-nav ul { flex-direction: column; gap: 2rem; text-align: center; }
-            .main-nav a { font-size: 1.5rem; }
-            .main-nav a::after { display: none; }
-
-            body.nav-open .hamburger-menu .line-1 { transform: rotate(45deg) translate(5px, 5px); }
-            body.nav-open .hamburger-menu .line-2 { opacity: 0; }
-            body.nav-open .hamburger-menu .line-3 { transform: rotate(-45deg) translate(5px, -5px); }
-
-        }
-    </style>
+    <script>(function(){var t=localStorage.getItem('theme');if(!t)t='light';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Spectral:ital,wght@0,300;0,400;0,500;1,400&family=Spectral+SC:wght@400;600&display=swap">
+    <link rel="stylesheet" href="styles/imprint.css">
 </head>
 <body>
 
-    <header class="main-header">
-        <div class="container">
-            <a href="index.html" class="logo">Niccolò Ridi</a>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="profile.html">Profile</a></li>
-                    <li><a href="practice.html">Practice</a></li>
-                    <li><a href="research.html">Research</a></li>
-                    <li><a href="data.html">Data</a></li>
-                    <li class="nav-sep"></li>
-                    <li><a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" class="ext-link">LinkedIn</a></li>
-                    <li><a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" class="ext-link">Scholar</a></li>
-                    <li><a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="ext-link">SSRN</a></li>
-                    <li><a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" class="ext-link">KCL</a></li>
-                </ul>
-            </nav>
-            <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span id="theme-icon">◑</span> <span id="theme-label">Light</span></button>
-            <button class="hamburger-menu" aria-label="Open navigation menu">
-                <span class="line line-1"></span>
-                <span class="line line-2"></span>
-                <span class="line line-3"></span>
-            </button>
-        </div>
+    <header class="page-header">
+        <a class="home" href="index.html">Niccolò Ridi</a>
+        <nav>
+            <a href="profile.html">profile</a>
+            <a href="practice.html">practice</a>
+            <a href="research.html">research</a>
+            <a href="data.html">data</a>
+            <span class="ext-group">
+                <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" rel="noopener">linkedin</a>
+                <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" rel="noopener">scholar</a>
+                <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" rel="noopener">ssrn</a>
+                <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" rel="noopener">kcl</a>
+            </span>
+        </nav>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span id="theme-label">dark</span></button>
+        <button class="hamburger-menu" aria-label="Open navigation menu">
+            <span class="line line-1"></span>
+            <span class="line line-2"></span>
+            <span class="line line-3"></span>
+        </button>
     </header>
 
     <main>
-        <div class="container fade-in">
-            <h2>Data</h2>
-            <p>
-                Datasets, interactive visualisations, and open-source tools from my research on international law and institutions.
-            </p>
+        <div class="page-body">
+            <article>
+                <h1 class="section">data</h1>
+                <p class="subtitle">Datasets, interactive essays, and open-source tools from research on international law.</p>
 
-            <ul class="dataset-list">
-                <li>
-                    <div class="dataset-title"><a href="https://zenodo.org/doi/10.5281/zenodo.7319780" target="_blank">Corpus of Resolutions: UN Security Council (CR-UNSC)</a></div>
-                    <div class="dataset-desc">A comprehensive, machine-readable corpus of all UN Security Council resolutions. With Seán Fobbe and Lorenzo Gasbarri.</div>
-                </li>
-                <li>
-                    <div class="dataset-title"><a href="https://doi.org/10.5281/zenodo.15191557" target="_blank">Words of Power: UN Security Council Resolutions</a></div>
-                    <div class="dataset-desc">Companion dataset with full-text and metadata for computational analysis. With Seán Fobbe and Lorenzo Gasbarri.</div>
-                </li>
-            </ul>
+                <p class="lead">A growing collection of computational instruments &mdash; corpora of judicial decisions and resolutions, citation networks, agent-based models, and pipelines for extracting structured knowledge from legal materials.</p>
 
-            <h3 style="font-size: 1.3rem; font-weight: bold; color: var(--primary-color); margin: 2.5rem 0 1.2rem;">Data Essays</h3>
+                <h2 class="section">data essays</h2>
 
-            <a class="essay-card" href="unsc-citations.html">
-                <div class="essay-card-title">The Law of Citations &ndash; UNSC Resolution Network</div>
-                <div class="essay-card-desc">Interactive data essay: 2,488 resolutions, 12,399 citations. Explore the full network, bridge animations, and citation functions.</div>
-            </a>
+                <a class="essay-card" href="unsc-citations.html">
+                    <div class="essay-card-title">The Law of Citations &mdash; UNSC Resolution Network</div>
+                    <div class="essay-card-desc">2,488 resolutions, 12,399 citations. The full network, bridge animations, and an exploration of how the Security Council quotes itself.</div>
+                </a>
 
-            <a class="essay-card" href="jessup-ai.html">
-                <div class="essay-card-title">GenAI as an International Lawyer &ndash; Jessup Moot Court</div>
-                <div class="essay-card-desc">Interactive data essay: 10 AI memorials, 2 LLMs, blindly graded by Jessup judges. Scores, categories, and judge detection rates.</div>
-            </a>
+                <a class="essay-card" href="jessup-ai.html">
+                    <div class="essay-card-title">GenAI as an International Lawyer &mdash; Jessup Moot Court</div>
+                    <div class="essay-card-desc">Ten AI memorials drafted by two LLMs, blindly graded by Jessup judges. Scores, categories, and judge detection rates.</div>
+                </a>
 
-            <a class="essay-card" href="cil-formation.html">
-                <div class="essay-card-title">Custom in the Making &ndash; CIL Formation Model</div>
-                <div class="essay-card-desc">Interactive data essay: 100 state agents, 5 network topologies, phase boundaries. How observation structure, treaties, and cheap talk shape customary international law.</div>
-            </a>
+                <a class="essay-card" href="cil-formation.html">
+                    <div class="essay-card-title">Custom in the Making &mdash; CIL Formation Model</div>
+                    <div class="essay-card-desc">One hundred state agents, five network topologies, phase boundaries. How observation structure, treaties, and cheap talk shape customary international law.</div>
+                </a>
 
-            <a class="essay-card" href="cjeu-py.html">
-                <div class="essay-card-title">cjeu-py &ndash; CJEU Case Law Toolkit</div>
-                <div class="essay-card-desc">Interactive data essay: 1,020 Grand Chamber decisions, 12,673 citations, 51 doctrinal communities. A Python pipeline from SPARQL to interactive citation networks.</div>
-            </a>
+                <a class="essay-card" href="cjeu-py.html">
+                    <div class="essay-card-title">cjeu-py &mdash; CJEU Case Law Toolkit</div>
+                    <div class="essay-card-desc">1,020 Grand Chamber decisions, 12,673 citations, 51 doctrinal communities. A Python pipeline from SPARQL to interactive citation networks.</div>
+                </a>
 
-            <h3 style="font-size: 1.3rem; font-weight: bold; color: var(--primary-color); margin: 2.5rem 0 1.2rem;">Code</h3>
+                <div class="fleuron"></div>
 
-            <ul class="dataset-list">
-                <li>
-                    <div class="dataset-title"><a href="https://github.com/niccoloridi/cjeu-py" target="_blank">cjeu-py</a></div>
-                    <div class="dataset-desc">Python toolkit for empirical research on the Court of Justice of the European Union. Collects, parses, extracts citations, classifies, and visualises CJEU case law. <a href="https://pypi.org/project/cjeu-py/" target="_blank">pip install cjeu-py</a></div>
-                </li>
-                <li>
-                    <div class="dataset-title"><a href="https://github.com/niccoloridi/PraxisBeliefABM" target="_blank">PraxisBeliefABM</a></div>
-                    <div class="dataset-desc">Agent-based model of customary international law formation. 100 state agents, 5 network topologies, phase boundaries. Python / Mesa.</div>
-                </li>
-            </ul>
+                <h2 class="section">datasets</h2>
+                <ul class="catalogue">
+                    <li>
+                        <div class="work-title"><a href="https://zenodo.org/doi/10.5281/zenodo.7319780" target="_blank" rel="noopener">Corpus of Resolutions: UN Security Council (CR-UNSC)</a></div>
+                        <div class="work-meta">zenodo &middot; with seán fobbe and lorenzo gasbarri</div>
+                        <div class="work-desc">A comprehensive, machine-readable corpus of all UN Security Council resolutions.</div>
+                    </li>
+                    <li>
+                        <div class="work-title"><a href="https://doi.org/10.5281/zenodo.15191557" target="_blank" rel="noopener">Words of Power: UN Security Council Resolutions</a></div>
+                        <div class="work-meta">zenodo &middot; with seán fobbe and lorenzo gasbarri</div>
+                        <div class="work-desc">Companion dataset with full-text and metadata for computational analysis.</div>
+                    </li>
+                </ul>
+
+                <h2 class="section">code</h2>
+                <ul class="catalogue">
+                    <li>
+                        <div class="work-title"><a href="https://github.com/niccoloridi/cjeu-py" target="_blank" rel="noopener">cjeu-py</a></div>
+                        <div class="work-meta">python &middot; <a href="https://pypi.org/project/cjeu-py/" target="_blank" rel="noopener">pip install cjeu-py</a></div>
+                        <div class="work-desc">Python toolkit for empirical research on the Court of Justice of the European Union. Collects, parses, extracts citations, classifies, and visualises CJEU case law.</div>
+                    </li>
+                    <li>
+                        <div class="work-title"><a href="https://github.com/niccoloridi/PraxisBeliefABM" target="_blank" rel="noopener">PraxisBeliefABM</a></div>
+                        <div class="work-meta">python &middot; mesa</div>
+                        <div class="work-desc">Agent-based model of customary international law formation. One hundred state agents, five network topologies, phase boundaries.</div>
+                    </li>
+                </ul>
+
+                <div class="fleuron"></div>
+
+                <p>A more granular list of pipelines and notebooks appears under <a href="research.html">research</a>. Inquiries by <a href="mailto:niccolo.ridi@kcl.ac.uk">correspondence</a>.</p>
+            </article>
         </div>
     </main>
 
-    <footer class="main-footer">
-        <p><a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a> &nbsp;|&nbsp; &copy; 2026 Niccolò Ridi. All Rights Reserved (probably).</p>
+    <footer class="page-footer">
+        <a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a>
+        <span class="rights">&copy; 2025 Niccolò Ridi. All Rights Reserved (probably).</span>
     </footer>
 
     <script>
-    // Hamburger
-    const hamburger = document.querySelector('.hamburger-menu');
-    hamburger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
-    document.querySelectorAll('.main-nav a').forEach(link => {
-        link.addEventListener('click', () => document.body.classList.remove('nav-open'));
-    });
-
-    // Fade-in
-    const faders = document.querySelectorAll('.fade-in');
-    const obsrv = new IntersectionObserver((entries, obs) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
+        const hamburger = document.querySelector('.hamburger-menu');
+        hamburger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
+        document.querySelectorAll('.page-header nav a').forEach(link => {
+            link.addEventListener('click', () => document.body.classList.remove('nav-open'));
         });
-    }, { threshold: 0.15 });
-    faders.forEach(f => obsrv.observe(f));
 
-    // Theme
-    const icons = { light: '◑', dark: '◐' };
-    const labels = { light: 'Light', dark: 'Dark' };
-    function getDefaultTheme() { return 'dark'; }
-    let currentTheme = localStorage.getItem('theme') || getDefaultTheme();
-    function applyTheme(t) {
-        document.body.classList.remove('dark-mode');
-        document.documentElement.classList.remove('dark-mode');
-        if (t === 'dark') { document.body.classList.add('dark-mode'); document.documentElement.classList.add('dark-mode'); }
-        document.getElementById('theme-icon').textContent = icons[t];
-        document.getElementById('theme-label').textContent = labels[t];
-        localStorage.setItem('theme', t);
-        currentTheme = t;
-    }
-    function toggleTheme() {
-        applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
-    }
-    applyTheme(currentTheme);
+        let currentTheme = localStorage.getItem('theme') || 'light';
+        function applyTheme(t) {
+            document.documentElement.classList.toggle('dark-mode', t === 'dark');
+            document.body.classList.toggle('dark-mode', t === 'dark');
+            document.getElementById('theme-label').textContent = t === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', t);
+            currentTheme = t;
+        }
+        function toggleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
+        applyTheme(currentTheme);
     </script>
 
 </body>

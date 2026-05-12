@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GenAI as an International Lawyer | Niccolò Ridi</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script>(function(){var t=localStorage.getItem('theme');if(!t)t='dark';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
+    <script>(function(){var t=localStorage.getItem('theme');if(!t)t='light';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
     <style>
         :root {
             --primary-color: #1a1a1a;
@@ -393,32 +393,33 @@
             body.nav-open .hamburger-menu .line-3 { transform: rotate(-45deg) translate(5px, -5px); }
         }
     </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Spectral:ital,wght@0,300;0,400;0,500;1,400&family=Spectral+SC:wght@400;600&display=swap">
+    <link rel="stylesheet" href="styles/imprint.css">
 </head>
 <body>
 
-    <header class="main-header">
-        <div class="container">
-            <a href="index.html" class="logo">Niccolò Ridi</a>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="profile.html">Profile</a></li>
-                    <li><a href="practice.html">Practice</a></li>
-                    <li><a href="research.html">Research</a></li>
-                    <li><a href="data.html">Data</a></li>
-                    <li class="nav-sep"></li>
-                    <li><a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" class="ext-link">LinkedIn</a></li>
-                    <li><a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" class="ext-link">Scholar</a></li>
-                    <li><a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="ext-link">SSRN</a></li>
-                    <li><a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" class="ext-link">KCL</a></li>
-                </ul>
-            </nav>
-            <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span id="theme-icon">◑</span> <span id="theme-label">Light</span></button>
-            <button class="hamburger-menu" aria-label="Open navigation menu">
-                <span class="line line-1"></span>
-                <span class="line line-2"></span>
-                <span class="line line-3"></span>
-            </button>
-        </div>
+        <header class="page-header">
+        <a class="home" href="index.html">Niccolò Ridi</a>
+        <nav>
+            <a href="profile.html">profile</a>
+            <a href="practice.html">practice</a>
+            <a href="research.html">research</a>
+            <a href="data.html">data</a>
+            <span class="ext-group">
+                <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" rel="noopener">linkedin</a>
+                <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" rel="noopener">scholar</a>
+                <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" rel="noopener">ssrn</a>
+                <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" rel="noopener">kcl</a>
+            </span>
+        </nav>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span id="theme-label">dark</span></button>
+        <button class="hamburger-menu" aria-label="Open navigation menu">
+            <span class="line line-1"></span>
+            <span class="line line-2"></span>
+            <span class="line line-3"></span>
+        </button>
     </header>
 
     <main>
@@ -545,8 +546,9 @@
         </article>
     </main>
 
-    <footer class="main-footer">
-        <p><a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a> &nbsp;|&nbsp; &copy; 2025 Niccolò Ridi. All Rights Reserved (probably).</p>
+        <footer class="page-footer">
+        <a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a>
+        <span class="rights">&copy; 2025 Niccolò Ridi. All Rights Reserved (probably).</span>
     </footer>
 
     <script>
@@ -1038,28 +1040,20 @@
     /* ── HAMBURGER ────────────────────────────────────── */
     const hamburger = document.querySelector('.hamburger-menu');
     hamburger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
-    document.querySelectorAll('.main-nav a').forEach(link => {
+    document.querySelectorAll('.page-header nav a').forEach(link => {
         link.addEventListener('click', () => document.body.classList.remove('nav-open'));
     });
 
-    /* ── THEME ────────────────────────────────────────── */
-    const icons = { light: '◑', dark: '◐' };
-    const labels = { light: 'Light', dark: 'Dark' };
-    function getDefaultTheme() { return 'dark'; }
-    let currentTheme = localStorage.getItem('theme') || getDefaultTheme();
+    let currentTheme = localStorage.getItem('theme') || 'light';
     function applyTheme(t) {
-        document.body.classList.remove('dark-mode');
-        document.documentElement.classList.remove('dark-mode');
-        if (t === 'dark') { document.body.classList.add('dark-mode'); document.documentElement.classList.add('dark-mode'); }
-        document.getElementById('theme-icon').textContent = icons[t];
-        document.getElementById('theme-label').textContent = labels[t];
+        document.documentElement.classList.toggle('dark-mode', t === 'dark');
+        document.body.classList.toggle('dark-mode', t === 'dark');
+        var lbl = document.getElementById('theme-label');
+        if (lbl) lbl.textContent = t === 'dark' ? 'light' : 'dark';
         localStorage.setItem('theme', t);
         currentTheme = t;
-        renderAll();
     }
-    function toggleTheme() {
-        applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
-    }
+    function toggleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
     applyTheme(currentTheme);
     </script>
 
