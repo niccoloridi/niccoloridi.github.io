@@ -107,29 +107,29 @@ a {
     text-decoration-color: var(--gold);
     text-decoration-style: solid;
     text-decoration-thickness: 1px;
-    text-underline-offset: 0.2em;
+    text-underline-offset: 0.18em;
     display: inline-block;
-    transition:
-        color 0.25s ease,
-        text-decoration-color 0.25s ease,
-        text-decoration-thickness 0.25s ease,
-        text-underline-offset 0.25s ease,
-        text-shadow 0.25s ease,
-        transform 0.08s ease-out;
+    position: relative;
+    transition: transform 0.08s ease-out;
 }
-/* Hover — the ink saturates: vermilion colour, thicker rule sinks slightly lower,
-   a half-pixel shadow gives the letters a touch more body, like ink soaking the paper. */
-a:hover {
-    color: var(--vermilion);
-    text-decoration-color: var(--vermilion);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 0.26em;
-    text-shadow: 0 0 0.5px currentColor;
+/* Hover — a thicker gold rule draws in from the centre outward, beneath the existing one,
+   like a quill stroke completing. Text colour is untouched. */
+a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -0.05em;
+    width: 100%;
+    height: 2px;
+    background-color: var(--gold);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+    pointer-events: none;
 }
+a:hover::after { transform: scaleX(1); }
 /* Active — letterpress press into paper */
-a:active {
-    transform: translateY(1px);
-}
+a:active { transform: translateY(1px); }
 
 em, i { font-style: italic; }
 strong, b { font-weight: 500; }
@@ -162,15 +162,7 @@ strong, b { font-weight: 500; }
     transition: background-color 400ms ease, border-color 400ms ease;
 }
 .page-header a { text-decoration: none; color: var(--ink-secondary); }
-.page-header a:hover {
-    color: var(--vermilion);
-    text-decoration: underline;
-    text-decoration-color: var(--vermilion);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 0.24em;
-    text-shadow: 0 0 0.5px currentColor;
-}
-.page-header a:active { transform: translateY(1px); }
+/* Hover/active handled by the global a::after animation and a:active translate */
 .page-header .home {
     color: var(--ink);
     font-family: var(--display);
@@ -485,7 +477,7 @@ figure.figure figcaption {
     line-height: 1.4;
 }
 .catalogue .work-title a { text-decoration: none; color: var(--ink); }
-.catalogue .work-title a:hover { color: var(--vermilion); text-decoration: underline; text-decoration-color: var(--vermilion); text-decoration-thickness: 2px; text-underline-offset: 0.26em; text-shadow: 0 0 0.5px currentColor; }
+/* .catalogue .work-title a hover handled by the global a::after animation */
 .catalogue .work-meta {
     font-family: var(--serif-sc);
     font-size: var(--t-smallcaps);
@@ -630,14 +622,7 @@ figure.figure figcaption {
     color: var(--ink-secondary);
     text-decoration: none;
 }
-.page-footer a:hover {
-    color: var(--vermilion);
-    text-decoration: underline;
-    text-decoration-color: var(--vermilion);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 0.24em;
-    text-shadow: 0 0 0.5px currentColor;
-}
+/* Hover handled by the global a::after animation */
 .page-footer .rights {
     font-family: var(--serif-sc);
     font-size: var(--t-meta);

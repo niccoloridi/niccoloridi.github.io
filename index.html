@@ -85,22 +85,26 @@
             text-decoration-color: var(--gold);
             text-decoration-style: solid;
             text-decoration-thickness: 1px;
-            text-underline-offset: 0.2em;
-            transition:
-                color 0.25s ease,
-                text-decoration-color 0.25s ease,
-                text-decoration-thickness 0.25s ease,
-                text-underline-offset 0.25s ease,
-                text-shadow 0.25s ease,
-                transform 0.08s ease-out;
+            text-underline-offset: 0.18em;
+            display: inline-block;
+            position: relative;
+            transition: transform 0.08s ease-out;
         }
-        a:hover {
-            color: var(--vermilion);
-            text-decoration-color: var(--vermilion);
-            text-decoration-thickness: 2px;
-            text-underline-offset: 0.26em;
-            text-shadow: 0 0 0.5px currentColor;
+        /* Hover — a thicker gold rule draws in from the centre outward */
+        a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -0.05em;
+            width: 100%;
+            height: 2px;
+            background-color: var(--gold);
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+            pointer-events: none;
         }
+        a:hover::after { transform: scaleX(1); }
         a:active { transform: translateY(1px); }
         ::selection { background: var(--gold); color: var(--page); }
 
@@ -122,15 +126,7 @@
             gap: 1rem;
         }
         .page-header a { text-decoration: none; color: var(--ink-secondary); }
-        .page-header a:hover {
-            color: var(--vermilion);
-            text-decoration: underline;
-            text-decoration-color: var(--vermilion);
-            text-decoration-thickness: 2px;
-            text-underline-offset: 0.24em;
-            text-shadow: 0 0 0.5px currentColor;
-        }
-        .page-header a:active { transform: translateY(1px); }
+        /* Hover/active handled by global a::after + a:active */
         .page-header .home {
             color: var(--ink);
             font-family: var(--display);
@@ -303,15 +299,7 @@
             text-decoration: none;
             white-space: nowrap;
         }
-        .hero-social a:hover {
-            color: var(--vermilion);
-            text-decoration: underline;
-            text-decoration-color: var(--vermilion);
-            text-decoration-thickness: 2px;
-            text-underline-offset: 0.26em;
-            text-shadow: 0 0 0.5px currentColor;
-        }
-        .hero-social a:active { transform: translateY(1px); }
+        /* Hover/active handled by global a::after + a:active */
 
         .hero-plate {
             display: block;
@@ -353,15 +341,7 @@
             gap: 1rem;
         }
         .page-footer a { color: var(--ink-secondary); text-decoration: none; }
-        .page-footer a:hover {
-            color: var(--vermilion);
-            text-decoration: underline;
-            text-decoration-color: var(--vermilion);
-            text-decoration-thickness: 2px;
-            text-underline-offset: 0.24em;
-            text-shadow: 0 0 0.5px currentColor;
-        }
-        .page-footer a:active { transform: translateY(1px); }
+        /* Hover/active handled by global a::after + a:active */
         .page-footer .mark {
             color: var(--vermilion);
             font-family: var(--display);
