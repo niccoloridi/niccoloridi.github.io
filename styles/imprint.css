@@ -110,17 +110,21 @@ a {
     text-underline-offset: 0.2em;
     display: inline-block;
     transition:
-        color 0.2s ease,
-        text-decoration-color 0.2s ease,
-        text-decoration-thickness 0.2s ease,
+        color 0.25s ease,
+        text-decoration-color 0.25s ease,
+        text-decoration-thickness 0.25s ease,
+        text-underline-offset 0.25s ease,
+        text-shadow 0.25s ease,
         transform 0.08s ease-out;
 }
-/* Hover — quill flourish: vermilion wavy underline, vermilion text */
+/* Hover — the ink saturates: vermilion colour, thicker rule sinks slightly lower,
+   a half-pixel shadow gives the letters a touch more body, like ink soaking the paper. */
 a:hover {
     color: var(--vermilion);
     text-decoration-color: var(--vermilion);
-    text-decoration-style: wavy;
-    text-decoration-thickness: 1.5px;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.26em;
+    text-shadow: 0 0 0.5px currentColor;
 }
 /* Active — letterpress press into paper */
 a:active {
@@ -162,8 +166,9 @@ strong, b { font-weight: 500; }
     color: var(--vermilion);
     text-decoration: underline;
     text-decoration-color: var(--vermilion);
-    text-decoration-style: wavy;
-    text-decoration-thickness: 1.5px;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.24em;
+    text-shadow: 0 0 0.5px currentColor;
 }
 .page-header a:active { transform: translateY(1px); }
 .page-header .home {
@@ -480,7 +485,7 @@ figure.figure figcaption {
     line-height: 1.4;
 }
 .catalogue .work-title a { text-decoration: none; color: var(--ink); }
-.catalogue .work-title a:hover { color: var(--vermilion); text-decoration: underline; text-decoration-color: var(--vermilion); text-decoration-style: wavy; text-decoration-thickness: 1.5px; }
+.catalogue .work-title a:hover { color: var(--vermilion); text-decoration: underline; text-decoration-color: var(--vermilion); text-decoration-thickness: 2px; text-underline-offset: 0.26em; text-shadow: 0 0 0.5px currentColor; }
 .catalogue .work-meta {
     font-family: var(--serif-sc);
     font-size: var(--t-smallcaps);
@@ -629,8 +634,9 @@ figure.figure figcaption {
     color: var(--vermilion);
     text-decoration: underline;
     text-decoration-color: var(--vermilion);
-    text-decoration-style: wavy;
-    text-decoration-thickness: 1.5px;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.24em;
+    text-shadow: 0 0 0.5px currentColor;
 }
 .page-footer .rights {
     font-family: var(--serif-sc);
