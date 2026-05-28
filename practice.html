@@ -4,124 +4,235 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Practice | Niccolò Ridi</title>
-    <script>(function(){var t=localStorage.getItem('imprint-theme');if(!t)t='light';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Spectral:ital,wght@0,300;0,400;0,500;1,400&family=Spectral+SC:wght@400;600&display=swap">
-    <link rel="stylesheet" href="styles/imprint.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
     <style>
-        /* Practice page: ICJ photo as a right-side figure on wide screens, text flows around */
-        .practice-figure {
-            float: right;
-            width: 40%;
-            margin: 0.6rem 0 1.5rem 2rem;
-            shape-outside: margin-box;
+        :root {
+            --bg: #0a0a0c;
+            --bg-2: #111114;
+            --fg: #ece8df;
+            --muted: #7d786d;
+            --gold: #d7a13b;
+            --line: #232327;
+
+            --grotesk: "Space Grotesk", system-ui, sans-serif;
+            --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+
+            --gutter: clamp(1.1rem, 3vw, 3rem);
         }
-        .practice-figure img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border: 1px solid var(--rule);
-            filter: sepia(0.08) saturate(0.92);
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { font-size: 17px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        body {
+            font-family: var(--grotesk);
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
         }
-        .practice-figure figcaption {
-            margin-top: 0.6rem;
-            font-family: var(--serif-sc);
-            font-size: var(--t-smallcaps);
-            letter-spacing: 0.06em;
-            color: var(--ink-secondary);
-            text-transform: lowercase;
-            text-align: right;
+        /* faint vignette so the black isn't dead-flat */
+        body::before {
+            content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background: radial-gradient(120% 90% at 70% 0%, transparent 55%, rgba(0,0,0,0.55) 100%);
         }
-        @media (max-width: 700px) {
-            .practice-figure { float: none; width: 100%; margin: 1.5rem 0; }
-            .practice-figure figcaption { text-align: center; }
+        a { color: var(--fg); text-decoration: none; }
+
+        /* ─── Top bar ─── */
+        header {
+            position: relative; z-index: 3;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.9rem var(--gutter);
+            border-bottom: 1px solid var(--line);
+            font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em;
+            text-transform: uppercase; color: var(--muted);
+        }
+        header .id { color: var(--fg); }
+        header .id b { color: var(--gold); font-weight: 500; }
+        header nav { display: flex; gap: 1.4rem; align-items: center; }
+        header nav a { position: relative; transition: color 0.2s; }
+        header nav a:hover { color: var(--fg); }
+        header nav a.on { color: var(--fg); }
+        .burger { display: none; background: none; border: none; cursor: pointer; padding: 4px; z-index: 50; }
+        .burger span { display: block; width: 22px; height: 1.5px; background: var(--fg); margin: 5px 0; transition: 0.3s; }
+
+        main { position: relative; z-index: 2; flex: 1; }
+
+        /* ─── Content column ─── */
+        .wrap {
+            max-width: 820px; margin: 0 auto;
+            padding: clamp(2.4rem, 7vh, 5rem) var(--gutter) clamp(2.4rem, 6vh, 4rem);
+        }
+
+        .eyebrow {
+            font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.16em;
+            text-transform: uppercase; color: var(--gold);
+            display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.1rem;
+        }
+        .eyebrow::before { content: ''; width: 26px; height: 1px; background: var(--gold); display: inline-block; }
+
+        h1.title {
+            font-family: var(--grotesk); font-weight: 700;
+            font-size: clamp(2.6rem, 9vw, 5.5rem); line-height: 0.95;
+            letter-spacing: -0.02em; text-transform: uppercase;
+            margin-bottom: clamp(1.4rem, 4vh, 2.2rem);
+        }
+
+        .intro-grid {
+            display: grid;
+            grid-template-columns: 1fr clamp(180px, 26%, 260px);
+            gap: clamp(1.5rem, 4vw, 3rem);
+            align-items: start;
+        }
+
+        .plate {
+            position: relative;
+        }
+        .plate img {
+            display: block; width: 100%; height: auto;
+            filter: grayscale(1) invert(1) brightness(1.06) contrast(1.05) sepia(1) hue-rotate(178deg) saturate(2.4);
+            mix-blend-mode: screen;
+        }
+        .plate .tag {
+            display: block; margin-top: 0.7rem;
+            font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--muted); text-align: right;
+        }
+
+        p { margin-bottom: 1.2rem; max-width: 62ch; }
+        p.lead {
+            font-size: 1.18rem; color: var(--fg); line-height: 1.5;
+        }
+        .intro-text p:first-child { margin-top: 0; }
+
+        a.inline { color: var(--gold); border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+        a.inline:hover { border-bottom-color: var(--gold); }
+
+        .subhead {
+            font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.16em;
+            text-transform: uppercase; color: var(--gold);
+            margin: clamp(2rem, 5vh, 3rem) 0 1.3rem;
+            padding-top: clamp(1.4rem, 4vh, 2.2rem);
+            border-top: 1px solid var(--line);
+            display: flex; align-items: center; gap: 0.6rem;
+        }
+        .subhead::before { content: ''; width: 26px; height: 1px; background: var(--gold); display: inline-block; }
+
+        ul.matters { list-style: none; max-width: 64ch; }
+        ul.matters li {
+            position: relative; padding-left: 1.6rem; margin-bottom: 0.9rem;
+            color: var(--fg); line-height: 1.5;
+        }
+        ul.matters li::before {
+            content: '—'; position: absolute; left: 0; top: 0;
+            color: var(--gold); font-family: var(--mono);
+        }
+
+        .rule { height: 1px; background: var(--line); margin: clamp(2rem, 5vh, 3rem) 0; }
+
+        /* ─── Footer / status ─── */
+        footer {
+            position: relative; z-index: 2;
+            display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem 1.5rem;
+            padding: 0.8rem var(--gutter);
+            border-top: 1px solid var(--line);
+            font-family: var(--mono); font-size: 0.68rem; color: var(--muted); letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        footer a:hover { color: var(--gold); }
+        footer .seg { display: flex; gap: 1.3rem; flex-wrap: wrap; }
+        footer .gold { color: var(--gold); }
+
+        @media (max-width: 640px) {
+            .intro-grid { grid-template-columns: 1fr; }
+            .plate { order: -1; max-width: 220px; margin: 0 auto 1rem; }
+            .plate .tag { text-align: center; }
+
+            header nav { position: fixed; inset: 0; flex-direction: column; justify-content: center;
+                background: var(--bg); transform: translateX(100%);
+                transition: transform 0.4s cubic-bezier(0.77,0,0.175,1);
+                font-size: 1.1rem; z-index: 40; gap: 1.6rem; }
+            body.nav-open header nav { transform: translateX(0); }
+            .burger { display: block; }
+            body.nav-open .burger span:nth-child(1){ transform: translateY(6.5px) rotate(45deg); }
+            body.nav-open .burger span:nth-child(2){ opacity: 0; }
+            body.nav-open .burger span:nth-child(3){ transform: translateY(-6.5px) rotate(-45deg); }
         }
     </style>
 </head>
 <body>
-
-    <header class="page-header">
-        <a class="home" href="index.html">Niccolò Ridi</a>
+    <header>
+        <a class="id" href="index.html"><b>◆</b> NICCOLÒ&nbsp;RIDI</a>
         <nav>
             <a href="profile.html">profile</a>
-            <a href="practice.html">practice</a>
+            <a class="on" href="practice.html">practice</a>
             <a href="research.html">research</a>
             <a href="data.html">data</a>
-            <span class="ext-group">
-                <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" rel="noopener">linkedin</a>
-                <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" rel="noopener">scholar</a>
-                <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" rel="noopener">ssrn</a>
-                <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" rel="noopener">kcl</a>
-            </span>
         </nav>
-        <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span id="theme-label">dark</span></button>
-        <button class="hamburger-menu" aria-label="Open navigation menu">
-            <span class="line line-1"></span>
-            <span class="line line-2"></span>
-            <span class="line line-3"></span>
-        </button>
+        <button class="burger" aria-label="menu"><span></span><span></span><span></span></button>
     </header>
 
     <main>
-        <div class="page-body">
-            <article>
-                <h1 class="section">practice</h1>
-                <p class="subtitle">Counsel and advisory work in public international law and international dispute settlement.</p>
+        <div class="wrap">
+            <div class="eyebrow">02 / practice</div>
+            <h1 class="title">Practice</h1>
 
-                <figure class="practice-figure">
-                    <img src="images/N_Ridi_ICJ.jpeg" alt="Niccolò Ridi pleading before the International Court of Justice">
-                    <figcaption>before the international court of justice</figcaption>
+            <div class="intro-grid">
+                <div class="intro-text">
+                    <p class="lead">Counsel and advisory work in public international law and international dispute settlement.</p>
+
+                    <p>A particular focus on proceedings before the International Court of Justice, the International Tribunal for the Law of the Sea, and tribunals constituted under the ICSID Convention.</p>
+
+                    <p>Engagements ordinarily arise from inter-state proceedings, advisory opinion requests, investor-state arbitration, and the questions that sit between them: state responsibility, the law of treaties, jurisdictional immunities, the law of the sea, the use of force, foreign investment protection, and the international human-rights and humanitarian-law obligations that increasingly cut across the rest.</p>
+                </div>
+
+                <figure class="plate">
+                    <img src="images/illustrations/png/plate-11.png" alt="">
+                    <span class="tag">pl. XI</span>
                 </figure>
+            </div>
 
-                <p class="lead">A particular focus on proceedings before the International Court of Justice, the International Tribunal for the Law of the Sea, and tribunals constituted under the ICSID Convention.</p>
+            <div class="subhead">recent matters</div>
+            <ul class="matters">
+                <li>Counsel and adviser roles in contentious and advisory proceedings before the International Court of Justice;</li>
+                <li>Support to a State chairing a group of States on matters of the law of the sea;</li>
+                <li>Assistance to party-appointed arbitrators in investment-treaty disputes administered under the ICSID Convention;</li>
+                <li>Research and drafting support to a Special Rapporteur of the International Law Commission;</li>
+                <li>Advisory work on a use-of-force matter arising under a multilateral treaty;</li>
+                <li>Advisory work in a boundary dispute;</li>
+                <li>Consultancy to inter-governmental research initiatives on questions of public international law;</li>
+                <li>Training and capacity-building for diplomats and government officials.</li>
+            </ul>
 
-                <p>Engagements ordinarily arise from inter-state proceedings, advisory opinion requests, investor-state arbitration, and the questions that sit between them: state responsibility, the law of treaties, jurisdictional immunities, the law of the sea, the use of force, foreign investment protection, and the international human-rights and humanitarian-law obligations that increasingly cut across the rest.</p>
+            <p style="margin-top:1.8rem">Work is undertaken as sole counsel, in support of leading counsel teams and firms, or in association with academic institutions and inter-governmental research initiatives. Confidentiality is the default. References on application.</p>
 
-                <p>Recent matters have included:</p>
-                <ul>
-                    <li>Counsel and adviser roles in contentious and advisory proceedings before the International Court of Justice;</li>
-                    <li>Support to a State chairing a group of States on matters of the law of the sea;</li>
-                    <li>Assistance to party-appointed arbitrators in investment-treaty disputes administered under the ICSID Convention;</li>
-                    <li>Research and drafting support to a Special Rapporteur of the International Law Commission;</li>
-                    <li>Advisory work on a use-of-force matter arising under a multilateral treaty;</li>
-                    <li>Advisory work in a boundary dispute;</li>
-                    <li>Consultancy to inter-governmental research initiatives on questions of public international law;</li>
-                    <li>Training and capacity-building for diplomats and government officials.</li>
-                </ul>
+            <div class="rule"></div>
 
-                <p>Work is undertaken as sole counsel, in support of leading counsel teams and firms, or in association with academic institutions and inter-governmental research initiatives. Confidentiality is the default. References on application.</p>
-
-                <div class="fleuron"></div>
-
-                <p>A non-exhaustive selection of recent matters and projects appears under <a href="research.html">research</a> and <a href="data.html">data</a>. Inquiries by <a href="mailto:niccolo.ridi@kcl.ac.uk">correspondence</a>.</p>
-            </article>
+            <p>A non-exhaustive selection of recent matters and projects appears under <a class="inline" href="research.html">research</a> and <a class="inline" href="data.html">data</a>. Inquiries by <a class="inline" href="mailto:niccolo.ridi@kcl.ac.uk">correspondence</a>.</p>
         </div>
     </main>
 
-    <footer class="page-footer">
-        <a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a>
-        <span class="rights">&copy; 2025 Niccolò Ridi. All Rights Reserved (probably).</span>
+    <footer>
+        <div class="seg">
+            <span class="gold">© 2025 niccolò ridi</span>
+            <a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a>
+        </div>
+        <div class="seg">
+            <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" rel="noopener">linkedin</a>
+            <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" rel="noopener">scholar</a>
+            <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" rel="noopener">ssrn</a>
+            <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" rel="noopener">kcl</a>
+        </div>
     </footer>
 
     <script>
-        const hamburger = document.querySelector('.hamburger-menu');
-        hamburger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
-        document.querySelectorAll('.page-header nav a').forEach(link => {
-            link.addEventListener('click', () => document.body.classList.remove('nav-open'));
-        });
-
-        let currentTheme = localStorage.getItem('imprint-theme') || 'light';
-        function applyTheme(t) {
-            document.documentElement.classList.toggle('dark-mode', t === 'dark');
-            document.body.classList.toggle('dark-mode', t === 'dark');
-            document.getElementById('theme-label').textContent = t === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('imprint-theme', t);
-            currentTheme = t;
-        }
-        function toggleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
-        applyTheme(currentTheme);
+        const burger = document.querySelector('.burger');
+        burger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
+        document.querySelectorAll('header nav a').forEach(a => a.addEventListener('click', () => document.body.classList.remove('nav-open')));
     </script>
-
 </body>
 </html>

@@ -5,215 +5,160 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>cjeu-py | Niccolò Ridi</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script>(function(){var t=localStorage.getItem('imprint-theme');if(!t)t='light';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
     <style>
         :root {
-            --primary-color: #1a1a1a;
-            --secondary-color: #555555;
-            --text-color: #333333;
-            --border-color: #e0e0e0;
-            --background-color: #ffffff;
-            --header-bg: #ffffff;
-            --accent-color: #1a1a1a;
-            --subtle-border: #f0f0f0;
-            --card-bg: #ffffff;
-            --pullquote-border: #ccc;
-            --pullquote-bg: #f9f9f9;
-            --stat-color: #c0392b;
-            --highlight-color: #c0392b;
-            --cjeu-collect: #3498db;
-            --cjeu-download: #2ecc71;
-            --cjeu-parse: #e67e22;
-            --cjeu-extract: #9b59b6;
-            --cjeu-classify: #e74c3c;
-            --cjeu-search: #1abc9c;
-            --cjeu-visualize: #f39c12;
-            --bar-primary: #3498db;
-            --bar-secondary: #e67e22;
-            --bar-tertiary: #27ae60;
-            --bar-danger: #c0392b;
-            --treatment-follows: #27ae60;
-            --treatment-neutral: #95a5a6;
-            --treatment-distinguishes: #e67e22;
-            --treatment-departs: #c0392b;
+            /* ─── Noir design tokens ─── */
+            --bg: #0a0a0c;
+            --bg-2: #111114;
+            --fg: #ece8df;
+            --muted: #7d786d;
+            --gold: #d7a13b;
+            --gold-soft: rgba(215,161,59,0.16);
+            --line: #232327;
+
+            --grotesk: "Space Grotesk", system-ui, sans-serif;
+            --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+            --gutter: clamp(1.1rem, 3vw, 3rem);
+
+            /* ─── Aliases consumed by the d3 viz code (css() helper) ─── */
+            --primary-color: var(--fg);
+            --secondary-color: var(--muted);
+            --text-color: var(--fg);
+            --border-color: var(--line);
+            --background-color: var(--bg);
+            --card-bg: var(--bg-2);
+            --stat-color: var(--gold);
+            --highlight-color: var(--gold);
+
+            /* Pipeline stage palette — tasteful warm/cool companions on dark */
+            --cjeu-collect: #6fb3c0;   /* cool blue */
+            --cjeu-download: #8a9b5b;  /* olive */
+            --cjeu-parse: #c0653f;     /* terra */
+            --cjeu-extract: #b07fc7;   /* violet */
+            --cjeu-classify: #d7a13b;  /* gold */
+            --cjeu-search: #6fb3c0;
+            --cjeu-visualize: #d9b15e;
+
+            /* Chart series palette */
+            --bar-primary: #d7a13b;    /* gold */
+            --bar-secondary: #6fb3c0;  /* cool blue */
+            --bar-tertiary: #8a9b5b;   /* olive */
+            --bar-danger: #c0653f;     /* terra */
+
+            /* Treatment categories */
+            --treatment-follows: #8a9b5b;
+            --treatment-neutral: #7d786d;
+            --treatment-distinguishes: #c0653f;
+            --treatment-departs: #c0653f;
         }
 
-        .dark-mode {
-            --primary-color: #e8eaed;
-            --secondary-color: #9aa0ab;
-            --text-color: #d0d0d0;
-            --border-color: #333333;
-            --background-color: #121212;
-            --header-bg: #1a1a1a;
-            --accent-color: #d4a574;
-            --subtle-border: #2a2a2a;
-            --card-bg: #1e1e1e;
-            --pullquote-border: #444;
-            --pullquote-bg: #1a1a1a;
-            --stat-color: #d4a574;
-            --highlight-color: #d4a574;
-            --cjeu-collect: #5dade2;
-            --cjeu-download: #2ecc71;
-            --cjeu-parse: #eb984e;
-            --cjeu-extract: #a569bd;
-            --cjeu-classify: #d4a574;
-            --cjeu-search: #48c9b0;
-            --cjeu-visualize: #f4d03f;
-            --bar-primary: #5dade2;
-            --bar-secondary: #eb984e;
-            --bar-tertiary: #2ecc71;
-            --bar-danger: #d4a574;
-            --treatment-follows: #2ecc71;
-            --treatment-neutral: #7f8c8d;
-            --treatment-distinguishes: #eb984e;
-            --treatment-departs: #d4a574;
-        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
+        html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
         body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: var(--mono);
             line-height: 1.8;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            background-color: var(--bg);
+            color: var(--fg);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+        /* faint vignette */
+        body::before {
+            content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background: radial-gradient(120% 90% at 70% 0%, transparent 55%, rgba(0,0,0,0.55) 100%);
         }
 
-        main { flex: 1; }
+        main { flex: 1; position: relative; z-index: 1; }
         body.nav-open { overflow: hidden; }
 
-        a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
-        a:hover { color: var(--secondary-color); }
-        .dark-mode a { color: var(--accent-color); }
-        .dark-mode a:hover { color: #e8c49a; }
-        .dark-mode .main-nav a { color: var(--primary-color); }
-        .dark-mode .main-nav .ext-link { color: var(--secondary-color); }
-        .dark-mode .main-nav .ext-link:hover { color: var(--primary-color); }
-        .dark-mode .main-footer a { color: var(--accent-color); }
-        .dark-mode .main-header { box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        a { color: var(--fg); text-decoration: none; }
+        a:hover { color: var(--fg); }
+        .essay-body a { border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+        .essay-body a:hover { border-bottom-color: var(--gold); }
 
-        /* Theme toggle */
-        .theme-toggle {
-            background: none;
-            border: 1px solid var(--border-color);
-            border-radius: 2rem;
-            padding: 4px 12px;
-            cursor: pointer;
-            font-size: 12px;
-            color: var(--secondary-color);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-            font-family: inherit;
-        }
-        .theme-toggle:hover { color: var(--primary-color); border-color: var(--primary-color); }
-
-        /* Header */
+        /* ─── Header (noir top bar) ─── */
         .main-header {
-            background: var(--header-bg);
-            padding: 1.5rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+            position: relative; z-index: 3;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.9rem var(--gutter);
+            border-bottom: 1px solid var(--line);
+            font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em;
+            text-transform: uppercase; color: var(--muted);
         }
-        .main-header .container {
-            max-width: 960px;
-            margin: auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-            gap: 1rem;
-        }
-        .main-header .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            z-index: 1001;
-        }
-        .main-nav ul { list-style: none; display: flex; gap: 2rem; }
-        .main-nav a {
-            color: var(--primary-color);
-            font-weight: normal;
-            position: relative;
-            padding: 0.5rem 0;
-        }
-        .main-nav a::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0;
-            width: 0; height: 2px;
-            background-color: var(--primary-color);
-            transition: width 0.3s ease;
-        }
-        .main-nav a:hover::after { width: 100%; }
-        .nav-sep { width: 1px; background: var(--border-color); align-self: stretch; margin: 0 0.2rem; }
-        .main-nav .ext-link { color: var(--secondary-color); font-size: 0.85rem; }
-        .main-nav .ext-link:hover { color: var(--primary-color); }
+        .main-header .id { color: var(--fg); }
+        .main-header .id b { color: var(--gold); font-weight: 500; }
+        .main-nav { display: flex; gap: 1.4rem; align-items: center; }
+        .main-nav a { color: var(--muted); transition: color 0.2s; text-transform: lowercase; }
+        .main-nav a:hover { color: var(--fg); }
 
         .hamburger-menu {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 10px;
-            z-index: 1001;
+            display: none; background: none; border: none; cursor: pointer; padding: 4px; z-index: 50;
         }
         .hamburger-menu .line {
-            display: block;
-            width: 25px;
-            height: 2px;
-            background-color: var(--primary-color);
-            margin: 5px 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
+            display: block; width: 22px; height: 1.5px; background-color: var(--fg);
+            margin: 5px 0; transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
-        /* Essay layout */
+        /* ─── Essay layout ─── */
         .essay-container {
-            max-width: 720px;
+            max-width: 760px;
             margin: 0 auto;
-            padding: 3rem 2rem 4rem;
+            padding: clamp(2rem,5vh,3.5rem) var(--gutter) 4rem;
         }
         .essay-header { margin-bottom: 2.5rem; }
         .essay-header h1 {
-            font-size: 2.4rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            line-height: 1.15;
-            margin-bottom: 0.8rem;
+            font-family: var(--grotesk);
+            font-size: clamp(2.4rem, 7vw, 3.6rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            color: var(--fg);
+            line-height: 1.02;
+            margin-bottom: 0.9rem;
         }
         .essay-meta {
-            font-size: 0.92rem;
-            color: var(--secondary-color);
-            line-height: 1.6;
+            font-family: var(--mono);
+            font-size: 0.78rem;
+            color: var(--muted);
+            line-height: 1.8;
+            letter-spacing: 0.02em;
         }
-        .essay-meta .authors { font-weight: bold; color: var(--primary-color); }
-        .essay-body p { margin-bottom: 1.5rem; max-width: 75ch; }
+        .essay-meta .authors { color: var(--gold); }
+        .essay-body p { margin-bottom: 1.5rem; max-width: 75ch; font-size: 0.95rem; }
+        .essay-body strong { color: var(--fg); font-weight: 600; }
+        .essay-body code {
+            font-family: var(--mono); font-size: 0.85em;
+            background: var(--bg-2); border: 1px solid var(--line);
+            border-radius: 3px; padding: 0.1em 0.4em; color: var(--gold);
+        }
         .essay-body h2 {
+            font-family: var(--grotesk);
             font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary-color);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            color: var(--fg);
             margin-top: 3rem;
             margin-bottom: 1rem;
         }
         .essay-body h3 {
+            font-family: var(--grotesk);
             font-size: 1.15rem;
-            font-weight: bold;
-            color: var(--primary-color);
+            font-weight: 600;
+            color: var(--fg);
             margin-top: 2rem;
             margin-bottom: 0.8rem;
         }
         .lead {
-            font-size: 1.12rem;
+            font-size: 1.08rem;
             line-height: 1.85;
-            color: var(--primary-color);
+            color: var(--fg);
         }
 
         /* Stat boxes */
@@ -227,50 +172,56 @@
             flex: 1;
             min-width: 120px;
             text-align: center;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border: 1px solid var(--line);
+            border-radius: 5px;
             padding: 1.2rem 0.8rem;
-            background: var(--card-bg);
+            background: var(--bg-2);
         }
         .stat-box .num {
             display: block;
-            font-size: 1.8rem;
+            font-family: var(--grotesk);
+            font-size: 1.9rem;
             font-weight: 700;
-            color: var(--stat-color);
+            color: var(--gold);
             line-height: 1.1;
         }
         .stat-box .label {
             display: block;
-            font-size: 0.75rem;
-            color: var(--secondary-color);
-            margin-top: 0.3rem;
+            font-size: 0.68rem;
+            color: var(--muted);
+            margin-top: 0.4rem;
             text-transform: uppercase;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.06em;
         }
 
         /* Pullquote */
         .pullquote {
-            border-left: 3px solid var(--pullquote-border);
+            border-left: 3px solid var(--gold);
             padding: 1.2rem 1.5rem;
             margin: 2rem 0;
-            background: var(--pullquote-bg);
-            font-size: 1.02rem;
+            background: var(--bg-2);
+            font-size: 1rem;
             line-height: 1.7;
-            color: var(--primary-color);
-            border-radius: 0 6px 6px 0;
+            color: var(--fg);
+            border-radius: 0 5px 5px 0;
         }
 
         /* Viz blocks */
         .viz-block {
-            margin: 2.5rem -2rem;
+            margin: 2.5rem 0;
+            padding: 1.4rem 1rem;
+            background: var(--bg-2);
+            border: 1px solid var(--line);
+            border-radius: 5px;
             overflow: hidden;
         }
         .viz-caption {
-            font-size: 0.82rem;
-            color: var(--secondary-color);
+            font-size: 0.72rem;
+            color: var(--muted);
             text-align: center;
-            margin-top: 0.5rem;
-            padding: 0 2rem;
+            margin-top: 0.6rem;
+            padding: 0 1rem;
+            letter-spacing: 0.02em;
         }
         .viz-reveal {
             opacity: 0;
@@ -290,86 +241,92 @@
 
         /* Code snippet */
         .code-block {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
+            background: var(--bg);
+            border: 1px solid var(--line);
+            border-radius: 5px;
             padding: 1.2rem 1.5rem;
             margin: 1.5rem 0;
-            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
-            font-size: 0.82rem;
-            line-height: 1.6;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            line-height: 1.7;
             overflow-x: auto;
             white-space: pre;
-            color: var(--text-color);
+            color: var(--fg);
         }
 
-        /* Footer */
-        .main-footer { padding: 1.5rem 2rem; text-align: center; font-size: 0.9rem; color: var(--secondary-color); }
-        .main-footer a { color: var(--primary-color); }
-        .main-footer p { max-width: none; margin-bottom: 0; }
+        /* ─── Footer (noir status bar) ─── */
+        .main-footer {
+            position: relative; z-index: 1;
+            display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem 1.5rem;
+            padding: 0.9rem var(--gutter);
+            border-top: 1px solid var(--line);
+            font-family: var(--mono); font-size: 0.68rem; color: var(--muted); letter-spacing: 0.04em;
+        }
+        .main-footer .seg { display: flex; gap: 1.3rem; flex-wrap: wrap; align-items: center; }
+        .main-footer a { color: var(--muted); }
+        .main-footer a:hover { color: var(--gold); }
+        .main-footer .gold { color: var(--gold); }
 
         /* Back link */
         .back-link {
             display: inline-block;
-            margin-bottom: 1.5rem;
-            font-size: 0.85rem;
-            color: var(--secondary-color);
-            font-weight: normal;
+            margin-bottom: 1.6rem;
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--muted);
         }
-        .back-link:hover { color: var(--primary-color); }
-        .dark-mode .back-link { color: var(--secondary-color); }
-        .dark-mode .back-link:hover { color: var(--accent-color); }
+        .back-link:hover { color: var(--gold); }
+
+        /* CTA button */
+        .cta-btn {
+            display: inline-block; padding: 0.8rem 2rem;
+            border: 1px solid var(--gold); border-radius: 4px;
+            font-family: var(--mono); font-size: 0.8rem;
+            text-transform: uppercase; letter-spacing: 0.06em;
+            color: var(--gold); transition: all 0.2s;
+        }
+        .cta-btn:hover { background: var(--gold-soft); color: var(--gold); }
+
+        .essay-footnote {
+            margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line);
+            font-size: 0.8rem; color: var(--muted);
+        }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .essay-header h1 { font-size: 1.8rem; }
             .essay-body h2 { font-size: 1.3rem; }
-            .essay-container { padding: 2rem 1.2rem 3rem; }
-            .viz-block { margin: 2rem -0.5rem; }
             .stat-row { gap: 0.8rem; }
-            .stat-box .num { font-size: 1.5rem; }
+            .stat-box .num { font-size: 1.6rem; }
             .stat-box { min-width: 100px; padding: 1rem 0.6rem; }
 
             .hamburger-menu { display: block; }
             .main-nav {
-                position: fixed; top: 0; left: 0;
-                width: 100%; height: 100vh;
-                background-color: var(--background-color);
-                display: flex; justify-content: center; align-items: center;
+                position: fixed; inset: 0;
+                background-color: var(--bg);
+                flex-direction: column; justify-content: center; align-items: center;
                 transform: translateX(100%);
                 transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+                font-size: 1.2rem; gap: 1.8rem; z-index: 40;
             }
             body.nav-open .main-nav { transform: translateX(0); }
-            .main-nav ul { flex-direction: column; gap: 2rem; text-align: center; }
-            .main-nav a { font-size: 1.5rem; }
-            .main-nav a::after { display: none; }
-            body.nav-open .hamburger-menu .line-1 { transform: rotate(45deg) translate(5px, 5px); }
+            body.nav-open .hamburger-menu .line-1 { transform: translateY(6.5px) rotate(45deg); }
             body.nav-open .hamburger-menu .line-2 { opacity: 0; }
-            body.nav-open .hamburger-menu .line-3 { transform: rotate(-45deg) translate(5px, -5px); }
+            body.nav-open .hamburger-menu .line-3 { transform: translateY(-6.5px) rotate(-45deg); }
         }
     </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Spectral:ital,wght@0,300;0,400;0,500;1,400&family=Spectral+SC:wght@400;600&display=swap">
-    <link rel="stylesheet" href="styles/imprint.css">
 </head>
 <body>
 
-        <header class="page-header">
-        <a class="home" href="index.html">Niccolò Ridi</a>
-        <nav>
+    <header class="main-header">
+        <a class="id" href="index.html"><b>◆</b> NICCOLÒ&nbsp;RIDI</a>
+        <nav class="main-nav">
             <a href="profile.html">profile</a>
             <a href="practice.html">practice</a>
             <a href="research.html">research</a>
             <a href="data.html">data</a>
-            <span class="ext-group">
-                <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" rel="noopener">linkedin</a>
-                <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" rel="noopener">scholar</a>
-                <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" rel="noopener">ssrn</a>
-                <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" rel="noopener">kcl</a>
-            </span>
         </nav>
-        <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span id="theme-label">dark</span></button>
         <button class="hamburger-menu" aria-label="Open navigation menu">
             <span class="line line-1"></span>
             <span class="line line-2"></span>
@@ -472,7 +429,7 @@ cjeu-py export-network --format html --max-nodes 500</div>
 
                 <p>The full interactive network &ndash; 500 Grand Chamber nodes, filterable by year, procedure, subject, and court &ndash; is available as a standalone visualisation.</p>
 
-                <p style="text-align: center; margin: 2rem 0;"><a href="https://github.com/niccoloridi/cjeu-py/blob/main/examples/grand_chamber_network.html" target="_blank" style="display: inline-block; padding: 0.8rem 2rem; border: 2px solid var(--primary-color); border-radius: 6px; font-weight: bold; font-size: 0.95rem;">View Interactive Grand Chamber Network &rarr;</a></p>
+                <p style="text-align: center; margin: 2rem 0;"><a class="cta-btn" href="https://github.com/niccoloridi/cjeu-py/blob/main/examples/grand_chamber_network.html" target="_blank">View Interactive Grand Chamber Network &rarr;</a></p>
 
                 <h2>VI. What It Enables</h2>
 
@@ -482,7 +439,7 @@ cjeu-py export-network --format html --max-nodes 500</div>
 
                 <p>The tool is open source and designed for researchers who may not be programmers. A five-command pipeline from zero to interactive network. Parquet tables that open in any data tool. CSV export with codebooks. Interactive HTML visualisations that run in any browser with no server.</p>
 
-                <p style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.88rem; color: var(--secondary-color);">
+                <p class="essay-footnote">
                     <strong>Install:</strong> <code>pip install cjeu-py</code><br>
                     <strong>Code:</strong> <a href="https://github.com/niccoloridi/cjeu-py" target="_blank">github.com/niccoloridi/cjeu-py</a><br>
                     <strong>PyPI:</strong> <a href="https://pypi.org/project/cjeu-py/" target="_blank">pypi.org/project/cjeu-py</a>
@@ -493,9 +450,17 @@ cjeu-py export-network --format html --max-nodes 500</div>
         </article>
     </main>
 
-        <footer class="page-footer">
-        <a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a>
-        <span class="rights">&copy; 2025 Niccolò Ridi. All Rights Reserved (probably).</span>
+    <footer class="main-footer">
+        <div class="seg">
+            <span class="gold">&copy; 2025 niccolò ridi</span>
+            <a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a>
+        </div>
+        <div class="seg">
+            <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" rel="noopener">linkedin</a>
+            <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" rel="noopener">scholar</a>
+            <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" rel="noopener">ssrn</a>
+            <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" rel="noopener">kcl</a>
+        </div>
     </footer>
 
     <script>
@@ -785,9 +750,11 @@ cjeu-py export-network --format html --max-nodes 500</div>
         const w = container.node().getBoundingClientRect().width;
         const isMobile = w < 600;
 
+        const catPalette = ["#d7a13b", "#6fb3c0", "#8a9b5b", "#b07fc7", "#c0653f", "#d9b15e"];
+
         const panels = [
             { title: "Precision", data: precisionData, colors: [css("--bar-tertiary"), css("--bar-primary"), css("--secondary-color")] },
-            { title: "Use", data: useData.slice(0, 6), colors: null },
+            { title: "Use", data: useData.slice(0, 6), colors: catPalette },
             { title: "Treatment", data: treatmentData.slice(0, 5), colors: [css("--treatment-follows"), css("--treatment-neutral"), css("--treatment-distinguishes"), css("--bar-primary"), css("--treatment-departs")] }
         ];
 
@@ -952,21 +919,9 @@ cjeu-py export-network --format html --max-nodes 500</div>
     // Hamburger
     const hamburger = document.querySelector('.hamburger-menu');
     hamburger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
-    document.querySelectorAll('.page-header nav a').forEach(link => {
+    document.querySelectorAll('.main-header nav a').forEach(link => {
         link.addEventListener('click', () => document.body.classList.remove('nav-open'));
     });
-
-    let currentTheme = localStorage.getItem('imprint-theme') || 'light';
-    function applyTheme(t) {
-        document.documentElement.classList.toggle('dark-mode', t === 'dark');
-        document.body.classList.toggle('dark-mode', t === 'dark');
-        var lbl = document.getElementById('theme-label');
-        if (lbl) lbl.textContent = t === 'dark' ? 'light' : 'dark';
-        localStorage.setItem('imprint-theme', t);
-        currentTheme = t;
-    }
-    function toggleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
-    applyTheme(currentTheme);
     </script>
 
 </body>

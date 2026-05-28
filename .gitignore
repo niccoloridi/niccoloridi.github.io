@@ -4,5 +4,23 @@ Examples/
 ai_images/
 .claude/
 
+# Not for publication (yet)
+network_grandchamber_viz.html
+
+# Design explorations / prototypes (kept locally, not published)
+index-intro-test.html
+index-noir.html
+index-vapor.html
+index-frontispiece.html
+index-twocol.html
+index-centered.html
+index-atelier.html
+index-celestial.html
+index-terminal.html
+index-imprint-old.html
+
+# Misc
+*.docx
+
 # OS files
 .DS_Store

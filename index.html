@@ -3,1045 +3,723 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Niccolò Ridi | Public International Law</title>
+    <title>Niccolò Ridi — Public International Law</title>
+    <script>(function(){var t=localStorage.getItem('noir-theme');if(t==='light')document.documentElement.classList.add('light-mode');})()</script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script>(function(){var t=localStorage.getItem('imprint-theme');if(!t)t='light';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Spectral:ital,wght@0,300;0,400;0,500;1,400&family=Spectral+SC:wght@400;600&display=swap">
-    <script type="importmap">
-    {
-      "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" }
-    }
-    </script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+    <script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }</script>
     <style>
         :root {
-            --page: #f4ede0;
-            --ink: #1a1410;
-            --ink-secondary: #5a4d3f;
-            --rule: #c9bfa7;
-            --gold: #a8893a;
-            --vermilion: #a73d28;
-
-            --serif: "Spectral", Georgia, "Times New Roman", serif;
-            --serif-sc: "Spectral SC", "Spectral", Georgia, serif;
-            --display: "Cormorant Garamond", "Spectral", Georgia, serif;
-
-            --t-smallcaps: 0.76rem;
-            --t-meta: 0.85rem;
-
-            --gutter: clamp(1rem, 3vw, 2.5rem);
-
-            --net-node: rgba(168, 137, 58, 0.52);
-            --net-node-hub: rgba(167, 61, 40, 0.72);
-            --net-link: rgba(168, 137, 58, 0.26);
-            --net-pulse: rgba(167, 61, 40, 0.95);
+            --bg: #0a0a0c; --bg-2: #111114; --fg: #ece8df; --muted: #7d786d;
+            --gold: #d7a13b; --line: #232327;
+            --grotesk: "Space Grotesk", system-ui, sans-serif;
+            --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+            --gutter: clamp(1.1rem, 3vw, 3rem);
+            --net-node: rgba(215,161,59,0.50);
+            --net-node-hub: rgba(236,232,223,0.92);
+            --net-link: rgba(215,161,59,0.22);
+            --net-pulse: rgba(236,232,223,0.95);
         }
-
-        /* Dark mode reuses the original committed homepage's copper-on-near-black palette
-           for the chrome/networks. Vermilion stays vermilion: the plate engraving keeps its
-           imprint colour even in dark mode rather than inverting to copper. */
-        .dark-mode {
-            --page: #121212;
-            --ink: #e8eaed;
-            --ink-secondary: #9aa0ab;
-            --rule: #2a2622;
-            --gold: #d4a574;
-            --vermilion: #b54732;
-            --net-node: rgba(212, 165, 116, 0.55);
-            --net-node-hub: rgba(232, 188, 140, 0.85);
-            --net-link: rgba(180, 165, 145, 0.28);
-            --net-pulse: rgba(255, 218, 170, 0.95);
+        .light-mode {
+            --bg: #ece7dc; --bg-2: #f4efe5; --fg: #16140f; --muted: #6b6457;
+            --gold: #9a7521; --line: #d3cab6;
+            --net-node: rgba(154,117,33,0.55); --net-node-hub: rgba(22,20,15,0.85);
+            --net-link: rgba(154,117,33,0.28); --net-pulse: rgba(167,61,40,0.9);
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        html {
-            font-family: var(--serif);
-            font-size: 17px;
-            font-weight: 300;
-            color: var(--ink);
-            background: var(--page);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: geometricPrecision;
-            font-feature-settings: "kern", "liga", "onum";
-        }
-
+        html { font-size: 16px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
         body {
-            line-height: 1.7;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            background: var(--page);
-            color: var(--ink);
-            transition: background-color 400ms ease, color 400ms ease;
+            font-family: var(--grotesk); background: var(--bg); color: var(--fg); line-height: 1.5;
+            height: 100vh; overflow: hidden; display: flex; flex-direction: column;
+            transition: background-color 300ms ease, color 300ms ease;
         }
+        body::before { content:''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background: radial-gradient(120% 90% at 70% 0%, transparent 55%, rgba(0,0,0,0.55) 100%); }
+        .light-mode body::before { background: radial-gradient(120% 90% at 70% 0%, transparent 60%, rgba(0,0,0,0.10) 100%); }
+        a { color: inherit; text-decoration: none; }
 
-        a {
-            color: inherit;
-            text-decoration: underline;
-            text-decoration-color: var(--gold);
-            text-decoration-style: solid;
-            text-decoration-thickness: 1px;
-            text-underline-offset: 0.18em;
-            display: inline-block;
-            position: relative;
-            transition: transform 0.08s ease-out;
+        header {
+            position: relative; z-index: 3; display: flex; justify-content: space-between; align-items: center;
+            padding: 0.75rem var(--gutter); border-bottom: 1px solid var(--line); flex-shrink: 0;
+            font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
         }
-        /* Hover — a thicker gold rule draws in from the centre outward */
-        a::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: -0.05em;
-            width: 100%;
-            height: 2px;
-            background-color: var(--gold);
-            transform: scaleX(0);
-            transform-origin: center;
-            transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
-            pointer-events: none;
-        }
-        a:hover::after { transform: scaleX(1); }
-        a:active { transform: translateY(1px); }
-        ::selection { background: var(--gold); color: var(--page); }
+        header .id { color: var(--fg); } header .id b { color: var(--gold); }
+        header nav { display: flex; gap: 1.3rem; align-items: center; }
+        header nav a:hover { color: var(--fg); }
+        .tog { background: none; border: 1px solid var(--line); color: var(--muted); cursor: pointer;
+            font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+            padding: 0.3rem 0.6rem; border-radius: 2px; transition: all 0.2s; }
+        .tog:hover { color: var(--fg); border-color: var(--gold); }
+        .burger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+        .burger span { display: block; width: 22px; height: 1.5px; background: var(--fg); margin: 5px 0; transition: 0.3s; }
 
-        /* ─── Header ─── */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            padding: 1rem var(--gutter);
-            background: var(--page);
-            border-bottom: 1px solid var(--rule);
-            font-family: var(--serif-sc);
-            font-size: var(--t-smallcaps);
-            letter-spacing: 0.12em;
-            text-transform: lowercase;
-            color: var(--ink-secondary);
-            flex-shrink: 0;
-            z-index: 50;
-            gap: 1rem;
-        }
-        .page-header a { text-decoration: none; color: var(--ink-secondary); }
-        /* Hover/active handled by global a::after + a:active */
-        .page-header .home {
-            color: var(--ink);
-            font-family: var(--display);
-            font-size: 1.3rem;
-            font-weight: 500;
-            letter-spacing: 0.04em;
-            text-transform: none;
-        }
-        .page-header nav { display: flex; gap: 1.5rem; align-items: baseline; flex-wrap: wrap; }
-        .page-header nav .ext-group {
-            display: flex; gap: 1.1rem;
-            padding-left: 1.1rem;
-            border-left: 1px solid var(--rule);
-            opacity: 0.85;
-        }
-        .theme-toggle {
-            background: none;
-            border: 1px solid var(--rule);
-            border-radius: 999px;
-            padding: 0.28rem 0.75rem;
-            cursor: pointer;
-            font-family: var(--serif-sc);
-            font-size: 0.68rem;
-            letter-spacing: 0.12em;
-            text-transform: lowercase;
-            color: var(--ink-secondary);
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-            line-height: 1;
-        }
-        .theme-toggle:hover { color: var(--ink); border-color: var(--gold); }
+        main { position: relative; z-index: 2; flex: 1; min-height: 0; display: flex; flex-direction: column; }
 
-        .hamburger-menu { display: none; background: none; border: none; cursor: pointer; padding: 6px; z-index: 51; }
-        .hamburger-menu .line {
-            display: block; width: 22px; height: 1.5px;
-            background-color: var(--ink); margin: 5px 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
+        .hero { flex: 1; min-height: 0; display: flex; flex-direction: column;
+            padding: clamp(1rem,3vh,2rem) var(--gutter) clamp(0.8rem,2vh,1.4rem); }
+        .hero-kicker { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--gold); margin-bottom: clamp(0.5rem,1.5vh,1rem); display: flex; gap: 0.6rem; align-items: center; }
+        .hero-kicker::before { content:''; width: 26px; height: 1px; background: var(--gold); display:inline-block; }
+        .wordmark { font-family: var(--grotesk); font-weight: 700; font-size: clamp(2.2rem, 7vw, 5.2rem);
+            line-height: 0.92; letter-spacing: -0.02em; text-transform: uppercase; }
+        .wordmark .l2 { display: inline-block; color: transparent; -webkit-text-stroke: 1.2px var(--fg); }
+        .wordmark .dot { color: var(--gold); }
+        .lede { font-family: var(--mono); font-size: clamp(0.78rem,1.1vw,0.92rem); letter-spacing: 0.01em;
+            color: var(--muted); max-width: 60ch; margin-top: clamp(0.6rem,1.6vh,1rem); line-height: 1.5; }
+        .lede .b { color: var(--gold); }
 
-        /* ─── Frontispiece grid (3x3, center = title plate, 8 around = mini networks) ─── */
-        main { flex: 1; min-height: 0; display: flex; overflow: hidden; }
+        .hero-cols { flex: 1; min-height: 0; display: grid; grid-template-columns: 1.08fr 0.92fr;
+            gap: clamp(1rem,2.5vw,2rem); margin-top: clamp(0.8rem,2vh,1.4rem); }
 
-        .frontispiece-grid {
-            display: grid;
-            /* Center column slightly narrower so side networks step back from the wordmark;
-               center row taller so the centre block has breathing room. */
-            grid-template-columns: 1fr 0.85fr 1fr;
-            grid-template-rows: 0.78fr 1.44fr 0.78fr;
-            /* Asymmetric gap: tighter vertically, generous horizontally — keeps side networks off the centre */
-            row-gap: clamp(0.4rem, 1vh, 0.8rem);
-            column-gap: clamp(1.4rem, 3.2vw, 3rem);
-            width: 100%;
-            height: 100%;
-            /* Minimal horizontal padding + no max-width: lets the grid use the full viewport so the
-               side cells can sit as far left/right as possible. */
-            padding: clamp(0.6rem, 1.5vh, 1.25rem) clamp(0.4rem, 1vw, 1rem);
-            max-width: none;
-            margin: 0 auto;
-            overflow: hidden;
-            position: relative;
-        }
+        /* ─── Terminal ─── */
+        .terminal { display: flex; flex-direction: column; background: var(--bg-2); border: 1px solid var(--line);
+            border-radius: 5px; overflow: hidden; min-height: 0; }
+        .term-bar { display: flex; align-items: center; gap: 0.5rem; padding: 0.45rem 0.7rem; flex-shrink: 0;
+            border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 0.6rem; color: var(--muted); letter-spacing: 0.06em; }
+        .term-bar .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
+        .term-bar .dot:nth-child(1){ background:#e06c5b } .term-bar .dot:nth-child(2){ background:#e0b65b } .term-bar .dot:nth-child(3){ background:#7bbf6a }
+        .term-bar .ttl { margin-left: auto; }
+        .term-body { flex: 1; min-height: 0; overflow-y: auto; padding: 0.7rem 0.85rem; font-family: var(--mono);
+            font-size: 0.76rem; line-height: 1.6; color: var(--fg); }
+        .term-body::-webkit-scrollbar { width: 7px; } .term-body::-webkit-scrollbar-thumb { background: var(--line); }
+        .ln { white-space: pre-wrap; word-break: break-word; }
+        .ln .p { color: var(--gold); } .ln .muted { color: var(--muted); } .ln .gold { color: var(--gold); }
+        .chip { color: var(--gold); cursor: pointer; border-bottom: 1px dotted var(--gold); }
+        .chip:hover { background: rgba(215,161,59,0.14); }
+        .term-foot { flex-shrink: 0; padding: 0.5rem 0.85rem 0.7rem; border-top: 1px solid var(--line); }
+        .term-input-row { display: flex; gap: 0.5rem; align-items: baseline; }
+        .term-input-row .p { color: var(--gold); font-family: var(--mono); font-size: 0.76rem; flex-shrink: 0; }
+        #term-input { flex: 1; min-width: 0; background: none; border: none; outline: none; color: var(--fg);
+            font-family: var(--mono); font-size: 0.76rem; caret-color: var(--gold); }
+        .term-suggest { margin-top: 0.45rem; font-family: var(--mono); font-size: 0.66rem; color: var(--muted);
+            min-height: 1.1em; display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; }
+        .term-suggest .tab { color: var(--gold); opacity: 0.7; }
+        .term-suggest .sug { cursor: pointer; padding: 0.05rem 0.35rem; border: 1px solid var(--line); border-radius: 2px; transition: all 0.12s; }
+        .term-suggest .sug:hover { color: var(--fg); border-color: var(--muted); }
+        .term-suggest .sug.top { color: var(--bg); background: var(--gold); border-color: var(--gold); }
+        .term-suggest .sug .to { opacity: 0.6; }
 
-        /* Bridge layer — thin lines drawn between the nearest nodes of adjacent network cells */
-        .bridges-layer {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 2;
-        }
-        .bridges-layer .bridge {
-            stroke: var(--gold);
-            stroke-width: 0.7;
-            stroke-opacity: 0;
-            transition: stroke-opacity 800ms ease;
-        }
-        .bridges-layer.ready .bridge {
-            stroke-opacity: 0.42;
-        }
+        /* ─── Network panel ─── */
+        .net-panel { position: relative; border: 1px solid var(--line); border-radius: 5px; overflow: hidden; min-height: 0;
+            background: radial-gradient(80% 80% at 50% 45%, rgba(215,161,59,0.05), transparent 70%); }
+        .net-panel canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+        .net-panel .cap { position: absolute; left: 0.7rem; bottom: 0.55rem; z-index: 2; font-family: var(--mono);
+            font-size: 0.58rem; color: var(--muted); letter-spacing: 0.06em; }
+        .net-panel .cap b { color: var(--gold); font-weight: 500; }
+        /* when a section is open, the constellation recedes behind the content */
+        body.mode-section .net-panel canvas { opacity: 0; transition: opacity 0.35s ease; }
+        body.mode-section .net-panel .cap { opacity: 0; }
 
-        .net-cell {
-            position: relative;
-            min-width: 0;
-            min-height: 0;
-            overflow: hidden;
-            /* Hidden at rest. Revealed on first user input or after a short delay. */
-            opacity: 0;
-            transition: opacity 1.6s ease;
-        }
-        body.networks-revealed .net-cell { opacity: 1; }
+        /* ─── In-panel content stage (the "viewport") — opaque over the network, scrolls ─── */
+        .stage { position: absolute; inset: 0; z-index: 3; padding: clamp(1rem,2.4vw,1.8rem);
+            background: var(--bg);
+            display: flex; gap: clamp(1rem,2vw,1.8rem); align-items: stretch;
+            opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s; }
+        body.mode-section .stage { opacity: 1; visibility: visible; transform: none; }
+        .stage-plate { flex: 0 0 30%; display: flex; align-items: flex-start; justify-content: center; align-self: stretch; padding-top: 0.3rem; }
+        .stage-plate img { max-height: 100%; max-width: 100%; }
+        .stage-text { flex: 1; min-width: 0; overflow-y: auto; padding-right: 0.5rem; }
+        .stage-text::-webkit-scrollbar { width: 7px; } .stage-text::-webkit-scrollbar-thumb { background: var(--line); }
+        .stage-text p { font-family: var(--grotesk); font-size: 0.9rem; line-height: 1.55; color: var(--fg); margin: 0 0 0.75rem; max-width: 62ch; }
+        .stage-text h3 { font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin: 1rem 0 0.5rem; }
+        .stage-text ul { list-style: none; margin: 0 0 0.6rem; }
+        .stage-text ul li { font-family: var(--mono); font-size: 0.74rem; color: var(--muted); padding-left: 1rem; position: relative; margin-bottom: 0.4rem; line-height: 1.45; }
+        .stage-text ul li::before { content:'·'; position:absolute; left:0; color: var(--gold); }
+        .stage-text a { color: var(--fg); border-bottom: 1px solid var(--line); }
+        .stage-text a:hover { color: var(--gold); border-color: var(--gold); }
+        .stage-text i { font-style: italic; }
+        /* research stage: filters + full publication list */
+        .stage .filters { display:flex; flex-wrap:wrap; gap:0.4rem; align-items:center; position:sticky; top:0; background:var(--bg); padding:0.1rem 0 0.6rem; margin-bottom:0.3rem; z-index:2; }
+        .stage .filter-btn { background:none; border:1px solid var(--line); color:var(--muted); font-family:var(--mono); font-size:0.62rem; letter-spacing:0.05em; text-transform:uppercase; padding:0.26rem 0.5rem; border-radius:2px; cursor:pointer; transition:all 0.15s; }
+        .stage .filter-btn:hover { color:var(--fg); }
+        .stage .filter-btn.active { color:var(--bg); background:var(--gold); border-color:var(--gold); }
+        .stage .year-select { background:var(--bg-2); border:1px solid var(--line); color:var(--muted); font-family:var(--mono); font-size:0.62rem; padding:0.26rem 0.4rem; border-radius:2px; cursor:pointer; }
+        .stage .pub-list { list-style:none; margin:0; }
+        .stage .pub-list li { font-family:var(--grotesk); font-size:0.82rem; line-height:1.5; color:var(--fg); padding:0.5rem 0; border-bottom:1px solid var(--line); }
+        .stage .pub-list li i { font-style:italic; }
+        .stage .pub-chip { display:inline-block; font-family:var(--mono); font-size:0.58rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--bg) !important; background:var(--gold); padding:0.04rem 0.34rem; border-radius:2px; border-bottom:none !important; margin-left:0.3rem; }
+        .stage .pub-chip:hover { filter:brightness(1.1); }
+        .stage .pub-note { display:block; font-family:var(--mono); font-size:0.62rem; color:var(--muted); margin-top:0.2rem; }
+        .stage-num { font-family: var(--mono); font-size: 0.66rem; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; }
+        .stage-title { font-family: var(--grotesk); font-weight: 700; font-size: clamp(1.6rem,3.2vw,2.6rem); text-transform: uppercase; letter-spacing: -0.01em; margin: 0.3rem 0 0.7rem; }
+        .stage-lines { list-style: none; font-family: var(--mono); font-size: 0.76rem; line-height: 1.5; color: var(--fg); }
+        .stage-lines li { padding-left: 1rem; position: relative; margin-bottom: 0.35rem; color: var(--muted); }
+        .stage-lines li::before { content: '·'; position: absolute; left: 0; color: var(--gold); }
+        .stage-actions { display: flex; gap: 1rem; align-items: center; margin-top: 1.1rem; font-family: var(--mono); font-size: 0.72rem; }
+        .stage-open { color: var(--bg); background: var(--gold); padding: 0.4rem 0.8rem; border-radius: 2px; }
+        .stage-open:hover { filter: brightness(1.1); }
+        .stage-close { background: none; border: 1px solid var(--line); color: var(--muted); cursor: pointer;
+            font-family: var(--mono); font-size: 0.72rem; padding: 0.4rem 0.7rem; border-radius: 2px; }
+        .stage-close:hover { color: var(--fg); border-color: var(--muted); }
 
-        .bridges-layer {
-            opacity: 0;
-            transition: opacity 1.6s ease;
-        }
-        body.networks-revealed .bridges-layer { opacity: 1; }
+        /* shrink the terminal column once a section is on stage */
+        body.mode-section .hero-cols { grid-template-columns: 0.46fr 1.54fr; }
 
-        /* Touch devices: skip the hidden state */
-        @media (hover: none) {
-            .net-cell, .bridges-layer { opacity: 1 !important; transition: none; }
-        }
-        .net-cell canvas, .net-cell svg {
-            width: 100%; height: 100%; display: block;
-        }
+        /* ─── Plate tiles (numbered nav, pinned to bottom) ─── */
+        .tiles { flex-shrink: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line);
+            border-top: 1px solid var(--line); }
+        .tile { background: var(--bg); position: relative; padding: clamp(0.6rem,1.4vh,1rem) clamp(0.8rem,1.5vw,1.3rem);
+            display: flex; flex-direction: column; transition: background 0.3s ease; }
+        .tile:hover { background: var(--bg-2); }
+        .tile .num { font-family: var(--mono); font-size: 0.66rem; color: var(--gold); letter-spacing: 0.08em; }
+        .tile .specimen { flex: 1; display: flex; align-items: center; justify-content: center; margin: 0.4rem 0; overflow: hidden; }
+        /* one consistent treatment for every plate: cool blue duotone, luminous on the dark ground */
+        .tile .specimen img, .stage-plate img { width: auto;
+            filter: grayscale(1) invert(1) brightness(1.06) contrast(1.05) sepia(1) hue-rotate(178deg) saturate(2.4);
+            mix-blend-mode: screen; }
+        /* light mode: dark blue ink on the light ground (not inverted) */
+        .light-mode .tile .specimen img, .light-mode .stage-plate img {
+            filter: grayscale(1) sepia(1) hue-rotate(178deg) saturate(1.9) contrast(1.08) brightness(0.96);
+            mix-blend-mode: multiply; }
+        .tile .specimen img { max-height: clamp(70px, 13vh, 150px); transition: transform 0.55s cubic-bezier(0.2,0.7,0.2,1); }
+        .tile:hover .specimen img { transform: scale(1.06); }
+        .tile .label { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--line); padding-top: 0.55rem; }
+        .tile .label .name { font-family: var(--grotesk); font-weight: 600; font-size: 1.05rem; text-transform: uppercase; }
+        .tile:hover .label .name { color: var(--gold); }
+        .tile .label .arrow { font-family: var(--mono); color: var(--muted); transition: transform 0.3s, color 0.3s; }
+        .tile:hover .label .arrow { color: var(--gold); transform: translate(3px,-3px); }
 
-        /* Mid-row side networks: hugged to the outer edges so the wordmark's horizontal
-           range is clear of nodes, even though they sit on the same vertical band.
-           Using `width` (not `max-width`) so the grid item keeps its size despite justify-self.
-           The smaller this %, the more breathing room around the central writing. */
-        .net-cell[data-net="3"] {
-            width: 50%;
-            justify-self: start;
-        }
-        .net-cell[data-net="4"] {
-            width: 50%;
-            justify-self: end;
-        }
+        footer { position: relative; z-index: 2; flex-shrink: 0; display: flex; justify-content: space-between; flex-wrap: wrap;
+            gap: 0.3rem 1.5rem; padding: 0.6rem var(--gutter); border-top: 1px solid var(--line);
+            font-family: var(--mono); font-size: 0.66rem; color: var(--muted); letter-spacing: 0.04em; }
+        footer a:hover { color: var(--gold); } footer .seg { display: flex; gap: 1.2rem; flex-wrap: wrap; } footer .gold { color: var(--gold); }
 
-        /* Center cell — mirrors the twelve-vigils frontispiece structure:
-           small vermilion mark · big uppercase wordmark · small-caps strands · nav · large plate engraving.
-           overflow:visible so the wordmark can extend over the adjacent network cells (it's the page's anchor). */
-        .frontispiece-center {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 0.5rem clamp(0.5rem, 1.5vw, 1rem);
-            min-width: 0;
-            min-height: 0;
-            overflow: visible;
-            position: relative;
-            z-index: 3;
+        @media (max-width: 880px) {
+            body { height: auto; overflow-y: auto; }
+            html { font-size: 17px; }
+            .hero { padding-top: 1.4rem; }
+            .lede { font-size: 0.95rem; }
+            .hero-cols, body.mode-section .hero-cols { grid-template-columns: 1fr; }
+            .terminal { height: 340px; }
+            .term-body, #term-input, .term-input-row .p { font-size: 0.86rem; }
+            .net-panel { height: 260px; }
+            .tiles { grid-template-columns: repeat(2, 1fr); }
+            .tile { min-height: 190px; }
+            .tile .label .name { font-size: 1.1rem; }
+            /* section on stage: stack, flow, and let the page scroll */
+            body.mode-section .net-panel { height: auto; min-height: 64vh; }
+            body.mode-section .stage { position: relative; }
+            .stage { flex-direction: column; gap: 1rem; }
+            .stage-plate { flex: 0 0 auto; max-height: 26vh; align-self: center; }
+            .stage-text { overflow: visible; }
+            .stage-title { font-size: 1.8rem; }
+            .stage-text p { font-size: 0.95rem; }
+            .stage-text ul li, .stage .pub-list li { font-size: 0.88rem; }
         }
-
-        .hero-imprint-mark {
-            color: var(--vermilion);
-            font-family: var(--display);
-            font-style: normal;
-            font-weight: 500;
-            font-size: clamp(0.78rem, 0.95vw, 0.95rem);
-            letter-spacing: 0.4em;
-            text-transform: uppercase;
-            margin: 0;
-            transition: color 400ms ease;
-        }
-
-        .hero-wordmark {
-            font-family: var(--display);
-            font-style: normal;
-            font-weight: 500;
-            font-size: clamp(2rem, 5.4vw, 3.6rem);
-            letter-spacing: 0.22em;
-            text-transform: uppercase;
-            line-height: 1.15;
-            margin: clamp(1.25rem, 3vh, 2.25rem) 0 0;
-            color: var(--ink);
-            white-space: nowrap;
-        }
-
-        .hero-strands {
-            font-family: var(--serif-sc);
-            font-style: normal;
-            font-size: clamp(0.72rem, 0.88vw, 0.9rem);
-            letter-spacing: 0.12em;
-            text-transform: lowercase;
-            color: var(--ink-secondary);
-            margin: clamp(0.6rem, 1.2vh, 1rem) 0 0;
-        }
-
-        .hero-social {
-            font-family: var(--serif-sc);
-            font-size: clamp(0.7rem, 0.82vw, 0.82rem);
-            letter-spacing: 0.12em;
-            text-transform: lowercase;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem 1.4rem;
-            justify-content: center;
-            margin: clamp(1.1rem, 2.2vh, 1.8rem) 0 0;
-        }
-        .hero-social a {
-            color: var(--ink-secondary);
-            text-decoration: none;
-            white-space: nowrap;
-        }
-        /* Hover/active handled by global a::after + a:active */
-
-        .hero-plate {
-            display: block;
-            width: clamp(110px, 11.5vw, 156px);
-            height: clamp(164px, 17.1vw, 232px);
-            color: var(--ink);   /* matches Twelve Vigils frontispiece: plate is in ink, not vermilion */
-            margin: clamp(1.25rem, 2.6vh, 2rem) 0 0;
-            transition: color 400ms ease, background-color 400ms ease;
-            flex-shrink: 0;
-        }
-        .hero-plate svg { width: 100%; height: 100%; display: block; }
-
-        /* Dark mode: inverted treatment — vermilion becomes the "paper", ink is the engraving.
-           Crop a few pixels off each side of the SVG so its natural inner padding doesn't read
-           as a vermilion "border" around the figure. */
-        .dark-mode .hero-plate {
-            background-color: #a73d28;
-            color: #1a1410;
-            overflow: hidden;
-        }
-        .dark-mode .hero-plate svg {
-            transform: scale(1.1);
-            transform-origin: center center;
-        }
-
-        /* ─── Footer ─── */
-        .page-footer {
-            border-top: 1px solid var(--rule);
-            padding: 0.9rem var(--gutter);
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            font-family: var(--serif-sc);
-            font-size: var(--t-meta);
-            color: var(--ink-secondary);
-            letter-spacing: 0.06em;
-            text-transform: lowercase;
-            flex-shrink: 0;
-            gap: 1rem;
-        }
-        .page-footer a { color: var(--ink-secondary); text-decoration: none; }
-        /* Hover/active handled by global a::after + a:active */
-        .page-footer .mark {
-            color: var(--vermilion);
-            font-family: var(--display);
-            font-weight: 500;
-            letter-spacing: 0.3em;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-        }
-
-        /* ─── Mobile: stack centred content + one mini-network below ─── */
-        @media (max-width: 768px) {
-            body { height: auto; overflow: auto; }
-            body.nav-open { overflow: hidden; }
-            main { overflow: visible; flex: 1 0 auto; }
-            .page-header { padding: 0.9rem var(--gutter); }
-            .page-header .home { font-size: 1.15rem; }
-
-            .frontispiece-grid {
-                display: flex;
-                flex-direction: column;
-                height: auto;
-                padding: 2rem var(--gutter) 2rem;
-                row-gap: 1.5rem;
-                column-gap: 0;
-                overflow: visible;
-            }
-            .net-cell { display: none; }
-            .net-cell[data-net="6"] { display: block; height: 30vh; min-height: 200px; order: 2; width: 100%; justify-self: stretch; }
-            .frontispiece-center { order: 1; padding: 1rem 0; overflow: visible; }
-
-            /* Bridges layer not relevant when only one network shows */
-            .bridges-layer { display: none; }
-
-            .hero-imprint-mark { font-size: 0.78rem; }
-            .hero-wordmark {
-                font-size: clamp(1.55rem, 7vw, 2.3rem);
-                letter-spacing: 0.16em;
-                white-space: normal;          /* allow it to wrap on narrow viewports if needed */
-                word-spacing: 0.05em;
-            }
-            .hero-strands { font-size: 0.85rem; letter-spacing: 0.12em; }
-            .hero-social { font-size: 0.8rem; gap: 0.5rem 1.2rem; }
-            .hero-plate { width: 122px; height: 182px; margin-top: 1.75rem; }
-
-            .hamburger-menu { display: block; }
-            .page-header nav {
-                position: fixed; top: 0; left: 0;
-                width: 100%; height: 100vh;
-                background-color: var(--page);
-                display: flex; flex-direction: column;
-                justify-content: center; align-items: center;
-                gap: 1.5rem;
-                transform: translateX(100%);
-                transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
-                font-size: 1.05rem;
-                letter-spacing: 0.18em;
-                z-index: 49;
-            }
-            .page-header nav .ext-group {
-                flex-direction: column;
-                border-left: 0;
-                border-top: 1px solid var(--rule);
-                padding-left: 0; padding-top: 1.5rem;
-                margin-top: 0.5rem; gap: 1rem;
-                align-items: center;
-            }
-            body.nav-open .page-header nav { transform: translateX(0); }
-            body.nav-open .hamburger-menu .line-1 { transform: rotate(45deg) translate(5px, 5px); }
-            body.nav-open .hamburger-menu .line-2 { opacity: 0; }
-            body.nav-open .hamburger-menu .line-3 { transform: rotate(-45deg) translate(5px, -5px); }
+        @media (max-width: 560px) {
+            header nav { position: fixed; inset: 0; flex-direction: column; justify-content: center; background: var(--bg);
+                transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.77,0,0.175,1); font-size: 1.1rem; z-index: 40; gap: 1.6rem; }
+            body.nav-open header nav { transform: translateX(0); }
+            .burger { display: block; z-index: 50; }
+            body.nav-open .burger span:nth-child(1){ transform: translateY(6.5px) rotate(45deg); }
+            body.nav-open .burger span:nth-child(2){ opacity: 0; }
+            body.nav-open .burger span:nth-child(3){ transform: translateY(-6.5px) rotate(-45deg); }
         }
     </style>
 </head>
-<body>
-
-    <header class="page-header">
-        <a class="home" href="index.html">Niccolò Ridi</a>
+<body class="ts-mono">
+    <header>
+        <a class="id" href="index.html"><b>◆</b> NICCOLÒ&nbsp;RIDI</a>
         <nav>
             <a href="profile.html">profile</a>
             <a href="practice.html">practice</a>
             <a href="research.html">research</a>
             <a href="data.html">data</a>
-            <span class="ext-group">
-                <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" rel="noopener">linkedin</a>
-                <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" rel="noopener">scholar</a>
-                <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" rel="noopener">ssrn</a>
-                <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" rel="noopener">kcl</a>
-            </span>
+            <button class="tog" onclick="toggleTheme()"><span id="tlabel">light</span></button>
         </nav>
-        <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span id="theme-label">dark</span></button>
-        <button class="hamburger-menu" aria-label="Open navigation menu">
-            <span class="line line-1"></span>
-            <span class="line line-2"></span>
-            <span class="line line-3"></span>
-        </button>
+        <button class="burger" aria-label="menu"><span></span><span></span><span></span></button>
     </header>
 
     <main>
-        <div class="frontispiece-grid">
-            <div class="net-cell" data-net="0"></div>
-            <div class="net-cell" data-net="1"></div>
-            <div class="net-cell" data-net="2"></div>
-            <div class="net-cell" data-net="3"></div>
+        <section class="hero">
+            <div class="hero-kicker">public international law // computational analysis</div>
+            <h1 class="wordmark"><span class="l1">Niccolò<span class="dot">.</span></span> <span class="l2">Ridi</span></h1>
+            <p class="lede">International lawyer &amp; computational researcher — <span class="b">I read courts, treaties &amp; citation networks at scale.</span></p>
 
-            <div class="frontispiece-center">
-                <h1 class="hero-wordmark">Dr Niccolò Ridi</h1>
-                <p class="hero-strands">public international law &middot; computational analysis</p>
-                <div class="hero-social">
-                    <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" rel="noopener">linkedin</a>
-                    <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" rel="noopener">scholar</a>
-                    <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" rel="noopener">ssrn</a>
-                    <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" rel="noopener">kcl</a>
-                    <a href="mailto:niccolo.ridi@kcl.ac.uk">mail</a>
+            <div class="hero-cols">
+                <div class="terminal" id="terminal">
+                    <div class="term-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="ttl">ridi@kcl — zsh</span></div>
+                    <div class="term-body" id="term-body">
+                        <div class="ln"><span class="muted"># type a command — or just start typing and press </span><span class="gold">↹ Tab</span><span class="muted"> to autocomplete</span></div>
+                    </div>
+                    <div class="term-foot">
+                        <div class="term-input-row">
+                            <span class="p">ridi@kcl:~$</span>
+                            <input id="term-input" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="terminal input">
+                        </div>
+                        <div class="term-suggest" id="term-suggest"></div>
+                    </div>
                 </div>
-                <span class="hero-plate" id="hero-plate" aria-hidden="true"></span>
+
+                <div class="net-panel" id="net-panel">
+                    <div class="cap"><b>fig.</b> co-citation network · echr grand chamber <span style="opacity:.6">(actually no, it looks quite different)</span></div>
+                    <div class="stage" id="stage" aria-live="polite"></div>
+                </div>
             </div>
+        </section>
 
-            <div class="net-cell" data-net="4"></div>
-            <div class="net-cell" data-net="5"></div>
-            <div class="net-cell" data-net="6"></div>
-            <div class="net-cell" data-net="7"></div>
-
-            <svg class="bridges-layer" id="bridges-layer" preserveAspectRatio="none" aria-hidden="true"></svg>
-        </div>
+        <nav class="tiles">
+            <a class="tile" href="profile.html"><span class="num">01</span>
+                <span class="specimen"><img src="images/illustrations/png/plate-01.png" alt="Profile"></span>
+                <span class="label"><span class="name">Profile</span><span class="arrow">↗</span></span></a>
+            <a class="tile" href="practice.html"><span class="num">02</span>
+                <span class="specimen"><img src="images/illustrations/png/plate-11.png" alt="Practice"></span>
+                <span class="label"><span class="name">Practice</span><span class="arrow">↗</span></span></a>
+            <a class="tile" href="research.html"><span class="num">03</span>
+                <span class="specimen"><img src="images/illustrations/png/plate-08.png" alt="Research"></span>
+                <span class="label"><span class="name">Research</span><span class="arrow">↗</span></span></a>
+            <a class="tile" href="data.html"><span class="num">04</span>
+                <span class="specimen"><img src="images/illustrations/png/plate-04.png" alt="Data"></span>
+                <span class="label"><span class="name">Data</span><span class="arrow">↗</span></span></a>
+        </nav>
     </main>
 
-    <footer class="page-footer">
-        <a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a>
-        <span class="rights">&copy; 2025 Niccolò Ridi. All Rights Reserved (probably).</span>
+    <footer>
+        <div class="seg"><span class="gold">© 2025 niccolò ridi</span><a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a></div>
+        <div class="seg">
+            <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" rel="noopener">linkedin</a>
+            <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" rel="noopener">scholar</a>
+            <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" rel="noopener">ssrn</a>
+            <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" rel="noopener">kcl</a>
+        </div>
     </footer>
 
+    <!-- full publications source for the research stage -->
+    <div id="research-src" hidden>
+        <p>Writings, datasets, and code on international adjudication, judicial reasoning, and computational law &mdash; the authority and effectiveness of international law, and how it is produced, used, and undergoes change. Full list on <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" rel="noopener">Google Scholar</a>. PhD inquiries with innovative projects welcome.</p>
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">all</button>
+            <button class="filter-btn" data-filter="book">books</button>
+            <button class="filter-btn" data-filter="article">articles</button>
+            <button class="filter-btn" data-filter="working">working papers</button>
+            <button class="filter-btn" data-filter="dataset">datasets</button>
+            <button class="filter-btn" data-filter="code">code</button>
+            <button class="filter-btn" data-filter="other">other</button>
+            <select class="year-select"><option value="all">all years</option></select>
+        </div>
+        <ul class="pub-list">
+            <li data-type="book" data-year="forthcoming">Niccolò Ridi, <i>Precedent in International Adjudication</i> (Oxford University Press, forthcoming)</li>
+            <li data-type="book" data-year="forthcoming">Thomas Schultz, Jason Mitchenson &amp; Niccolò Ridi, <i>The Principle of Comity in Public and Private International Law</i> (Cambridge University Press, forthcoming)</li>
+            <li data-type="book" data-year="forthcoming"><i>The Elgar Concise Encyclopedia of the Law of International Organizations</i> (Edward Elgar, forthcoming) (edited with Lorenzo Gasbarri and Christiane Ahlborn)</li>
+            <li data-type="book" data-year="forthcoming"><i>Theorizing Procedure in International Adjudication</i> (edited with Juliette McIntyre) <span class="pub-note">Proposal stage</span></li>
+            <li data-type="working" data-year="2025">'GenAI as an International Lawyer: A Case Study with the Jessup International Law Moot Court' (2025) (with Damien Charlotin) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a> <span class="pub-note">Working paper · Top Ten in Legal Scholarship, Political Science &amp; Computer Science Research Networks</span></li>
+            <li data-type="other" data-year="2025">'Instrumentalized Migration and Jurisdictional Challenges: Lithuania v. Belarus at the ICJ', <i>EJIL: Talk!</i> (2025) (with Matina Papadaki)</li>
+            <li data-type="code" data-year="2025">'Peace Palace Papers, Please' (2025). Python code to download and OCR the entire body of case law, pleadings, and hearing transcripts of the International Court of Justice. <a href="https://shorturl.at/mgYkY" target="_blank" class="pub-chip">Colab</a></li>
+            <li data-type="code" data-year="2025">'Headnote Harvester' (2025). A PDF processing and legal Q&amp;A pipeline employing Mistral OCR and Google Gemini to extract key legal concepts and generate cited summaries (headnotes).</li>
+            <li data-type="code" data-year="2025">'SHABT.ai' (2025). Semantic Hyperdimensional Analysis of Bench Texts AI &mdash; a chatbot to query the jurisprudence of the ICJ based on data generated with Headnote Harvester.</li>
+            <li data-type="article" data-year="2024">'Res Judicata and Time', in Andrea Gattini (ed), <i>Time and International Litigation</i> (Brill 2024) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+            <li data-type="article" data-year="2024">'Distantly Reading the <i>Recueil des cours</i>: A Quantitative Analysis of the Hague Academy Collected Courses' (2024) <i>European Journal of International Law</i> 247&ndash;262 (with Thomas Schultz)</li>
+            <li data-type="article" data-year="2024">'The Use of Scholarship by the European Court of Human Rights' (2024) <i>International and Comparative Law Quarterly</i> (with Kanstantsin Dzehtsiarou)</li>
+            <li data-type="article" data-year="2024">'Tracing the Footprints of International Law Ideas' (2024) 64(2) <i>Virginia Journal of International Law</i> 405&ndash;446 (with Thomas Schultz) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+            <li data-type="article" data-year="2024">'The Use of Authorities by International Courts and Tribunals', in Joanna Gomula &amp; Stephan Wittich (eds), <i>Research Handbook of International Procedural Law</i> (Elgar 2024)</li>
+            <li data-type="article" data-year="2024">'Judicial Comity', in Hélène Ruiz Fabri (ed), <i>Max Planck Encyclopedia of International Procedural Law</i> (OUP 2024)</li>
+            <li data-type="article" data-year="2024">'Judicial Decisions &mdash; Article 38(1)(d) ICJ Statute', <i>Max Planck Encyclopedia of Public International Law</i> (2024)</li>
+            <li data-type="dataset" data-year="2024">Seán Fobbe, Lorenzo Gasbarri &amp; Niccolò Ridi, 'Corpus of Resolutions: UN Security Council (CR-UNSC)' (2024) Zenodo</li>
+            <li data-type="dataset" data-year="2024">Seán Fobbe, Lorenzo Gasbarri &amp; Niccolò Ridi, 'Words of Power: Introducing a Comprehensive Corpus of UN Security Council Resolutions' (2024) Zenodo</li>
+            <li data-type="code" data-year="2024">'ECHR Peerless Pleading Purveyor' (2024). Python code to download and transcribe webcasts of hearings before the European Court of Human Rights. <a href="https://shorturl.at/hpGMX" target="_blank" class="pub-chip">Colab</a></li>
+            <li data-type="code" data-year="2024">'IACtHR Listener' (2024). Python code to download and process decisions of the Inter-American Court of Human Rights. <a href="https://shorturl.at/afFU4" target="_blank" class="pub-chip">Colab</a></li>
+            <li data-type="code" data-year="2024">'UNCITRAL Listener' (2024). Python code to download, transcribe, and process audio recordings of UNCITRAL meetings. <a href="https://shorturl.at/BGN13" target="_blank" class="pub-chip">Colab</a></li>
+            <li data-type="code" data-year="2024">'The Purloined PDF' (2024). A converter and RAG pipeline to extract text from PDF files and optimise it for use with large language models. <a href="https://shorturl.at/afgG1" target="_blank" class="pub-chip">Colab</a></li>
+            <li data-type="code" data-year="2024">'ICJ Digest Generator' (2024). Python code generating a digest of the jurisprudence of the ICJ through citation mining and large language models. <a href="https://shorturl.at/knET5" target="_blank" class="pub-chip">Colab</a></li>
+            <li data-type="code" data-year="2024">'Dr. Ridi&rsquo;s Fabled Pleading Parser' (2024). A versatile document analysis tool utilising various LLM APIs (OpenAI, Gemini, Claude) and local models to analyse legal pleadings.</li>
+            <li data-type="code" data-year="2024">'Generative AI and the Law: A Series of Lecture Tutorials' (2024). Interactive Colaboratory notebooks covering LLM fundamentals, prompt engineering, customising AI for legal tasks, and adversarial prompt techniques.</li>
+            <li data-type="article" data-year="2023">'The Role of Previous Resolutions in the Practice of the Security Council' (2023) 61(3) <i>Columbia Journal of Transnational Law</i> 571 (with Lorenzo Gasbarri) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+            <li data-type="other" data-year="2023">'Book Review: Rossana Deplano, <i>Empirical and Theoretical Perspectives on International Law</i>' (2023) <i>Australian Year Book of International Law</i></li>
+            <li data-type="code" data-year="2023">'Academic Scribe' (2023). Python code to transcribe and refine lecture recordings using OpenAI Whisper and large language models. <a href="https://shorturl.at/ELPU8" target="_blank" class="pub-chip">Colab</a></li>
+            <li data-type="code" data-year="2023">'Authority-Based Argument Miner' (2023). Python code to identify cited scholarship and case law in pleadings before international judicial bodies. <a href="https://shorturl.at/ghov0" target="_blank" class="pub-chip">Colab</a> <span class="pub-note">Companion code to Ridi &amp; Schultz, 'Tracing the Footprints'</span></li>
+            <li data-type="article" data-year="2022">'Sanctioning to Change State Behaviour' (2022) 13(2) <i>Journal of International Dispute Settlement</i> 210 (with Veronika Fikfak) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+            <li data-type="article" data-year="2022">'Layers of Preclusion: <i>Res judicata</i> Issues in <i>Victor Pey Casado v Chile</i>' (2022) <i>ICSID Review</i> <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+            <li data-type="article" data-year="2022">'GATT Article XX(d)', in Peter-Tobias Stoll &amp; Holger P. Hestermeyer (eds), <i>Commentaries on World Trade Law</i> (Brill 2022)</li>
+            <li data-type="other" data-year="2022">'Book Review: Jan Paulsson, <i>The Unruly Notion of Abuse of Rights</i>' (2022) <i>European Journal of International Law</i></li>
+            <li data-type="article" data-year="2021">'Rule of Precedent and Rules on Precedent', in Eric de Brabandere (ed), <i>International Procedure in Interstate Litigation and Arbitration</i> (CUP 2021) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a> <span class="pub-note">Cited in ILC, First Report on Subsidiary Means (A/CN.4/760)</span></li>
+            <li data-type="other" data-year="2021">Evidence to the UK Parliament Lords Select Committee on International Relations and Defence, 'UNCLOS: Fit for Purpose in the 21st Century?' (2021) (with Massimo Fabio Lando)</li>
+            <li data-type="article" data-year="2020">'United States &mdash; Anti-Dumping Measures (Softwood Lumber from Canada)' (2020) 114 <i>American Journal of International Law</i> 735 <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+            <li data-type="article" data-year="2020">'Empirically Mapping Investment Arbitration Scholarship', in Katia Fach Gomez (ed), <i>Private Actors in International Investment Law</i> (Springer 2020) 209 (with Thomas Schultz) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+            <li data-type="article" data-year="2020">'Arbitration Literature', in Thomas Schultz &amp; Federico Ortino (eds), <i>The Oxford Handbook of International Arbitration</i> (OUP 2020) 1 (with Thomas Schultz) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+            <li data-type="article" data-year="2020">'Mapping the &ldquo;Invisible College of International Lawyers&rdquo; through Obituaries' (2020) 34(1) <i>Leiden Journal of International Law</i> (with Luíza Leão Soares Pereira) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+            <li data-type="article" data-year="2020">'Approaches to External Precedent', in Behn, Langford &amp; Gáspár-Szilágyi (eds), <i>Adjudicating Trade and Investment Law</i> (CUP 2020)</li>
+            <li data-type="article" data-year="2020">'How Comity Makes Transnationalism Work', in Peer Zumbansen (ed), <i>The Many Lives of Transnational Law</i> (CUP 2020) 88&ndash;102 (with Thomas Schultz) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+            <li data-type="article" data-year="2019">'The Shape and Structure of the &ldquo;Usable Past&rdquo;' (2019) 10 <i>Journal of International Dispute Settlement</i> 200 <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a> <span class="pub-note">Runner-up, James Crawford Prize</span></li>
+            <li data-type="article" data-year="2019">'&ldquo;Mirages of an Intellectual Dreamland&rdquo;? <i>Ratio</i>, <i>Obiter</i> and the Textualization of International Precedent' (2019) 10 <i>Journal of International Dispute Settlement</i> 361 <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+            <li data-type="article" data-year="2018">'Precarious Finality? Reflections on <i>Res Judicata</i>' (2018) <i>Leiden Journal of International Law</i> 383 <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+            <li data-type="article" data-year="2018">'Comity in US Courts' (2018) 10(1) <i>Northeastern University Law Review</i> 281 (with Thomas Schultz) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+            <li data-type="article" data-year="2017">'Comity and International Courts and Tribunals' (2017) 50 <i>Cornell International Law Journal</i> 577 (with Thomas Schultz) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+            <li data-type="article" data-year="2017">'Comity: The Narrative and Influence of a Core American Concept' (2017) <i>Yearbook of Private International Law</i> (with Thomas Schultz) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+            <li data-type="article" data-year="2017">'Militias', in Grote, Lachenmann &amp; Wolfrum (eds), <i>Max Planck Encyclopedia of Comparative Constitutional Law</i> (2017)</li>
+            <li data-type="other" data-year="2017">'Book Review: Vadi, <i>Analogies in International Investment Law and Arbitration</i>' (2017) <i>British Yearbook of International Law</i> 222 <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+            <li data-type="other" data-year="2016">'The Last Page: Public International Law Limericks' (2016) <i>European Journal of International Law</i> (with Sondre Torp Helmersen) <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+            <li data-type="other" data-year="2016">'Book Review: Hindelang and Krajewski (eds), <i>Shifting Paradigms in International Investment Law</i>' (2016) <i>European Journal of International Law</i> 545 <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+            <li data-type="other" data-year="2016">'Book Review: Bianchi, Peat, and Windsor (eds), <i>Interpretation in International Law</i>' (2016) <i>King&rsquo;s Law Journal</i> <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" class="pub-chip">SSRN</a></li>
+            <li data-type="other" data-year="2015">'The Mediterranean Migrants Crisis and the Use of Force' (2015) <i>Opinio Juris</i> (with Sondre Torp Helmersen)</li>
+            <li data-type="other" data-year="2015">'All the Reasons Europe&rsquo;s Plan to Attack Migrant Boats Is a Bad Idea' (2015) <i>Quartz</i> (with Sondre Torp Helmersen)</li>
+            <li data-type="other" data-year="2014">'Overview: Human Rights Law' (2014) 3(1) <i>Cambridge Journal of International and Comparative Law</i> 286</li>
+            <li data-type="article" data-year="2013">'The Exercise of Diplomatic Protection on Behalf of Refugees', in Vasilka Sancin &amp; Maša Kovič Dine (eds), <i>Responsibility to Protect in Theory and Practice</i> (GV Založba 2013) 653</li>
+            <li data-type="other" data-year="2013">Paolo Caretti <i>et al.</i>, <i>L&rsquo;iniziativa legislativa popolare in prospettiva comparata</i>, Report (Library of the Italian Senate)</li>
+        </ul>
+    </div>
+
     <script>
-        const hamburger = document.querySelector('.hamburger-menu');
-        hamburger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
-        document.querySelectorAll('.page-header nav a').forEach(link => {
-            link.addEventListener('click', () => document.body.classList.remove('nav-open'));
-        });
-
-        // Theme — light default
-        let currentTheme = localStorage.getItem('imprint-theme') || 'light';
-        window.__themeListeners = [];
-        function applyTheme(t) {
-            document.documentElement.classList.toggle('dark-mode', t === 'dark');
-            document.body.classList.toggle('dark-mode', t === 'dark');
-            document.getElementById('theme-label').textContent = t === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('imprint-theme', t);
-            currentTheme = t;
-            window.__themeListeners.forEach(fn => { try { fn(t); } catch(e) {} });
+        const burger = document.querySelector('.burger');
+        burger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
+        document.querySelectorAll('header nav a').forEach(a => a.addEventListener('click', () => document.body.classList.remove('nav-open')));
+        let theme = localStorage.getItem('noir-theme') || 'dark';
+        function applyTheme(t){
+            document.documentElement.classList.toggle('light-mode', t === 'light');
+            document.body.classList.toggle('light-mode', t === 'light');
+            document.getElementById('tlabel').textContent = t === 'light' ? 'dark' : 'light';
+            localStorage.setItem('noir-theme', t); theme = t;
+            window.__net && window.__net.retheme && window.__net.retheme();
         }
-        function toggleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
-        applyTheme(currentTheme);
+        function toggleTheme(){ applyTheme(theme === 'light' ? 'dark' : 'light'); }
+        applyTheme(theme);
 
-        // Reveal the constellations after the page has settled: on first user input,
-        // or after a short delay, whichever comes first. They stay visible after that.
-        // Touch devices reveal immediately (no hover, single network shown).
-        (function networksReveal() {
-            let revealed = false;
-            function reveal() {
-                if (revealed) return;
-                revealed = true;
-                document.body.classList.add('networks-revealed');
-            }
-            if (window.matchMedia('(hover: none)').matches) {
-                reveal();
-                return;
-            }
-            const opts = { once: true, passive: true };
-            window.addEventListener('mousemove', reveal, opts);
-            window.addEventListener('scroll', reveal, opts);
-            window.addEventListener('touchstart', reveal, opts);
-            window.addEventListener('keydown', reveal, opts);
-            setTimeout(reveal, 1800);
-        })();
+        /* ─── Interactive shell with autocomplete/suggestions ─── */
+        (function shell(){
+            const body = document.getElementById('term-body');
+            const input = document.getElementById('term-input');
+            const sugBox = document.getElementById('term-suggest');
+            const term = document.getElementById('terminal');
+            const canFocus = window.matchMedia('(hover: hover)').matches;
+            const go = (href) => { window.location.href = href; };
 
-        // Inline the plate SVG so currentColor tints it via CSS
-        (function loadPlate() {
-            const el = document.getElementById('hero-plate');
-            if (!el) return;
-            fetch('images/illustrations/plate-10.svg')
-                .then(r => r.ok ? r.text() : Promise.reject(r.status))
-                .then(svg => {
-                    el.innerHTML = svg;
-                    const inner = el.querySelector('svg');
-                    if (inner) { inner.removeAttribute('width'); inner.removeAttribute('height'); }
-                })
-                .catch(err => console.warn('plate-10 load failed', err));
+            function el(html){ const d=document.createElement('div'); d.className='ln'; d.innerHTML=html; return d; }
+            function print(html){ body.appendChild(el(html)); body.scrollTop = body.scrollHeight; }
+            function echo(cmd){ print('<span class="p">ridi@kcl:~$</span> ' + cmd); }
+
+            const SECTIONS = {
+                profile:  ['profile.html',  'bio, positions & education'],
+                practice: ['practice.html', 'counsel & advisory work'],
+                research: ['research.html', 'publications & working papers'],
+                data:     ['data.html',     'datasets & computational essays'],
+            };
+            const LINKS = {
+                linkedin: 'https://www.linkedin.com/in/niccoloridi/',
+                scholar:  'https://scholar.google.com/citations?user=cxXS2JIAAAAJ',
+                ssrn:     'https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991',
+                kcl:      'https://www.kcl.ac.uk/people/niccolo-ridi',
+                email:    'mailto:niccolo.ridi@kcl.ac.uk',
+            };
+            // alias -> canonical command (drives both `run` and suggestions)
+            const ALIASES = {
+                publications:'research', papers:'research', pubs:'research', work:'practice',
+                counsel:'practice', cv:'profile', bio:'about', me:'whoami', home:'whoami',
+                datasets:'data', networks:'data', code:'data', email:'contact', mail:'contact', links:'contact',
+            };
+
+            const COMMANDS = {
+                help(){ return '<span class="muted">commands:</span> '
+                    + ['whoami','about','profile','practice','research','data','contact','open','ls','clear']
+                        .map(c=>'<span class="chip" data-cmd="'+c+'">'+c+'</span>').join('  '); },
+                whoami(){ return 'Dr Niccolò Ridi — academic &amp; counsel in <span class="gold">public international law</span>.\n'
+                    + '<span class="muted">international dispute resolution · computational analysis of law</span>'; },
+                about(){ return 'I work where international adjudication meets data science — citation networks,\n'
+                    + 'NLP on legal corpora, and agent-based models of legal change.\n'
+                    + '<span class="muted">→ </span><span class="chip" data-cmd="profile">open profile</span>'; },
+                contact(){ return '<span class="gold">email</span>  <a class="chip" href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a>\n'
+                    + '<span class="gold">www</span>    '
+                    + '<a class="chip" href="'+LINKS.linkedin+'" target="_blank">linkedin</a> '
+                    + '<a class="chip" href="'+LINKS.scholar+'" target="_blank">scholar</a> '
+                    + '<a class="chip" href="'+LINKS.ssrn+'" target="_blank">ssrn</a> '
+                    + '<a class="chip" href="'+LINKS.kcl+'" target="_blank">kcl</a>'; },
+                ls(){ return Object.keys(SECTIONS).map(s=>'<span class="chip" data-cmd="'+s+'">'+s+'/</span>').join('   '); },
+                clear(){ body.innerHTML=''; return null; },
+                sudo(){ return '<span class="muted">nice try, counsel. these proceedings need no elevation.</span>'; },
+            };
+            // ─── in-panel "viewport": sections render in the network space ───
+            const stage = document.getElementById('stage');
+            const VIEW = {
+                profile: { n:'01', plate:'plate-01', body:
+                    '<p>Senior Lecturer (Associate Professor) in Public International Law at The Dickson Poon School of Law, King\'s College London — Associate Director of CIGAD, Associate Dean for Doctoral Studies, Fellow of the Centre for Data Futures, and liaison to the King\'s Institute for AI.</p>'
+                  + '<p>My research concerns the authority and effectiveness of international law — how it is produced and changes — applying empirical and computational methods to legal argumentation and actor behaviour.</p>'
+                  + '<h3>positions &amp; affiliations</h3><ul>'
+                  + '<li>Senior Lecturer (Associate Professor), King\'s College London — 2021–present</li>'
+                  + '<li>Senior Fellow, Melbourne Law School — 2026</li>'
+                  + '<li>Visiting Professor, University of Florence — 2025</li>'
+                  + '<li>Faculty, Centre for Transnational Legal Studies (Georgetown Law) — 2024–2025</li>'
+                  + '<li>Academic Fellow, The Honourable Society of the Middle Temple — 2023–present</li>'
+                  + '<li>Research Fellow, iCourts — University of Copenhagen — 2020–2023</li></ul>'
+                  + '<h3>education</h3><ul><li>PhD in Public International Law, King\'s College London — 2019</li>'
+                  + '<li>LLM in International Law, King\'s College London</li>'
+                  + '<li>Doctoral Research Fellow, Graduate Institute, Geneva — 2014–2018</li></ul>' },
+                practice: { n:'02', plate:'plate-11', body:
+                    '<p>Counsel and advisory work in public international law and international dispute settlement — with a particular focus on proceedings before the International Court of Justice, ITLOS, and tribunals constituted under the ICSID Convention.</p>'
+                  + '<p>Engagements span state responsibility, the law of treaties, jurisdictional immunities, the law of the sea, the use of force, foreign-investment protection, and the human-rights and humanitarian-law questions that cut across them.</p>'
+                  + '<h3>recent matters</h3><ul>'
+                  + '<li>Counsel &amp; adviser in contentious and advisory proceedings before the ICJ</li>'
+                  + '<li>Support to a State chairing a group of States on law-of-the-sea matters</li>'
+                  + '<li>Assistance to party-appointed arbitrators in ICSID investment-treaty disputes</li>'
+                  + '<li>Research &amp; drafting support to a Special Rapporteur of the ILC</li>'
+                  + '<li>Advisory work on a use-of-force matter under a multilateral treaty</li>'
+                  + '<li>Advisory work in a boundary dispute</li></ul>' },
+                research: { n:'03', plate:'plate-08', srcId:'research-src' },
+                data: { n:'04', plate:'plate-04', body:
+                    '<p>Datasets, interactive essays, and open-source tools from research on international law — corpora of decisions and resolutions, citation networks, agent-based models, and pipelines for extracting structured knowledge from legal materials.</p>'
+                  + '<h3>data essays</h3><ul>'
+                  + '<li><a href="unsc-citations.html">The Law of Citations — UNSC Resolution Network</a> · 2,488 resolutions, 12,399 citations</li>'
+                  + '<li><a href="jessup-ai.html">GenAI as an International Lawyer — Jessup Moot</a> · ten AI memorials, blindly graded</li>'
+                  + '<li><a href="cil-formation.html">Custom in the Making — CIL Formation Model</a> · 100 agents, five topologies</li>'
+                  + '<li><a href="cjeu-py.html">cjeu-py — CJEU Case Law Toolkit</a> · 1,020 decisions, 12,673 citations</li></ul>' },
+            };
+            function openSection(s){
+                const v = VIEW[s]; if (!v) return;
+                const bodyHTML = v.srcId ? (document.getElementById(v.srcId)||{}).innerHTML || '' : v.body;
+                stage.innerHTML =
+                    '<div class="stage-plate"><img src="images/illustrations/png/'+v.plate+'.png" alt=""></div>'
+                  + '<div class="stage-text"><div class="stage-num">'+v.n+' / '+s+'</div>'
+                  + '<h2 class="stage-title">'+s+'</h2>'
+                  + bodyHTML
+                  + '<div class="stage-actions"><button class="stage-close" type="button">cd ..</button></div></div>';
+                document.body.classList.add('mode-section');
+                stage.querySelector('.stage-text').scrollTop = 0;
+                if (v.srcId === 'research-src') initResearchFilters(stage);
+                const cb = stage.querySelector('.stage-close');
+                if (cb) cb.addEventListener('click', ()=>{ closeSection(); if (canFocus) input.focus(); });
+            }
+            function initResearchFilters(scope){
+                const items = scope.querySelectorAll('.pub-list li');
+                const btns = scope.querySelectorAll('.filter-btn');
+                const ys = scope.querySelector('.year-select');
+                if (!ys) return;
+                let activeType = 'all';
+                const years = new Set(); items.forEach(li => years.add(li.dataset.year));
+                const sorted = [...years].sort((a,b)=>{ if(a==='forthcoming')return -1; if(b==='forthcoming')return 1; return parseInt(b)-parseInt(a); });
+                ys.length = 1; sorted.forEach(y=>{ const o=document.createElement('option'); o.value=y; o.textContent=y; ys.appendChild(o); });
+                function upd(){ const yr=ys.value; items.forEach(it=>{ const mt=activeType==='all'||it.dataset.type===activeType; const my=yr==='all'||it.dataset.year===yr; it.style.display = mt&&my ? '' : 'none'; }); }
+                btns.forEach(b=>b.addEventListener('click',()=>{ btns.forEach(x=>x.classList.remove('active')); b.classList.add('active'); activeType=b.dataset.filter; upd(); }));
+                ys.addEventListener('change', upd); upd();
+            }
+            function closeSection(){ document.body.classList.remove('mode-section'); }
+
+            Object.keys(SECTIONS).forEach(s => { COMMANDS[s] = () => { const [,desc]=SECTIONS[s];
+                openSection(s); return '<span class="gold">'+s+'</span> — '+desc; }; });
+            COMMANDS.home = COMMANDS.cd = () => { closeSection(); return '<span class="muted">~ home</span>'; };
+
+            const VOCAB = Array.from(new Set([...Object.keys(COMMANDS), ...Object.keys(SECTIONS), ...Object.keys(ALIASES), ...Object.keys(LINKS)]))
+                .filter(x => x !== 'sudo');
+
+            function suggestions(q){
+                q = q.trim().toLowerCase().split(/\s+/)[0];
+                if (!q) return [];
+                const starts = VOCAB.filter(k => k.startsWith(q));
+                const incl = VOCAB.filter(k => !k.startsWith(q) && k.includes(q));
+                return [...starts, ...incl].slice(0, 5);
+            }
+            function destOf(k){
+                if (SECTIONS[ALIASES[k]||k]) return '→ /' + (ALIASES[k]||k);
+                if (LINKS[k]) return '↗ link';
+                if (ALIASES[k]) return '→ ' + ALIASES[k];
+                return '';
+            }
+            function renderSuggest(){
+                const s = suggestions(input.value);
+                if (!s.length) { sugBox.innerHTML = ''; return; }
+                sugBox.innerHTML = '<span class="tab">↹</span>' + s.map((k,i)=>
+                    '<span class="sug'+(i===0?' top':'')+'" data-cmd="'+k+'">'+k+' <span class="to">'+destOf(k)+'</span></span>').join('');
+            }
+
+            function run(raw){
+                const line = raw.trim(); if (!line) return;
+                echo(line); sugBox.innerHTML = '';
+                let [cmd, ...args] = line.split(/\s+/); cmd = cmd.toLowerCase();
+                if (cmd === 'open') {
+                    const t = (args[0]||'').toLowerCase().replace('/','');
+                    const c = ALIASES[t] || t;
+                    if (SECTIONS[c]) { openSection(c); print('<span class="gold">'+c+'</span> <span class="muted">→ on stage</span>'); }
+                    else print('open: no such section: ' + (args[0]||''));
+                    return;
+                }
+                if (LINKS[cmd]) { print('<span class="muted">opening </span>'+cmd+' <span class="muted">↗</span>'); window.open(LINKS[cmd], '_blank'); return; }
+                const resolved = ALIASES[cmd] || cmd;
+                if (COMMANDS[resolved]) { const out = COMMANDS[resolved](args); if (out !== null && out !== undefined) print(out); }
+                else print('<span class="muted">zsh: command not found: </span>'+cmd+' <span class="muted">— try </span><span class="chip" data-cmd="help">help</span>');
+            }
+
+            // clicks: run chips in output, and suggestion chips
+            body.addEventListener('click', e => { const c = e.target.closest('.chip[data-cmd]'); if (c) { run(c.getAttribute('data-cmd')); if(canFocus) input.focus(); } });
+            sugBox.addEventListener('click', e => { const s = e.target.closest('.sug[data-cmd]'); if (s) { run(s.getAttribute('data-cmd')); input.value=''; if(canFocus) input.focus(); } });
+            term.addEventListener('click', e => { if (canFocus && !e.target.closest('a, .chip, .sug')) input.focus(); });
+
+            input.addEventListener('input', renderSuggest);
+            input.addEventListener('keydown', e => {
+                if (e.key === 'Tab') { const s = suggestions(input.value); if (s.length) { e.preventDefault(); input.value = s[0]; renderSuggest(); } }
+                else if (e.key === 'Enter') { run(input.value); input.value = ''; }
+            });
+
+            // type a command out character-by-character, then run it
+            function autorun(cmd){ let i = 0; input.value = ''; sugBox.innerHTML = '';
+                (function t(){ if (i <= cmd.length) { input.value = cmd.slice(0,i); i++; setTimeout(t, 55); } else { run(cmd); input.value = ''; } })(); }
+
+            // tiles open the section in-panel (terminal autotypes the command) instead of navigating away
+            document.querySelectorAll('.tile').forEach(a => a.addEventListener('click', e => {
+                const key = (a.getAttribute('href')||'').replace('.html','');
+                if (VIEW[key]) { e.preventDefault(); if (canFocus) input.focus(); autorun(key); }
+            }));
+            // wordmark / id returns to the home view
+            const idLink = document.querySelector('header .id');
+            if (idLink) idLink.addEventListener('click', e => { if (document.body.classList.contains('mode-section')) { e.preventDefault(); closeSection(); } });
+
+            // boot: auto-type `whoami`
+            const boot = 'whoami'; let i = 0;
+            (function type(){
+                if (i <= boot.length) { input.value = boot.slice(0,i); renderSuggest(); i++; setTimeout(type, 85); }
+                else { setTimeout(()=>{ run(boot); input.value=''; sugBox.innerHTML=''; if (canFocus) input.focus(); }, 350); }
+            })();
         })();
     </script>
 
     <script type="module">
-        // ─── 8 small WebGL constellations + bridges between their closest nodes ───
-        const cells = Array.from(document.querySelectorAll('.net-cell'));
-        const NETWORK_REGISTRY = [];
-
-        function hasWebGL() {
-            try {
-                const c = document.createElement('canvas');
-                return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl')));
-            } catch (e) { return false; }
+        // ─── Calm constellation in the right panel (canvas is absolute → no resize feedback) ───
+        const container = document.getElementById('net-panel');
+        function hasWebGL(){ try { const c=document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl2')||c.getContext('webgl'))); } catch(e){ return false; } }
+        if (container && hasWebGL()) {
+            try { const THREE = await import('three'); requestAnimationFrame(() => { window.__net = createCalmNetwork(THREE, container); }); }
+            catch(err){ console.warn('three.js failed', err); }
         }
 
-        if (!hasWebGL()) {
-            // Quiet fallback — leave the cells empty.
-        } else {
-            try {
-                const THREE = await import('three');
-                cells.forEach((cell, i) => {
-                    const rect = cell.getBoundingClientRect();
-                    if (rect.width < 30 || rect.height < 30) return;
-                    const handle = createMiniNetwork(THREE, cell, i);
-                    if (handle) NETWORK_REGISTRY[i] = handle;
-                });
-                setupBridges();
-            } catch (err) {
-                console.warn('three.js failed to load', err);
-            }
-        }
-
-        // ─── Bridges: connect each cell to its grid neighbours via the closest node pair ───
-        function setupBridges() {
-            const svg = document.getElementById('bridges-layer');
-            const grid = document.querySelector('.frontispiece-grid');
-            if (!svg || !grid) return;
-
-            const adjacency = [
-                [0, 1], [1, 2],   // top row
-                [0, 3], [2, 4],   // sides up
-                [3, 5], [4, 7],   // sides down
-                [5, 6], [6, 7]    // bottom row
-            ];
-            const svgns = 'http://www.w3.org/2000/svg';
-
-            function nodePagePos(net, idx) {
-                const rect = net.container.getBoundingClientRect();
-                const n = net.nodes[idx];
-                return {
-                    x: rect.left + (n.x + net.getW() / 2),
-                    y: rect.top + (net.getH() / 2 - n.y)
-                };
-            }
-
-            function findClosestPair(netA, netB) {
-                let minD2 = Infinity, bestA = 0, bestB = 0;
-                for (let i = 0; i < netA.nodes.length; i++) {
-                    for (let j = 0; j < netB.nodes.length; j++) {
-                        const a = nodePagePos(netA, i);
-                        const b = nodePagePos(netB, j);
-                        const dx = a.x - b.x, dy = a.y - b.y;
-                        const d2 = dx*dx + dy*dy;
-                        if (d2 < minD2) { minD2 = d2; bestA = i; bestB = j; }
-                    }
-                }
-                return { aIdx: bestA, bIdx: bestB };
-            }
-
-            const bridges = [];
-
-            // Hold off until the entrance animation has placed nodes — then build & fade in.
-            setTimeout(() => {
-                adjacency.forEach(([a, b]) => {
-                    const netA = NETWORK_REGISTRY[a];
-                    const netB = NETWORK_REGISTRY[b];
-                    if (!netA || !netB) return;
-                    const pair = findClosestPair(netA, netB);
-                    const line = document.createElementNS(svgns, 'line');
-                    line.setAttribute('class', 'bridge');
-                    svg.appendChild(line);
-                    bridges.push({ netA, netB, aIdx: pair.aIdx, bIdx: pair.bIdx, line });
-                });
-                svg.classList.add('ready');
-
-                let lastReeval = performance.now();
-                function frame(now) {
-                    const gridRect = grid.getBoundingClientRect();
-
-                    // Periodically re-pick the closest pair — networks drift, so the bridge follows
-                    if (now - lastReeval > 2200) {
-                        lastReeval = now;
-                        for (const b of bridges) {
-                            const pair = findClosestPair(b.netA, b.netB);
-                            b.aIdx = pair.aIdx; b.bIdx = pair.bIdx;
-                        }
-                    }
-
-                    for (const b of bridges) {
-                        const a = nodePagePos(b.netA, b.aIdx);
-                        const c = nodePagePos(b.netB, b.bIdx);
-                        b.line.setAttribute('x1', a.x - gridRect.left);
-                        b.line.setAttribute('y1', a.y - gridRect.top);
-                        b.line.setAttribute('x2', c.x - gridRect.left);
-                        b.line.setAttribute('y2', c.y - gridRect.top);
-                    }
-                    requestAnimationFrame(frame);
-                }
-                requestAnimationFrame(frame);
-            }, 3200);
-        }
-
-        function createMiniNetwork(THREE, container, seed) {
+        function createCalmNetwork(THREE, container){
             const rect = container.getBoundingClientRect();
-            let W = Math.max(50, Math.floor(rect.width));
-            let H = Math.max(50, Math.floor(rect.height));
-
-            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'low-power' });
-            renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
-            renderer.setSize(W, H);
-            renderer.setClearColor(0x000000, 0);
-            container.appendChild(renderer.domElement);
-
+            let W = Math.max(120, Math.floor(rect.width)), H = Math.max(120, Math.floor(rect.height));
+            const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true, powerPreference:'low-power' });
+            renderer.setPixelRatio(Math.min(2, window.devicePixelRatio||1));
+            renderer.setSize(W, H, false);                  // false → never write inline canvas style (CSS owns layout)
+            renderer.setClearColor(0x000000,0); container.appendChild(renderer.domElement);
             const scene = new THREE.Scene();
-            const camera = new THREE.OrthographicCamera(-W/2, W/2, H/2, -H/2, -1000, 1000);
+            const camera = new THREE.OrthographicCamera(-W/2,W/2,H/2,-H/2,-1000,1000);
 
-            function readColors() {
+            function readColors(){
                 const s = getComputedStyle(document.documentElement);
-                const parse = (k, fb) => {
-                    const v = s.getPropertyValue(k).trim();
-                    const c = new THREE.Color();
-                    try { c.setStyle(v); } catch(e) { c.setHex(fb); }
-                    return c;
-                };
-                return {
-                    node:  parse('--net-node',     0xa8893a),
-                    hub:   parse('--net-node-hub', 0xa73d28),
-                    link:  parse('--net-link',     0xa8893a),
-                    pulse: parse('--net-pulse',    0xa73d28)
-                };
+                const parse = (k,fb)=>{ const v=s.getPropertyValue(k).trim(); const c=new THREE.Color(); try{c.setStyle(v);}catch(e){c.setHex(fb);} return c; };
+                return { node:parse('--net-node',0xd7a13b), hub:parse('--net-node-hub',0xece8df), link:parse('--net-link',0xd7a13b), pulse:parse('--net-pulse',0xece8df) };
             }
             let theme = readColors();
 
-            // ─── Build a small graph (11–14 nodes, single cluster) — restrained so the centre carries the page ───
-            const N = 11 + Math.floor(Math.random() * 4);
-            const nodes = [];
-            for (let i = 0; i < N; i++) {
-                const isHub = i === 0;
-                nodes.push({
-                    id: i,
-                    hub: isHub,
-                    r: isHub ? 5 + Math.random() * 2 : 2.3 + Math.random() * 2.2,
-                    baseSize: isHub ? 18 + Math.random() * 6 : 8 + Math.random() * 5,
-                    x: (Math.random() - 0.5) * W * 0.6,
-                    y: (Math.random() - 0.5) * H * 0.6,
-                    flashStart: 0, flashDur: 0,
-                    entranceDelay: 250 + seed * 90 + i * 40 + Math.random() * 200,
-                    entranceDur: 800
-                });
-            }
-            const edges = [];
-            for (let i = 0; i < N; i++) {
-                for (let j = i + 1; j < N; j++) {
-                    if (Math.random() < 0.28) edges.push({ s: i, t: j, boostStart: 0, boostDur: 0 });
-                }
-            }
-            // Orphan fix
-            (function fix() {
-                const deg = new Array(N).fill(0);
-                edges.forEach(e => { deg[e.s]++; deg[e.t]++; });
-                for (let i = 0; i < N; i++) {
-                    if (deg[i] === 0) {
-                        const target = (i === 0) ? 1 : 0;
-                        edges.push({ s: i, t: target, boostStart: 0, boostDur: 0 });
-                        deg[i]++; deg[target]++;
-                    }
-                }
-            })();
-            edges.forEach((e, i) => { e.entranceDelay = 400 + seed * 90 + i * 40 + Math.random() * 200; e.entranceDur = 700; });
+            const N = 48, N_HUBS = 5; const nodes = [];
+            for (let i=0;i<N;i++){ const isHub=i<N_HUBS;
+                nodes.push({ id:i, hub:isHub, r:isHub?4+Math.random()*2:1.8+Math.random()*1.8,
+                    baseSize:isHub?13+Math.random()*5:5+Math.random()*4,
+                    x:(Math.random()-0.5)*W*0.75, y:(Math.random()-0.5)*H*0.75,
+                    phase:Math.random()*Math.PI*2, wob:0.9+Math.random()*1.4,
+                    flashStart:0, flashDur:0, entranceDelay:120+i*20+Math.random()*180, entranceDur:720 }); }
+            const edges=[]; const seen=new Set(); const ek=(a,b)=>a<b?a+'_'+b:b+'_'+a;
+            function addEdge(a,b){ if(a===b)return; const k=ek(a,b); if(seen.has(k))return; seen.add(k); edges.push({s:a,t:b,boostStart:0,boostDur:0}); }
+            // nearest-neighbour backbone
+            for (let i=0;i<N;i++){ const d=[]; for(let j=0;j<N;j++){ if(i===j)continue; const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y; d.push({j,d2:dx*dx+dy*dy}); }
+                d.sort((p,q)=>p.d2-q.d2); addEdge(i,d[0].j); if(d[1])addEdge(i,d[1].j); }
+            // dense random scatter + hub spokes → reads busy, like v1
+            for (let i=0;i<N;i++) for(let j=i+1;j<N;j++){ if(Math.random()<0.06) addEdge(i,j); }
+            for (let i=N_HUBS;i<N;i++){ if(Math.random()<0.45) addEdge(i, Math.floor(Math.random()*N_HUBS)); }
+            (function fix(){ const deg=new Array(N).fill(0); edges.forEach(e=>{deg[e.s]++;deg[e.t]++;}); for(let i=0;i<N;i++) if(deg[i]===0) addEdge(i,(i===0)?1:0); })();
+            edges.forEach((e,i)=>{ e.entranceDelay=220+i*12+Math.random()*180; e.entranceDur=680; });
 
-            const simLinks = edges.map(e => ({ source: e.s, target: e.t }));
-            const simulation = d3.forceSimulation(nodes)
-                .force('link', d3.forceLink(simLinks).distance(Math.min(W, H) * 0.16).strength(0.18))
-                .force('charge', d3.forceManyBody().strength(-Math.min(W, H) * 0.12))
-                .force('center', d3.forceCenter(0, 0).strength(0.06))
-                .force('collision', d3.forceCollide().radius(d => d.r + 3))
-                .force('x', d3.forceX(0).strength(0.04))
-                .force('y', d3.forceY(0).strength(0.04))
-                .alpha(0.5)
-                .alphaDecay(0.018)
-                .stop();
+            const simLinks = edges.map(e=>({source:e.s,target:e.t}));
+            const sim = d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(simLinks).distance(Math.min(W,H)*0.12).strength(0.16))
+                .force('charge', d3.forceManyBody().strength(-Math.min(W,H)*0.06))
+                .force('center', d3.forceCenter(0,0).strength(0.06))
+                .force('collision', d3.forceCollide().radius(d=>d.r+2))
+                .force('x', d3.forceX(0).strength(0.05)).force('y', d3.forceY(0).strength(0.05))
+                .alpha(0.9).alphaDecay(0.018).stop();
+            const dispX=new Float32Array(N), dispY=new Float32Array(N);
 
-            // ─── Node mesh ───
-            const nodeGeom = new THREE.BufferGeometry();
-            const nodePos = new Float32Array(N * 3);
-            const nodeSize = new Float32Array(N);
-            const nodeColor = new Float32Array(N * 3);
-            const nodeFlash = new Float32Array(N);
-            const nodeOpacity = new Float32Array(N);
-            for (let i = 0; i < N; i++) {
-                nodePos[i*3] = nodes[i].x; nodePos[i*3+1] = nodes[i].y;
-                nodeSize[i] = nodes[i].baseSize;
-                const col = nodes[i].hub ? theme.hub : theme.node;
-                nodeColor[i*3] = col.r; nodeColor[i*3+1] = col.g; nodeColor[i*3+2] = col.b;
-                nodeOpacity[i] = 0;
-            }
-            nodeGeom.setAttribute('position', new THREE.BufferAttribute(nodePos, 3));
-            nodeGeom.setAttribute('aSize', new THREE.BufferAttribute(nodeSize, 1));
-            nodeGeom.setAttribute('aColor', new THREE.BufferAttribute(nodeColor, 3));
-            nodeGeom.setAttribute('aFlash', new THREE.BufferAttribute(nodeFlash, 1));
-            nodeGeom.setAttribute('aOpacity', new THREE.BufferAttribute(nodeOpacity, 1));
+            const nodeGeom=new THREE.BufferGeometry();
+            const nodePos=new Float32Array(N*3), nodeSize=new Float32Array(N), nodeColor=new Float32Array(N*3), nodeFlash=new Float32Array(N), nodeOpacity=new Float32Array(N);
+            for (let i=0;i<N;i++){ nodePos[i*3]=nodes[i].x; nodePos[i*3+1]=nodes[i].y; nodeSize[i]=nodes[i].baseSize;
+                const col=nodes[i].hub?theme.hub:theme.node; nodeColor[i*3]=col.r;nodeColor[i*3+1]=col.g;nodeColor[i*3+2]=col.b; nodeOpacity[i]=0; }
+            nodeGeom.setAttribute('position',new THREE.BufferAttribute(nodePos,3));
+            nodeGeom.setAttribute('aSize',new THREE.BufferAttribute(nodeSize,1));
+            nodeGeom.setAttribute('aColor',new THREE.BufferAttribute(nodeColor,3));
+            nodeGeom.setAttribute('aFlash',new THREE.BufferAttribute(nodeFlash,1));
+            nodeGeom.setAttribute('aOpacity',new THREE.BufferAttribute(nodeOpacity,1));
+            const nodeMat=new THREE.ShaderMaterial({ uniforms:{ uPulse:{value:theme.pulse.clone()}, uPxRatio:{value:renderer.getPixelRatio()} },
+                vertexShader:`attribute float aSize; attribute vec3 aColor; attribute float aFlash; attribute float aOpacity;
+                    varying vec3 vColor; varying float vFlash; varying float vOpacity; uniform float uPxRatio;
+                    void main(){ vColor=aColor; vFlash=aFlash; vOpacity=aOpacity; gl_PointSize=aSize*(1.0+aFlash*0.45)*uPxRatio;
+                    gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+                fragmentShader:`varying vec3 vColor; varying float vFlash; varying float vOpacity; uniform vec3 uPulse;
+                    void main(){ if(vOpacity<0.01) discard; vec2 p=gl_PointCoord-0.5; float d=length(p); if(d>0.5) discard;
+                    float core=smoothstep(0.40,0.0,d); float halo=smoothstep(0.50,0.20,d)*0.55; vec3 c=mix(vColor,uPulse,vFlash);
+                    gl_FragColor=vec4(c,(core+halo)*vOpacity); }`,
+                transparent:true, depthWrite:false, blending:THREE.NormalBlending });
+            scene.add(new THREE.Points(nodeGeom,nodeMat));
 
-            const nodeMat = new THREE.ShaderMaterial({
-                uniforms: {
-                    uPulse:   { value: theme.pulse.clone() },
-                    uPxRatio: { value: renderer.getPixelRatio() }
-                },
-                vertexShader: `
-                    attribute float aSize;
-                    attribute vec3 aColor;
-                    attribute float aFlash;
-                    attribute float aOpacity;
-                    varying vec3 vColor;
-                    varying float vFlash;
-                    varying float vOpacity;
-                    uniform float uPxRatio;
-                    void main() {
-                        vColor = aColor; vFlash = aFlash; vOpacity = aOpacity;
-                        gl_PointSize = aSize * (1.0 + aFlash * 0.55) * uPxRatio;
-                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                    }
-                `,
-                fragmentShader: `
-                    varying vec3 vColor;
-                    varying float vFlash;
-                    varying float vOpacity;
-                    uniform vec3 uPulse;
-                    void main() {
-                        if (vOpacity < 0.01) discard;
-                        vec2 p = gl_PointCoord - 0.5;
-                        float d = length(p);
-                        if (d > 0.5) discard;
-                        float core = smoothstep(0.40, 0.0, d);
-                        float halo = smoothstep(0.50, 0.20, d) * 0.55;
-                        vec3 c = mix(vColor, uPulse, vFlash);
-                        gl_FragColor = vec4(c, (core + halo) * vOpacity);
-                    }
-                `,
-                transparent: true,
-                depthWrite: false,
-                blending: THREE.NormalBlending
-            });
-            const nodePoints = new THREE.Points(nodeGeom, nodeMat);
-            scene.add(nodePoints);
+            const edgeGeom=new THREE.BufferGeometry();
+            const edgePos=new Float32Array(edges.length*6), edgeBoost=new Float32Array(edges.length*2), edgeOpacity=new Float32Array(edges.length*2);
+            for (let i=0;i<edges.length;i++){ const a=nodes[edges[i].s],b=nodes[edges[i].t]; edgePos[i*6]=a.x;edgePos[i*6+1]=a.y; edgePos[i*6+3]=b.x;edgePos[i*6+4]=b.y; }
+            edgeGeom.setAttribute('position',new THREE.BufferAttribute(edgePos,3));
+            edgeGeom.setAttribute('aBoost',new THREE.BufferAttribute(edgeBoost,1));
+            edgeGeom.setAttribute('aOpacity',new THREE.BufferAttribute(edgeOpacity,1));
+            const edgeMat=new THREE.ShaderMaterial({ uniforms:{ uColor:{value:theme.link.clone()}, uPulse:{value:theme.pulse.clone()} },
+                vertexShader:`attribute float aBoost; attribute float aOpacity; varying float vB; varying float vO;
+                    void main(){ vB=aBoost; vO=aOpacity; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+                fragmentShader:`uniform vec3 uColor; uniform vec3 uPulse; varying float vB; varying float vO;
+                    void main(){ vec3 c=mix(uColor,uPulse,vB); gl_FragColor=vec4(c,(0.5+vB*0.4)*vO); }`,
+                transparent:true, depthWrite:false, blending:THREE.NormalBlending });
+            scene.add(new THREE.LineSegments(edgeGeom,edgeMat));
 
-            // ─── Edge mesh ───
-            const edgeGeom = new THREE.BufferGeometry();
-            const edgePos = new Float32Array(edges.length * 6);
-            const edgeBoost = new Float32Array(edges.length * 2);
-            const edgeOpacity = new Float32Array(edges.length * 2);
-            for (let i = 0; i < edges.length; i++) {
-                const a = nodes[edges[i].s], b = nodes[edges[i].t];
-                edgePos[i*6] = a.x; edgePos[i*6+1] = a.y;
-                edgePos[i*6+3] = b.x; edgePos[i*6+4] = b.y;
-            }
-            edgeGeom.setAttribute('position', new THREE.BufferAttribute(edgePos, 3));
-            edgeGeom.setAttribute('aBoost', new THREE.BufferAttribute(edgeBoost, 1));
-            edgeGeom.setAttribute('aOpacity', new THREE.BufferAttribute(edgeOpacity, 1));
+            // ─── shine particle pool: sparks travel along boosted edges (v1 flavour) ───
+            const PPOOL = 7; const pStates = [];
+            const pGeom = new THREE.BufferGeometry();
+            const pPos = new Float32Array(PPOOL*3), pAlpha = new Float32Array(PPOOL);
+            pGeom.setAttribute('position', new THREE.BufferAttribute(pPos,3));
+            pGeom.setAttribute('aAlpha', new THREE.BufferAttribute(pAlpha,1));
+            const pMat = new THREE.ShaderMaterial({ uniforms:{ uColor:{value:theme.pulse.clone()}, uPxRatio:{value:renderer.getPixelRatio()} },
+                vertexShader:`attribute float aAlpha; varying float vA; uniform float uPxRatio;
+                    void main(){ vA=aAlpha; gl_PointSize=(12.0*aAlpha+4.0)*uPxRatio; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+                fragmentShader:`uniform vec3 uColor; varying float vA; void main(){ if(vA<0.01) discard; vec2 p=gl_PointCoord-0.5; float d=length(p); if(d>0.5) discard;
+                    float core=smoothstep(0.45,0.0,d); float halo=smoothstep(0.5,0.1,d)*0.55; gl_FragColor=vec4(uColor,(core+halo)*vA); }`,
+                transparent:true, depthWrite:false, blending:THREE.NormalBlending });
+            scene.add(new THREE.Points(pGeom,pMat));
+            function spawnShine(ei){ if(pStates.length>=PPOOL) return; pStates.push({ ei, start:performance.now(), dur:720 }); }
 
-            const edgeMat = new THREE.ShaderMaterial({
-                uniforms: {
-                    uColor: { value: theme.link.clone() },
-                    uPulse: { value: theme.pulse.clone() }
-                },
-                vertexShader: `
-                    attribute float aBoost;
-                    attribute float aOpacity;
-                    varying float vB;
-                    varying float vO;
-                    void main() {
-                        vB = aBoost; vO = aOpacity;
-                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                    }
-                `,
-                fragmentShader: `
-                    uniform vec3 uColor;
-                    uniform vec3 uPulse;
-                    varying float vB;
-                    varying float vO;
-                    void main() {
-                        vec3 c = mix(uColor, uPulse, vB);
-                        gl_FragColor = vec4(c, (0.55 + vB * 0.4) * vO);
-                    }
-                `,
-                transparent: true,
-                depthWrite: false,
-                blending: THREE.NormalBlending
-            });
-            const edgeLines = new THREE.LineSegments(edgeGeom, edgeMat);
-            scene.add(edgeLines);
+            function retheme(){ theme=readColors(); nodeMat.uniforms.uPulse.value.copy(theme.pulse);
+                edgeMat.uniforms.uColor.value.copy(theme.link); edgeMat.uniforms.uPulse.value.copy(theme.pulse);
+                pMat.uniforms.uColor.value.copy(theme.pulse);
+                const a=nodeGeom.getAttribute('aColor'); for(let i=0;i<N;i++){ const c=nodes[i].hub?theme.hub:theme.node; a.array[i*3]=c.r;a.array[i*3+1]=c.g;a.array[i*3+2]=c.b; } a.needsUpdate=true; }
 
-            // ─── Shine particle pool ───
-            const PARTICLE_POOL = 2;
-            const particleStates = [];
-            const particleGeom = new THREE.BufferGeometry();
-            const particlePos = new Float32Array(PARTICLE_POOL * 3);
-            const particleAlpha = new Float32Array(PARTICLE_POOL);
-            particleGeom.setAttribute('position', new THREE.BufferAttribute(particlePos, 3));
-            particleGeom.setAttribute('aAlpha', new THREE.BufferAttribute(particleAlpha, 1));
-
-            const particleMat = new THREE.ShaderMaterial({
-                uniforms: {
-                    uColor:   { value: theme.pulse.clone() },
-                    uPxRatio: { value: renderer.getPixelRatio() }
-                },
-                vertexShader: `
-                    attribute float aAlpha;
-                    varying float vA;
-                    uniform float uPxRatio;
-                    void main() {
-                        vA = aAlpha;
-                        gl_PointSize = 14.0 * aAlpha * uPxRatio + 5.0 * uPxRatio;
-                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                    }
-                `,
-                fragmentShader: `
-                    uniform vec3 uColor;
-                    varying float vA;
-                    void main() {
-                        if (vA < 0.01) discard;
-                        vec2 p = gl_PointCoord - 0.5;
-                        float d = length(p);
-                        if (d > 0.5) discard;
-                        float core = smoothstep(0.45, 0.0, d);
-                        float halo = smoothstep(0.5, 0.10, d) * 0.55;
-                        gl_FragColor = vec4(uColor, (core + halo) * vA);
-                    }
-                `,
-                transparent: true, depthWrite: false, blending: THREE.NormalBlending
-            });
-            const particlePoints = new THREE.Points(particleGeom, particleMat);
-            scene.add(particlePoints);
-
-            function spawnShine(edgeIdx) {
-                if (particleStates.length >= PARTICLE_POOL) return;
-                particleStates.push({ edgeIdx, startTime: performance.now(), duration: 900 });
-            }
-
-            // Theme update
-            function pushTheme() {
-                theme = readColors();
-                nodeMat.uniforms.uPulse.value.copy(theme.pulse);
-                edgeMat.uniforms.uColor.value.copy(theme.link);
-                edgeMat.uniforms.uPulse.value.copy(theme.pulse);
-                particleMat.uniforms.uColor.value.copy(theme.pulse);
-                const a = nodeGeom.getAttribute('aColor');
-                for (let i = 0; i < N; i++) {
-                    const c = nodes[i].hub ? theme.hub : theme.node;
-                    a.array[i*3] = c.r; a.array[i*3+1] = c.g; a.array[i*3+2] = c.b;
-                }
-                a.needsUpdate = true;
-            }
-            window.__themeListeners.push(pushTheme);
-
-            // Resize
-            const ro = new ResizeObserver(() => {
-                const r = container.getBoundingClientRect();
-                const w = Math.max(50, Math.floor(r.width));
-                const h = Math.max(50, Math.floor(r.height));
-                if (w === W && h === H) return;
-                W = w; H = h;
-                renderer.setSize(W, H);
-                camera.left = -W/2; camera.right = W/2;
-                camera.top = H/2; camera.bottom = -H/2;
-                camera.updateProjectionMatrix();
-            });
+            const ro=new ResizeObserver(()=>{ const r=container.getBoundingClientRect(); const w=Math.max(120,Math.floor(r.width)),h=Math.max(120,Math.floor(r.height));
+                if(w===W&&h===H)return; W=w;H=h; renderer.setSize(W,H,false); camera.left=-W/2;camera.right=W/2;camera.top=H/2;camera.bottom=-H/2; camera.updateProjectionMatrix(); sim.alpha(0.3); });
             ro.observe(container);
 
-            // Pulses — each network on its own offset cadence so they don't all sync
-            let paused = false;
-            document.addEventListener('visibilitychange', () => { paused = document.hidden; });
+            let paused=false, pulseTimer=null; const period=850+Math.random()*750;
+            function pulse(){ const now=performance.now();
+                const nf=1+Math.floor(Math.random()*2);
+                for(let f=0;f<nf;f++){ const ni=Math.floor(Math.random()*N); nodes[ni].flashStart=now; nodes[ni].flashDur=1500+Math.random()*900; }
+                if(edges.length){ const ne=1+Math.floor(Math.random()*2);
+                    for(let f=0;f<ne;f++){ const ei=Math.floor(Math.random()*edges.length); edges[ei].boostStart=now; edges[ei].boostDur=1100+Math.random()*700; spawnShine(ei); } } }
+            function startP(){ if(!pulseTimer) pulseTimer=setInterval(pulse, period); } function stopP(){ if(pulseTimer){clearInterval(pulseTimer);pulseTimer=null;} }
+            document.addEventListener('visibilitychange', ()=>{ paused=document.hidden; if(document.hidden) stopP(); else startP(); });
+            setTimeout(()=>{ if(!document.hidden) startP(); }, 1400);
 
-            let pulseTimer = null;
-            const pulsePeriod = 3000 + Math.random() * 1500;
-            function pulseTick() {
-                const now = performance.now();
-                const ni = Math.floor(Math.random() * N);
-                nodes[ni].flashStart = now;
-                nodes[ni].flashDur = 2200;
-                if (edges.length) {
-                    const ei = Math.floor(Math.random() * edges.length);
-                    edges[ei].boostStart = now;
-                    edges[ei].boostDur = 1700;
-                    spawnShine(ei);
-                }
-            }
-            function startPulses() { if (!pulseTimer) pulseTimer = setInterval(pulseTick, pulsePeriod); }
-            function stopPulses() { if (pulseTimer) { clearInterval(pulseTimer); pulseTimer = null; } }
-            document.addEventListener('visibilitychange', () => {
-                if (document.hidden) stopPulses(); else startPulses();
-            });
-            setTimeout(() => { if (!document.hidden) startPulses(); }, 3500 + seed * 250);
-
-            // Main loop. We hold the simulation + entrance clock until the page is "revealed"
-            // (first user input or 1.8s timeout), so the formation animation plays out as the
-            // networks fade in rather than running invisibly behind the curtain.
-            let startT = null;
-            function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
-
-            function tick(now) {
-                if (paused) { requestAnimationFrame(tick); return; }
-                if (!document.body.classList.contains('networks-revealed')) {
-                    requestAnimationFrame(tick);
-                    return;
-                }
-                if (startT === null) startT = now;
-                const elapsed = now - startT;
-                simulation.tick();
-                nodes.forEach(n => {
-                    const margin = (n.hub ? 10 : 6);
-                    n.x = Math.max(-W/2 + margin, Math.min(W/2 - margin, n.x));
-                    n.y = Math.max(-H/2 + margin, Math.min(H/2 - margin, n.y));
-                });
-
-                const np = nodeGeom.getAttribute('position');
-                const nf = nodeGeom.getAttribute('aFlash');
-                const no = nodeGeom.getAttribute('aOpacity');
-                for (let i = 0; i < N; i++) {
-                    const n = nodes[i];
-                    np.array[i*3] = n.x; np.array[i*3+1] = n.y;
-                    if (n.flashStart) {
-                        const k = (now - n.flashStart) / n.flashDur;
-                        if (k >= 1) { nf.array[i] = 0; n.flashStart = 0; }
-                        else nf.array[i] = Math.sin(Math.PI * k);
-                    }
-                    if (no.array[i] < 1) {
-                        const t = (elapsed - n.entranceDelay) / n.entranceDur;
-                        no.array[i] = (t <= 0) ? 0 : (t >= 1) ? 1 : easeOutCubic(t);
-                    }
-                }
-                np.needsUpdate = true; nf.needsUpdate = true; no.needsUpdate = true;
-
-                const ep = edgeGeom.getAttribute('position');
-                const eb = edgeGeom.getAttribute('aBoost');
-                const eo = edgeGeom.getAttribute('aOpacity');
-                for (let i = 0; i < edges.length; i++) {
-                    const e = edges[i];
-                    const a = nodes[e.s], b = nodes[e.t];
-                    ep.array[i*6] = a.x; ep.array[i*6+1] = a.y;
-                    ep.array[i*6+3] = b.x; ep.array[i*6+4] = b.y;
-                    if (e.boostStart) {
-                        const k = (now - e.boostStart) / e.boostDur;
-                        const v = (k >= 1) ? 0 : Math.sin(Math.PI * k);
-                        if (k >= 1) e.boostStart = 0;
-                        eb.array[i*2] = v; eb.array[i*2+1] = v;
-                    }
-                    if (eo.array[i*2] < 1) {
-                        const t = (elapsed - e.entranceDelay) / e.entranceDur;
-                        const o = (t <= 0) ? 0 : (t >= 1) ? 1 : easeOutCubic(t);
-                        eo.array[i*2] = o; eo.array[i*2+1] = o;
-                    }
-                }
-                ep.needsUpdate = true; eb.needsUpdate = true; eo.needsUpdate = true;
-
-                const pp = particleGeom.getAttribute('position');
-                const pa = particleGeom.getAttribute('aAlpha');
-                for (let i = 0; i < PARTICLE_POOL; i++) {
-                    if (i < particleStates.length) {
-                        const ps = particleStates[i];
-                        const t = Math.max(0, Math.min(1, (now - ps.startTime) / ps.duration));
-                        const e = edges[ps.edgeIdx];
-                        const a = nodes[e.s], b = nodes[e.t];
-                        pp.array[i*3] = a.x + (b.x - a.x) * t;
-                        pp.array[i*3+1] = a.y + (b.y - a.y) * t;
-                        pa.array[i] = Math.sin(Math.PI * t);
-                    } else { pa.array[i] = 0; }
-                }
-                for (let i = particleStates.length - 1; i >= 0; i--) {
-                    if ((now - particleStates[i].startTime) >= particleStates[i].duration) {
-                        particleStates.splice(i, 1);
-                    }
-                }
-                pp.needsUpdate = true; pa.needsUpdate = true;
-
-                renderer.render(scene, camera);
-                requestAnimationFrame(tick);
+            let startT=null; const easeOutCubic=t=>1-Math.pow(1-t,3);
+            function tick(now){
+                if(paused){ requestAnimationFrame(tick); return; }
+                if(startT===null) startT=now; const elapsed=now-startT; sim.tick();
+                for(let i=0;i<N;i++){ const n=nodes[i]; const m=n.hub?12:8;
+                    n.x=Math.max(-W/2+m,Math.min(W/2-m,n.x)); n.y=Math.max(-H/2+m,Math.min(H/2-m,n.y));
+                    dispX[i]=n.x+Math.sin(now*0.00035+n.phase)*n.wob; dispY[i]=n.y+Math.cos(now*0.0003+n.phase*1.3)*n.wob; }
+                const np=nodeGeom.getAttribute('position'),nf=nodeGeom.getAttribute('aFlash'),no=nodeGeom.getAttribute('aOpacity');
+                for(let i=0;i<N;i++){ const n=nodes[i]; np.array[i*3]=dispX[i];np.array[i*3+1]=dispY[i];
+                    if(n.flashStart){ const k=(now-n.flashStart)/n.flashDur; if(k>=1){nf.array[i]=0;n.flashStart=0;} else nf.array[i]=Math.sin(Math.PI*k)*0.85; }
+                    if(no.array[i]<1){ const t=(elapsed-n.entranceDelay)/n.entranceDur; no.array[i]=(t<=0)?0:(t>=1)?1:easeOutCubic(t); } }
+                np.needsUpdate=true;nf.needsUpdate=true;no.needsUpdate=true;
+                const ep=edgeGeom.getAttribute('position'),eb=edgeGeom.getAttribute('aBoost'),eo=edgeGeom.getAttribute('aOpacity');
+                for(let i=0;i<edges.length;i++){ const e=edges[i]; ep.array[i*6]=dispX[e.s];ep.array[i*6+1]=dispY[e.s]; ep.array[i*6+3]=dispX[e.t];ep.array[i*6+4]=dispY[e.t];
+                    if(e.boostStart){ const k=(now-e.boostStart)/e.boostDur; const v=(k>=1)?0:Math.sin(Math.PI*k)*0.8; if(k>=1)e.boostStart=0; eb.array[i*2]=v;eb.array[i*2+1]=v; }
+                    if(eo.array[i*2]<1){ const t=(elapsed-e.entranceDelay)/e.entranceDur; const o=(t<=0)?0:(t>=1)?1:easeOutCubic(t); eo.array[i*2]=o;eo.array[i*2+1]=o; } }
+                ep.needsUpdate=true;eb.needsUpdate=true;eo.needsUpdate=true;
+                const ppos=pGeom.getAttribute('position'), pa=pGeom.getAttribute('aAlpha');
+                for(let i=0;i<PPOOL;i++){ if(i<pStates.length){ const ps=pStates[i]; const t=Math.max(0,Math.min(1,(now-ps.start)/ps.dur)); const e=edges[ps.ei];
+                    ppos.array[i*3]=dispX[e.s]+(dispX[e.t]-dispX[e.s])*t; ppos.array[i*3+1]=dispY[e.s]+(dispY[e.t]-dispY[e.s])*t; pa.array[i]=Math.sin(Math.PI*t); } else pa.array[i]=0; }
+                for(let i=pStates.length-1;i>=0;i--){ if((now-pStates[i].start)>=pStates[i].dur) pStates.splice(i,1); }
+                ppos.needsUpdate=true; pa.needsUpdate=true;
+                renderer.render(scene,camera); requestAnimationFrame(tick);
             }
             requestAnimationFrame(tick);
-
-            // Expose this network so the bridges manager can read its current node positions
-            return {
-                container,
-                nodes,
-                seed,
-                getW: () => W,
-                getH: () => H
-            };
+            return { retheme };
         }
     </script>
-
 </body>
 </html>
