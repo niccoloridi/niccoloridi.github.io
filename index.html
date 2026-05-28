@@ -70,6 +70,7 @@
         .lede { font-family: var(--mono); font-size: clamp(0.78rem,1.1vw,0.92rem); letter-spacing: 0.01em;
             color: var(--muted); max-width: 60ch; margin-top: clamp(0.6rem,1.6vh,1rem); line-height: 1.5; }
         .lede .b { color: var(--gold); }
+        .console-toggle { display: none; }   /* mobile only (see media query) */
 
         .hero-cols { flex: 1; min-height: 0; display: grid; grid-template-columns: 1.08fr 0.92fr;
             gap: clamp(1rem,2.5vw,2rem); margin-top: clamp(0.8rem,2vh,1.4rem); }
@@ -199,6 +200,12 @@
             body.mcollapsed .hero-cols { max-height: 0; opacity: 0; margin-top: 0; }
             body.mode-section .hero-cols { max-height: 3000px; opacity: 1; }
             body.mode-section .terminal { display: none; }   /* section view = content only on mobile */
+            .console-toggle { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.7rem;
+                background: none; border: 1px solid var(--line); color: var(--muted); cursor: pointer;
+                font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
+                padding: 0.38rem 0.7rem; border-radius: 3px; }
+            .console-toggle:hover { color: var(--fg); border-color: var(--gold); }
+            body.mode-section .console-toggle { display: none; }
             .terminal { height: 340px; }
             .term-body, #term-input, .term-input-row .p { font-size: 0.86rem; }
             .net-panel { height: 260px; }
@@ -243,17 +250,18 @@
         <section class="hero">
             <div class="hero-kicker">public international law // computational analysis</div>
             <h1 class="wordmark"><span class="l1">Niccolò<span class="dot">.</span></span> <span class="l2">Ridi</span></h1>
-            <p class="lede">International lawyer &amp; computational researcher — <span class="b">I read courts, treaties &amp; citation networks at scale.</span></p>
+            <p class="lede">International lawyer &amp; computational researcher — <span class="b">international law, at scale.</span></p>
+            <button class="console-toggle" id="console-toggle" type="button" aria-label="toggle console">▸ console</button>
 
             <div class="hero-cols">
                 <div class="terminal" id="terminal">
-                    <div class="term-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="ttl">ridi@kcl — zsh</span></div>
+                    <div class="term-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="ttl">ridi@hague — zsh</span></div>
                     <div class="term-body" id="term-body">
                         <div class="ln"><span class="muted"># type a command — or just start typing and press </span><span class="gold">↹ Tab</span><span class="muted"> to autocomplete</span></div>
                     </div>
                     <div class="term-foot">
                         <div class="term-input-row">
-                            <span class="p">ridi@kcl:~$</span>
+                            <span class="p">ridi@hague:~$</span>
                             <input id="term-input" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="terminal input">
                         </div>
                         <div class="term-suggest" id="term-suggest"></div>
@@ -284,7 +292,7 @@
     </main>
 
     <footer>
-        <div class="seg"><span class="gold">© 2025 niccolò ridi</span><a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a></div>
+        <div class="seg"><span class="gold">© 2025 niccolò ridi</span><a href="mailto:niccolo.ridi@hague.ac.uk">niccolo.ridi@hague.ac.uk</a></div>
         <div class="seg">
             <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" rel="noopener">linkedin</a>
             <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" rel="noopener">scholar</a>
@@ -393,7 +401,7 @@
 
             function el(html){ const d=document.createElement('div'); d.className='ln'; d.innerHTML=html; return d; }
             function print(html){ body.appendChild(el(html)); body.scrollTop = body.scrollHeight; }
-            function echo(cmd){ print('<span class="p">ridi@kcl:~$</span> ' + cmd); }
+            function echo(cmd){ print('<span class="p">ridi@hague:~$</span> ' + cmd); }
 
             const SECTIONS = {
                 profile:  ['profile.html',  'bio, positions & education'],
@@ -406,7 +414,7 @@
                 scholar:  'https://scholar.google.com/citations?user=cxXS2JIAAAAJ',
                 ssrn:     'https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991',
                 kcl:      'https://www.kcl.ac.uk/people/niccolo-ridi',
-                email:    'mailto:niccolo.ridi@kcl.ac.uk',
+                email:    'mailto:niccolo.ridi@hague.ac.uk',
             };
             // alias -> canonical command (drives both `run` and suggestions)
             const ALIASES = {
@@ -419,12 +427,12 @@
                 help(){ return '<span class="muted">commands:</span> '
                     + ['whoami','about','profile','practice','research','data','contact','open','ls','clear']
                         .map(c=>'<span class="chip" data-cmd="'+c+'">'+c+'</span>').join('  '); },
-                whoami(){ return 'Dr Niccolò Ridi — academic &amp; counsel in <span class="gold">public international law</span>.\n'
+                whoami(){ return 'Dr Niccolò Ridi — academic &amp; practitioner in <span class="gold">public international law</span>.\n'
                     + '<span class="muted">international dispute resolution · computational analysis of law</span>'; },
                 about(){ return 'I work where international adjudication meets data science — citation networks,\n'
                     + 'NLP on legal corpora, and agent-based models of legal change.\n'
                     + '<span class="muted">→ </span><span class="chip" data-cmd="profile">open profile</span>'; },
-                contact(){ return '<span class="gold">email</span>  <a class="chip" href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a>\n'
+                contact(){ return '<span class="gold">email</span>  <a class="chip" href="mailto:niccolo.ridi@hague.ac.uk">niccolo.ridi@hague.ac.uk</a>\n'
                     + '<span class="gold">www</span>    '
                     + '<a class="chip" href="'+LINKS.linkedin+'" target="_blank">linkedin</a> '
                     + '<a class="chip" href="'+LINKS.scholar+'" target="_blank">scholar</a> '
@@ -568,6 +576,17 @@
             const idLink = document.querySelector('header .id');
             if (idLink) idLink.addEventListener('click', e => { if (document.body.classList.contains('mode-section')) { e.preventDefault(); closeSection(); } });
 
+            // mobile: re-summon / dismiss the terminal+network after the intro collapse
+            const ctog = document.getElementById('console-toggle');
+            function syncCtog(){ if (ctog) ctog.textContent = document.body.classList.contains('mcollapsed') ? '▸ console' : '▾ hide console'; }
+            if (ctog) ctog.addEventListener('click', () => {
+                const opening = document.body.classList.contains('mcollapsed');
+                document.body.classList.toggle('mcollapsed');
+                syncCtog();
+                if (opening) { const t=document.getElementById('terminal'); if (t) setTimeout(()=>t.scrollIntoView({behavior:'smooth', block:'center'}), 120); if (canFocus) input.focus(); }
+            });
+            window.__syncCtog = syncCtog; syncCtog();
+
             // boot: auto-type `whoami`
             const boot = 'whoami'; let i = 0;
             (function type(){
@@ -576,7 +595,7 @@
                     run(boot); input.value=''; sugBox.innerHTML=''; if (canFocus) input.focus();
                     // mobile: after the intro plays, fold the terminal+network so the tiles jump up
                     if (window.matchMedia('(max-width: 880px)').matches) {
-                        setTimeout(()=>{ if (!document.body.classList.contains('mode-section')) document.body.classList.add('mcollapsed'); }, 1500);
+                        setTimeout(()=>{ if (!document.body.classList.contains('mode-section')) { document.body.classList.add('mcollapsed'); syncCtog(); } }, 1500);
                     }
                 }, 350); }
             })();
