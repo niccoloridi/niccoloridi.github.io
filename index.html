@@ -225,14 +225,13 @@
             /* section on stage: stack, flow, and let the page scroll */
             body.mode-section .net-panel { height: auto; min-height: 64vh; }
             body.mode-section .stage { position: relative; }
-            body.mode-section .stage { flex-direction: column; align-items: stretch; gap: 1.1rem; }
+            body.mode-section .stage { flex-direction: column; align-items: stretch; gap: 2.4rem; }
             .stage-plate { flex: 0 0 auto; min-height: 0; align-self: center; padding-top: 0; }
             .stage-plate img { max-height: 22vh; max-width: 80%; width: auto; }
-            /* mobile: hint becomes a readable pill near the bottom INSIDE the plate (no collision with the text below) */
-            .plate-toggle .pt-hint { bottom: 0.5rem; opacity: 0.97; color: var(--gold);
-                background: rgba(10,10,12,0.66); padding: 0.34rem 0.72rem; border: 1px solid var(--line);
-                border-radius: 999px; font-size: 0.6rem; }
-            .light-mode .plate-toggle .pt-hint { background: rgba(236,231,220,0.82); }
+            /* mobile: hint sits BELOW the plate (not over the photo), with breathing room before the text */
+            .plate-toggle .pt-hint { top: 100%; bottom: auto; margin-top: 0.7rem; opacity: 0.85; color: var(--gold);
+                background: none; border: none; padding: 0; border-radius: 0; font-size: 0.6rem; }
+            .plate-toggle::after { display: none; }   /* no glyph over the photo on mobile */
             .stage-text { overflow: visible; min-height: 0; }
             .stage-title { font-size: 1.8rem; }
             .stage-text p { font-size: 0.95rem; }
@@ -556,8 +555,7 @@
                     dpr = Math.min(2, window.devicePixelRatio || 1);
                     W = Math.max(40, Math.round(r.width * dpr));
                     H = Math.max(40, Math.round(r.height * dpr));
-                    canvas.width = W; canvas.height = H;
-                    canvas.style.width = r.width + 'px'; canvas.style.height = r.height + 'px';
+                    canvas.width = W; canvas.height = H;   // backing resolution only; CSS (inset:0) owns the display size
                 }
                 function cover(im, ox, oy){            // focal-centred cover: keep (ox,oy) of the image near the box centre
                     ox = (ox == null) ? 0.5 : ox; oy = (oy == null) ? 0.5 : oy;
