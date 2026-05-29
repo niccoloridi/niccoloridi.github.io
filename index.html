@@ -122,6 +122,16 @@
         body.mode-section .stage { opacity: 1; visibility: visible; transform: none; }
         .stage-plate { flex: 0 0 30%; display: flex; align-items: flex-start; justify-content: center; align-self: stretch; padding-top: 0.3rem; }
         .stage-plate img { max-height: 100%; max-width: 100%; }
+        /* click-to-reveal plate ⇄ photo (pixel dissolve; box stays put) */
+        .plate-toggle { position: relative; display: inline-block; line-height: 0; cursor: pointer; }
+        .plate-toggle .pt-canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.2s ease; pointer-events: none; }
+        .plate-toggle .pt-hint { position: absolute; left: 50%; bottom: -1.35rem; transform: translateX(-50%);
+            font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase;
+            color: var(--muted); opacity: 0.62; white-space: nowrap; transition: color 0.2s, opacity 0.2s; pointer-events: none; }
+        .plate-toggle::after { content: '↻'; position: absolute; top: 0.35rem; right: 0.35rem; font-family: var(--mono);
+            font-size: 0.7rem; color: var(--gold); opacity: 0.55; transition: opacity 0.2s; pointer-events: none; }
+        .plate-toggle:hover .pt-hint { color: var(--gold); opacity: 1; }
+        .plate-toggle:hover::after { opacity: 0.95; }
         .stage-text { flex: 1; min-width: 0; overflow-y: auto; padding-right: 0.5rem; }
         .stage-text::-webkit-scrollbar { width: 7px; } .stage-text::-webkit-scrollbar-thumb { background: var(--line); }
         .stage-text p { font-family: var(--grotesk); font-size: 0.9rem; line-height: 1.55; color: var(--fg); margin: 0 0 0.75rem; max-width: 62ch; }
@@ -459,7 +469,7 @@
             // ─── in-panel "viewport": sections render in the network space ───
             const stage = document.getElementById('stage');
             const VIEW = {
-                profile: { n:'01', plate:'plate-01', body:
+                profile: { n:'01', plate:'plate-01', photo:'images/IMG_18.jpg', pf:[0.27,0.33], body:
                     '<p>Senior Lecturer (Associate Professor) in Public International Law at The Dickson Poon School of Law, King\'s College London — Associate Director of CIGAD, Associate Dean for Doctoral Studies, Fellow of the Centre for Data Futures, and liaison to the King\'s Institute for AI.</p>'
                   + '<p>My research concerns the authority and effectiveness of international law — how it is produced and changes — applying empirical and computational methods to legal argumentation and actor behaviour.</p>'
                   + '<h3>positions &amp; affiliations</h3><ul>'
@@ -472,7 +482,7 @@
                   + '<h3>education</h3><ul><li>PhD in Public International Law, King\'s College London — 2019</li>'
                   + '<li>LLM in International Law, University of Cambridge — 2014</li>'
                   + '<li>Doctoral Research Fellow, Graduate Institute, Geneva — 2014–2018</li></ul>' },
-                practice: { n:'02', plate:'plate-11', body:
+                practice: { n:'02', plate:'plate-11', photo:'images/N_Ridi_ICJ.jpeg', pf:[0.74,0.26], body:
                     '<p>Counsel and advisory work in public international law and international dispute settlement — with a particular focus on proceedings before the International Court of Justice, ITLOS, and tribunals constituted under the ICSID Convention.</p>'
                   + '<p>Engagements span state responsibility, the law of treaties, jurisdictional immunities, the law of the sea, the use of force, foreign investment protection, and the human-rights and humanitarian-law questions that cut across them.</p>'
                   + '<h3>recent matters</h3><ul>'
@@ -494,14 +504,17 @@
             function openSection(s){
                 const v = VIEW[s]; if (!v) return;
                 const bodyHTML = v.srcId ? (document.getElementById(v.srcId)||{}).innerHTML || '' : v.body;
-                stage.innerHTML =
-                    '<div class="stage-plate"><img src="images/illustrations/png/'+v.plate+'.png" alt=""></div>'
+                const plateCell = v.photo
+                    ? '<div class="stage-plate"><span class="plate-toggle" data-photo="'+v.photo+'" data-fx="'+(v.pf?v.pf[0]:0.5)+'" data-fy="'+(v.pf?v.pf[1]:0.5)+'"><img class="pt-plate" src="images/illustrations/png/'+v.plate+'.png" alt=""><canvas class="pt-canvas" aria-hidden="true"></canvas><span class="pt-hint">click to reveal</span></span></div>'
+                    : '<div class="stage-plate"><img src="images/illustrations/png/'+v.plate+'.png" alt=""></div>';
+                stage.innerHTML = plateCell
                   + '<div class="stage-text"><div class="stage-num">'+v.n+' / '+s+'</div>'
                   + '<h2 class="stage-title">'+s+'</h2>'
                   + bodyHTML
                   + '<div class="stage-actions"><button class="stage-close" type="button">cd ..</button></div></div>';
                 document.body.classList.add('mode-section');
                 stage.querySelector('.stage-text').scrollTop = 0;
+                if (v.photo) initPlateToggle(stage.querySelector('.plate-toggle'));
                 if (window.matchMedia('(max-width: 880px)').matches) setTimeout(()=>{ const np=document.getElementById('net-panel'); if (np) np.scrollIntoView({behavior:'smooth', block:'start'}); }, 90);
                 if (v.srcId === 'research-src') initResearchFilters(stage);
                 const cb = stage.querySelector('.stage-close');
@@ -521,6 +534,89 @@
                 function upd(){ const yr=ys.value; items.forEach(it=>{ const mt=activeType==='all'||it.dataset.type===activeType; const my=yr==='all'||it.dataset.year===yr; it.style.display = mt&&my ? '' : 'none'; }); }
                 btns.forEach(b=>b.addEventListener('click',()=>{ btns.forEach(x=>x.classList.remove('active')); b.classList.add('active'); activeType=b.dataset.filter; upd(); }));
                 ys.addEventListener('change', upd); upd();
+            }
+            // click the plate to pixel-dissolve between the engraving and a photo (cover-cropped, box unchanged)
+            function initPlateToggle(el){
+                if (!el) return;
+                const plateImg = el.querySelector('.pt-plate');
+                const canvas = el.querySelector('.pt-canvas');
+                const ctx = canvas.getContext('2d');
+                const photoSrc = el.getAttribute('data-photo');
+                const hint = el.querySelector('.pt-hint');
+                const FX = parseFloat(el.getAttribute('data-fx')); const fx = isNaN(FX) ? 0.5 : FX;
+                const FY = parseFloat(el.getAttribute('data-fy')); const fy = isNaN(FY) ? 0.5 : FY;
+                let state = 'plate', busy = false, photoImg = null, W = 0, H = 0, dpr = 1;
+                function measure(){
+                    const r = el.getBoundingClientRect();
+                    dpr = Math.min(2, window.devicePixelRatio || 1);
+                    W = Math.max(40, Math.round(r.width * dpr));
+                    H = Math.max(40, Math.round(r.height * dpr));
+                    canvas.width = W; canvas.height = H;
+                    canvas.style.width = r.width + 'px'; canvas.style.height = r.height + 'px';
+                }
+                function cover(im, ox, oy){            // focal-centred cover: keep (ox,oy) of the image near the box centre
+                    ox = (ox == null) ? 0.5 : ox; oy = (oy == null) ? 0.5 : oy;
+                    const off = document.createElement('canvas'); off.width = W; off.height = H;
+                    const c = off.getContext('2d');
+                    const s = Math.max(W / im.naturalWidth, H / im.naturalHeight);
+                    const dw = im.naturalWidth * s, dh = im.naturalHeight * s;
+                    let x = W / 2 - ox * dw, y = H / 2 - oy * dh;
+                    x = Math.min(0, Math.max(W - dw, x)); y = Math.min(0, Math.max(H - dh, y));
+                    c.drawImage(im, x, y, dw, dh);
+                    return off;
+                }
+                function plateSnap(){
+                    const off = cover(plateImg, 0.5, 0.5); const c = off.getContext('2d');
+                    let id; try { id = c.getImageData(0, 0, W, H); } catch (e) { return off; }
+                    const d = id.data, light = document.body.classList.contains('light-mode');
+                    for (let i = 0; i < d.length; i += 4){
+                        let lum = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
+                        let cc = (lum - 128) * 1.55 + 128; cc *= 1.12; cc = cc < 0 ? 0 : cc > 255 ? 255 : cc;
+                        if (light){ const t = cc/255;
+                            d[i]   = Math.round(30*(1-t) + 236*t);
+                            d[i+1] = Math.round(45*(1-t) + 231*t);
+                            d[i+2] = Math.round(75*(1-t) + 220*t);
+                        } else { const inv = 255 - cc;
+                            d[i]   = Math.round(10 + inv*0.27*0.96);
+                            d[i+1] = Math.round(11 + inv*0.66*0.96);
+                            d[i+2] = Math.round(13 + inv*1.0*0.96);
+                        }
+                        d[i+3] = 255;
+                    }
+                    c.putImageData(id, 0, 0); return off;
+                }
+                function dissolve(from, to, after){
+                    busy = true; canvas.style.opacity = '1';
+                    const ts = Math.max(8, Math.round(15 * dpr));
+                    const cols = Math.ceil(W / ts), rows = Math.ceil(H / ts);
+                    const thr = new Float32Array(cols * rows);
+                    for (let i = 0; i < thr.length; i++) thr[i] = Math.random() * 0.55;
+                    const start = performance.now(), dur = 1050, win = 0.4;
+                    (function frame(now){
+                        let p = (now - start) / dur; if (p > 1) p = 1;
+                        const ep = p < 0.5 ? 2*p*p : 1 - Math.pow(-2*p + 2, 2)/2;
+                        ctx.clearRect(0, 0, W, H);
+                        ctx.globalAlpha = 1 - ep * 0.92; ctx.drawImage(from, 0, 0);   // outgoing crossfades out
+                        for (let cy = 0; cy < rows; cy++) for (let cx = 0; cx < cols; cx++){
+                            let a = (ep - thr[cy*cols + cx]) / win; a = a < 0 ? 0 : a > 1 ? 1 : a;
+                            if (a > 0){ ctx.globalAlpha = a; const dx = cx*ts, dy = cy*ts;
+                                ctx.drawImage(to, dx, dy, ts, ts, dx, dy, ts, ts); }
+                        }
+                        ctx.globalAlpha = 1;
+                        if (p < 1) requestAnimationFrame(frame);
+                        else { ctx.clearRect(0, 0, W, H); ctx.drawImage(to, 0, 0); busy = false; if (after) after(); }
+                    })(performance.now());
+                }
+                function toPhoto(){ measure(); dissolve(plateSnap(), cover(photoImg, fx, fy), () => { state = 'photo'; if (hint) hint.textContent = 'click to revert'; }); }
+                el.addEventListener('click', () => {
+                    if (busy || !plateImg.complete) return;
+                    if (state === 'plate'){
+                        if (photoImg && photoImg.complete && photoImg.naturalWidth) toPhoto();
+                        else { photoImg = new Image(); photoImg.onload = toPhoto; photoImg.src = photoSrc; }
+                    } else {
+                        measure(); dissolve(cover(photoImg, fx, fy), plateSnap(), () => { state = 'plate'; canvas.style.opacity = '0'; if (hint) hint.textContent = 'click to reveal'; });
+                    }
+                });
             }
             function clearSectionUI(){ document.body.classList.remove('mode-section'); }
             function closeSection(){ clearSectionUI(); if (location.hash) history.replaceState({}, '', location.pathname + location.search); }
