@@ -24,3 +24,6 @@ index-imprint-old.html
 
 # OS files
 .DS_Store
+
+# archived standalone pages (local backup)
+_archive/
