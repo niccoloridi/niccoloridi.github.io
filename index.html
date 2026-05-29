@@ -255,13 +255,13 @@
 
             <div class="hero-cols">
                 <div class="terminal" id="terminal">
-                    <div class="term-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="ttl">ridi@hague — zsh</span></div>
+                    <div class="term-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="ttl">niccolo@website — zsh</span></div>
                     <div class="term-body" id="term-body">
-                        <div class="ln"><span class="muted"># type a command — or just start typing and press </span><span class="gold">↹ Tab</span><span class="muted"> to autocomplete</span></div>
+                        <div class="ln"><span class="muted"># type </span><span class="chip" data-cmd="help">help</span><span class="muted"> for the manual — or start typing and press </span><span class="gold">↹ Tab</span></div>
                     </div>
                     <div class="term-foot">
                         <div class="term-input-row">
-                            <span class="p">ridi@hague:~$</span>
+                            <span class="p">niccolo@website:~$</span>
                             <input id="term-input" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="terminal input">
                         </div>
                         <div class="term-suggest" id="term-suggest"></div>
@@ -292,7 +292,7 @@
     </main>
 
     <footer>
-        <div class="seg"><span class="gold">© 2025 niccolò ridi</span><a href="mailto:niccolo.ridi@hague.ac.uk">niccolo.ridi@hague.ac.uk</a></div>
+        <div class="seg"><span class="gold">© 2025 niccolò ridi</span><a href="mailto:niccolo.niccolo@website.ac.uk">niccolo.niccolo@website.ac.uk</a></div>
         <div class="seg">
             <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" rel="noopener">linkedin</a>
             <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" rel="noopener">scholar</a>
@@ -401,7 +401,7 @@
 
             function el(html){ const d=document.createElement('div'); d.className='ln'; d.innerHTML=html; return d; }
             function print(html){ body.appendChild(el(html)); body.scrollTop = body.scrollHeight; }
-            function echo(cmd){ print('<span class="p">ridi@hague:~$</span> ' + cmd); }
+            function echo(cmd){ print('<span class="p">niccolo@website:~$</span> ' + cmd); }
 
             const SECTIONS = {
                 profile:  ['profile.html',  'bio, positions & education'],
@@ -414,7 +414,7 @@
                 scholar:  'https://scholar.google.com/citations?user=cxXS2JIAAAAJ',
                 ssrn:     'https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991',
                 kcl:      'https://www.kcl.ac.uk/people/niccolo-ridi',
-                email:    'mailto:niccolo.ridi@hague.ac.uk',
+                email:    'mailto:niccolo.niccolo@website.ac.uk',
             };
             // alias -> canonical command (drives both `run` and suggestions)
             const ALIASES = {
@@ -424,15 +424,34 @@
             };
 
             const COMMANDS = {
-                help(){ return '<span class="muted">commands:</span> '
-                    + ['whoami','about','profile','practice','research','data','contact','open','ls','clear']
-                        .map(c=>'<span class="chip" data-cmd="'+c+'">'+c+'</span>').join('  '); },
+                help(){
+                    const row = (c, d, clickable=true) => {
+                        const pad = ' '.repeat(Math.max(1, 12 - c.length));
+                        const nm = clickable ? '<span class="chip" data-cmd="'+c+'">'+c+'</span>' : c;
+                        return '  ' + nm + pad + '<span class="muted">' + d + '</span>';
+                    };
+                    return '<span class="gold">MANUAL</span><span class="muted">  — click a command, or type it and press Enter</span>\n\n'
+                        + '<span class="muted">navigate</span>\n'
+                        + row('profile','bio · positions · education') + '\n'
+                        + row('practice','counsel &amp; advisory work') + '\n'
+                        + row('research','publications — filter by type / year') + '\n'
+                        + row('data','datasets &amp; computational essays') + '\n\n'
+                        + '<span class="muted">about</span>\n'
+                        + row('whoami','one-line identity') + '\n'
+                        + row('about','what I work on') + '\n'
+                        + row('contact','email &amp; profiles') + '\n\n'
+                        + '<span class="muted">system</span>\n'
+                        + row('ls','list sections') + '\n'
+                        + row('open &lt;section&gt;','open a section by name', false) + '\n'
+                        + row('clear','clear the screen') + '\n'
+                        + row('man','show this manual');
+                },
                 whoami(){ return 'Dr Niccolò Ridi — academic &amp; practitioner in <span class="gold">public international law</span>.\n'
                     + '<span class="muted">international dispute resolution · computational analysis of law</span>'; },
                 about(){ return 'I work where international adjudication meets data science — citation networks,\n'
                     + 'NLP on legal corpora, and agent-based models of legal change.\n'
                     + '<span class="muted">→ </span><span class="chip" data-cmd="profile">open profile</span>'; },
-                contact(){ return '<span class="gold">email</span>  <a class="chip" href="mailto:niccolo.ridi@hague.ac.uk">niccolo.ridi@hague.ac.uk</a>\n'
+                contact(){ return '<span class="gold">email</span>  <a class="chip" href="mailto:niccolo.niccolo@website.ac.uk">niccolo.niccolo@website.ac.uk</a>\n'
                     + '<span class="gold">www</span>    '
                     + '<a class="chip" href="'+LINKS.linkedin+'" target="_blank">linkedin</a> '
                     + '<a class="chip" href="'+LINKS.scholar+'" target="_blank">scholar</a> '
@@ -511,6 +530,7 @@
             Object.keys(SECTIONS).forEach(s => { COMMANDS[s] = () => { const [,desc]=SECTIONS[s];
                 openSection(s); return '<span class="gold">'+s+'</span> — '+desc; }; });
             COMMANDS.home = COMMANDS.cd = () => { closeSection(); return '<span class="muted">~ home</span>'; };
+            COMMANDS.man = COMMANDS.help;
 
             const VOCAB = Array.from(new Set([...Object.keys(COMMANDS), ...Object.keys(SECTIONS), ...Object.keys(ALIASES), ...Object.keys(LINKS)]))
                 .filter(x => x !== 'sudo');
