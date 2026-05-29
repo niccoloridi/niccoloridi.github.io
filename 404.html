@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Niccolò Ridi</title>
+    <style>html,body{margin:0;height:100%;background:#0a0a0c;color:#7d786d;font-family:"JetBrains Mono",ui-monospace,monospace;display:flex;align-items:center;justify-content:center}a{color:#d7a13b}</style>
+    <script>
+        // Map a missing path to the matching in-panel section, else go home.
+        (function () {
+            var sections = ['profile', 'practice', 'research', 'data'];
+            var path = (location.pathname || '').toLowerCase();
+            var hit = sections.filter(function (s) { return path.indexOf(s) !== -1; })[0];
+            location.replace('/index.html' + (hit ? '#' + hit : ''));
+        })();
+    </script>
+</head>
+<body><a href="/index.html">→ niccolò ridi</a></body>
+</html>
