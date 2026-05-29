@@ -591,7 +591,7 @@
                     const cols = Math.ceil(W / ts), rows = Math.ceil(H / ts);
                     const thr = new Float32Array(cols * rows);
                     for (let i = 0; i < thr.length; i++) thr[i] = Math.random() * 0.55;
-                    const start = performance.now(), dur = 1050, win = 0.4;
+                    const start = performance.now(), dur = 820, win = 0.4;
                     (function frame(now){
                         let p = (now - start) / dur; if (p > 1) p = 1;
                         const ep = p < 0.5 ? 2*p*p : 1 - Math.pow(-2*p + 2, 2)/2;
@@ -607,15 +607,20 @@
                         else { ctx.clearRect(0, 0, W, H); ctx.drawImage(to, 0, 0); busy = false; if (after) after(); }
                     })(performance.now());
                 }
-                function toPhoto(){ measure(); dissolve(plateSnap(), cover(photoImg, fx, fy), () => { state = 'photo'; if (hint) hint.textContent = 'click to revert'; }); }
-                el.addEventListener('click', () => {
-                    if (busy || !plateImg.complete) return;
+                let pending = false;
+                function flush(){ if (pending){ pending = false; toggle(); } }
+                function toPhoto(){ measure(); dissolve(plateSnap(), cover(photoImg, fx, fy), () => { state = 'photo'; if (hint) hint.textContent = 'click to revert'; flush(); }); }
+                function toPlate(){ measure(); dissolve(cover(photoImg, fx, fy), plateSnap(), () => { state = 'plate'; canvas.style.opacity = '0'; if (hint) hint.textContent = 'click to reveal'; flush(); }); }
+                function toggle(){
                     if (state === 'plate'){
                         if (photoImg && photoImg.complete && photoImg.naturalWidth) toPhoto();
-                        else { photoImg = new Image(); photoImg.onload = toPhoto; photoImg.src = photoSrc; }
-                    } else {
-                        measure(); dissolve(cover(photoImg, fx, fy), plateSnap(), () => { state = 'plate'; canvas.style.opacity = '0'; if (hint) hint.textContent = 'click to reveal'; });
-                    }
+                        else { if (!photoImg){ photoImg = new Image(); photoImg.src = photoSrc; } photoImg.onload = toPhoto; if (photoImg.complete && photoImg.naturalWidth) toPhoto(); }
+                    } else toPlate();
+                }
+                el.addEventListener('click', () => {
+                    if (!plateImg.complete) return;
+                    if (busy) { pending = true; return; }   // queue a click made mid-dissolve
+                    toggle();
                 });
             }
             function clearSectionUI(){ document.body.classList.remove('mode-section'); }
