@@ -228,6 +228,11 @@
             body.mode-section .stage { flex-direction: column; align-items: stretch; gap: 1.1rem; }
             .stage-plate { flex: 0 0 auto; min-height: 0; align-self: center; padding-top: 0; }
             .stage-plate img { max-height: 22vh; max-width: 80%; width: auto; }
+            /* mobile: hint becomes a readable pill near the bottom INSIDE the plate (no collision with the text below) */
+            .plate-toggle .pt-hint { bottom: 0.5rem; opacity: 0.97; color: var(--gold);
+                background: rgba(10,10,12,0.66); padding: 0.34rem 0.72rem; border: 1px solid var(--line);
+                border-radius: 999px; font-size: 0.6rem; }
+            .light-mode .plate-toggle .pt-hint { background: rgba(236,231,220,0.82); }
             .stage-text { overflow: visible; min-height: 0; }
             .stage-title { font-size: 1.8rem; }
             .stage-text p { font-size: 0.95rem; }
