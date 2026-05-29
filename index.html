@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Niccolò Ridi — Public International Law</title>
-    <script>(function(){var t=localStorage.getItem('noir-theme');if(t==='light')document.documentElement.classList.add('light-mode');})()</script>
+    <script>(function(){var t=localStorage.getItem('noir-theme');if(!t){var h=new Date().getHours();t=(h>=7&&h<19)?'light':'dark';}if(t==='light')document.documentElement.classList.add('light-mode');})()</script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -236,14 +236,7 @@
 <body class="ts-mono">
     <header>
         <a class="id" href="index.html"><b>◆</b> NICCOLÒ&nbsp;RIDI</a>
-        <nav>
-            <a href="profile.html">profile</a>
-            <a href="practice.html">practice</a>
-            <a href="research.html">research</a>
-            <a href="data.html">data</a>
-            <button class="tog" onclick="toggleTheme()"><span id="tlabel">light</span></button>
-        </nav>
-        <button class="burger" aria-label="menu"><span></span><span></span><span></span></button>
+        <button class="tog" onclick="toggleTheme()"><span id="tlabel">light</span></button>
     </header>
 
     <main>
@@ -376,19 +369,19 @@
     </div>
 
     <script>
-        const burger = document.querySelector('.burger');
-        burger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
-        document.querySelectorAll('header nav a').forEach(a => a.addEventListener('click', () => document.body.classList.remove('nav-open')));
-        let theme = localStorage.getItem('noir-theme') || 'dark';
-        function applyTheme(t){
+        // default by the viewer's local time (daytime → light), unless they've chosen before
+        function themeDefault(){ const h = new Date().getHours(); return (h >= 7 && h < 19) ? 'light' : 'dark'; }
+        let theme = localStorage.getItem('noir-theme') || themeDefault();
+        function applyTheme(t, persist){
             document.documentElement.classList.toggle('light-mode', t === 'light');
             document.body.classList.toggle('light-mode', t === 'light');
             document.getElementById('tlabel').textContent = t === 'light' ? 'dark' : 'light';
-            localStorage.setItem('noir-theme', t); theme = t;
+            if (persist) localStorage.setItem('noir-theme', t);
+            theme = t;
             window.__net && window.__net.retheme && window.__net.retheme();
         }
-        function toggleTheme(){ applyTheme(theme === 'light' ? 'dark' : 'light'); }
-        applyTheme(theme);
+        function toggleTheme(){ applyTheme(theme === 'light' ? 'dark' : 'light', true); }
+        applyTheme(theme, false);
 
         /* ─── Interactive shell with autocomplete/suggestions ─── */
         (function shell(){
@@ -430,7 +423,7 @@
                         const nm = clickable ? '<span class="chip" data-cmd="'+c+'">'+c+'</span>' : c;
                         return '  ' + nm + pad + '<span class="muted">' + d + '</span>';
                     };
-                    return '<span class="gold">MANUAL</span><span class="muted">  — click a command, or type it and press Enter</span>\n\n'
+                    return '<span class="man-anchor"></span><span class="gold">MANUAL</span><span class="muted">  — click a command, or type it and press Enter</span>\n\n'
                         + '<span class="muted">navigate</span>\n'
                         + row('profile','bio · positions · education') + '\n'
                         + row('practice','counsel &amp; advisory work') + '\n'
@@ -444,7 +437,8 @@
                         + row('ls','list sections') + '\n'
                         + row('open &lt;section&gt;','open a section by name', false) + '\n'
                         + row('clear','clear the screen') + '\n'
-                        + row('man','show this manual');
+                        + row('man','show this manual')
+                        + '\n\n  <span class="chip" data-cmd="top">↑ back to top</span>';
                 },
                 whoami(){ return 'Dr Niccolò Ridi — academic &amp; practitioner in <span class="gold">public international law</span>.\n'
                     + '<span class="muted">international dispute resolution · computational analysis of law</span>'; },
@@ -531,6 +525,7 @@
                 openSection(s); return '<span class="gold">'+s+'</span> — '+desc; }; });
             COMMANDS.home = COMMANDS.cd = () => { closeSection(); return '<span class="muted">~ home</span>'; };
             COMMANDS.man = COMMANDS.help;
+            COMMANDS.top = () => { const a = body.querySelectorAll('.man-anchor'); const el = a[a.length-1]; if (el) el.scrollIntoView({ behavior:'smooth', block:'start' }); return null; };
 
             const VOCAB = Array.from(new Set([...Object.keys(COMMANDS), ...Object.keys(SECTIONS), ...Object.keys(ALIASES), ...Object.keys(LINKS)]))
                 .filter(x => x !== 'sudo');
@@ -584,8 +579,8 @@
             });
 
             // type a command out character-by-character, then run it
-            function autorun(cmd){ let i = 0; input.value = ''; sugBox.innerHTML = '';
-                (function t(){ if (i <= cmd.length) { input.value = cmd.slice(0,i); i++; setTimeout(t, 55); } else { run(cmd); input.value = ''; } })(); }
+            function autorun(cmd, done){ let i = 0; input.value = ''; sugBox.innerHTML = '';
+                (function t(){ if (i <= cmd.length) { input.value = cmd.slice(0,i); i++; setTimeout(t, 55); } else { run(cmd); input.value = ''; if (done) setTimeout(done, 80); } })(); }
 
             // tiles open the section in-panel (terminal autotypes the command) instead of navigating away
             document.querySelectorAll('.tile').forEach(a => a.addEventListener('click', e => {
@@ -607,18 +602,14 @@
             });
             window.__syncCtog = syncCtog; syncCtog();
 
-            // boot: auto-type `whoami`
-            const boot = 'whoami'; let i = 0;
-            (function type(){
-                if (i <= boot.length) { input.value = boot.slice(0,i); renderSuggest(); i++; setTimeout(type, 85); }
-                else { setTimeout(()=>{
-                    run(boot); input.value=''; sugBox.innerHTML=''; if (canFocus) input.focus();
-                    // mobile: after the intro plays, fold the terminal+network so the tiles jump up
-                    if (window.matchMedia('(max-width: 880px)').matches) {
-                        setTimeout(()=>{ if (!document.body.classList.contains('mode-section')) { document.body.classList.add('mcollapsed'); syncCtog(); } }, 1500);
-                    }
-                }, 350); }
-            })();
+            // boot: type whoami, then auto-print the manual on its own
+            setTimeout(() => autorun('whoami', () => setTimeout(() => autorun('man', () => {
+                if (canFocus) input.focus();
+                // mobile: after the intro plays, fold the terminal+network so the tiles jump up
+                if (window.matchMedia('(max-width: 880px)').matches) {
+                    setTimeout(() => { if (!document.body.classList.contains('mode-section')) { document.body.classList.add('mcollapsed'); syncCtog(); } }, 1800);
+                }
+            }), 500)), 250);
         })();
     </script>
 
