@@ -487,13 +487,62 @@
             .essay-header h1 { font-size: 1.8rem; }
             .essay-body h2 { font-size: 1.3rem; }
             .essay-container { padding: 2rem 1.2rem 3rem; }
-            .viz-block { margin: 2rem -0.5rem; }
+
+            /* ── Mobile figure flow hardening ─────────────────────────
+               Keep every figure in NORMAL DOCUMENT FLOW, full-width within
+               the content box, and painted ABOVE the prose so a positioned
+               figure can never sit behind / overlap text. Removes the
+               desktop edge-bleed (negative margins) that could push a
+               figure past the viewport and over neighbouring paragraphs. */
+            .essay-body > p,
+            .essay-body > h2,
+            .essay-body > h3,
+            .pullquote,
+            .viz-caption { position: relative; z-index: 1; }
+
+            .viz-block {
+                position: relative;
+                z-index: 2;
+                margin: 2rem 0;
+                width: 100%;
+                max-width: 100%;
+                overflow: visible;
+            }
+            .viz-block svg {
+                position: relative;
+                z-index: 2;
+                width: 100%;
+                max-width: 100%;
+                height: auto;
+                display: block;
+            }
+            /* Legends reflow to a static block below the chart, full width,
+               so they can never overlay the figure or the prose. */
+            .viz-legend {
+                position: relative;
+                z-index: 2;
+                margin-top: 0.6rem;
+                justify-content: flex-start;
+                font-size: 0.7rem;
+            }
+            .viz-caption { margin-top: 0.6rem; }
+
             .stat-row { gap: 0.8rem; }
             .stat-box .num { font-size: 1.5rem; }
             .stat-box { min-width: 100px; padding: 1rem 0.6rem; }
+            .stat-row, .compare-row {
+                position: relative;
+                z-index: 2;
+                width: 100%;
+                max-width: 100%;
+            }
             .topo-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.6rem;
+                position: relative;
+                z-index: 2;
+                width: 100%;
+                max-width: 100%;
             }
             .topo-card:nth-child(1),
             .topo-card:nth-child(2),
@@ -501,6 +550,18 @@
             .topo-card:nth-child(4),
             .topo-card:nth-child(5) { grid-column: auto; }
             .topo-card:nth-child(5) { grid-column: 1 / -1; max-width: 50%; margin: 0 auto; }
+            .topo-card { overflow: hidden; }
+            .topo-card svg { max-width: 100%; height: auto; }
+        }
+
+        @media (max-width: 480px) {
+            .essay-container { padding: 1.8rem 1rem 2.5rem; }
+            .viz-block { margin: 1.6rem 0; }
+            /* single-column stat / compare cards so nothing is squeezed */
+            .stat-row, .compare-row { flex-direction: column; }
+            .stat-box, .compare-item { min-width: 0; width: 100%; }
+            .topo-grid { grid-template-columns: 1fr; }
+            .topo-card:nth-child(5) { grid-column: auto; max-width: 100%; }
         }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -758,6 +819,11 @@
 
     function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
 
+    /* Narrow-viewport helpers: desktop output is unchanged because every
+       call site only diverges when innerWidth ≤ 768 (or ≤ 480). */
+    function isMobile() { return window.innerWidth <= 768; }
+    function isNarrow() { return window.innerWidth <= 480; }
+
     /* ── THEME ───────────────────────────────────── */
     let theme = localStorage.getItem('noir-theme') || ((new Date().getHours() >= 7 && new Date().getHours() < 19) ? 'light' : 'dark');
     function applyTheme(t, persist) {
@@ -777,8 +843,14 @@
         const container = d3.select("#viz-heatmap");
         container.selectAll("*").remove();
         const w = container.node().getBoundingClientRect().width;
-        const h = Math.min(400, w * 0.65);
-        const m = { top: 30, right: 60, bottom: 55, left: 70 };
+        const mob = isMobile();
+        // On mobile, shrink the desktop-tuned margins and grow the aspect
+        // ratio so the 9×7 grid cells stay large enough to hold their labels
+        // (otherwise the in-cell text collides / overflows onto the prose).
+        const h = mob ? Math.max(300, w * 1.05) : Math.min(400, w * 0.65);
+        const m = mob
+            ? { top: 22, right: 30, bottom: 48, left: 40 }
+            : { top: 30, right: 60, bottom: 55, left: 70 };
 
         const svg = container.append("svg")
             .attr("width", w).attr("height", h)
@@ -898,26 +970,48 @@
             .text("Intrinsic Preference Mean (µ_IP)");
 
         // Color legend
-        const legendW = 15;
-        const legendH = h - m.top - m.bottom;
-        const legendX = w - m.right + 20;
         const defs = svg.append("defs");
-        const grad = defs.append("linearGradient").attr("id", "heat-grad").attr("x1", "0").attr("y1", "1").attr("x2", "0").attr("y2", "0");
-        d3.range(0, 1.0001, 0.1).forEach(t => {
-            grad.append("stop")
-                .attr("offset", (t * 100) + "%")
-                .attr("stop-color", colorScale(t));
-        });
-        svg.append("rect").attr("x", legendX).attr("y", m.top).attr("width", legendW).attr("height", legendH).attr("fill", "url(#heat-grad)").attr("rx", 2);
-        [0, 0.25, 0.5, 0.75, 1.0].forEach(v => {
-            svg.append("text")
-                .attr("x", legendX + legendW + 5)
-                .attr("y", m.top + legendH * (1 - v))
-                .attr("dy", "0.35em")
-                .attr("font-size", "9px")
-                .attr("fill", css('--secondary-color'))
-                .text(Math.round(v * 100) + "%");
-        });
+        if (mob) {
+            // Mobile: a compact horizontal gradient bar appended BELOW the plot
+            // (the desktop right-edge legend would overflow the narrow SVG).
+            const grad = defs.append("linearGradient").attr("id", "heat-grad").attr("x1", "0").attr("y1", "0").attr("x2", "1").attr("y2", "0");
+            d3.range(0, 1.0001, 0.1).forEach(t => {
+                grad.append("stop").attr("offset", (t * 100) + "%").attr("stop-color", colorScale(t));
+            });
+            const lw = Math.min(160, w - m.left - m.right);
+            const lx = (w - lw) / 2;
+            const ly = h - 2;
+            // extend the svg a touch so the legend never clips
+            svg.attr("height", h + 26).attr("viewBox", `0 0 ${w} ${h + 26}`);
+            svg.append("rect").attr("x", lx).attr("y", ly).attr("width", lw).attr("height", 10).attr("fill", "url(#heat-grad)").attr("rx", 2);
+            [0, 0.5, 1.0].forEach(v => {
+                svg.append("text")
+                    .attr("x", lx + lw * v)
+                    .attr("y", ly + 22)
+                    .attr("text-anchor", v === 0 ? "start" : v === 1 ? "end" : "middle")
+                    .attr("font-size", "9px")
+                    .attr("fill", css('--secondary-color'))
+                    .text(Math.round(v * 100) + "%");
+            });
+        } else {
+            const legendW = 15;
+            const legendH = h - m.top - m.bottom;
+            const legendX = w - m.right + 20;
+            const grad = defs.append("linearGradient").attr("id", "heat-grad").attr("x1", "0").attr("y1", "1").attr("x2", "0").attr("y2", "0");
+            d3.range(0, 1.0001, 0.1).forEach(t => {
+                grad.append("stop").attr("offset", (t * 100) + "%").attr("stop-color", colorScale(t));
+            });
+            svg.append("rect").attr("x", legendX).attr("y", m.top).attr("width", legendW).attr("height", legendH).attr("fill", "url(#heat-grad)").attr("rx", 2);
+            [0, 0.25, 0.5, 0.75, 1.0].forEach(v => {
+                svg.append("text")
+                    .attr("x", legendX + legendW + 5)
+                    .attr("y", m.top + legendH * (1 - v))
+                    .attr("dy", "0.35em")
+                    .attr("font-size", "9px")
+                    .attr("fill", css('--secondary-color'))
+                    .text(Math.round(v * 100) + "%");
+            });
+        }
     }
 
     /* ── MINI NETWORK TOPOLOGIES ─────────────────── */
@@ -1029,7 +1123,7 @@
         const container = d3.select("#viz-topo-bars");
         container.selectAll("*").remove();
         const w = container.node().getBoundingClientRect().width;
-        const h = Math.min(300, w * 0.5);
+        const h = isMobile() ? Math.max(220, w * 0.75) : Math.min(300, w * 0.5);
         const m = { top: 20, right: 30, bottom: 60, left: 50 };
 
         const svg = container.append("svg")
@@ -1141,7 +1235,7 @@
         const container = d3.select("#viz-sincerity");
         container.selectAll("*").remove();
         const w = container.node().getBoundingClientRect().width;
-        const h = Math.min(320, w * 0.55);
+        const h = isMobile() ? Math.max(240, w * 0.8) : Math.min(320, w * 0.55);
         const m = { top: 25, right: 50, bottom: 50, left: 50 };
 
         const svg = container.append("svg")
@@ -1276,7 +1370,7 @@
         const container = d3.select("#viz-structural");
         container.selectAll("*").remove();
         const w = container.node().getBoundingClientRect().width;
-        const h = Math.min(350, w * 0.55);
+        const h = isMobile() ? Math.max(260, w * 0.85) : Math.min(350, w * 0.55);
         const m = { top: 25, right: 20, bottom: 80, left: 50 };
 
         const svg = container.append("svg")
@@ -1393,7 +1487,7 @@
         const container = d3.select("#viz-speed");
         container.selectAll("*").remove();
         const w = container.node().getBoundingClientRect().width;
-        const h = Math.min(300, w * 0.5);
+        const h = isMobile() ? Math.max(240, w * 0.78) : Math.min(300, w * 0.5);
         const m = { top: 25, right: 55, bottom: 50, left: 55 };
 
         const svg = container.append("svg")

@@ -445,6 +445,25 @@
             .stat-box .num { font-size: 1.5rem; }
             .stat-box { min-width: 100px; padding: 1rem 0.6rem; }
 
+            /* Figures stack cleanly in normal flow on mobile — never layered
+               behind prose, never wider than the viewport. */
+            .viz-block {
+                position: relative;
+                z-index: 1;
+                width: auto;
+                max-width: 100%;
+                overflow: visible;
+                clear: both;
+            }
+            .viz-block svg {
+                width: 100%;
+                max-width: 100%;
+                height: auto;       /* honour the responsive viewBox; no fixed desktop px */
+                display: block;
+            }
+            /* Detection figure: keep big number + dot grid in flow, full width. */
+            #viz-detection { position: relative; width: 100%; }
+
             .hamburger-menu { display: block; }
             .page-header nav {
                 position: fixed; top: 0; left: 0;
@@ -461,6 +480,12 @@
             body.nav-open .hamburger-menu .line-1 { transform: rotate(45deg) translate(5px, 5px); }
             body.nav-open .hamburger-menu .line-2 { opacity: 0; }
             body.nav-open .hamburger-menu .line-3 { transform: rotate(-45deg) translate(5px, -5px); }
+        }
+
+        @media (max-width: 480px) {
+            .essay-container { padding: 1.6rem 1rem 2.5rem; }
+            .viz-block { margin: 1.8rem -0.25rem; }
+            .detection-grid { max-width: 100%; }
         }
     </style>
 </head>
@@ -645,6 +670,11 @@
 
     function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
 
+    /* Mobile breakpoints mirrored in JS so chart geometry reflows in-flow
+       on narrow viewports without ever touching the desktop render path. */
+    function isNarrow() { return window.matchMedia('(max-width: 768px)').matches; }
+    function isXNarrow() { return window.matchMedia('(max-width: 480px)').matches; }
+
     /* ── DISTRIBUTION ─────────────────────────────────── */
     function drawDistribution() {
         const container = d3.select("#viz-distribution");
@@ -776,8 +806,10 @@
         const container = d3.select("#viz-memorials");
         container.selectAll("*").remove();
         const w = container.node().getBoundingClientRect().width;
-        const barH = 28;
-        const m = { top: 10, right: 50, bottom: 30, left: 90 };
+        const barH = isNarrow() ? 24 : 28;
+        const m = isNarrow()
+            ? { top: 10, right: 34, bottom: 30, left: 68 }
+            : { top: 10, right: 50, bottom: 30, left: 90 };
         const sorted = [...memorials].sort((a, b) => a.score - b.score);
         const h = m.top + sorted.length * (barH + 6) + m.bottom;
 
@@ -943,8 +975,14 @@
         const container = d3.select("#viz-categories");
         container.selectAll("*").remove();
         const w = container.node().getBoundingClientRect().width;
-        const h = Math.min(300, w * 0.5);
-        const m = { top: 20, right: 20, bottom: 60, left: 160 };
+        const narrow = isNarrow();
+        /* On mobile the long category labels can't share the row with the bars,
+           so they move to their own line ABOVE each bar group (left margin
+           collapses) and the figure grows taller to fit them in flow. */
+        const h = narrow ? Math.max(360, w * 1.05) : Math.min(300, w * 0.5);
+        const m = narrow
+            ? { top: 20, right: 34, bottom: 50, left: 12 }
+            : { top: 20, right: 20, bottom: 60, left: 160 };
 
         const svg = container.append("svg")
             .attr("width", w).attr("height", h)
@@ -952,7 +990,10 @@
 
         const cats = categoryScores.map(d => d.cat.replace(/\n/g, ' '));
         const y0 = d3.scaleBand().domain(cats).range([m.top, h - m.bottom]).padding(0.25);
-        const y1 = d3.scaleBand().domain(["GPT-4", "Gemini"]).range([0, y0.bandwidth()]).padding(0.1);
+        // On mobile, reserve the top of each band for an above-the-bars label.
+        const labelPad = narrow ? 16 : 0;
+        const y1 = d3.scaleBand().domain(["GPT-4", "Gemini"])
+            .range([labelPad, y0.bandwidth()]).padding(0.1);
         const xScale = d3.scaleLinear().domain([0, 20]).range([m.left, w - m.right]);
 
         // Grid lines
@@ -978,30 +1019,36 @@
                     .attr("fill", d.model === "GPT-4" ? css('--gpt4-color') : css('--gemini-color'))
                     .attr("opacity", 0.85);
 
+                // Keep the value label inside the chart on narrow widths so it
+                // never overflows past the right edge.
+                const rawX = xScale(d.val) + 4;
+                const inside = narrow && rawX > (w - m.right - 12);
                 svg.append("text")
-                    .attr("x", xScale(d.val) + 4)
+                    .attr("x", inside ? xScale(d.val) - 4 : rawX)
                     .attr("y", y0(catName) + y1(d.model) + y1.bandwidth() / 2)
                     .attr("dy", "0.35em")
+                    .attr("text-anchor", inside ? "end" : "start")
                     .attr("font-size", "10px")
                     .attr("font-weight", "bold")
-                    .attr("fill", css('--primary-color'))
+                    .attr("fill", inside ? css('--background-color') : css('--primary-color'))
                     .text(d.val);
             });
         });
 
-        // Y axis labels
+        // Y axis labels — to the left on desktop, stacked above each group on mobile.
         svg.selectAll(".cat-label")
             .data(cats)
             .join("text")
-            .attr("x", m.left - 8)
-            .attr("y", d => y0(d) + y0.bandwidth() / 2)
+            .attr("x", narrow ? m.left : m.left - 8)
+            .attr("y", d => narrow ? y0(d) + 10 : y0(d) + y0.bandwidth() / 2)
             .attr("dy", "0.35em")
-            .attr("text-anchor", "end")
+            .attr("text-anchor", narrow ? "start" : "end")
             .attr("font-size", "10px")
             .attr("fill", css('--secondary-color'))
             .each(function(d) {
                 const parts = d.split(' ');
                 const el = d3.select(this);
+                if (narrow) { el.text(d); return; }
                 if (parts.length <= 3) {
                     el.text(d);
                 } else {
