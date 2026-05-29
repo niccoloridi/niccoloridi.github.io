@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GenAI as an International Lawyer | Niccolò Ridi</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script>(function(){var t=localStorage.getItem('imprint-theme');if(!t)t='dark';if(t==='dark')document.documentElement.classList.add('dark-mode');})()</script>
+    <script>(function(){var t=localStorage.getItem('noir-theme');if(!t){var h=new Date().getHours();t=(h>=7&&h<19)?'light':'dark';}if(t==='light')document.documentElement.classList.add('light-mode');})()</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -44,26 +44,47 @@
             --font-mono: 'JetBrains Mono', monospace;
         }
 
-        /* dark-mode is the default/only theme on this noir page; keep the
-           class active so legacy .dark-mode rules + JS toggle stay coherent. */
-        .dark-mode {
-            --primary-color: var(--fg);
-            --secondary-color: var(--muted);
-            --text-color: var(--fg);
-            --border-color: var(--line);
-            --background-color: var(--bg);
-            --header-bg: var(--bg);
-            --accent-color: var(--gold);
-            --subtle-border: var(--line);
-            --card-bg: var(--bg-2);
-            --pullquote-border: var(--gold);
-            --pullquote-bg: var(--bg-2);
-            --stat-color: var(--gold);
-            --highlight-color: var(--gold);
-            --gpt4-color: #6fb3c0;
-            --gemini-color: #d7a13b;
-            --human-color: #9aa0ab;
+        /* Dark is the default (tokens in :root above). Light-mode overrides
+           ALL base tokens + legacy aliases the d3 css() helper reads, so the
+           charts recolour live on toggle. */
+        .light-mode {
+            /* base */
+            --bg: #ece7dc;
+            --bg-2: #f4efe5;
+            --fg: #16140f;
+            --muted: #6b6457;
+            --gold: #9a7521;
+            --line: #d3cab6;
+
+            /* legacy aliases */
+            --primary-color: #16140f;
+            --secondary-color: #6b6457;
+            --text-color: #16140f;
+            --border-color: #d3cab6;
+            --background-color: #ece7dc;
+            --header-bg: #ece7dc;
+            --accent-color: #9a7521;
+            --subtle-border: #d3cab6;
+            --card-bg: #f4efe5;
+            --pullquote-border: #9a7521;
+            --pullquote-bg: #f4efe5;
+            --stat-color: #9a7521;
+            --highlight-color: #9a7521;
+
+            /* series palette — legible on light */
+            --gpt4-color: #3f8e9b;   /* deeper cool blue */
+            --gemini-color: #9a7521; /* gold */
+            --human-color: #6b6457;  /* cool grey */
         }
+
+        /* Soften the vignette on light so the warm paper stays flat. */
+        .light-mode body::before {
+            background: radial-gradient(120% 90% at 70% 0%, transparent 60%, rgba(0,0,0,0.06) 100%);
+        }
+
+        /* Scorecard cells: keep contrast in both themes. */
+        .light-mode .judge-dot.missed { background: var(--bg-2); border: 1px solid var(--line); color: var(--muted); }
+        .light-mode .judge-dot.spotted { background: var(--gold); color: #fff; font-weight: 600; }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -446,25 +467,8 @@
 <body>
 
         <header class="page-header">
-        <a class="home" href="index.html"><b>◆</b> NICCOLÒ RIDI</a>
-        <nav>
-            <a href="profile.html">profile</a>
-            <a href="practice.html">practice</a>
-            <a href="research.html">research</a>
-            <a href="data.html">data</a>
-            <span class="ext-group">
-                <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" rel="noopener">linkedin</a>
-                <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" rel="noopener">scholar</a>
-                <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" rel="noopener">ssrn</a>
-                <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" rel="noopener">kcl</a>
-            </span>
-        </nav>
-        <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span id="theme-label">dark</span></button>
-        <button class="hamburger-menu" aria-label="Open navigation menu">
-            <span class="line line-1"></span>
-            <span class="line line-2"></span>
-            <span class="line line-3"></span>
-        </button>
+        <a class="home" href="index.html" style="color:var(--fg)"><b style="color:var(--gold)">◆</b> NICCOLÒ RIDI</a>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span id="tlabel">light</span></button>
     </header>
 
     <main>
@@ -1090,24 +1094,20 @@
     }, { threshold: 0.1 });
     reveals.forEach(el => revealObs.observe(el));
 
-    /* ── HAMBURGER ────────────────────────────────────── */
-    const hamburger = document.querySelector('.hamburger-menu');
-    hamburger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
-    document.querySelectorAll('.page-header nav a').forEach(link => {
-        link.addEventListener('click', () => document.body.classList.remove('nav-open'));
-    });
-
-    let currentTheme = localStorage.getItem('imprint-theme') || 'dark';
-    function applyTheme(t) {
-        document.documentElement.classList.toggle('dark-mode', t === 'dark');
-        document.body.classList.toggle('dark-mode', t === 'dark');
-        var lbl = document.getElementById('theme-label');
-        if (lbl) lbl.textContent = t === 'dark' ? 'light' : 'dark';
-        localStorage.setItem('imprint-theme', t);
-        currentTheme = t;
+    /* ── THEME ────────────────────────────────────────── */
+    let theme = localStorage.getItem('noir-theme') || ((new Date().getHours() >= 7 && new Date().getHours() < 19) ? 'light' : 'dark');
+    function applyTheme(t, persist) {
+        document.documentElement.classList.toggle('light-mode', t === 'light');
+        document.body.classList.toggle('light-mode', t === 'light');
+        var l = document.getElementById('tlabel');
+        if (l) l.textContent = t === 'light' ? 'dark' : 'light';
+        if (persist) localStorage.setItem('noir-theme', t);
+        theme = t;
+        if (typeof renderAll === 'function') renderAll();
+        else if (typeof drawAll === 'function') drawAll();
     }
-    function toggleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
-    applyTheme(currentTheme);
+    function toggleTheme() { applyTheme(theme === 'light' ? 'dark' : 'light', true); }
+    applyTheme(theme, false);
     </script>
 
 </body>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>cjeu-py | Niccolò Ridi</title>
+    <script>(function(){var t=localStorage.getItem('noir-theme');if(!t){var h=new Date().getHours();t=(h>=7&&h<19)?'light':'dark';}if(t==='light')document.documentElement.classList.add('light-mode');})()</script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,6 +56,56 @@
             --treatment-departs: #c0653f;
         }
 
+        /* ─── Light-mode token overrides ─── */
+        .light-mode {
+            --bg: #ece7dc;
+            --bg-2: #f4efe5;
+            --fg: #16140f;
+            --muted: #6b6457;
+            --gold: #9a7521;
+            --gold-soft: rgba(154,117,33,0.14);
+            --line: #d3cab6;
+
+            /* Aliases consumed by the d3 viz code */
+            --primary-color: var(--fg);
+            --secondary-color: var(--muted);
+            --text-color: var(--fg);
+            --border-color: var(--line);
+            --background-color: var(--bg);
+            --card-bg: var(--bg-2);
+            --stat-color: var(--gold);
+            --highlight-color: var(--gold);
+
+            /* Pipeline stage palette — deepened to read on a light ground */
+            --cjeu-collect: #3f8e9b;   /* teal */
+            --cjeu-download: #6f7e3f;  /* olive */
+            --cjeu-parse: #b0532c;     /* terra */
+            --cjeu-extract: #8a5aa0;   /* violet */
+            --cjeu-classify: #9a7521;  /* gold */
+            --cjeu-search: #3f8e9b;
+            --cjeu-visualize: #9a7521;
+
+            /* Chart series palette */
+            --bar-primary: #9a7521;    /* gold */
+            --bar-secondary: #3f8e9b;  /* teal */
+            --bar-tertiary: #6f7e3f;   /* olive */
+            --bar-danger: #b0532c;     /* terra */
+
+            /* Treatment categories */
+            --treatment-follows: #6f7e3f;
+            --treatment-neutral: #6b6457;
+            --treatment-distinguishes: #b0532c;
+            --treatment-departs: #b0532c;
+        }
+        /* softer vignette on light */
+        .light-mode body::before { background: radial-gradient(120% 90% at 70% 0%, transparent 60%, rgba(0,0,0,0.10) 100%); }
+
+        /* header theme toggle (matches homepage .tog) */
+        .tog { background: none; border: 1px solid var(--line); color: var(--muted); cursor: pointer;
+            font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+            padding: 0.3rem 0.6rem; border-radius: 2px; transition: all 0.2s; }
+        .tog:hover { color: var(--fg); border-color: var(--gold); }
+
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
@@ -93,17 +144,6 @@
         }
         .main-header .id { color: var(--fg); }
         .main-header .id b { color: var(--gold); font-weight: 500; }
-        .main-nav { display: flex; gap: 1.4rem; align-items: center; }
-        .main-nav a { color: var(--muted); transition: color 0.2s; text-transform: lowercase; }
-        .main-nav a:hover { color: var(--fg); }
-
-        .hamburger-menu {
-            display: none; background: none; border: none; cursor: pointer; padding: 4px; z-index: 50;
-        }
-        .hamburger-menu .line {
-            display: block; width: 22px; height: 1.5px; background-color: var(--fg);
-            margin: 5px 0; transition: transform 0.3s ease, opacity 0.3s ease;
-        }
 
         /* ─── Essay layout ─── */
         .essay-container {
@@ -301,37 +341,14 @@
             .stat-box .num { font-size: 1.6rem; }
             .stat-box { min-width: 100px; padding: 1rem 0.6rem; }
 
-            .hamburger-menu { display: block; }
-            .main-nav {
-                position: fixed; inset: 0;
-                background-color: var(--bg);
-                flex-direction: column; justify-content: center; align-items: center;
-                transform: translateX(100%);
-                transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
-                font-size: 1.2rem; gap: 1.8rem; z-index: 40;
-            }
-            body.nav-open .main-nav { transform: translateX(0); }
-            body.nav-open .hamburger-menu .line-1 { transform: translateY(6.5px) rotate(45deg); }
-            body.nav-open .hamburger-menu .line-2 { opacity: 0; }
-            body.nav-open .hamburger-menu .line-3 { transform: translateY(-6.5px) rotate(-45deg); }
         }
     </style>
 </head>
 <body>
 
     <header class="main-header">
-        <a class="id" href="index.html"><b>◆</b> NICCOLÒ&nbsp;RIDI</a>
-        <nav class="main-nav">
-            <a href="profile.html">profile</a>
-            <a href="practice.html">practice</a>
-            <a href="research.html">research</a>
-            <a href="data.html">data</a>
-        </nav>
-        <button class="hamburger-menu" aria-label="Open navigation menu">
-            <span class="line line-1"></span>
-            <span class="line line-2"></span>
-            <span class="line line-3"></span>
-        </button>
+        <a href="index.html" style="color:var(--fg)"><b style="color:var(--gold)">◆</b> NICCOLÒ RIDI</a>
+        <button class="tog" onclick="toggleTheme()"><span id="tlabel">light</span></button>
     </header>
 
     <main>
@@ -750,7 +767,7 @@ cjeu-py export-network --format html --max-nodes 500</div>
         const w = container.node().getBoundingClientRect().width;
         const isMobile = w < 600;
 
-        const catPalette = ["#d7a13b", "#6fb3c0", "#8a9b5b", "#b07fc7", "#c0653f", "#d9b15e"];
+        const catPalette = [css("--cjeu-classify"), css("--cjeu-collect"), css("--cjeu-download"), css("--cjeu-extract"), css("--cjeu-parse"), css("--cjeu-visualize")];
 
         const panels = [
             { title: "Precision", data: precisionData, colors: [css("--bar-tertiary"), css("--bar-primary"), css("--secondary-color")] },
@@ -916,12 +933,19 @@ cjeu-py export-network --format html --max-nodes 500</div>
     }, { threshold: 0.1 });
     vizBlocks.forEach(b => vizObserver.observe(b));
 
-    // Hamburger
-    const hamburger = document.querySelector('.hamburger-menu');
-    hamburger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
-    document.querySelectorAll('.main-header nav a').forEach(link => {
-        link.addEventListener('click', () => document.body.classList.remove('nav-open'));
-    });
+    // Theme toggle — recolours the viz live by re-reading CSS tokens via renderAll()
+    let theme = localStorage.getItem('noir-theme') || ((new Date().getHours() >= 7 && new Date().getHours() < 19) ? 'light' : 'dark');
+    function applyTheme(t, persist) {
+        document.documentElement.classList.toggle('light-mode', t === 'light');
+        document.body.classList.toggle('light-mode', t === 'light');
+        var l = document.getElementById('tlabel');
+        if (l) l.textContent = t === 'light' ? 'dark' : 'light';
+        if (persist) localStorage.setItem('noir-theme', t);
+        theme = t;
+        if (typeof renderAll === 'function') renderAll();
+    }
+    function toggleTheme() { applyTheme(theme === 'light' ? 'dark' : 'light', true); }
+    applyTheme(theme, false);
     </script>
 
 </body>

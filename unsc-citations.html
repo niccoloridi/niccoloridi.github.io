@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Citation Network of the UN Security Council | Niccolò Ridi</title>
+    <script>(function(){var t=localStorage.getItem('noir-theme');if(!t){var h=new Date().getHours();t=(h>=7&&h<19)?'light':'dark';}if(t==='light')document.documentElement.classList.add('light-mode');})()</script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         :root {
@@ -49,6 +50,49 @@
             --font-display: 'Space Grotesk', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
         }
+
+        /* ─── Light-mode token overrides (matches homepage `noir-theme`) ─── */
+        .light-mode {
+            --bg: #ece7dc;
+            --bg-2: #f4efe5;
+            --fg: #16140f;
+            --muted: #6b6457;
+            --gold: #9a7521;
+            --line: #d3cab6;
+
+            /* Legacy aliases — literal values (read via getComputedStyle into SVG attrs) */
+            --primary-color: #16140f;   /* = --fg */
+            --secondary-color: #6b6457; /* = --muted */
+            --text-color: #16140f;      /* = --fg */
+            --border-color: #d3cab6;    /* = --line */
+            --background-color: #ece7dc;/* = --bg */
+            --header-bg: #ece7dc;
+            --accent-color: #9a7521;    /* = --gold */
+            --subtle-border: #d3cab6;
+            --card-bg: #f4efe5;         /* = --bg-2 */
+
+            /* Visualization palette — deepened so it reads on a light ground */
+            --viz-node: #9a7521;        /* gold */
+            --viz-node-hub: #16140f;    /* deep ink for hubs */
+            --viz-link: rgba(154,117,33,0.30);
+            --viz-highlight: #9a7521;
+            --viz-cluster1: #9a7521;
+            --viz-cluster2: #b08a2e;
+            --viz-cluster3: #7e5e16;
+            --viz-cluster4: #16140f;
+            --viz-cluster5: #6e5414;
+            --viz-cluster6: #8a6a1e;
+            --viz-cluster7: #5c4a28;
+            --viz-cluster8: #6b6457;
+            --pullquote-border: #9a7521;
+            --pullquote-bg: #f4efe5;
+            --stat-color: #9a7521;
+        }
+
+        body { transition: background-color 300ms ease, color 300ms ease; }
+
+        /* Soften the vignette in light mode */
+        .light-mode body::before { background: radial-gradient(120% 90% at 70% 0%, transparent 60%, rgba(0,0,0,0.10) 100%); }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -111,8 +155,21 @@
         .page-header nav a { position: relative; }
         .page-header nav a:hover { color: var(--fg); }
 
-        .hamburger-menu { display: none; background: none; border: none; cursor: pointer; padding: 10px; z-index: 1001; }
-        .hamburger-menu .line { display: block; width: 25px; height: 2px; background-color: var(--fg); margin: 5px 0; transition: transform 0.3s ease, opacity 0.3s ease; }
+        /* Theme toggle (matches homepage .tog) */
+        .tog {
+            background: none;
+            border: 1px solid var(--line);
+            color: var(--muted);
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-size: 0.62rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.3rem 0.6rem;
+            border-radius: 2px;
+            transition: all 0.2s;
+        }
+        .tog:hover { color: var(--fg); border-color: var(--gold); }
 
         /* Essay layout */
         .essay-container {
@@ -399,7 +456,7 @@
             position: absolute;
             bottom: 20px;
             left: 20px;
-            background: rgba(17,17,20,0.95);
+            background: var(--bg-2);
             border: 1px solid var(--line);
             border-radius: 4px;
             box-shadow: 0 2px 15px rgba(0,0,0,0.4);
@@ -654,17 +711,7 @@
 
         <header class="page-header">
         <a class="home" href="index.html"><b>&#9670;</b> NICCOLÒ RIDI</a>
-        <nav>
-            <a href="profile.html">profile</a>
-            <a href="practice.html">practice</a>
-            <a href="research.html">research</a>
-            <a href="data.html">data</a>
-        </nav>
-        <button class="hamburger-menu" aria-label="Open navigation menu">
-            <span class="line line-1"></span>
-            <span class="line line-2"></span>
-            <span class="line line-3"></span>
-        </button>
+        <button class="tog" onclick="toggleTheme()"><span id="tlabel">light</span></button>
     </header>
 
     <main>
@@ -849,12 +896,24 @@
     </footer>
 
     <script>
-        // Hamburger
-        const hamburger = document.querySelector('.hamburger-menu');
-    hamburger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
-    document.querySelectorAll('.page-header nav a').forEach(link => {
-        link.addEventListener('click', () => document.body.classList.remove('nav-open'));
-    });
+        // ─── Theme toggle (matches homepage `noir-theme`) ───
+        let theme = localStorage.getItem('noir-theme') || ((new Date().getHours() >= 7 && new Date().getHours() < 19) ? 'light' : 'dark');
+        // Set inside loadFullNetwork so the live network can be re-coloured on toggle.
+        window._recolorNetwork = null;
+        function applyTheme(t, persist) {
+            document.documentElement.classList.toggle('light-mode', t === 'light');
+            document.body.classList.toggle('light-mode', t === 'light');
+            var l = document.getElementById('tlabel');
+            if (l) l.textContent = t === 'light' ? 'dark' : 'light';
+            if (persist) localStorage.setItem('noir-theme', t);
+            theme = t;
+            // Re-render token-driven SVG charts so they re-read the new colours.
+            if (typeof reRenderVisible === 'function') reRenderVisible();
+            // Re-colour the already-built force network in place.
+            if (typeof window._recolorNetwork === 'function') window._recolorNetwork();
+        }
+        function toggleTheme() { applyTheme(theme === 'light' ? 'dark' : 'light', true); }
+        applyTheme(theme, false);
 
         // ─── Utility ───
         function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
@@ -1086,6 +1145,13 @@
             node.append('circle')
                 .attr('r', function(d) { return getRadius(d); })
                 .attr('fill', function(d) { return nodeColor(d); });
+
+            // Expose a live re-colour hook so a manual theme toggle re-reads tokens.
+            // (The .link stroke is driven by CSS var(--gold) and adapts automatically;
+            //  node circle fills are set inline, so they are re-applied here.)
+            window._recolorNetwork = function() {
+                node.select('circle').attr('fill', function(d) { return nodeColor(d); });
+            };
 
             var tooltip = d3.select('#net-tooltip');
 

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custom in the Making | Niccolò Ridi</title>
+    <script>(function(){var t=localStorage.getItem('noir-theme');if(!t){var h=new Date().getHours();t=(h>=7&&h<19)?'light':'dark';}if(t==='light')document.documentElement.classList.add('light-mode');})()</script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         :root {
@@ -42,6 +43,50 @@
             --bar-secondary: #6fb3c0;
             --bar-tertiary: #8a9b5b;
             --bar-danger: #c0653f;
+
+            /* Heatmap interpolator selector (overridden in light-mode) */
+            --heat-scheme: inferno;
+        }
+
+        /* ── Light-mode override (matches homepage tokens) ───────── */
+        .light-mode {
+            --bg: #ece7dc;
+            --bg-2: #f4efe5;
+            --fg: #16140f;
+            --muted: #6b6457;
+            --gold: #9a7521;
+            --line: #d3cab6;
+
+            /* Mapped legacy tokens / viz aliases → light */
+            --primary-color: var(--fg);
+            --secondary-color: var(--muted);
+            --text-color: var(--fg);
+            --border-color: var(--line);
+            --background-color: var(--bg);
+            --header-bg: var(--bg);
+            --accent-color: var(--gold);
+            --subtle-border: var(--line);
+            --card-bg: var(--bg-2);
+            --pullquote-border: var(--gold);
+            --pullquote-bg: var(--bg-2);
+            --stat-color: var(--gold);
+            --highlight-color: var(--gold);
+            /* Heatmap endpoints — low end blends into the light paper bg */
+            --heat-low: #ece7dc;
+            --heat-mid: #9a7521;
+            --heat-high: #4a3408;
+            /* Categorical / topology palette deepened for light ground */
+            --topo-complete: #3f8e9b;
+            --topo-regional: #b0532c;
+            --topo-smallworld: #9a7521;
+            --topo-scalefree: #6f7e3f;
+            --topo-power: #8a5aa0;
+            --bar-primary: #9a7521;
+            --bar-secondary: #3f8e9b;
+            --bar-tertiary: #6f7e3f;
+            --bar-danger: #b0532c;
+            /* light-mode heatmap uses magma (reads better on light paper) */
+            --heat-scheme: magma;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -57,6 +102,7 @@
             flex-direction: column;
             min-height: 100vh;
             position: relative;
+            transition: background-color 300ms ease, color 300ms ease;
         }
 
         /* Faint vignette; content sits above */
@@ -68,10 +114,12 @@
             z-index: 0;
             background: radial-gradient(120% 80% at 50% 0%, transparent 55%, rgba(0,0,0,0.55) 100%);
         }
+        .light-mode body::before {
+            background: radial-gradient(120% 80% at 50% 0%, transparent 60%, rgba(0,0,0,0.10) 100%);
+        }
         body > * { position: relative; z-index: 1; }
 
         main { flex: 1; }
-        body.nav-open { overflow: hidden; }
 
         h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
 
@@ -103,17 +151,22 @@
         }
         .page-header .home:hover { color: var(--gold); }
         .page-header .home b { color: var(--gold); }
-        .page-header nav { display: flex; align-items: center; gap: 1.4rem; }
-        .page-header nav a {
-            color: var(--muted);
-            text-transform: lowercase;
-            font-weight: 400;
-        }
-        .page-header nav a:hover { color: var(--fg); }
-        .page-header nav .ext-group { display: flex; gap: 1.4rem; }
 
-        .hamburger-menu { display: none; background: none; border: none; cursor: pointer; padding: 10px; z-index: 1001; }
-        .hamburger-menu .line { display: block; width: 25px; height: 2px; background-color: var(--fg); margin: 5px 0; transition: transform 0.3s ease, opacity 0.3s ease; }
+        /* Theme toggle (mono, bordered) — matches homepage */
+        .tog {
+            background: none;
+            border: 1px solid var(--line);
+            color: var(--muted);
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.3rem 0.6rem;
+            border-radius: 2px;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .tog:hover { color: var(--fg); border-color: var(--gold); }
 
         /* Essay layout */
         .essay-container {
@@ -445,23 +498,6 @@
             .topo-card:nth-child(4),
             .topo-card:nth-child(5) { grid-column: auto; }
             .topo-card:nth-child(5) { grid-column: 1 / -1; max-width: 50%; margin: 0 auto; }
-
-            .hamburger-menu { display: block; }
-            .page-header nav {
-                position: fixed; top: 0; left: 0;
-                width: 100%; height: 100vh;
-                background-color: var(--bg);
-                flex-direction: column; justify-content: center; align-items: center;
-                gap: 2rem;
-                transform: translateX(100%);
-                transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
-            }
-            body.nav-open .page-header nav { transform: translateX(0); }
-            .page-header nav .ext-group { flex-direction: column; gap: 1.2rem; align-items: center; }
-            .page-header nav a { font-size: 1.2rem; }
-            body.nav-open .hamburger-menu .line-1 { transform: rotate(45deg) translate(5px, 5px); }
-            body.nav-open .hamburger-menu .line-2 { opacity: 0; }
-            body.nav-open .hamburger-menu .line-3 { transform: rotate(-45deg) translate(5px, -5px); }
         }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -472,17 +508,7 @@
 
         <header class="page-header">
         <a class="home" href="index.html"><b>&#9670;</b> NICCOLÒ RIDI</a>
-        <nav>
-            <a href="profile.html">profile</a>
-            <a href="practice.html">practice</a>
-            <a href="research.html">research</a>
-            <a href="data.html">data</a>
-        </nav>
-        <button class="hamburger-menu" aria-label="Open navigation menu">
-            <span class="line line-1"></span>
-            <span class="line line-2"></span>
-            <span class="line line-3"></span>
-        </button>
+        <button class="tog" onclick="toggleTheme()"><span id="tlabel">light</span></button>
     </header>
 
     <main>
@@ -729,6 +755,20 @@
 
     function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
 
+    /* ── THEME ───────────────────────────────────── */
+    let theme = localStorage.getItem('noir-theme') || ((new Date().getHours() >= 7 && new Date().getHours() < 19) ? 'light' : 'dark');
+    function applyTheme(t, persist) {
+        document.documentElement.classList.toggle('light-mode', t === 'light');
+        document.body.classList.toggle('light-mode', t === 'light');
+        var l = document.getElementById('tlabel');
+        if (l) l.textContent = t === 'light' ? 'dark' : 'light';
+        if (persist) localStorage.setItem('noir-theme', t);
+        theme = t;
+        // redraw so the d3 figures re-read the theme tokens live
+        if (typeof renderAll === 'function') renderAll();
+    }
+    function toggleTheme() { applyTheme(theme === 'light' ? 'dark' : 'light', true); }
+
     /* ── HEATMAP ─────────────────────────────────── */
     function drawHeatmap() {
         const container = d3.select("#viz-heatmap");
@@ -747,21 +787,31 @@
         const cellW = (w - m.left - m.right) / cw.length;
         const cellH = (h - m.top - m.bottom) / ip.length;
 
-        // Color scale — dark-friendly sequential.
-        // Prefer d3.interpolateInferno (dark → magenta → gold → bright) if available;
-        // otherwise fall back to a near-bg → gold → bright ramp.
-        const heatInterp = (typeof d3.interpolateInferno === 'function')
-            ? d3.interpolateInferno
-            : (function() {
-                const ramp = d3.scaleLinear()
-                    .domain([0, 0.5, 1])
-                    .range([css('--heat-low'), css('--heat-mid'), css('--heat-high')])
-                    .interpolate(d3.interpolateRgb);
-                return t => ramp(t);
-              })();
+        // Color scale — theme-aware sequential.
+        // Dark: inferno (dark → magenta → gold → bright). Light: magma reads better on paper.
+        // The CSS token --heat-scheme selects the scheme; the empty/low end is blended
+        // toward the page background so near-zero cells melt into the paper/ground.
+        const isLight = document.documentElement.classList.contains('light-mode');
+        const scheme = css('--heat-scheme');
+        let baseInterp;
+        if (scheme === 'magma' && typeof d3.interpolateMagma === 'function') baseInterp = d3.interpolateMagma;
+        else if (typeof d3.interpolateInferno === 'function') baseInterp = d3.interpolateInferno;
+        else {
+            const ramp = d3.scaleLinear()
+                .domain([0, 0.5, 1])
+                .range([css('--heat-low'), css('--heat-mid'), css('--heat-high')])
+                .interpolate(d3.interpolateRgb);
+            baseInterp = t => ramp(t);
+        }
+        // On light: invert magma so the low end is light (blends into the bg) and the
+        // high end is dark/saturated; also fade the very low end into the page bg.
+        const bg = css('--bg');
+        const heatInterp = t => isLight
+            ? d3.interpolateRgb(bg, baseInterp(1 - (0.05 + t * 0.9)))(Math.min(1, 0.25 + t * 0.9))
+            : baseInterp(0.05 + t * 0.9);
         const colorScale = d3.scaleSequential()
             .domain([0, 1])
-            .interpolator(t => heatInterp(0.05 + t * 0.9));
+            .interpolator(heatInterp);
 
         // Tooltip
         const tooltip = container.append("div").attr("class", "viz-tooltip");
@@ -1492,7 +1542,8 @@
         drawStructural();
     }
 
-    renderAll();
+    // Initial paint: set the toggle label + class state, then render the figures once.
+    applyTheme(theme, false);
 
     let resizeTimer;
     window.addEventListener('resize', () => {
@@ -1508,13 +1559,6 @@
         });
     }, { threshold: 0.1 });
     reveals.forEach(el => revealObs.observe(el));
-
-    /* ── HAMBURGER ────────────────────────────────── */
-    const hamburger = document.querySelector('.hamburger-menu');
-    hamburger.addEventListener('click', () => document.body.classList.toggle('nav-open'));
-    document.querySelectorAll('.page-header nav a').forEach(link => {
-        link.addEventListener('click', () => document.body.classList.remove('nav-open'));
-    });
     </script>
 
 </body>
