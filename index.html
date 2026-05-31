@@ -724,18 +724,22 @@
             });
             window.__syncCtog = syncCtog; syncCtog();
 
-            // deep link (e.g. an essay's "← Back to Data"): index.html#data opens that section
             const hsec = (location.hash || '').replace('#','').toLowerCase();
-            if (VIEW[hsec]) setTimeout(() => openSection(hsec), 450);
-
-            // boot: render the welcome network, then whoami, then auto-print the manual
-            setTimeout(() => autorun('welcome-network', () => setTimeout(() => autorun('whoami', () => setTimeout(() => autorun('man', () => {
-                if (canFocus) input.focus();
-                // mobile: after the intro plays, fold the terminal+network so the tiles jump up
-                if (window.matchMedia('(max-width: 880px)').matches) {
-                    setTimeout(() => { if (!document.body.classList.contains('mode-section')) { document.body.classList.add('mcollapsed'); syncCtog(); } }, 1800);
-                }
-            }), 500)), 450)), 250);
+            if (VIEW[hsec]) {
+                // deep link (e.g. an essay's "← Back to Data"): open that section, skip the typed intro
+                document.body.classList.add('networks-revealed');
+                setTimeout(() => openSection(hsec), 350);
+            } else {
+                // boot: type `welcome-network` → the constellation appears & blooms → whoami → the manual
+                setTimeout(() => autorun('welcome-network', () => setTimeout(() => autorun('whoami', () => setTimeout(() => autorun('man', () => {
+                    if (canFocus) input.focus();
+                    // mobile: after the intro plays, fold the terminal+network so the tiles jump up
+                    if (window.matchMedia('(max-width: 880px)').matches) {
+                        setTimeout(() => { if (!document.body.classList.contains('mode-section')) { document.body.classList.add('mcollapsed'); syncCtog(); } }, 1800);
+                    }
+                }), 500)), 450)), 250);
+            }
+            setTimeout(() => document.body.classList.add('networks-revealed'), 6000);  // safety net if the boot command never ran
         })();
     </script>
 
@@ -865,6 +869,8 @@
             let startT=null; const easeOutCubic=t=>1-Math.pow(1-t,3);
             function tick(now){
                 if(paused){ requestAnimationFrame(tick); return; }
+                // hold the constellation until the `welcome-network` command reveals it (so it appears after the line is typed)
+                if(!document.body.classList.contains('networks-revealed')){ requestAnimationFrame(tick); return; }
                 if(startT===null) startT=now; const elapsed=now-startT; sim.tick();
                 for(let i=0;i<N;i++){ const n=nodes[i]; const m=n.hub?6:3;
                     n.x=Math.max(-W/2+m,Math.min(W/2-m,n.x)); n.y=Math.max(-H/2+m,Math.min(H/2-m,n.y));
