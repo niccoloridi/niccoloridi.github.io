@@ -640,7 +640,13 @@
             COMMANDS.home = COMMANDS.cd = () => { closeSection(); return '<span class="muted">~ home</span>'; };
             COMMANDS.man = COMMANDS.help;
             COMMANDS.top = () => { const a = body.querySelectorAll('.man-anchor'); const el = a[a.length-1]; if (el) el.scrollIntoView({ behavior:'smooth', block:'start' }); return null; };
-            COMMANDS['welcome-network'] = () => { closeSection(); if (window.__net && window.__net.bloom) window.__net.bloom(); return '<span class="gold">welcome network</span> <span class="muted">— rendered ✦</span>'; };
+            COMMANDS['welcome-network'] = () => {
+                closeSection();
+                document.body.classList.add('networks-revealed');            // make sure the constellation is showing
+                if (window.__net && window.__net.bloom) window.__net.bloom();
+                else window.__bloomPending = true;                           // not built yet → bloom as soon as it is
+                return '<span class="gold">welcome network</span> <span class="muted">— rendered ✦</span>';
+            };
             ALIASES.welcome = 'welcome-network';
 
             const VOCAB = Array.from(new Set([...Object.keys(COMMANDS), ...Object.keys(SECTIONS), ...Object.keys(ALIASES), ...Object.keys(LINKS)]))
@@ -738,7 +744,7 @@
         const container = document.getElementById('net-panel');
         function hasWebGL(){ try { const c=document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl2')||c.getContext('webgl'))); } catch(e){ return false; } }
         if (container && hasWebGL()) {
-            try { const THREE = await import('three'); requestAnimationFrame(() => { window.__net = createCalmNetwork(THREE, container); }); }
+            try { const THREE = await import('three'); requestAnimationFrame(() => { window.__net = createCalmNetwork(THREE, container); if (window.__bloomPending && window.__net.bloom) { window.__bloomPending = false; setTimeout(() => window.__net.bloom(), 500); } }); }
             catch(err){ console.warn('three.js failed', err); }
         }
 
