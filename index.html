@@ -277,7 +277,7 @@
                 </div>
 
                 <div class="net-panel" id="net-panel">
-                    <div class="cap"><b>fig.</b> co-citation network · echr grand chamber <span style="opacity:.6">(actually no, it looks quite different)</span></div>
+                    <div class="cap"><b>fig.</b> welcome network</div>
                     <div class="stage" id="stage" aria-live="polite"></div>
                 </div>
             </div>
@@ -449,6 +449,7 @@
                         + row('about','what I work on') + '\n'
                         + row('contact','email &amp; profiles') + '\n\n'
                         + '<span class="muted">system</span>\n'
+                        + row('welcome','replay the welcome network') + '\n'
                         + row('ls','list sections') + '\n'
                         + row('open &lt;section&gt;','open a section by name', false) + '\n'
                         + row('clear','clear the screen') + '\n'
@@ -639,6 +640,8 @@
             COMMANDS.home = COMMANDS.cd = () => { closeSection(); return '<span class="muted">~ home</span>'; };
             COMMANDS.man = COMMANDS.help;
             COMMANDS.top = () => { const a = body.querySelectorAll('.man-anchor'); const el = a[a.length-1]; if (el) el.scrollIntoView({ behavior:'smooth', block:'start' }); return null; };
+            COMMANDS['welcome-network'] = () => { closeSection(); if (window.__net && window.__net.bloom) window.__net.bloom(); return '<span class="gold">welcome network</span> <span class="muted">— rendered ✦</span>'; };
+            ALIASES.welcome = 'welcome-network';
 
             const VOCAB = Array.from(new Set([...Object.keys(COMMANDS), ...Object.keys(SECTIONS), ...Object.keys(ALIASES), ...Object.keys(LINKS)]))
                 .filter(x => x !== 'sudo');
@@ -719,14 +722,14 @@
             const hsec = (location.hash || '').replace('#','').toLowerCase();
             if (VIEW[hsec]) setTimeout(() => openSection(hsec), 450);
 
-            // boot: type whoami, then auto-print the manual on its own
-            setTimeout(() => autorun('whoami', () => setTimeout(() => autorun('man', () => {
+            // boot: render the welcome network, then whoami, then auto-print the manual
+            setTimeout(() => autorun('welcome-network', () => setTimeout(() => autorun('whoami', () => setTimeout(() => autorun('man', () => {
                 if (canFocus) input.focus();
                 // mobile: after the intro plays, fold the terminal+network so the tiles jump up
                 if (window.matchMedia('(max-width: 880px)').matches) {
                     setTimeout(() => { if (!document.body.classList.contains('mode-section')) { document.body.classList.add('mcollapsed'); syncCtog(); } }, 1800);
                 }
-            }), 500)), 250);
+            }), 500)), 450)), 250);
         })();
     </script>
 
@@ -859,6 +862,7 @@
                 if(startT===null) startT=now; const elapsed=now-startT; sim.tick();
                 for(let i=0;i<N;i++){ const n=nodes[i]; const m=n.hub?6:3;
                     n.x=Math.max(-W/2+m,Math.min(W/2-m,n.x)); n.y=Math.max(-H/2+m,Math.min(H/2-m,n.y));
+                    if (n.x < -W/2 + 178 && n.y < -H/2 + 30) n.y = -H/2 + 30;   // keep clear of the bottom-left caption
                     dispX[i]=n.x+Math.sin(now*0.00035+n.phase)*n.wob; dispY[i]=n.y+Math.cos(now*0.0003+n.phase*1.3)*n.wob; }
                 const np=nodeGeom.getAttribute('position'),nf=nodeGeom.getAttribute('aFlash'),no=nodeGeom.getAttribute('aOpacity');
                 for(let i=0;i<N;i++){ const n=nodes[i]; np.array[i*3]=dispX[i];np.array[i*3+1]=dispY[i];
@@ -878,7 +882,7 @@
                 renderer.render(scene,camera); requestAnimationFrame(tick);
             }
             requestAnimationFrame(tick);
-            return { retheme };
+            return { retheme, bloom: () => { for (let k = 0; k < 7; k++) setTimeout(pulse, k * 110); } };
         }
     </script>
 </body>
