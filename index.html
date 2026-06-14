@@ -117,6 +117,23 @@
         .net-standby .sb-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); animation: sb-pulse 1.3s ease-in-out infinite; }
         @keyframes sb-pulse { 0%,100% { opacity: 0.25; transform: scale(0.65); } 50% { opacity: 1; transform: scale(1); } }
         body.networks-revealed .net-standby { opacity: 0; }
+
+        /* ─── intro / boot cinematic (dev) — the network sits UNDER the title, not behind it ─── */
+        #intro { position: fixed; inset: 0; z-index: 9000; background: var(--bg);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(0.8rem, 3vh, 2rem);
+            overflow: hidden; transition: opacity 0.9s ease; }
+        #intro.done { opacity: 0; pointer-events: none; }
+        .intro-center { text-align: center; }
+        .intro-type { font-family: var(--mono); font-size: clamp(0.7rem, 1.4vw, 0.95rem); color: var(--muted); min-height: 1.5em; letter-spacing: 0.02em; }
+        .intro-name { font-family: var(--grotesk); font-weight: 700; text-transform: uppercase; font-size: clamp(2.2rem, 8vw, 6rem);
+            line-height: 0.92; letter-spacing: -0.02em; margin-top: clamp(0.7rem, 2vh, 1.2rem);
+            opacity: 0; transform: translateY(12px); transition: opacity 0.9s ease, transform 0.9s ease; }
+        .intro-name.show { opacity: 1; transform: none; }
+        .intro-name .dot { color: var(--gold); }
+        .intro-name .l2 { color: transparent; -webkit-text-stroke: 1.4px var(--fg); }
+        #intro-net { position: relative; width: min(680px, 82vw); height: min(40vh, 360px); opacity: 0; transition: opacity 0.8s ease; }
+        #intro.lit #intro-net { opacity: 1; }
+        #intro-net canvas { display: block; width: 100%; height: 100%; }
         /* when a section is open, the constellation recedes behind the content */
         body.mode-section .net-panel canvas { opacity: 0; transition: opacity 0.35s ease; }
         body.mode-section .net-panel .cap { opacity: 0; }
@@ -256,6 +273,13 @@
     </style>
 </head>
 <body class="ts-mono">
+    <div id="intro" aria-hidden="true">
+        <div class="intro-center">
+            <div class="intro-type"></div>
+            <h1 class="intro-name"><span class="l1">Niccolò<span class="dot">.</span></span> <span class="l2">Ridi</span></h1>
+        </div>
+        <div id="intro-net"></div>
+    </div>
     <header>
         <a class="id" href="index.html"><b>◆</b> NICCOLÒ&nbsp;RIDI</a>
         <button class="tog" onclick="toggleTheme()"><span id="tlabel">light</span></button>
@@ -733,31 +757,63 @@
             window.__syncCtog = syncCtog; syncCtog();
 
             const hsec = (location.hash || '').replace('#','').toLowerCase();
-            if (VIEW[hsec]) {
-                // deep link (e.g. an essay's "← Back to Data"): open that section, skip the typed intro
-                document.body.classList.add('networks-revealed');
-                setTimeout(() => openSection(hsec), 350);
+            window.__startBoot = function(skipWelcome){
+                if (window.__booted) return; window.__booted = true;
+                if (VIEW[hsec]) {            // deep link: open that section, no intro
+                    document.body.classList.add('networks-revealed');
+                    setTimeout(() => openSection(hsec), 350);
+                    return;
+                }
+                if (window.matchMedia('(max-width: 880px)').matches) { document.body.classList.add('mcollapsed'); syncCtog(); }  // mobile: console hidden by default
+                const manStep = () => autorun('man', () => { if (canFocus) input.focus(); });
+                if (skipWelcome) {          // the intro already played welcome-network → go straight to whoami
+                    document.body.classList.add('networks-revealed');
+                    setTimeout(() => autorun('whoami', () => setTimeout(manStep, 500)), 250);
+                } else {
+                    setTimeout(() => autorun('welcome-network', () => setTimeout(() => autorun('whoami', () => setTimeout(manStep, 500)), 450)), 250);
+                }
+                setTimeout(() => document.body.classList.add('networks-revealed'), 6000);
+            };
+            if (document.getElementById('intro') && !VIEW[hsec]) {
+                window.addEventListener('intro:done', () => window.__startBoot(true), { once: true });
+                setTimeout(() => window.__startBoot(), 13000);   // fallback if the intro never signals
             } else {
-                // boot: type `welcome-network` → the constellation appears & blooms → whoami → the manual
-                setTimeout(() => autorun('welcome-network', () => setTimeout(() => autorun('whoami', () => setTimeout(() => autorun('man', () => {
-                    if (canFocus) input.focus();
-                    // mobile: after the intro plays, fold the terminal+network so the tiles jump up
-                    if (window.matchMedia('(max-width: 880px)').matches) {
-                        setTimeout(() => { if (!document.body.classList.contains('mode-section')) { document.body.classList.add('mcollapsed'); syncCtog(); } }, 1800);
-                    }
-                }), 500)), 450)), 250);
+                const _ov = document.getElementById('intro'); if (_ov) _ov.style.display = 'none';
+                window.__startBoot();
             }
-            setTimeout(() => document.body.classList.add('networks-revealed'), 6000);  // safety net if the boot command never ran
         })();
     </script>
 
     <script type="module">
         // ─── Calm constellation in the right panel (canvas is absolute → no resize feedback) ───
         const container = document.getElementById('net-panel');
+        const introEl = document.getElementById('intro');
+        const deepLink = /^#(profile|practice|research|data)$/.test(location.hash);
         function hasWebGL(){ try { const c=document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl2')||c.getContext('webgl'))); } catch(e){ return false; } }
-        if (container && hasWebGL()) {
-            try { const THREE = await import('three'); requestAnimationFrame(() => { window.__net = createCalmNetwork(THREE, container); if (window.__bloomPending && window.__net.bloom) { window.__bloomPending = false; setTimeout(() => window.__net.bloom(), 500); } }); }
-            catch(err){ console.warn('three.js failed', err); }
+        let THREE = null;
+        if (hasWebGL()) { try { THREE = await import('three'); } catch(err){ console.warn('three.js failed', err); THREE = null; } }
+        if (THREE && container) requestAnimationFrame(() => { window.__net = createCalmNetwork(THREE, container); if (window.__bloomPending && window.__net.bloom) { window.__bloomPending = false; setTimeout(() => window.__net.bloom(), 500); } });
+
+        // ─── intro: terminal types in the void → name → network blooms UNDER the title → resolves to the homepage ───
+        if (introEl && !deepLink) runIntro(); else if (introEl) introEl.style.display = 'none';
+        async function runIntro(){
+            const wait = ms => new Promise(r => setTimeout(r, ms));
+            const typeEl = introEl.querySelector('.intro-type');
+            const nameEl = introEl.querySelector('.intro-name');
+            async function type(el, str, sp){ el.textContent = ''; for (let i = 0; i < str.length; i++){ el.textContent += str[i]; await wait(sp); } }
+            await wait(450);
+            await type(typeEl, 'niccolo@website:~$ welcome-network', 44);
+            await wait(300);
+            document.body.classList.add('networks-revealed');              // network blooms first, beneath the command
+            if (THREE) { try { const n = createCalmNetwork(THREE, document.getElementById('intro-net')); if (n && n.bloom) n.bloom(); } catch(e){} }
+            introEl.classList.add('lit');
+            await wait(950);
+            if (nameEl) nameEl.classList.add('show');                      // then the name fades in above it
+            await wait(2300);
+            introEl.classList.add('done');                                  // dissolve to the homepage
+            window.dispatchEvent(new Event('intro:done'));
+            await wait(950);
+            introEl.style.display = 'none';
         }
 
         function createCalmNetwork(THREE, container){
