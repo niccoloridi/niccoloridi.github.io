@@ -134,6 +134,12 @@
         #intro-net { position: relative; width: min(680px, 82vw); height: min(40vh, 360px); opacity: 0; transition: opacity 0.8s ease; }
         #intro.lit #intro-net { opacity: 1; }
         #intro-net canvas { display: block; width: 100%; height: 100%; }
+        .intro-skip { position: absolute; bottom: clamp(1.2rem, 4vh, 2.4rem); left: 50%; transform: translateX(-50%);
+            background: none; border: 1px solid var(--line); color: var(--muted); cursor: pointer;
+            font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase;
+            padding: 0.45rem 0.95rem; border-radius: 999px; transition: color 0.2s, border-color 0.2s, opacity 0.4s; }
+        .intro-skip:hover { color: var(--fg); border-color: var(--gold); }
+        #intro.done .intro-skip { opacity: 0; }
         /* when a section is open, the constellation recedes behind the content */
         body.mode-section .net-panel canvas { opacity: 0; transition: opacity 0.35s ease; }
         body.mode-section .net-panel .cap { opacity: 0; }
@@ -279,6 +285,7 @@
             <h1 class="intro-name"><span class="l1">Niccolò<span class="dot">.</span></span> <span class="l2">Ridi</span></h1>
         </div>
         <div id="intro-net"></div>
+        <button class="intro-skip" type="button">skip intro ↓</button>
     </div>
     <header>
         <a class="id" href="index.html"><b>◆</b> NICCOLÒ&nbsp;RIDI</a>
@@ -794,8 +801,19 @@
         if (hasWebGL()) { try { THREE = await import('three'); } catch(err){ console.warn('three.js failed', err); THREE = null; } }
         if (THREE && container) requestAnimationFrame(() => { window.__net = createCalmNetwork(THREE, container); if (window.__bloomPending && window.__net.bloom) { window.__bloomPending = false; setTimeout(() => window.__net.bloom(), 500); } });
 
-        // ─── intro: terminal types in the void → name → network blooms UNDER the title → resolves to the homepage ───
-        if (introEl && !deepLink) runIntro(); else if (introEl) introEl.style.display = 'none';
+        // ─── intro: terminal types in the void → network blooms UNDER the title → name → resolves to the homepage ───
+        let __introDone = false;
+        function finishIntro(){
+            if (__introDone) return; __introDone = true;
+            introEl.classList.add('done');
+            window.dispatchEvent(new Event('intro:done'));
+            setTimeout(() => { introEl.style.display = 'none'; }, 950);
+        }
+        if (introEl && !deepLink) {
+            const skip = introEl.querySelector('.intro-skip');
+            if (skip) skip.addEventListener('click', finishIntro);
+            runIntro();
+        } else if (introEl) introEl.style.display = 'none';
         async function runIntro(){
             const wait = ms => new Promise(r => setTimeout(r, ms));
             const typeEl = introEl.querySelector('.intro-type');
@@ -810,10 +828,7 @@
             await wait(950);
             if (nameEl) nameEl.classList.add('show');                      // then the name fades in above it
             await wait(2300);
-            introEl.classList.add('done');                                  // dissolve to the homepage
-            window.dispatchEvent(new Event('intro:done'));
-            await wait(950);
-            introEl.style.display = 'none';
+            finishIntro();                                                 // dissolve to the homepage
         }
 
         function createCalmNetwork(THREE, container){
