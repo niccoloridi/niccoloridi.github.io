@@ -324,16 +324,16 @@
 
         <nav class="tiles">
             <a class="tile" href="profile.html"><span class="num">01</span>
-                <span class="specimen"><img src="images/illustrations/png/plate-01.png" alt="Profile"></span>
+                <span class="specimen"><img src="images/ai/head.jpg" alt="Profile"></span>
                 <span class="label"><span class="name">Profile</span><span class="arrow">↗</span></span></a>
             <a class="tile" href="practice.html"><span class="num">02</span>
-                <span class="specimen"><img src="images/illustrations/png/plate-11.png" alt="Practice"></span>
+                <span class="specimen"><img src="images/ai/cliff.jpg" alt="Practice"></span>
                 <span class="label"><span class="name">Practice</span><span class="arrow">↗</span></span></a>
             <a class="tile" href="research.html"><span class="num">03</span>
-                <span class="specimen"><img src="images/illustrations/png/plate-08.png" alt="Research"></span>
+                <span class="specimen"><img src="images/ai/hand.jpg" alt="Research"></span>
                 <span class="label"><span class="name">Research</span><span class="arrow">↗</span></span></a>
             <a class="tile" href="data.html"><span class="num">04</span>
-                <span class="specimen"><img src="images/illustrations/png/plate-04.png" alt="Data"></span>
+                <span class="specimen"><img src="images/ai/planet.jpg" alt="Data"></span>
                 <span class="label"><span class="name">Data</span><span class="arrow">↗</span></span></a>
         </nav>
     </main>
@@ -513,7 +513,7 @@
             // ─── in-panel "viewport": sections render in the network space ───
             const stage = document.getElementById('stage');
             const VIEW = {
-                profile: { n:'01', plate:'plate-01', photo:'images/IMG_18.jpg', pf:[0.27,0.33], body:
+                profile: { n:'01', img:'images/ai/head.jpg', photo:'images/IMG_18.jpg', pf:[0.27,0.33], body:
                     '<p>Senior Lecturer (Associate Professor) in Public International Law at The Dickson Poon School of Law, King\'s College London — Associate Director of CIGAD, Associate Dean for Doctoral Studies, Fellow of the Centre for Data Futures, and liaison to the King\'s Institute for AI.</p>'
                   + '<p>My research concerns the authority and effectiveness of international law — how it is produced and changes — applying empirical and computational methods to legal argumentation and actor behaviour.</p>'
                   + '<h3>positions &amp; affiliations</h3><ul>'
@@ -526,7 +526,7 @@
                   + '<h3>education</h3><ul><li>PhD in Public International Law, King\'s College London — 2019</li>'
                   + '<li>LLM in International Law, University of Cambridge — 2014</li>'
                   + '<li>Doctoral Research Fellow, Graduate Institute, Geneva — 2014–2018</li></ul>' },
-                practice: { n:'02', plate:'plate-11', photo:'images/N_Ridi_ICJ.jpeg', pf:[0.74,0.26], body:
+                practice: { n:'02', img:'images/ai/cliff.jpg', photo:'images/N_Ridi_ICJ.jpeg', pf:[0.74,0.26], body:
                     '<p>Counsel and advisory work in public international law and international dispute settlement — with a particular focus on proceedings before the International Court of Justice, ITLOS, and tribunals constituted under the ICSID Convention.</p>'
                   + '<p>Engagements span state responsibility, the law of treaties, jurisdictional immunities, the law of the sea, the use of force, foreign investment protection, and the human-rights and humanitarian-law questions that cut across them.</p>'
                   + '<h3>recent matters</h3><ul>'
@@ -536,8 +536,8 @@
                   + '<li>Research &amp; drafting support to a Special Rapporteur of the ILC</li>'
                   + '<li>Advisory work on a use-of-force matter under a multilateral treaty</li>'
                   + '<li>Advisory work in a boundary dispute</li></ul>' },
-                research: { n:'03', plate:'plate-08', srcId:'research-src' },
-                data: { n:'04', plate:'plate-04', body:
+                research: { n:'03', img:'images/ai/hand.jpg', srcId:'research-src' },
+                data: { n:'04', img:'images/ai/planet.jpg', body:
                     '<p>Datasets, interactive essays, and open-source tools from research on international law — corpora of decisions and resolutions, citation networks, agent-based models, and pipelines for extracting structured knowledge from legal materials.</p>'
                   + '<h3>data essays</h3><ul>'
                   + '<li><a href="unsc-citations.html">The Law of Citations — UNSC Resolution Network</a> · 2,488 resolutions, 12,399 citations</li>'
@@ -549,8 +549,8 @@
                 const v = VIEW[s]; if (!v) return;
                 const bodyHTML = v.srcId ? (document.getElementById(v.srcId)||{}).innerHTML || '' : v.body;
                 const plateCell = v.photo
-                    ? '<div class="stage-plate"><span class="plate-toggle" data-photo="'+v.photo+'" data-fx="'+(v.pf?v.pf[0]:0.5)+'" data-fy="'+(v.pf?v.pf[1]:0.5)+'"><img class="pt-plate" src="images/illustrations/png/'+v.plate+'.png" alt=""><canvas class="pt-canvas" aria-hidden="true"></canvas><span class="pt-hint">click to reveal</span></span></div>'
-                    : '<div class="stage-plate"><img src="images/illustrations/png/'+v.plate+'.png" alt=""></div>';
+                    ? '<div class="stage-plate"><span class="plate-toggle" data-photo="'+v.photo+'" data-fx="'+(v.pf?v.pf[0]:0.5)+'" data-fy="'+(v.pf?v.pf[1]:0.5)+'"><img class="pt-plate" src="'+v.img+'" alt=""><canvas class="pt-canvas" aria-hidden="true"></canvas><span class="pt-hint">click to reveal</span></span></div>'
+                    : '<div class="stage-plate"><img src="'+v.img+'" alt=""></div>';
                 stage.innerHTML = plateCell
                   + '<div class="stage-text"><div class="stage-num">'+v.n+' / '+s+'</div>'
                   + '<h2 class="stage-title">'+s+'</h2>'
