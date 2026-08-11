@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#09090b">
+    <title>Animation Studies — Niccolò Ridi</title>
+    <script>(function(){var t=localStorage.getItem('noir-theme');if(!t){var h=new Date().getHours();t=(h>=7&&h<19)?'light':'dark';}if(t==='light')document.documentElement.classList.add('light');})()</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #09090b;
+            --surface: #101013;
+            --surface-2: #151519;
+            --ink: #eee9df;
+            --muted: #827c72;
+            --gold: #d9a33d;
+            --line: #29282c;
+            --gutter: clamp(1rem, 3.2vw, 3rem);
+            --sans: "Space Grotesk", system-ui, sans-serif;
+            --mono: "JetBrains Mono", ui-monospace, monospace;
+        }
+        :root.light { color-scheme: light; --bg: #ece7dc; --surface: #e6dfd2; --surface-2: #f4efe5;
+            --ink: #16140f; --muted: #696154; --gold: #8b620c; --line: #c9bfae; }
+
+        * { box-sizing: border-box; }
+        html { background: var(--bg); }
+        body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); }
+        button, a { color: inherit; }
+        a { text-decoration: none; }
+
+        .grain { position: fixed; inset: 0; z-index: 20; pointer-events: none; opacity: .045; mix-blend-mode: screen;
+            background: repeating-radial-gradient(circle at 31% 47%, rgba(255,255,255,.7) 0 .35px, transparent .5px 3px); }
+        .light .grain { opacity: .035; mix-blend-mode: multiply; background: repeating-radial-gradient(circle at 31% 47%, rgba(22,20,15,.7) 0 .35px, transparent .5px 3px); }
+
+        header { min-height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+            padding: .7rem var(--gutter); border-bottom: 1px solid var(--line); font: .66rem/1.2 var(--mono);
+            letter-spacing: .1em; text-transform: uppercase; position: sticky; top: 0; z-index: 10;
+            background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(14px); }
+        .identity { display: flex; align-items: center; gap: 1rem; }
+        .identity b { color: var(--gold); font-weight: 500; }
+        .identity span { color: var(--muted); }
+        .controls { display: flex; align-items: center; gap: .55rem; }
+        .control { background: transparent; border: 1px solid var(--line); padding: .45rem .7rem; border-radius: 99px;
+            font: inherit; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: .2s ease; }
+        .control:hover, .control:focus-visible { border-color: var(--gold); color: var(--gold); outline: none; }
+
+        main { padding: clamp(2rem, 6vw, 5rem) var(--gutter) 5rem; }
+        .intro { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(280px, .55fr); gap: 3rem;
+            align-items: end; max-width: 1500px; margin: 0 auto clamp(2rem, 5vw, 4rem); }
+        .eyebrow { margin: 0 0 .85rem; color: var(--gold); font: .68rem/1 var(--mono); letter-spacing: .18em; text-transform: uppercase; }
+        h1 { max-width: 920px; margin: 0; font-size: clamp(2.7rem, 7.6vw, 7rem); line-height: .88; letter-spacing: -.055em;
+            font-weight: 600; text-transform: uppercase; }
+        h1 em { font-style: normal; color: transparent; -webkit-text-stroke: 1px var(--ink); }
+        .brief { margin: 0 0 .35rem; color: var(--muted); font: .76rem/1.65 var(--mono); max-width: 48ch; }
+        .brief strong { color: var(--ink); font-weight: 400; }
+
+        .gallery { max-width: 1500px; margin: 0 auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+            border: 1px solid var(--line); }
+        .study { min-width: 0; position: relative; background: var(--surface); border-bottom: 1px solid var(--line); }
+        .study:nth-child(odd) { border-right: 1px solid var(--line); }
+        .study:nth-last-child(-n+2) { border-bottom: 0; }
+        .visual { height: clamp(260px, 35vw, 520px); position: relative; overflow: hidden; background: #08080a; cursor: crosshair; }
+        canvas { display: block; width: 100%; height: 100%; }
+        .visual::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+            box-shadow: inset 0 0 70px rgba(0,0,0,.45); }
+        .index { position: absolute; left: 1rem; top: 1rem; z-index: 2; font: .62rem/1 var(--mono); letter-spacing: .12em; color: var(--gold); }
+        .live { position: absolute; right: 1rem; top: 1rem; z-index: 2; display: flex; align-items: center; gap: .45rem;
+            color: rgba(238,233,223,.55); font: .56rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+        .live::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 9px var(--gold); }
+        .meta { min-height: 124px; padding: 1rem 1.15rem 1.2rem; display: grid; grid-template-columns: 1fr auto; gap: .6rem 1.5rem; }
+        .meta h2 { margin: 0; font-size: clamp(1.05rem, 2vw, 1.45rem); font-weight: 500; letter-spacing: -.025em; text-transform: uppercase; }
+        .tag { justify-self: end; color: var(--gold); font: .57rem/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; text-align: right; }
+        .meta p { grid-column: 1 / -1; margin: 0; max-width: 66ch; color: var(--muted); font: .68rem/1.55 var(--mono); }
+        .study:hover .meta h2 { color: var(--gold); }
+
+        .note { max-width: 1500px; margin: 2.2rem auto 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+            border-top: 1px solid var(--line); padding-top: 1.2rem; }
+        .note p { margin: 0; color: var(--muted); font: .68rem/1.6 var(--mono); }
+        .note b { color: var(--gold); font-weight: 400; }
+
+        @media (max-width: 780px) {
+            header { align-items: flex-start; }
+            .identity span { display: none; }
+            .control { font-size: .56rem; padding: .42rem .58rem; }
+            .intro { grid-template-columns: 1fr; gap: 1.5rem; }
+            .gallery { grid-template-columns: 1fr; }
+            .study:nth-child(odd) { border-right: 0; }
+            .study:nth-last-child(2) { border-bottom: 1px solid var(--line); }
+            .visual { height: min(78vw, 430px); }
+            .note { grid-template-columns: 1fr; gap: .8rem; }
+        }
+        @media (prefers-reduced-motion: reduce) { .live::before { box-shadow: none; } }
+    </style>
+</head>
+<body>
+    <div class="grain" aria-hidden="true"></div>
+    <header>
+        <a class="identity" href="index.html"><b>NR</b><span>Animation studies / 01—10</span></a>
+        <div class="controls">
+            <button class="control" id="theme" type="button">Light theme</button>
+            <button class="control" id="regenerate" type="button">Regenerate</button>
+            <button class="control" id="pause" type="button" aria-pressed="false">Pause motion</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="intro">
+            <div>
+                <p class="eyebrow">A computational plate room</p>
+                <h1>Ten studies in <em>living form.</em></h1>
+            </div>
+            <p class="brief">Possible replacements for the four static plates. Each study is <strong>drawn live</strong>, has a different tempo, and responds subtly to the pointer. The shared palette keeps them inside the existing site rather than making them feel like embedded demos.</p>
+        </section>
+
+        <section class="gallery" aria-label="Generative animation studies">
+            <article class="study">
+                <div class="visual"><span class="index">S.01 / FLOW</span><span class="live">Live system</span><canvas data-sketch="flow" aria-label="Animated golden particle flow field"></canvas></div>
+                <div class="meta"><h2>Field Notes</h2><span class="tag">Flow field<br>Warm phosphor</span><p>Thousands of short-lived traces follow an invisible vector field: part weather map, part pencil study, part machine dream.</p></div>
+            </article>
+            <article class="study">
+                <div class="visual"><span class="index">S.02 / MOIRÉ</span><span class="live">Live system</span><canvas data-sketch="moire" aria-label="Animated moire line interference pattern"></canvas></div>
+                <div class="meta"><h2>Signal Fold</h2><span class="tag">Moiré study<br>Op-art</span><p>A stack of razor-thin waves slips in and out of alignment, producing a textile-like shimmer without gradients or imagery.</p></div>
+            </article>
+            <article class="study">
+                <div class="visual"><span class="index">S.03 / ORBIT</span><span class="live">Live system</span><canvas data-sketch="orbit" aria-label="Animated orbital curve drawing"></canvas></div>
+                <div class="meta"><h2>Unstable Orbit</h2><span class="tag">Harmonograph<br>Celestial</span><p>A slowly precessing family of curves with the poise of an astronomical instrument and the slight wrongness of impossible geometry.</p></div>
+            </article>
+            <article class="study">
+                <div class="visual"><span class="index">S.04 / CHROME</span><span class="live">Live system</span><canvas data-sketch="chrome" aria-label="Animated iridescent liquid ribbon"></canvas></div>
+                <div class="meta"><h2>Liquid Index</h2><span class="tag">Iridescent mesh<br>Y2K restraint</span><p>A soft, metallic membrane made from layered contours—your “shimmery stuff,” but disciplined to the site’s editorial grid.</p></div>
+            </article>
+            <article class="study">
+                <div class="visual"><span class="index">S.05 / WAVE</span><span class="live">Live system</span><canvas data-sketch="scope" aria-label="Animated oscilloscope waveform"></canvas></div>
+                <div class="meta"><h2>Ghost Signal</h2><span class="tag">Oscilloscope<br>CRT afterglow</span><p>A luminous signal keeps almost resolving into a symbol. The glow is analogue; the behaviour is mathematical.</p></div>
+            </article>
+            <article class="study">
+                <div class="visual"><span class="index">S.06 / SWARM</span><span class="live">Live system</span><canvas data-sketch="swarm" aria-label="Animated constellation swarm"></canvas></div>
+                <div class="meta"><h2>Soft Assembly</h2><span class="tag">Particle swarm<br>Networked form</span><p>A porous organism continuously gathers and disperses—closest to the current network motif, but more atmospheric and alive.</p></div>
+            </article>
+            <article class="study">
+                <div class="visual"><span class="index">S.07 / CONTOUR</span><span class="live">Live system</span><canvas data-sketch="contour" aria-label="Animated topographic contour field"></canvas></div>
+                <div class="meta"><h2>Moving Isobar</h2><span class="tag">Topographic lines<br>Slow weather</span><p>Nested pressure systems migrate across an imaginary territory: a cartographic texture with no fixed geography.</p></div>
+            </article>
+            <article class="study">
+                <div class="visual"><span class="index">S.08 / BLOOM</span><span class="live">Live system</span><canvas data-sketch="bloom" aria-label="Animated magnetic radial bloom"></canvas></div>
+                <div class="meta"><h2>Magnetic Bloom</h2><span class="tag">Polar geometry<br>Kinetic emblem</span><p>A radial instrument alternately flowers and collapses, sitting between a diffraction pattern, seal, and impossible mechanism.</p></div>
+            </article>
+            <article class="study">
+                <div class="visual"><span class="index">S.09 / DITHER</span><span class="live">Live system</span><canvas data-sketch="dither" aria-label="Animated metallic dither field"></canvas></div>
+                <div class="meta"><h2>Dither Current</h2><span class="tag">Halftone field<br>Digital patina</span><p>A deliberately low-resolution current catches the light like perforated metal—graphic, tactile, and quietly early-digital.</p></div>
+            </article>
+            <article class="study">
+                <div class="visual"><span class="index">S.10 / NODES</span><span class="live">Live system</span><canvas data-sketch="chladni" aria-label="Animated Chladni nodal pattern"></canvas></div>
+                <div class="meta"><h2>Resonant Matter</h2><span class="tag">Chladni field<br>Acoustic geometry</span><p>Particles collect around the nodal lines of a continuously changing virtual plate, making sound structure visible without audio.</p></div>
+            </article>
+        </section>
+
+        <aside class="note">
+            <p><b>Direction:</b> these sit somewhere between computational modernism, retrofuturist scientific graphics, early computer art, and ambient data sculpture.</p>
+            <p><b>Interaction:</b> move across a specimen to disturb its field. “Regenerate” changes its internal parameters; “Pause motion” lets you compare still compositions.</p>
+        </aside>
+    </main>
+
+    <script>
+    (() => {
+        let GOLD, INK, BG, LIGHT;
+        function syncPalette(){
+            LIGHT=document.documentElement.classList.contains('light');
+            GOLD=LIGHT?[139,98,12]:[236,174,53]; INK=LIGHT?[22,20,15]:[246,241,231]; BG=LIGHT?[236,231,220]:[8,8,10];
+        }
+        syncPalette();
+        const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let paused = reduced, seed = Math.random() * 999, last = performance.now();
+        const canvases = [...document.querySelectorAll('canvas[data-sketch]')];
+        const state = new Map();
+        const pointer = new WeakMap();
+        const pauseBtn = document.querySelector('#pause');
+
+        function resize(c) {
+            const r = c.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2);
+            const w = Math.max(1, Math.round(r.width * d)), h = Math.max(1, Math.round(r.height * d));
+            if (c.width !== w || c.height !== h) { c.width = w; c.height = h; state.delete(c); }
+            return { ctx: c.getContext('2d'), w, h, d };
+        }
+        function cursor(c) { return pointer.get(c) || { x: .5, y: .5, active: 0 }; }
+        canvases.forEach(c => {
+            pointer.set(c, { x: .5, y: .5, active: 0 });
+            c.closest('.visual').addEventListener('pointermove', e => {
+                const r = c.getBoundingClientRect(), p = pointer.get(c);
+                p.x = (e.clientX-r.left)/r.width; p.y = (e.clientY-r.top)/r.height; p.active = 1;
+            });
+            c.closest('.visual').addEventListener('pointerleave', () => pointer.get(c).active = 0);
+        });
+
+        function clear(ctx,w,h,a=1) { ctx.fillStyle=`rgba(${BG.join(',')},${a})`; ctx.fillRect(0,0,w,h); }
+        function flow(c,t) {
+            const {ctx,w,h}=resize(c); let s=state.get(c);
+            if(!s){ s={p:Array.from({length:Math.min(1200,Math.round(w*h/520))},()=>({x:Math.random()*w,y:Math.random()*h,a:Math.random()*6.28,l:20+Math.random()*90}))}; state.set(c,s); clear(ctx,w,h); }
+            ctx.fillStyle=`rgba(${BG.join(',')},.055)`; ctx.fillRect(0,0,w,h); const m=cursor(c); ctx.lineWidth=Math.max(1,w/1000);
+            s.p.forEach((p,i)=>{ const ox=p.x,oy=p.y; let a=Math.sin(p.x*.006+t*.00021+seed)+Math.cos(p.y*.008-t*.00016)*1.45;
+                if(m.active){const dx=m.x*w-p.x,dy=m.y*h-p.y,q=Math.max(35,Math.hypot(dx,dy));a+=140/q*Math.sin(Math.atan2(dy,dx));}
+                p.x+=Math.cos(a)*1.15*(w/700);p.y+=Math.sin(a)*1.15*(w/700);p.l--;
+                ctx.strokeStyle=`rgba(${GOLD.join(',')},${.14+(i%11)/90})`;ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(p.x,p.y);ctx.stroke();
+                if(p.x<0||p.x>w||p.y<0||p.y>h||p.l<0){p.x=Math.random()*w;p.y=Math.random()*h;p.l=30+Math.random()*100;}
+            });
+        }
+        function moire(c,t) {
+            const {ctx,w,h}=resize(c); clear(ctx,w,h); const m=cursor(c), mx=(m.x-.5)*1.5, my=(m.y-.5)*.8;
+            ctx.lineWidth=Math.max(.65,w/1300); for(let set=0;set<2;set++){ctx.strokeStyle=set?`rgba(${GOLD.join(',')},${LIGHT ? .72 : .8})`:`rgba(${INK.join(',')},${LIGHT ? .3 : .36})`;
+                for(let j=-22;j<40;j++){ctx.beginPath();for(let x=-20;x<=w+20;x+=5){const u=x/w, phase=j*.105+(set?1:-1)*t*.00016;
+                    const y=h*(.5+j*.022)+Math.sin(u*8+phase+mx)*h*.105+Math.sin(u*19-phase*1.3+my)*h*.025;
+                    x===-20?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();}}
+        }
+        function orbit(c,t) {
+            const {ctx,w,h}=resize(c); clear(ctx,w,h,.12); const m=cursor(c), cx=w*(.5+(m.x-.5)*.07),cy=h*(.5+(m.y-.5)*.07),r=Math.min(w,h)*.31;
+            ctx.save();ctx.translate(cx,cy);ctx.rotate(t*.000025);ctx.lineWidth=Math.max(.8,w/1100);
+            for(let k=0;k<14;k++){ctx.strokeStyle=`rgba(${k%3?GOLD.join(','):INK.join(',')},${.08+k*.018})`;ctx.beginPath();
+                for(let i=0;i<=620;i++){const q=i/620*Math.PI*2, drift=t*.00009+k*.115; const rr=r*(.7+.18*Math.sin(3*q+drift)+.09*Math.cos(7*q-drift));
+                    const x=Math.cos(q+k*.018)*rr, y=Math.sin(q)*rr*(.66+.12*Math.sin(drift));i?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.stroke();}
+            ctx.restore();
+        }
+        function chrome(c,t) {
+            const {ctx,w,h}=resize(c); clear(ctx,w,h); const m=cursor(c), bands=42;
+            for(let j=bands;j>=0;j--){const q=j/bands, phase=t*.00036+q*4+seed;ctx.beginPath();
+                for(let i=0;i<=160;i++){const u=i/160, x=u*w; const envelope=Math.sin(u*Math.PI);
+                    const y=h*(.5+Math.sin(u*6.2+phase)*.12*envelope+Math.cos(u*2.1-phase*.35)*.09)+(q-.5)*h*.34*(.28+envelope)+((m.y-.5)*h*.08*envelope);
+                    i?ctx.lineTo(x,y):ctx.moveTo(x,y);} const hue=(35+q*170+t*.004)%360;
+                ctx.strokeStyle=`hsla(${hue},${LIGHT?78:86}%,${LIGHT?30+q*27:47+q*40}%,${(LIGHT ? .17 : .14)+q*.24})`;ctx.lineWidth=1+q*2.1;ctx.stroke(); }
+        }
+        function scope(c,t) {
+            const {ctx,w,h}=resize(c); clear(ctx,w,h,.16); const m=cursor(c), tt=t*.001, passes=11;
+            ctx.save();ctx.globalCompositeOperation='lighter';
+            for(let p=passes;p>=0;p--){ctx.beginPath();for(let i=0;i<=520;i++){const q=i/520*Math.PI*2;
+                const mod=2.2+.35*Math.sin(tt*.13)+(m.x-.5)*.7, x=w/2+Math.sin(q*3+tt*.31)*Math.cos(q*mod-tt*.17)*w*.32;
+                const y=h/2+Math.sin(q*4-tt*.23)*Math.cos(q*1.5+tt*.11)*h*.28+(m.y-.5)*h*.06;
+                i?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.strokeStyle=`rgba(${p<3?INK.join(','):GOLD.join(',')},${p<2?.18:.018})`;ctx.lineWidth=(passes-p+1)*1.35;ctx.stroke();}
+            ctx.restore();
+        }
+        function swarm(c,t) {
+            const {ctx,w,h}=resize(c); let s=state.get(c);
+            if(!s){s={p:Array.from({length:130},(_,i)=>({a:Math.random()*6.28,r:.05+Math.random()*.39,z:Math.random()*6.28,v:.00008+Math.random()*.00016}))};state.set(c,s);}
+            clear(ctx,w,h,.18);const m=cursor(c), pts=s.p.map((p,i)=>{const a=p.a+t*p.v, pulse=.72+.28*Math.sin(t*.0007+p.z);return{x:w*(.5+(m.x-.5)*.06+Math.cos(a*2+p.z)*p.r*pulse),y:h*(.5+(m.y-.5)*.06+Math.sin(a*3-p.z)*p.r*.72),i};});
+            ctx.lineWidth=Math.max(.5,w/1600);for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const a=pts[i],b=pts[j],d=Math.hypot(a.x-b.x,a.y-b.y),lim=Math.min(w,h)*.105;if(d<lim){ctx.strokeStyle=`rgba(${GOLD.join(',')},${(1-d/lim)*.13})`;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}}
+            pts.forEach((p,i)=>{ctx.fillStyle=i%17===0?`rgba(${INK.join(',')},.9)`:`rgba(${GOLD.join(',')},${.28+(i%7)*.07})`;ctx.beginPath();ctx.arc(p.x,p.y,i%17===0?2.4:1.15,0,6.28);ctx.fill();});
+        }
+        function contour(c,t) {
+            const {ctx,w,h}=resize(c); clear(ctx,w,h); const m=cursor(c); ctx.lineWidth=Math.max(.65,w/1400);
+            for(let band=0;band<34;band++){const q=band/33, drift=t*.00011+q*3.7;ctx.beginPath();
+                for(let i=0;i<=180;i++){const u=i/180, x=u*w;const ridge=Math.sin(u*5.4+drift)*.105+Math.sin(u*13-drift*.7)*.035;
+                    const bowl=Math.cos((u-.5)*Math.PI)*Math.sin(drift*.45)*.06;const y=h*(q+ridge+bowl+(m.y-.5)*.035*Math.sin(u*Math.PI));i?ctx.lineTo(x,y):ctx.moveTo(x,y);}
+                ctx.strokeStyle=band%7===0?`rgba(${INK.join(',')},.32)`:`rgba(${GOLD.join(',')},${.12+q*.2})`;ctx.stroke();}
+        }
+        function bloom(c,t) {
+            const {ctx,w,h}=resize(c); clear(ctx,w,h,.14); const m=cursor(c), r=Math.min(w,h)*.34, pulse=.82+.12*Math.sin(t*.00045);
+            ctx.save();ctx.translate(w*(.5+(m.x-.5)*.06),h*(.5+(m.y-.5)*.06));ctx.rotate(t*.000025);ctx.globalCompositeOperation='lighter';
+            for(let k=0;k<19;k++){ctx.beginPath();for(let i=0;i<=360;i++){const a=i/360*Math.PI*2;const petals=6+Math.sin(t*.00013)*2;
+                    const rr=r*pulse*(.46+.23*Math.sin(a*petals+k*.13)+.08*Math.sin(a*17-t*.0004+k));const x=Math.cos(a)*rr,y=Math.sin(a)*rr;
+                    i?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.strokeStyle=`rgba(${k%5?GOLD.join(','):INK.join(',')},${.035+k*.012})`;ctx.lineWidth=.7+k*.08;ctx.stroke();}
+            ctx.restore();
+        }
+        function dither(c,t) {
+            const {ctx,w,h}=resize(c); clear(ctx,w,h); const m=cursor(c), step=Math.max(7,Math.round(w/82));
+            for(let y=step/2;y<h;y+=step)for(let x=step/2;x<w;x+=step){const u=x/w,v=y/h;
+                const wave=(Math.sin(u*12+t*.0011)+Math.cos(v*15-t*.0008)+Math.sin((u+v)*9-t*.0004))/3;
+                const pull=m.active?Math.max(0,1-Math.hypot(u-m.x,v-m.y)*3):0;const size=step*(.08+.32*(wave*.5+.5)+pull*.28);
+                const hue=(34+110*(wave*.5+.5)+t*.008)%360;ctx.fillStyle=`hsla(${hue},${LIGHT?72:82}%,${LIGHT?27+wave*13:54+wave*18}%,${(LIGHT ? .35 : .32)+pull*.35})`;
+                ctx.fillRect(Math.round(x-size/2),Math.round(y-size/2),Math.max(1,Math.round(size)),Math.max(1,Math.round(size)));}
+        }
+        function chladni(c,t) {
+            const {ctx,w,h}=resize(c); clear(ctx,w,h,.2); const m=cursor(c), step=Math.max(5,Math.round(w/120));
+            const n=3.2+.75*Math.sin(t*.00017)+(m.x-.5)*.6, k=5.1+.65*Math.cos(t*.00014)+(m.y-.5)*.6;
+            ctx.save();ctx.translate(w/2,h/2);ctx.rotate(Math.sin(t*.00009)*.12);
+            for(let y=-h*.48;y<h*.48;y+=step)for(let x=-w*.48;x<w*.48;x+=step){const u=x/(w*.48),v=y/(h*.48);
+                const z=Math.sin(n*Math.PI*u)*Math.sin(k*Math.PI*v)-Math.sin(k*Math.PI*u)*Math.sin(n*Math.PI*v);
+                if(Math.abs(z)<.105){const a=1-Math.abs(z)/.105;ctx.fillStyle=`rgba(${(Math.abs(z)<.025?INK:GOLD).join(',')},${.12+a*.58})`;ctx.beginPath();ctx.arc(x,y,.45+a*1.25,0,6.28);ctx.fill();}}
+            ctx.restore();
+        }
+        const sketches={flow,moire,orbit,chrome,scope,swarm,contour,bloom,dither,chladni};
+        function frame(now){ if(!paused){ canvases.forEach(c=>sketches[c.dataset.sketch](c,now)); last=now; } requestAnimationFrame(frame); }
+        document.querySelector('#regenerate').addEventListener('click',()=>{seed=Math.random()*999;state.clear();canvases.forEach(c=>{const {ctx,w,h}=resize(c);clear(ctx,w,h);});});
+        const themeBtn=document.querySelector('#theme');
+        function labelTheme(){themeBtn.textContent=LIGHT?'Dark theme':'Light theme';}
+        labelTheme();
+        themeBtn.addEventListener('click',()=>{document.documentElement.classList.toggle('light');syncPalette();labelTheme();localStorage.setItem('noir-theme',LIGHT?'light':'dark');state.clear();canvases.forEach(c=>{const {ctx,w,h}=resize(c);clear(ctx,w,h);sketches[c.dataset.sketch](c,last);});});
+        pauseBtn.addEventListener('click',()=>{paused=!paused;pauseBtn.textContent=paused?'Resume motion':'Pause motion';pauseBtn.setAttribute('aria-pressed',String(paused));});
+        if(paused){pauseBtn.textContent='Resume motion';pauseBtn.setAttribute('aria-pressed','true'); canvases.forEach(c=>sketches[c.dataset.sketch](c,last));}
+        new ResizeObserver(()=>state.clear()).observe(document.querySelector('.gallery'));
+        requestAnimationFrame(frame);
+    })();
+    </script>
+</body>
+</html>

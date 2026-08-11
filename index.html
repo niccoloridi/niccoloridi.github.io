@@ -152,6 +152,16 @@
         body.mode-section .stage { opacity: 1; visibility: visible; transform: none; }
         .stage-plate { flex: 0 0 30%; display: flex; align-items: flex-start; justify-content: center; align-self: stretch; padding-top: 0.3rem; }
         .stage-plate img { max-height: 100%; max-width: 100%; }
+        .stage-generative { position: relative; display: block; width: 100%; height: 100%; min-height: 250px; overflow: hidden; }
+        .stage-generative canvas { display: block; width: 100%; height: 100%; opacity: 1 !important; }
+        .stage-generative.has-photo { cursor: pointer; }
+        .stage-plate .stage-generative .generative-photo { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none;
+            object-fit: cover; opacity: 0; filter: none; mix-blend-mode: normal; transition: opacity 0.65s cubic-bezier(0.2,0.7,0.2,1); }
+        .stage-generative.photo-visible .generative-photo { opacity: 1; }
+        .stage-generative .pt-hint { position: absolute; left: 50%; bottom: 0.6rem; transform: translateX(-50%); z-index: 2;
+            padding: 0.2rem 0.4rem; background: color-mix(in srgb, var(--bg) 76%, transparent);
+            font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase;
+            color: var(--muted); opacity: 0.75; white-space: nowrap; pointer-events: none; }
         /* click-to-reveal plate ⇄ photo (pixel dissolve; box stays put) */
         .plate-toggle { position: relative; display: inline-block; line-height: 0; cursor: pointer; }
         .plate-toggle .pt-canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.2s ease; pointer-events: none; }
@@ -218,6 +228,9 @@
             mix-blend-mode: multiply; }
         .tile .specimen img { max-height: clamp(70px, 13vh, 150px); transition: transform 0.55s cubic-bezier(0.2,0.7,0.2,1); }
         .tile:hover .specimen img { transform: scale(1.06); }
+        .tile .specimen canvas { width: 100%; height: clamp(70px, 13vh, 150px); display: block;
+            opacity: 1; transition: transform 0.55s cubic-bezier(0.2,0.7,0.2,1); }
+        .tile:hover .specimen canvas { opacity: 1; transform: scale(1.025); }
         .tile .label { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--line); padding-top: 0.55rem; }
         .tile .label .name { font-family: var(--grotesk); font-weight: 600; font-size: 1.05rem; text-transform: uppercase; }
         .tile:hover .label .name { color: var(--gold); }
@@ -258,6 +271,8 @@
             body.mode-section .stage { flex-direction: column; align-items: stretch; gap: 2.4rem; }
             .stage-plate { flex: 0 0 auto; min-height: 0; align-self: center; padding-top: 0; }
             .stage-plate img { max-height: 22vh; max-width: 80%; width: auto; }
+            .stage-generative { width: min(80vw, 430px); height: 240px; min-height: 0; }
+            .stage-generative .generative-photo { max-width: none; max-height: none; }
             /* mobile: hint sits BELOW the plate (not over the photo), with breathing room before the text */
             .plate-toggle .pt-hint { top: 100%; bottom: auto; margin-top: 0.7rem; opacity: 0.85; color: var(--gold);
                 background: none; border: none; padding: 0; border-radius: 0; font-size: 0.6rem; }
@@ -324,16 +339,16 @@
 
         <nav class="tiles">
             <a class="tile" href="profile.html"><span class="num">01</span>
-                <span class="specimen"><img src="images/ai/head_dissolving.jpg" alt="Profile"></span>
+                <span class="specimen"><canvas data-plate="flow" aria-label="Animated golden flow field"></canvas></span>
                 <span class="label"><span class="name">Profile</span><span class="arrow">↗</span></span></a>
             <a class="tile" href="practice.html"><span class="num">02</span>
-                <span class="specimen"><img src="images/ai/cliff_dissolving.jpg" alt="Practice"></span>
+                <span class="specimen"><canvas data-plate="moire" aria-label="Animated moiré signal field"></canvas></span>
                 <span class="label"><span class="name">Practice</span><span class="arrow">↗</span></span></a>
             <a class="tile" href="research.html"><span class="num">03</span>
-                <span class="specimen"><img src="images/ai/hand_dissolving.jpg" alt="Research"></span>
+                <span class="specimen"><canvas data-plate="chrome" aria-label="Animated liquid index"></canvas></span>
                 <span class="label"><span class="name">Research</span><span class="arrow">↗</span></span></a>
             <a class="tile" href="data.html"><span class="num">04</span>
-                <span class="specimen"><img src="images/ai/planet_dissolving.jpg" alt="Data"></span>
+                <span class="specimen"><canvas data-plate="dither" aria-label="Animated dither current"></canvas></span>
                 <span class="label"><span class="name">Data</span><span class="arrow">↗</span></span></a>
         </nav>
     </main>
@@ -513,7 +528,7 @@
             // ─── in-panel "viewport": sections render in the network space ───
             const stage = document.getElementById('stage');
             const VIEW = {
-                profile: { n:'01', img:'images/ai/head_dissolving.jpg', photo:'images/IMG_18.jpg', pf:[0.27,0.33], body:
+                profile: { n:'01', plate:'flow', photo:'images/IMG_18.jpg', pf:[0.27,0.33], body:
                     '<p>Senior Lecturer (Associate Professor) in Public International Law at The Dickson Poon School of Law, King\'s College London — Associate Director of CIGAD, Associate Dean for Doctoral Studies, Fellow of the Centre for Data Futures, and liaison to the King\'s Institute for AI.</p>'
                   + '<p>My research concerns the authority and effectiveness of international law — how it is produced and changes — applying empirical and computational methods to legal argumentation and actor behaviour.</p>'
                   + '<h3>positions &amp; affiliations</h3><ul>'
@@ -526,7 +541,7 @@
                   + '<h3>education</h3><ul><li>PhD in Public International Law, King\'s College London — 2019</li>'
                   + '<li>LLM in International Law, University of Cambridge — 2014</li>'
                   + '<li>Doctoral Research Fellow, Graduate Institute, Geneva — 2014–2018</li></ul>' },
-                practice: { n:'02', img:'images/ai/cliff_dissolving.jpg', photo:'images/N_Ridi_ICJ.jpeg', pf:[0.74,0.26], body:
+                practice: { n:'02', plate:'moire', photo:'images/N_Ridi_ICJ.jpeg', pf:[0.74,0.26], body:
                     '<p>Counsel and advisory work in public international law and international dispute settlement — with a particular focus on proceedings before the International Court of Justice, ITLOS, and tribunals constituted under the ICSID Convention.</p>'
                   + '<p>Engagements span state responsibility, the law of treaties, jurisdictional immunities, the law of the sea, the use of force, foreign investment protection, and the human-rights and humanitarian-law questions that cut across them.</p>'
                   + '<h3>recent matters</h3><ul>'
@@ -536,8 +551,8 @@
                   + '<li>Research &amp; drafting support to a Special Rapporteur of the ILC</li>'
                   + '<li>Advisory work on a use-of-force matter under a multilateral treaty</li>'
                   + '<li>Advisory work in a boundary dispute</li></ul>' },
-                research: { n:'03', img:'images/ai/hand_dissolving.jpg', srcId:'research-src' },
-                data: { n:'04', img:'images/ai/planet_dissolving.jpg', body:
+                research: { n:'03', plate:'chrome', srcId:'research-src' },
+                data: { n:'04', plate:'dither', body:
                     '<p>Datasets, interactive essays, and open-source tools from research on international law — corpora of decisions and resolutions, citation networks, agent-based models, and pipelines for extracting structured knowledge from legal materials.</p>'
                   + '<h3>data essays</h3><ul>'
                   + '<li><a href="unsc-citations.html">The Law of Citations — UNSC Resolution Network</a> · 2,488 resolutions, 12,399 citations</li>'
@@ -548,9 +563,10 @@
             function openSection(s){
                 const v = VIEW[s]; if (!v) return;
                 const bodyHTML = v.srcId ? (document.getElementById(v.srcId)||{}).innerHTML || '' : v.body;
-                const plateCell = v.photo
-                    ? '<div class="stage-plate"><span class="plate-toggle" data-photo="'+v.photo+'" data-fx="'+(v.pf?v.pf[0]:0.5)+'" data-fy="'+(v.pf?v.pf[1]:0.5)+'"><img class="pt-plate" src="'+v.img+'" alt=""><canvas class="pt-canvas" aria-hidden="true"></canvas><span class="pt-hint">click to reveal</span></span></div>'
-                    : '<div class="stage-plate"><img src="'+v.img+'" alt=""></div>';
+                const plateCell = '<div class="stage-plate"><span class="stage-generative'+(v.photo?' has-photo':'')+'"'+(v.photo?' role="button" tabindex="0" aria-label="Reveal photograph"':'')+'>'
+                    + '<canvas data-plate="'+v.plate+'" aria-label="Animated '+s+' study"></canvas>'
+                    + (v.photo?'<img class="generative-photo" src="'+v.photo+'" alt=""><span class="pt-hint">click to reveal</span>':'')
+                    + '</span></div>';
                 stage.innerHTML = plateCell
                   + '<div class="stage-text"><div class="stage-num">'+v.n+' / '+s+'</div>'
                   + '<h2 class="stage-title">'+s+'</h2>'
@@ -558,13 +574,26 @@
                   + '<div class="stage-actions"><button class="stage-close" type="button">cd ..</button></div></div>';
                 document.body.classList.add('mode-section');
                 stage.querySelector('.stage-text').scrollTop = 0;
-                if (v.photo) initPlateToggle(stage.querySelector('.plate-toggle'));
+                if (v.photo) initGenerativeReveal(stage.querySelector('.stage-generative'));
                 if (window.matchMedia('(max-width: 880px)').matches) setTimeout(()=>{ const np=document.getElementById('net-panel'); if (np) np.scrollIntoView({behavior:'smooth', block:'start'}); }, 90);
                 if (v.srcId === 'research-src') initResearchFilters(stage);
                 const cb = stage.querySelector('.stage-close');
                 if (cb) cb.addEventListener('click', ()=>{ closeSection(); if (canFocus) input.focus(); });
                 // push a history entry so the browser back button closes the frame (desktop + mobile)
                 if (location.hash !== '#'+s) history.pushState({ sec:s }, '', '#'+s);
+            }
+            function initGenerativeReveal(el){
+                if (!el) return;
+                const hint = el.querySelector('.pt-hint');
+                const toggle = () => {
+                    const visible = el.classList.toggle('photo-visible');
+                    el.setAttribute('aria-label', visible ? 'Return to animation' : 'Reveal photograph');
+                    if (hint) hint.textContent = visible ? 'click to return' : 'click to reveal';
+                };
+                el.addEventListener('click', toggle);
+                el.addEventListener('keydown', event => {
+                    if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); toggle(); }
+                });
             }
             function initResearchFilters(scope){
                 const items = scope.querySelectorAll('.pub-list li');
@@ -791,6 +820,7 @@
         })();
     </script>
 
+    <script src="generative-plates.js"></script>
     <script type="module">
         // ─── Calm constellation in the right panel (canvas is absolute → no resize feedback) ───
         const container = document.getElementById('net-panel');
