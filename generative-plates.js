@@ -42,6 +42,24 @@
         ctx.fillRect(0, 0, w, h);
     }
 
+    function fadeEdges(ctx, w, h) {
+        const fx = Math.max(18, w * .14), fy = Math.max(14, h * .2);
+        const edge = (x0, y0, x1, y1, rect, reverse = false) => {
+            const gradient = ctx.createLinearGradient(x0, y0, x1, y1);
+            gradient.addColorStop(0, reverse ? 'rgba(0,0,0,1)' : 'rgba(0,0,0,0)');
+            gradient.addColorStop(1, reverse ? 'rgba(0,0,0,0)' : 'rgba(0,0,0,1)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(...rect);
+        };
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-in';
+        edge(0, 0, fx, 0, [0, 0, fx, h]);
+        edge(w - fx, 0, w, 0, [w - fx, 0, fx, h], true);
+        edge(0, 0, 0, fy, [0, 0, w, fy]);
+        edge(0, h - fy, 0, h, [0, h - fy, w, fy], true);
+        ctx.restore();
+    }
+
     function flow(canvas, time) {
         const { ctx, w, h } = surface(canvas);
         const p = palette();
@@ -56,19 +74,20 @@
         }
         wash(ctx, w, h, .042);
         ctx.lineCap = 'round';
-        ctx.lineWidth = Math.max(p.light ? 1.45 : 1.05, w / 720);
+        ctx.lineWidth = Math.max(p.light ? 1.7 : 1.3, w / 650);
         for (let i = 0; i < s.particles.length; i++) {
             const q = s.particles[i], ox = q.x, oy = q.y;
             const angle = Math.sin(q.x * .011 + time * .00022 + seed) + Math.cos(q.y * .014 - time * .00017) * 1.4;
             q.x += Math.cos(angle) * Math.max(.65, w / 430);
             q.y += Math.sin(angle) * Math.max(.65, w / 430);
             q.life--;
-            ctx.strokeStyle = `rgba(${p.gold.join(',')},${(p.light ? .7 : .32) + (i % 9) * .022})`;
+            ctx.strokeStyle = `rgba(${p.gold.join(',')},${(p.light ? .82 : .48) + (i % 9) * .018})`;
             ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(q.x, q.y); ctx.stroke();
             if (q.x < 0 || q.x > w || q.y < 0 || q.y > h || q.life < 0) {
                 q.x = Math.random() * w; q.y = Math.random() * h; q.life = 24 + Math.random() * 70;
             }
         }
+        fadeEdges(ctx, w, h);
     }
 
     function moire(canvas, time) {
@@ -150,11 +169,37 @@
         }
     }
 
-    const renderers = { flow, moire, orbit, chrome, dither };
+    function weave(canvas, time) {
+        const { ctx, w, h } = surface(canvas), p = palette(), m = pointer.get(canvas);
+        wash(ctx, w, h);
+        ctx.lineCap = 'round';
+        for (let set = 0; set < 2; set++) {
+            for (let k = 0; k < 18; k++) {
+                ctx.beginPath();
+                for (let i = 0; i <= 120; i++) {
+                    const u = i / 120, x = u * w, phase = k * .3 + time * .0003 * (set ? 1 : -1);
+                    const y = h * (.5 + (k - 8.5) * .025)
+                        + Math.sin(u * (set ? 9 : 6) + phase) * h * .17 * Math.sin(u * Math.PI)
+                        + (m.y - .5) * h * .06;
+                    i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+                }
+                const color = set ? p.gold : p.ink;
+                ctx.strokeStyle = `rgba(${color.join(',')},${set ? (p.light ? .78 : .74) : (p.light ? .22 : .2)})`;
+                ctx.lineWidth = Math.max(1, w / 760) + k * .045;
+                ctx.stroke();
+            }
+        }
+        fadeEdges(ctx, w, h);
+    }
+
+    const renderers = { flow, moire, orbit, chrome, dither, weave };
+    const profileVariant = new URLSearchParams(location.search).get('profile') === 'weave';
+    const rendererFor = canvas => profileVariant && canvas.dataset.plate === 'flow' ? 'weave' : canvas.dataset.plate;
     function register(canvas) {
         if (registered.has(canvas)) return;
         registered.add(canvas);
         canvases.add(canvas);
+        if (profileVariant && canvas.dataset.plate === 'flow') canvas.setAttribute('aria-label', 'Animated vector weave');
         pointer.set(canvas, { x: .5, y: .5 });
         const surface = canvas.closest('.specimen, .stage-generative') || canvas;
         surface.addEventListener('pointermove', event => {
@@ -176,7 +221,7 @@
         if (light !== wasLight) { state.clear(); wasLight = light; }
         canvases.forEach(canvas => {
             if (!canvas.isConnected) { canvases.delete(canvas); state.delete(canvas); return; }
-            renderers[canvas.dataset.plate](canvas, time);
+            renderers[rendererFor(canvas)](canvas, time);
         });
         if (!reduced && !document.hidden) requestAnimationFrame(frame);
     }
