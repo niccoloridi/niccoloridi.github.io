@@ -231,6 +231,8 @@
         .tile .specimen canvas { width: 100%; height: clamp(70px, 13vh, 150px); display: block;
             opacity: 1; transition: transform 0.55s cubic-bezier(0.2,0.7,0.2,1); }
         .tile:hover .specimen canvas { opacity: 1; transform: scale(1.025); }
+        .tile.research-flow:hover { background: var(--bg); }
+        .tile.research-flow:hover .specimen canvas { transform: none; }
         .tile .label { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--line); padding-top: 0.55rem; }
         .tile .label .name { font-family: var(--grotesk); font-weight: 600; font-size: 1.05rem; text-transform: uppercase; }
         .tile:hover .label .name { color: var(--gold); }
@@ -344,7 +346,7 @@
             <a class="tile" href="practice.html"><span class="num">02</span>
                 <span class="specimen"><canvas data-plate="moire" aria-label="Animated moiré signal field"></canvas></span>
                 <span class="label"><span class="name">Practice</span><span class="arrow">↗</span></span></a>
-            <a class="tile" href="research.html"><span class="num">03</span>
+            <a class="tile research-flow" href="research.html"><span class="num">03</span>
                 <span class="specimen"><canvas data-plate="flow" aria-label="Animated golden flow field"></canvas></span>
                 <span class="label"><span class="name">Research</span><span class="arrow">↗</span></span></a>
             <a class="tile" href="data.html"><span class="num">04</span>
