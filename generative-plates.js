@@ -7,9 +7,21 @@
     const tau = Math.PI * 2;
     let seed = Math.random() * 900;
 
-    const palette = () => document.documentElement.classList.contains('light-mode')
-        ? { bg: [236, 231, 220], gold: [139, 98, 12], ink: [22, 20, 15], light: true }
-        : { bg: [10, 10, 12], gold: [236, 174, 53], ink: [246, 241, 231], light: false };
+    function themeColor(name, fallback) {
+        const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        const hex = value.match(/^#([0-9a-f]{6})$/i);
+        if (hex) return [0, 2, 4].map(i => parseInt(hex[1].slice(i, i + 2), 16));
+        return fallback;
+    }
+    const palette = () => {
+        const light = document.documentElement.classList.contains('light-mode');
+        return {
+            bg: themeColor('--bg', light ? [236, 231, 220] : [10, 10, 12]),
+            gold: themeColor('--gold', light ? [154, 117, 33] : [215, 161, 59]),
+            ink: themeColor('--fg', light ? [22, 20, 15] : [236, 232, 223]),
+            light
+        };
+    };
 
     function surface(canvas) {
         const rect = canvas.getBoundingClientRect();
@@ -35,22 +47,23 @@
         const p = palette();
         let s = state.get(canvas);
         if (!s) {
-            const count = Math.min(360, Math.round(w * h / 330));
+            const count = Math.min(520, Math.round(w * h / 260));
             s = { particles: Array.from({ length: count }, () => ({
                 x: Math.random() * w, y: Math.random() * h, life: 18 + Math.random() * 70
             })) };
             state.set(canvas, s);
             wash(ctx, w, h);
         }
-        wash(ctx, w, h, .055);
-        ctx.lineWidth = Math.max(.7, w / 800);
+        wash(ctx, w, h, .042);
+        ctx.lineCap = 'round';
+        ctx.lineWidth = Math.max(p.light ? 1.45 : 1.05, w / 720);
         for (let i = 0; i < s.particles.length; i++) {
             const q = s.particles[i], ox = q.x, oy = q.y;
             const angle = Math.sin(q.x * .011 + time * .00022 + seed) + Math.cos(q.y * .014 - time * .00017) * 1.4;
             q.x += Math.cos(angle) * Math.max(.65, w / 430);
             q.y += Math.sin(angle) * Math.max(.65, w / 430);
             q.life--;
-            ctx.strokeStyle = `rgba(${p.gold.join(',')},${.15 + (i % 9) * .018})`;
+            ctx.strokeStyle = `rgba(${p.gold.join(',')},${(p.light ? .7 : .32) + (i % 9) * .022})`;
             ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(q.x, q.y); ctx.stroke();
             if (q.x < 0 || q.x > w || q.y < 0 || q.y > h || q.life < 0) {
                 q.x = Math.random() * w; q.y = Math.random() * h; q.life = 24 + Math.random() * 70;
