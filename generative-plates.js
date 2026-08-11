@@ -81,7 +81,10 @@
                 q.x += Math.cos(angle) * Math.max(.65, w / 430);
                 q.y += Math.sin(angle) * Math.max(.65, w / 430);
                 q.life--;
-                const alpha = ((p.light ? .82 : .48) + (i % 9) * .018) * strength;
+                const fadeZone = Math.max(16, Math.min(w, h) * .16);
+                const edgeDistance = Math.min(q.x, q.y, w - q.x, h - q.y);
+                const edgeFade = Math.max(0, Math.min(1, edgeDistance / fadeZone));
+                const alpha = ((p.light ? .82 : .48) + (i % 9) * .018) * strength * edgeFade;
                 ctx.strokeStyle = `rgba(${p.gold.join(',')},${alpha})`;
                 ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(q.x, q.y); ctx.stroke();
                 if (q.x < 0 || q.x > w || q.y < 0 || q.y > h || q.life < 0) {
@@ -95,7 +98,6 @@
         }
         wash(ctx, w, h, .042);
         drawPass(time);
-        fadeEdges(ctx, w, h);
     }
 
     function moire(canvas, time) {
