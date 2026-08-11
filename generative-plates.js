@@ -65,28 +65,36 @@
         const p = palette();
         let s = state.get(canvas);
         if (!s) {
-            const count = Math.min(520, Math.round(w * h / 260));
+            const count = Math.max(180, Math.min(520, Math.round(w * h / 260)));
             s = { particles: Array.from({ length: count }, () => ({
                 x: Math.random() * w, y: Math.random() * h, life: 18 + Math.random() * 70
-            })) };
+            })), fresh: true };
             state.set(canvas, s);
             wash(ctx, w, h);
         }
-        wash(ctx, w, h, .042);
         ctx.lineCap = 'round';
         ctx.lineWidth = Math.max(p.light ? 1.7 : 1.3, w / 650);
-        for (let i = 0; i < s.particles.length; i++) {
-            const q = s.particles[i], ox = q.x, oy = q.y;
-            const angle = Math.sin(q.x * .011 + time * .00022 + seed) + Math.cos(q.y * .014 - time * .00017) * 1.4;
-            q.x += Math.cos(angle) * Math.max(.65, w / 430);
-            q.y += Math.sin(angle) * Math.max(.65, w / 430);
-            q.life--;
-            ctx.strokeStyle = `rgba(${p.gold.join(',')},${(p.light ? .82 : .48) + (i % 9) * .018})`;
-            ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(q.x, q.y); ctx.stroke();
-            if (q.x < 0 || q.x > w || q.y < 0 || q.y > h || q.life < 0) {
-                q.x = Math.random() * w; q.y = Math.random() * h; q.life = 24 + Math.random() * 70;
+        const drawPass = (at, strength = 1) => {
+            for (let i = 0; i < s.particles.length; i++) {
+                const q = s.particles[i], ox = q.x, oy = q.y;
+                const angle = Math.sin(q.x * .011 + at * .00022 + seed) + Math.cos(q.y * .014 - at * .00017) * 1.4;
+                q.x += Math.cos(angle) * Math.max(.65, w / 430);
+                q.y += Math.sin(angle) * Math.max(.65, w / 430);
+                q.life--;
+                const alpha = ((p.light ? .82 : .48) + (i % 9) * .018) * strength;
+                ctx.strokeStyle = `rgba(${p.gold.join(',')},${alpha})`;
+                ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(q.x, q.y); ctx.stroke();
+                if (q.x < 0 || q.x > w || q.y < 0 || q.y > h || q.life < 0) {
+                    q.x = Math.random() * w; q.y = Math.random() * h; q.life = 24 + Math.random() * 70;
+                }
             }
+        };
+        if (s.fresh) {
+            for (let warm = 28; warm > 0; warm--) drawPass(time - warm * 16, .68);
+            s.fresh = false;
         }
+        wash(ctx, w, h, .042);
+        drawPass(time);
         fadeEdges(ctx, w, h);
     }
 
