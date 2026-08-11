@@ -193,13 +193,10 @@
     }
 
     const renderers = { flow, moire, orbit, chrome, dither, weave };
-    const profileVariant = new URLSearchParams(location.search).get('profile') === 'weave';
-    const rendererFor = canvas => profileVariant && canvas.dataset.plate === 'flow' ? 'weave' : canvas.dataset.plate;
     function register(canvas) {
         if (registered.has(canvas)) return;
         registered.add(canvas);
         canvases.add(canvas);
-        if (profileVariant && canvas.dataset.plate === 'flow') canvas.setAttribute('aria-label', 'Animated vector weave');
         pointer.set(canvas, { x: .5, y: .5 });
         const surface = canvas.closest('.specimen, .stage-generative') || canvas;
         surface.addEventListener('pointermove', event => {
@@ -221,7 +218,7 @@
         if (light !== wasLight) { state.clear(); wasLight = light; }
         canvases.forEach(canvas => {
             if (!canvas.isConnected) { canvases.delete(canvas); state.delete(canvas); return; }
-            renderers[rendererFor(canvas)](canvas, time);
+            renderers[canvas.dataset.plate](canvas, time);
         });
         if (!reduced && !document.hidden) requestAnimationFrame(frame);
     }
