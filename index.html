@@ -339,13 +339,13 @@
 
         <nav class="tiles">
             <a class="tile" href="profile.html"><span class="num">01</span>
-                <span class="specimen"><canvas data-plate="weave" aria-label="Animated chromatic vector weave"></canvas></span>
+                <span class="specimen"><canvas data-plate="chrome" aria-label="Animated liquid index"></canvas></span>
                 <span class="label"><span class="name">Profile</span><span class="arrow">↗</span></span></a>
             <a class="tile" href="practice.html"><span class="num">02</span>
                 <span class="specimen"><canvas data-plate="moire" aria-label="Animated moiré signal field"></canvas></span>
                 <span class="label"><span class="name">Practice</span><span class="arrow">↗</span></span></a>
             <a class="tile" href="research.html"><span class="num">03</span>
-                <span class="specimen"><canvas data-plate="chrome" aria-label="Animated liquid index"></canvas></span>
+                <span class="specimen"><canvas data-plate="flow" aria-label="Animated golden flow field"></canvas></span>
                 <span class="label"><span class="name">Research</span><span class="arrow">↗</span></span></a>
             <a class="tile" href="data.html"><span class="num">04</span>
                 <span class="specimen"><canvas data-plate="dither" aria-label="Animated dither current"></canvas></span>
@@ -528,7 +528,7 @@
             // ─── in-panel "viewport": sections render in the network space ───
             const stage = document.getElementById('stage');
             const VIEW = {
-                profile: { n:'01', plate:'weave', photo:'images/IMG_18.jpg', pf:[0.27,0.33], body:
+                profile: { n:'01', plate:'chrome', photo:'images/IMG_18.jpg', pf:[0.27,0.33], body:
                     '<p>Senior Lecturer (Associate Professor) in Public International Law at The Dickson Poon School of Law, King\'s College London — Associate Director of CIGAD, Associate Dean for Doctoral Studies, Fellow of the Centre for Data Futures, and liaison to the King\'s Institute for AI.</p>'
                   + '<p>My research concerns the authority and effectiveness of international law — how it is produced and changes — applying empirical and computational methods to legal argumentation and actor behaviour.</p>'
                   + '<h3>positions &amp; affiliations</h3><ul>'
@@ -551,7 +551,7 @@
                   + '<li>Research &amp; drafting support to a Special Rapporteur of the ILC</li>'
                   + '<li>Advisory work on a use-of-force matter under a multilateral treaty</li>'
                   + '<li>Advisory work in a boundary dispute</li></ul>' },
-                research: { n:'03', plate:'chrome', srcId:'research-src' },
+                research: { n:'03', plate:'flow', srcId:'research-src' },
                 data: { n:'04', plate:'dither', body:
                     '<p>Datasets, interactive essays, and open-source tools from research on international law — corpora of decisions and resolutions, citation networks, agent-based models, and pipelines for extracting structured knowledge from legal materials.</p>'
                   + '<h3>data essays</h3><ul>'
@@ -820,7 +820,7 @@
         })();
     </script>
 
-    <script src="generative-plates.js"></script>
+    <script src="generative-plates.js?v=20260811-1"></script>
     <script type="module">
         // ─── Calm constellation in the right panel (canvas is absolute → no resize feedback) ───
         const container = document.getElementById('net-panel');

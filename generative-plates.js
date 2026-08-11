@@ -218,7 +218,8 @@
         if (light !== wasLight) { state.clear(); wasLight = light; }
         canvases.forEach(canvas => {
             if (!canvas.isConnected) { canvases.delete(canvas); state.delete(canvas); return; }
-            renderers[canvas.dataset.plate](canvas, time);
+            const render = renderers[canvas.dataset.plate];
+            if (render) render(canvas, time);
         });
         if (!reduced && !document.hidden) requestAnimationFrame(frame);
     }
