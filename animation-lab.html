@@ -63,6 +63,7 @@
         .study { min-width: 0; position: relative; background: var(--surface); border-bottom: 1px solid var(--line); }
         .study:nth-child(odd) { border-right: 1px solid var(--line); }
         .study:nth-last-child(-n+2) { border-bottom: 0; }
+        .study:nth-last-child(2) { border-bottom: 1px solid var(--line); }
         .visual { height: clamp(260px, 35vw, 520px); position: relative; overflow: hidden; background: #08080a; cursor: crosshair; }
         canvas { display: block; width: 100%; height: 100%; }
         .visual::after { content: ""; position: absolute; inset: 0; pointer-events: none;
@@ -99,7 +100,7 @@
 <body>
     <div class="grain" aria-hidden="true"></div>
     <header>
-        <a class="identity" href="index.html"><b>NR</b><span>Animation studies / 01—10</span></a>
+        <a class="identity" href="index.html"><b>NR</b><span>Animation studies / 01—11</span></a>
         <div class="controls">
             <button class="control" id="theme" type="button">Light theme</button>
             <button class="control" id="regenerate" type="button">Regenerate</button>
@@ -111,7 +112,7 @@
         <section class="intro">
             <div>
                 <p class="eyebrow">A computational plate room</p>
-                <h1>Ten studies in <em>living form.</em></h1>
+                <h1>Eleven studies in <em>living form.</em></h1>
             </div>
             <p class="brief">Possible replacements for the four static plates. Each study is <strong>drawn live</strong>, has a different tempo, and responds subtly to the pointer. The shared palette keeps them inside the existing site rather than making them feel like embedded demos.</p>
         </section>
@@ -156,6 +157,10 @@
             <article class="study">
                 <div class="visual"><span class="index">S.10 / NODES</span><span class="live">Live system</span><canvas data-sketch="chladni" aria-label="Animated Chladni nodal pattern"></canvas></div>
                 <div class="meta"><h2>Resonant Matter</h2><span class="tag">Chladni field<br>Acoustic geometry</span><p>Particles collect around the nodal lines of a continuously changing virtual plate, making sound structure visible without audio.</p></div>
+            </article>
+            <article class="study">
+                <div class="visual"><span class="index">S.11 / WEAVE</span><span class="live">Live system</span><canvas data-sketch="weave" aria-label="Animated chromatic vector ribbon weave"></canvas></div>
+                <div class="meta"><h2>Vector Weave</h2><span class="tag">Ribbon system<br>Chromatic braid</span><p>Two mathematical fabrics pass through one another without touching, producing a compact field of depth and shifting metallic colour.</p></div>
             </article>
         </section>
 
@@ -279,7 +284,17 @@
                 if(Math.abs(z)<.105){const a=1-Math.abs(z)/.105;ctx.fillStyle=`rgba(${(Math.abs(z)<.025?INK:GOLD).join(',')},${.12+a*.58})`;ctx.beginPath();ctx.arc(x,y,.45+a*1.25,0,6.28);ctx.fill();}}
             ctx.restore();
         }
-        const sketches={flow,moire,orbit,chrome,scope,swarm,contour,bloom,dither,chladni};
+        function weave(c,t) {
+            const {ctx,w,h}=resize(c);clear(ctx,w,h);const m=cursor(c);
+            for(let set=0;set<2;set++)for(let k=0;k<18;k++){ctx.beginPath();
+                for(let i=0;i<=150;i++){const u=i/150,x=u*w,phase=k*.28+t*.0003*(set?1:-1);
+                    const y=h*(.5+(k-8.5)*.024)+Math.sin(u*(set?9:6)+phase)*h*.16*Math.sin(u*Math.PI)+(m.y-.5)*h*.05;
+                    i?ctx.lineTo(x,y):ctx.moveTo(x,y);}
+                const hue=(set?38:190)+k*3+t*.003;
+                ctx.strokeStyle=`hsla(${hue},${LIGHT?82:90}%,${LIGHT?31+k*.8:58+k}%,${LIGHT ? .38 : .32})`;
+                ctx.lineWidth=1.1+k*.055;ctx.stroke();}
+        }
+        const sketches={flow,moire,orbit,chrome,scope,swarm,contour,bloom,dither,chladni,weave};
         function frame(now){ if(!paused){ canvases.forEach(c=>sketches[c.dataset.sketch](c,now)); last=now; } requestAnimationFrame(frame); }
         document.querySelector('#regenerate').addEventListener('click',()=>{seed=Math.random()*999;state.clear();canvases.forEach(c=>{const {ctx,w,h}=resize(c);clear(ctx,w,h);});});
         const themeBtn=document.querySelector('#theme');

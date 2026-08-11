@@ -183,9 +183,9 @@
                         + (m.y - .5) * h * .06;
                     i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
                 }
-                const color = set ? p.gold : p.ink;
-                ctx.strokeStyle = `rgba(${color.join(',')},${set ? (p.light ? .78 : .74) : (p.light ? .22 : .2)})`;
-                ctx.lineWidth = Math.max(1, w / 760) + k * .045;
+                const hue = (set ? 38 : 190) + k * 3 + time * .003;
+                ctx.strokeStyle = `hsla(${hue},${p.light ? 82 : 90}%,${p.light ? 31 + k * .8 : 58 + k}%,${p.light ? .38 : .32})`;
+                ctx.lineWidth = Math.max(1.1, w / 760) + k * .055;
                 ctx.stroke();
             }
         }
