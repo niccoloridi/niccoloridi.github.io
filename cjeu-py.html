@@ -371,13 +371,6 @@
 
                 <p>The tool queries the EU Publications Office's CELLAR endpoint directly &ndash; the authoritative source for EU legal data &ndash; downloads full judgment texts, and extracts citations with a four-phase, footnote-aware extractor that resolves each reference to a CELEX identifier with an explicit confidence tier. Since v0.6.0 it also speaks to the Court's new InfoCuria portal: live search with facets, pending cases, procedural histories, hearing calendars, and the doctrine attached to each case. The result is a complete data pipeline that takes a researcher from zero to interactive network visualisation in a few commands.</p>
 
-                <div class="stat-row">
-                    <div class="stat-box"><span class="num">1,020</span><span class="label">Grand Chamber cases</span></div>
-                    <div class="stat-box"><span class="num">12,673</span><span class="label">Case citations</span></div>
-                    <div class="stat-box"><span class="num">51</span><span class="label">Doctrinal communities</span></div>
-                    <div class="stat-box"><span class="num">4</span><span class="label">Extraction phases</span></div>
-                </div>
-
                 <h2>I. The Pipeline</h2>
 
                 <p>cjeu-py organises CJEU research into seven stages. Each stage produces inspectable intermediate output &ndash; Parquet tables, JSONL files, HTML visualisations &ndash; and can be run independently. The pipeline is resumable: interrupted downloads pick up where they left off, and classification checkpoints prevent re-processing.</p>
