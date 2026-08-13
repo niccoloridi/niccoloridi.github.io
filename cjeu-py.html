@@ -407,7 +407,7 @@ cjeu-py export-network --format html --max-nodes 500</div>
 
                 <p>The heart of the pipeline is citation extraction, and v0.6.0 rebuilt it around a simple observation: the Court's own XHTML already links most case references to their targets. Four phases run in order of confidence. First, <strong>CourtLink hyperlinks</strong> are read directly from the markup, each carrying an exact ECLI. Second, a <strong>catalogue-guided search</strong> looks for every case the CELLAR citation graph says the document should cite. Third, a <strong>13-pattern regex safety net</strong> catches formal references the structural layers missed. Fourth, an optional <strong>party-name enrichment</strong> hunts for informal mentions. Every citation is resolved to a CELEX identifier with an explicit confidence tier, from A (exact identifier) to U (honestly unresolved), and each document's recall is scored against the Court's own citation graph.</p>
 
-                <p>Two details matter for anyone studying the Advocates General. Extraction is footnote-aware &ndash; AG opinions place the overwhelming majority of their citations in footnotes, which naive parsers silently discard &ndash; and textual pinpoints (&ldquo;point 26&rdquo;, &ldquo;paragraphs 9 and 10&rdquo;) are attached to the citations they qualify. Each citation is anchored to its source paragraph or footnote, preserving the context needed for downstream analysis. Across the Grand Chamber corpus, the extractor identifies 12,673 case-to-case citations &ndash; an average of roughly 12 citations per decision, though the distribution is heavily right-skewed.</p>
+                <p>Two details matter for anyone studying the Advocates General. Extraction is footnote-aware &ndash; AG opinions place the overwhelming majority of their citations in footnotes, which naive parsers silently discard &ndash; and textual pinpoints (&ldquo;point 26&rdquo;, &ldquo;paragraphs 9 and 10&rdquo;) are attached to the citations they qualify. Each citation is anchored to its source paragraph or footnote, preserving the context needed for downstream analysis. For the Grand Chamber corpus, CELLAR's own citation graph records 12,673 case-to-case citation edges &ndash; roughly 12 per decision, though the distribution is heavily right-skewed &ndash; and the extractor's per-document recall is scored against exactly that graph.</p>
 
                 <h2>IV. The New CURIA Portal</h2>
 
@@ -417,21 +417,7 @@ cjeu-py export-network --format html --max-nodes 500</div>
 
                 <h2>V. How the Court Uses Precedent</h2>
 
-                <p>Raw citation counts reveal who cites whom, but not <em>how</em>. A companion research programme uses LLMs to categorise each citation along dimensions drawn from the framework in Marc Jacob's <em>Precedents and Case-Based Reasoning in the European Court of Justice</em> (Cambridge, 2014). The classification module is being validated against that forthcoming work and ships separately; the findings below come from the research programme, run on the datasets cjeu-py produces.</p>
-
-                <!-- CLASSIFICATION CHARTS -->
-                <div class="viz-block viz-reveal" id="viz-classification"></div>
-                <p class="viz-caption">Figure 4: Citation classification across three dimensions. Based on 2,855 classified citations from AG opinions and judgments.</p>
-
-                <p><strong>Precision</strong> captures depth of engagement. Nearly 79% of citations involve substantive engagement with the cited case &ndash; the Court discusses its reasoning, applies its test, or extends its logic. Only 8% are string citations (bare references with no discussion). This matters: it means the CJEU's citation practice is not decorative. When it cites a case, it means it.</p>
-
-                <p><strong>Use</strong> captures the functional role. Over half (56%) of citations establish or invoke a legal principle. Interpretation (15%) and application of legal tests (8%) follow. The Court cites its own precedent primarily to anchor doctrinal propositions, not to resolve factual analogies.</p>
-
-                <div class="pullquote">
-                    76% of citations follow the cited precedent. Explicit departures occur in less than 1% of cases. The CJEU builds its doctrine incrementally, rarely overruling and almost never acknowledging when it does.
-                </div>
-
-                <p><strong>Treatment</strong> is the most revealing dimension. 76% of citations follow the cited case; 19% are neutral references. Explicit departures occur in only 0.8% of citations. The Court's self-image as a stable, coherent legal system is borne out by the data &ndash; or at least, the Court is careful to present it that way.</p>
+                <p>Raw citation counts reveal who cites whom, but not <em>how</em>. A companion research programme uses LLMs to classify every citation &ndash; stance towards the cited case, depth of engagement, argumentative function &ndash; along dimensions drawn from Marc Jacob's <em>Precedents and Case-Based Reasoning in the European Court of Justice</em> (Cambridge, 2014), applied to the datasets cjeu-py produces. That study compares how the Court and its Advocates General construct the case law, across hundreds of matched judgment&ndash;opinion pairs. The classification module and the findings ship together with the forthcoming paper; this page will be updated when it is out.</p>
 
                 <h2>VI. The Citation Network</h2>
 
@@ -507,34 +493,6 @@ cjeu-py export-network --format html --max-nodes 500</div>
         { label: "State aid", count: 55 },
         { label: "Competition", count: 55 },
         { label: "Freedom, security & justice", count: 54 }
-    ];
-
-    const precisionData = [
-        { label: "Substantive", count: 2255, pct: 79.0 },
-        { label: "General", count: 369, pct: 12.9 },
-        { label: "String", count: 230, pct: 8.1 }
-    ];
-
-    const useData = [
-        { label: "Principle", count: 1585, pct: 55.5 },
-        { label: "Interpretation", count: 424, pct: 14.9 },
-        { label: "Legal test", count: 239, pct: 8.4 },
-        { label: "Procedural", count: 225, pct: 7.9 },
-        { label: "Definition", count: 160, pct: 5.6 },
-        { label: "Jurisdictional", count: 109, pct: 3.8 },
-        { label: "Distinguish", count: 27, pct: 0.9 },
-        { label: "Other", count: 65, pct: 2.3 }
-    ];
-
-    const treatmentData = [
-        { label: "Follows", count: 2176, pct: 76.2 },
-        { label: "Neutral", count: 545, pct: 19.1 },
-        { label: "Dist. (scope)", count: 43, pct: 1.5 },
-        { label: "Extends", count: 24, pct: 0.8 },
-        { label: "Departs (expl.)", count: 23, pct: 0.8 },
-        { label: "Dist. (facts)", count: 16, pct: 0.6 },
-        { label: "Dist. (law)", count: 15, pct: 0.5 },
-        { label: "Departs (impl.)", count: 12, pct: 0.4 }
     ];
 
     const topCases = [
@@ -762,91 +720,6 @@ cjeu-py export-network --format html --max-nodes 500</div>
             .text(d => d.count);
     }
 
-    /* ── CLASSIFICATION PANELS ────────────────────── */
-    function drawClassification() {
-        const container = d3.select("#viz-classification");
-        container.selectAll("*").remove();
-        const w = container.node().getBoundingClientRect().width;
-        const isMobile = w < 600;
-
-        const catPalette = [css("--cjeu-classify"), css("--cjeu-collect"), css("--cjeu-download"), css("--cjeu-extract"), css("--cjeu-parse"), css("--cjeu-visualize")];
-
-        const panels = [
-            { title: "Precision", data: precisionData, colors: [css("--bar-tertiary"), css("--bar-primary"), css("--secondary-color")] },
-            { title: "Use", data: useData.slice(0, 6), colors: catPalette },
-            { title: "Treatment", data: treatmentData.slice(0, 5), colors: [css("--treatment-follows"), css("--treatment-neutral"), css("--treatment-distinguishes"), css("--bar-primary"), css("--treatment-departs")] }
-        ];
-
-        const wrapper = container.append("div")
-            .style("display", isMobile ? "block" : "flex")
-            .style("gap", "1.5rem")
-            .style("padding", "0 1rem");
-
-        panels.forEach((panel, pi) => {
-            const panelDiv = wrapper.append("div")
-                .style("flex", "1")
-                .style("margin-bottom", isMobile ? "1.5rem" : "0");
-
-            panelDiv.append("div")
-                .style("font-size", "0.85rem")
-                .style("font-weight", "700")
-                .style("color", css("--primary-color"))
-                .style("margin-bottom", "0.6rem")
-                .style("text-transform", "uppercase")
-                .style("letter-spacing", "0.04em")
-                .text(panel.title);
-
-            const panelW = isMobile ? w - 32 : (w - 80) / 3;
-            const barH = 22;
-            const gap = 4;
-            const labelW = pi === 0 ? 75 : (pi === 1 ? 85 : 80);
-            const panelH = panel.data.length * (barH + gap);
-
-            const svg = panelDiv.append("svg")
-                .attr("width", panelW)
-                .attr("height", panelH);
-
-            const maxPct = d3.max(panel.data, d => d.pct);
-            const barScale = d3.scaleLinear()
-                .domain([0, maxPct])
-                .range([0, panelW - labelW - 50]);
-
-            panel.data.forEach((d, i) => {
-                const yPos = i * (barH + gap);
-                const col = panel.colors
-                    ? (panel.colors[i] || css("--secondary-color"))
-                    : css("--bar-primary");
-
-                svg.append("text")
-                    .attr("x", labelW - 6)
-                    .attr("y", yPos + barH / 2)
-                    .attr("text-anchor", "end")
-                    .attr("dominant-baseline", "central")
-                    .attr("font-size", "10px")
-                    .attr("fill", css("--text-color"))
-                    .text(d.label);
-
-                svg.append("rect")
-                    .attr("x", labelW)
-                    .attr("y", yPos + 2)
-                    .attr("width", barScale(d.pct))
-                    .attr("height", barH - 4)
-                    .attr("fill", col)
-                    .attr("rx", 3)
-                    .attr("opacity", 0.8);
-
-                svg.append("text")
-                    .attr("x", labelW + barScale(d.pct) + 5)
-                    .attr("y", yPos + barH / 2)
-                    .attr("dominant-baseline", "central")
-                    .attr("font-size", "10px")
-                    .attr("font-weight", "600")
-                    .attr("fill", css("--stat-color"))
-                    .text(d.pct + "%");
-            });
-        });
-    }
-
     /* ── TOP CASES ────────────────────────────────── */
     function drawTopCases() {
         const container = d3.select("#viz-topcases");
@@ -906,7 +779,6 @@ cjeu-py export-network --format html --max-nodes 500</div>
         drawPipeline();
         drawYearly();
         drawSubjects();
-        drawClassification();
         drawTopCases();
     }
 
