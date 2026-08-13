@@ -34,7 +34,7 @@
             --stat-color: var(--gold);
             --highlight-color: var(--gold);
 
-            /* Pipeline stage palette — tasteful warm/cool companions on dark */
+            /* Pipeline stage palette - tasteful warm/cool companions on dark */
             --cjeu-collect: #6fb3c0;   /* cool blue */
             --cjeu-download: #8a9b5b;  /* olive */
             --cjeu-parse: #c0653f;     /* terra */
@@ -76,7 +76,7 @@
             --stat-color: var(--gold);
             --highlight-color: var(--gold);
 
-            /* Pipeline stage palette — deepened to read on a light ground */
+            /* Pipeline stage palette - deepened to read on a light ground */
             --cjeu-collect: #3f8e9b;   /* teal */
             --cjeu-download: #6f7e3f;  /* olive */
             --cjeu-parse: #b0532c;     /* terra */
@@ -360,7 +360,8 @@
                 <h1>cjeu-py</h1>
                 <div class="essay-meta">
                     <span class="authors">Niccolò Ridi</span><br>
-                    A Python toolkit for empirical research on the Court of Justice of the European Union (2026)
+                    A Python toolkit for empirical research on the Court of Justice of the European Union (2026)<br>
+                    Updated for v0.6.0, August 2026
                 </div>
             </header>
 
@@ -368,13 +369,13 @@
 
                 <p class="lead">The Court of Justice of the European Union has produced thousands of decisions since its creation. Understanding how it builds legal doctrine &ndash; which cases it cites, how it treats its own precedent, which areas of law are connected and which remain siloed &ndash; requires processing a corpus too large for manual analysis. <strong>cjeu-py</strong> is a Python toolkit that transforms CJEU case law into research-ready datasets, from raw SPARQL queries to interactive citation networks.</p>
 
-                <p>The tool queries the EU Publications Office's CELLAR endpoint directly &ndash; the authoritative source for EU legal data &ndash; downloads full judgment texts from EUR-Lex, extracts citations using 14 regex patterns plus the Court's own typographic conventions, and optionally classifies each citation along four dimensions using LLMs. The result is a complete data pipeline that takes a researcher from zero to interactive network visualisation in a few commands.</p>
+                <p>The tool queries the EU Publications Office's CELLAR endpoint directly &ndash; the authoritative source for EU legal data &ndash; downloads full judgment texts, and extracts citations with a four-phase, footnote-aware extractor that resolves each reference to a CELEX identifier with an explicit confidence tier. Since v0.6.0 it also speaks to the Court's new InfoCuria portal: live search with facets, pending cases, procedural histories, hearing calendars, and the doctrine attached to each case. The result is a complete data pipeline that takes a researcher from zero to interactive network visualisation in a few commands.</p>
 
                 <div class="stat-row">
                     <div class="stat-box"><span class="num">1,020</span><span class="label">Grand Chamber cases</span></div>
                     <div class="stat-box"><span class="num">12,673</span><span class="label">Case citations</span></div>
                     <div class="stat-box"><span class="num">51</span><span class="label">Doctrinal communities</span></div>
-                    <div class="stat-box"><span class="num">14</span><span class="label">Extraction patterns</span></div>
+                    <div class="stat-box"><span class="num">4</span><span class="label">Extraction phases</span></div>
                 </div>
 
                 <h2>I. The Pipeline</h2>
@@ -385,13 +386,14 @@
                 <div class="viz-block viz-reveal" id="viz-pipeline"></div>
                 <p class="viz-caption">Figure 1: The cjeu-py data pipeline. Seven stages from SPARQL query to interactive network.</p>
 
-                <p>The design philosophy is pragmatic. Data comes from official sources (CELLAR SPARQL, EUR-Lex REST API), not scraping. Downloads are cached to disk and resumable. The tool is pip-installable (<code>pip install cjeu-py</code>) and runs entirely from the command line. LLM classification is optional &ndash; the extraction and network stages work without it.</p>
+                <p>The design philosophy is pragmatic. Data comes from official sources (CELLAR SPARQL and REST, and the InfoCuria API), not fragile page scraping. Downloads are cached to disk and resumable. The tool is pip-installable (<code>pip install cjeu-py</code>) and runs entirely from the command line, with a browser GUI (<code>cjeu-py gui</code>) for those who prefer one. An LLM layer is optional; the collection, extraction, and network stages work without any API key.</p>
 
                 <div class="code-block">pip install cjeu-py
 
 cjeu-py download-cellar --max-items 100
 cjeu-py fetch-texts --max-items 100
-cjeu-py extract-citations
+cjeu-py extract-citations --report
+cjeu-py case C-311/18
 cjeu-py export-network --format html --max-nodes 500</div>
 
                 <h2>II. What It Collects</h2>
@@ -410,13 +412,19 @@ cjeu-py export-network --format html --max-nodes 500</div>
 
                 <h2>III. Citation Extraction</h2>
 
-                <p>The heart of the pipeline is citation extraction. The tool identifies case references in judgment text using 14 regex patterns targeting different citation formats: ECLI identifiers, case numbers (Case C-xxx/xx), European Court Reports references, joined cases, and paragraph pinpoints. A dual fallback mechanism supplements regex with the Court's own typographic convention &ndash; cases cited in italics &ndash; and a party-name gazetteer built from all collected case names.</p>
+                <p>The heart of the pipeline is citation extraction, and v0.6.0 rebuilt it around a simple observation: the Court's own XHTML already links most case references to their targets. Four phases run in order of confidence. First, <strong>CourtLink hyperlinks</strong> are read directly from the markup, each carrying an exact ECLI. Second, a <strong>catalogue-guided search</strong> looks for every case the CELLAR citation graph says the document should cite. Third, a <strong>13-pattern regex safety net</strong> catches formal references the structural layers missed. Fourth, an optional <strong>party-name enrichment</strong> hunts for informal mentions. Every citation is resolved to a CELEX identifier with an explicit confidence tier, from A (exact identifier) to U (honestly unresolved), and each document's recall is scored against the Court's own citation graph.</p>
 
-                <p>Each citation is anchored to its source paragraph, preserving the context needed for downstream classification. Across the Grand Chamber corpus, the extractor identifies 12,673 case-to-case citations &ndash; an average of roughly 12 citations per decision, though the distribution is heavily right-skewed.</p>
+                <p>Two details matter for anyone studying the Advocates General. Extraction is footnote-aware &ndash; AG opinions place the overwhelming majority of their citations in footnotes, which naive parsers silently discard &ndash; and textual pinpoints (&ldquo;point 26&rdquo;, &ldquo;paragraphs 9 and 10&rdquo;) are attached to the citations they qualify. Each citation is anchored to its source paragraph or footnote, preserving the context needed for downstream analysis. Across the Grand Chamber corpus, the extractor identifies 12,673 case-to-case citations &ndash; an average of roughly 12 citations per decision, though the distribution is heavily right-skewed.</p>
 
-                <h2>IV. How the Court Uses Precedent</h2>
+                <h2>IV. The New CURIA Portal</h2>
 
-                <p>Raw citation counts reveal who cites whom, but not <em>how</em>. The optional classification stage uses LLMs to categorise each citation along four dimensions drawn from the framework in Marc Jacob's <em>Precedents and Case-Based Reasoning in the European Court of Justice</em> (Cambridge, 2014).</p>
+                <p>In January 2026 the Court replaced its long-standing InfoCuria search with a new portal, to loud complaints from practitioners. Whatever its merits as a website, the new portal exposes something researchers never had: a clean JSON backend. cjeu-py 0.6.0 ships what is, to our knowledge, the first dedicated Python client for the new InfoCuria search API. It offers live full-text search with facets (document type, jurisdiction, dates), procedural records including <em>pending</em> cases, hearing calendars, judge-rapporteur and advocate general assignments, and the academic doctrine notes the Court curates for each case &ndash; none of which the traditional bulk sources expose.</p>
+
+                <p>A single command, <code>cjeu-py case C-311/18</code>, merges the CELLAR and CURIA records for any case into one card: identifiers, dates, state, formation, rapporteur, advocate general, referring court, hearings, and doctrine. The client is polite by design &ndash; one request per second, an identifying user agent, and payloads pinned against captured fixtures so that silent API drift breaks a test rather than a dataset.</p>
+
+                <h2>V. How the Court Uses Precedent</h2>
+
+                <p>Raw citation counts reveal who cites whom, but not <em>how</em>. A companion research programme uses LLMs to categorise each citation along dimensions drawn from the framework in Marc Jacob's <em>Precedents and Case-Based Reasoning in the European Court of Justice</em> (Cambridge, 2014). The classification module is being validated against that forthcoming work and ships separately; the findings below come from the research programme, run on the datasets cjeu-py produces.</p>
 
                 <!-- CLASSIFICATION CHARTS -->
                 <div class="viz-block viz-reveal" id="viz-classification"></div>
@@ -432,7 +440,7 @@ cjeu-py export-network --format html --max-nodes 500</div>
 
                 <p><strong>Treatment</strong> is the most revealing dimension. 76% of citations follow the cited case; 19% are neutral references. Explicit departures occur in only 0.8% of citations. The Court's self-image as a stable, coherent legal system is borne out by the data &ndash; or at least, the Court is careful to present it that way.</p>
 
-                <h2>V. The Citation Network</h2>
+                <h2>VI. The Citation Network</h2>
 
                 <p>The extracted citations form a directed graph: each node is a decision, each edge a citation from one case to another. Network analysis reveals structure invisible to close reading.</p>
 
@@ -448,18 +456,19 @@ cjeu-py export-network --format html --max-nodes 500</div>
 
                 <p style="text-align: center; margin: 2rem 0;"><a class="cta-btn" href="https://github.com/niccoloridi/cjeu-py/blob/main/examples/grand_chamber_network.html" target="_blank">View Interactive Grand Chamber Network &rarr;</a></p>
 
-                <h2>VI. What It Enables</h2>
+                <h2>VII. What It Enables</h2>
 
                 <p>cjeu-py is not a finished analysis &ndash; it is infrastructure for analyses. The data it produces enables questions that were previously intractable at scale:</p>
 
                 <p>Which areas of EU law are most interconnected? Do competition and free movement cases cite each other, or do they develop in isolation? How does the Court's citation practice change when the Grand Chamber, rather than a chamber of five, decides? Do advocate general opinions systematically differ from judgments in how they treat precedent? When the Court distinguishes rather than follows a case, is the distinction genuine or cosmetic? Which judges sit on which cases, and does composition correlate with citation patterns?</p>
 
-                <p>The tool is open source and designed for researchers who may not be programmers. A five-command pipeline from zero to interactive network. Parquet tables that open in any data tool. CSV export with codebooks. Interactive HTML visualisations that run in any browser with no server.</p>
+                <p>The tool is open source and designed for researchers who may not be programmers. A five-command pipeline from zero to interactive network. Parquet tables that open in any data tool. CSV and Excel export with codebooks. Interactive HTML visualisations that run in any browser with no server. And for those working with AI assistants, a read-only MCP server (<code>cjeu-py mcp</code>) lets Claude and other agents query a local corpus &ndash; and look up live procedural records &ndash; without being able to modify any of it.</p>
 
                 <p class="essay-footnote">
                     <strong>Install:</strong> <code>pip install cjeu-py</code><br>
                     <strong>Code:</strong> <a href="https://github.com/niccoloridi/cjeu-py" target="_blank">github.com/niccoloridi/cjeu-py</a><br>
-                    <strong>PyPI:</strong> <a href="https://pypi.org/project/cjeu-py/" target="_blank">pypi.org/project/cjeu-py</a>
+                    <strong>PyPI:</strong> <a href="https://pypi.org/project/cjeu-py/" target="_blank">pypi.org/project/cjeu-py</a><br>
+                    <strong>Sample data:</strong> <a href="https://github.com/niccoloridi/cjeu-py/tree/main/examples/sample_data" target="_blank">a frozen 14-document corpus with provenance manifest</a>
                 </p>
 
             </div>
@@ -549,12 +558,12 @@ cjeu-py export-network --format html --max-nodes 500</div>
     ];
 
     const pipelineStages = [
-        { label: "Collect", sub: "CELLAR SPARQL", color: "--cjeu-collect" },
-        { label: "Download", sub: "EUR-Lex XHTML", color: "--cjeu-download" },
+        { label: "Collect", sub: "CELLAR + CURIA", color: "--cjeu-collect" },
+        { label: "Download", sub: "CELLAR XHTML", color: "--cjeu-download" },
         { label: "Parse", sub: "Headers & metadata", color: "--cjeu-parse" },
-        { label: "Extract", sub: "14 regex patterns", color: "--cjeu-extract" },
-        { label: "Classify", sub: "LLM taxonomy", color: "--cjeu-classify" },
-        { label: "Search", sub: "8 query modes", color: "--cjeu-search" },
+        { label: "Extract", sub: "4-phase, footnotes", color: "--cjeu-extract" },
+        { label: "Resolve", sub: "CELEX + tiers", color: "--cjeu-classify" },
+        { label: "Search", sub: "Local + live", color: "--cjeu-search" },
         { label: "Visualize", sub: "D3.js networks", color: "--cjeu-visualize" }
     ];
 
@@ -933,7 +942,7 @@ cjeu-py export-network --format html --max-nodes 500</div>
     }, { threshold: 0.1 });
     vizBlocks.forEach(b => vizObserver.observe(b));
 
-    // Theme toggle — recolours the viz live by re-reading CSS tokens via renderAll()
+    // Theme toggle - recolours the viz live by re-reading CSS tokens via renderAll()
     let theme = localStorage.getItem('noir-theme') || ((new Date().getHours() >= 7 && new Date().getHours() < 19) ? 'light' : 'dark');
     function applyTheme(t, persist) {
         document.documentElement.classList.toggle('light-mode', t === 'light');
