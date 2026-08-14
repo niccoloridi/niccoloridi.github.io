@@ -28,6 +28,9 @@ index-imprint-old.html
 # Mail credentials (explicit even though Examples/ is ignored above)
 /Examples/credentials_agl.txt
 
+# Local operational documentation (explicit even though Examples/ is ignored)
+/Examples/worker-runbook.md
+
 # Misc
 *.docx
 

@@ -54,6 +54,7 @@ const CORS = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, POST, OPTIONS",
   "access-control-allow-headers": "content-type, authorization",
+  "strict-transport-security": "max-age=31536000",
 };
 
 function json(data, status = 200, extra = {}) {
@@ -147,6 +148,13 @@ async function nextManuscriptNumber(env) {
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+
+    if (url.protocol !== "https:") {
+      const secure = new URL(url);
+      secure.protocol = "https:";
+      return Response.redirect(secure.toString(), 308);
+    }
+
     const ip = request.headers.get("cf-connecting-ip") || "0.0.0.0";
     let path = url.pathname;
     if (path.startsWith("/yearbook/")) path = "/editorial/" + path.slice("/yearbook/".length);

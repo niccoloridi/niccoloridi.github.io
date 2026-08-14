@@ -76,11 +76,11 @@ an hour and sends one email when previously unseen manuscript numbers appear.
 It stores only those numbers in a private Actions cache; manuscript content is
 not copied into an issue, workflow log, or notification-state file.
 
-The default mail transport is Gmail SMTP and the destination is
-`niccoloridi@gmail.com`. Add these repository secrets:
+The default mail transport is Gmail SMTP. Add these repository secrets:
 
 - `ALJ_SMTP_USERNAME` — the sending Gmail address;
 - `ALJ_SMTP_PASSWORD` — a Google app password, not the account password;
+- `ALJ_NOTIFICATION_TO` — the private destination address;
 - `ALJ_SMTP_FROM` — optional; defaults to the SMTP username.
 
 For another provider, set repository variables `ALJ_SMTP_HOST` and

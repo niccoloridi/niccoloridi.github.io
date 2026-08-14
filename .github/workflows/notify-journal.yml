@@ -17,26 +17,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Check mail configuration
         id: mail
         env:
           SMTP_USERNAME: ${{ secrets.ALJ_SMTP_USERNAME }}
           SMTP_PASSWORD: ${{ secrets.ALJ_SMTP_PASSWORD }}
+          NOTIFICATION_TO: ${{ secrets.ALJ_NOTIFICATION_TO }}
         run: |
-          if [ -n "$SMTP_USERNAME" ] && [ -n "$SMTP_PASSWORD" ]; then
+          if [ -n "$SMTP_USERNAME" ] && [ -n "$SMTP_PASSWORD" ] && [ -n "$NOTIFICATION_TO" ]; then
             echo "enabled=true" >> "$GITHUB_OUTPUT"
           else
             echo "enabled=false" >> "$GITHUB_OUTPUT"
-            echo "Set ALJ_SMTP_USERNAME and ALJ_SMTP_PASSWORD to enable email notifications."
+            echo "Set ALJ_SMTP_USERNAME, ALJ_SMTP_PASSWORD, and ALJ_NOTIFICATION_TO to enable email notifications."
           fi
 
       # The cache contains manuscript numbers only. It prevents repeated mail
       # without publishing pending-submission metadata in the repository.
       - name: Restore notification state
         if: steps.mail.outputs.enabled == 'true'
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .notification-state
           key: alj-notifications-bootstrap
@@ -54,12 +55,12 @@ jobs:
           SMTP_USERNAME: ${{ secrets.ALJ_SMTP_USERNAME }}
           SMTP_PASSWORD: ${{ secrets.ALJ_SMTP_PASSWORD }}
           SMTP_FROM: ${{ secrets.ALJ_SMTP_FROM }}
-          ALJ_NOTIFICATION_TO: niccoloridi@gmail.com
+          ALJ_NOTIFICATION_TO: ${{ secrets.ALJ_NOTIFICATION_TO }}
         run: python3 .github/scripts/notify-journal.py
 
       - name: Save notification state
         if: steps.notify.outputs.state_changed == 'true'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .notification-state
           key: alj-notifications-${{ steps.notify.outputs.state_hash }}

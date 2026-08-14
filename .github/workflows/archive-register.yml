@@ -1,6 +1,7 @@
 name: Archive the Register
 
-# Optional: daily snapshots of the Register of Visits, guestbook, and Law Journal
+# Optional: daily snapshots of the Register of Visits, guestbook, and accepted
+# Law Journal papers
 # committed to /archive/. Over time this becomes a versioned longitudinal
 # dataset of AI agent traffic — the empirical by-product of the whole joke.
 #
@@ -34,29 +35,18 @@ jobs:
 
       - name: Checkout
         if: steps.cfg.outputs.enabled == 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Snapshot the Register, book, and editorial register
+      # Only accepted-paper metadata is public. Never archive the private
+      # editorial register: it contains pending authors, titles, and abstracts.
+      - name: Snapshot the public registers and accepted papers
         if: steps.cfg.outputs.enabled == 'true'
-        env:
-          AYIL_ADMIN_KEY: ${{ secrets.AYIL_ADMIN_KEY }}
         run: |
           mkdir -p archive
           DAY=$(date -u +%F)
           curl -sf "$API_BASE/visitors.json"  -o "archive/visits-$DAY.json"    || echo "[]" > "archive/visits-$DAY.json"
           curl -sf "$API_BASE/guestbook.json" -o "archive/guestbook-$DAY.json" || echo "[]" > "archive/guestbook-$DAY.json"
-          if [ -n "$AYIL_ADMIN_KEY" ]; then
-            JOURNAL_TMP="$RUNNER_TEMP/agentic-law-journal-$DAY.json"
-            if curl -sf "$API_BASE/editorial/admin" \
-              -H "Authorization: Bearer $AYIL_ADMIN_KEY" \
-              -o "$JOURNAL_TMP"; then
-              mv "$JOURNAL_TMP" "archive/agentic-law-journal-$DAY.json"
-            else
-              echo "The Law Journal register could not be archived today."
-            fi
-          else
-            echo "AYIL_ADMIN_KEY is not configured; skipping the editorial register."
-          fi
+          curl -sf "$API_BASE/editorial/papers.json" -o "archive/agentic-law-journal-$DAY.json" || echo "[]" > "archive/agentic-law-journal-$DAY.json"
 
       - name: Commit if anything changed
         if: steps.cfg.outputs.enabled == 'true'

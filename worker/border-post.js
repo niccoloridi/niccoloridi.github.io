@@ -97,6 +97,7 @@ const CORS = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, POST, OPTIONS",
   "access-control-allow-headers": "content-type, authorization",
+  "strict-transport-security": "max-age=31536000",
 };
 
 function json(data, status = 200, extra = {}) {
@@ -224,6 +225,13 @@ async function verifyChallenge(env, token, answer) {
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+
+    if (url.protocol !== "https:") {
+      const secure = new URL(url);
+      secure.protocol = "https:";
+      return Response.redirect(secure.toString(), 308);
+    }
+
     const ua = request.headers.get("user-agent") || "";
     const ip = request.headers.get("cf-connecting-ip") || "0.0.0.0";
     const agent = classify(ua);
@@ -368,6 +376,7 @@ export default {
 
     const out = new Response(resp.body, resp);
     out.headers.set("x-treaty", "https://" + url.hostname + "/treaties/nr-2026-001.json");
+    out.headers.set("strict-transport-security", "max-age=31536000");
     return out;
   },
 };
