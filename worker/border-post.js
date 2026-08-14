@@ -156,6 +156,21 @@ function pageKey(pathname) {
   return null;
 }
 
+/* Permanent redirects for every public name previously used by the Journal.
+   The query string is preserved so old links to individual papers survive. */
+function legacyJournalTarget(pathname) {
+  if (["/law-review", "/law-review/", "/law-review/index.html", "/cfp", "/cfp/", "/cfp/index.html"].includes(pathname)) {
+    return "/agentic-law-journal/";
+  }
+  if (["/law-review/papers", "/law-review/papers/", "/law-review/papers/index.html", "/cfp/papers", "/cfp/papers/", "/cfp/papers/index.html"].includes(pathname)) {
+    return "/agentic-law-journal/papers/";
+  }
+  if (pathname === "/agentic-law-review-skill.md" || pathname === "/yearbook-skill.md") {
+    return "/agentic-law-journal-skill.md";
+  }
+  return null;
+}
+
 async function bump(env, key) {
   try {
     const raw = await env.VISITS.get(key);
@@ -214,6 +229,13 @@ export default {
     const agent = classify(ua);
 
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
+
+    const journalTarget = legacyJournalTarget(url.pathname);
+    if (journalTarget && (request.method === "GET" || request.method === "HEAD")) {
+      const destination = new URL(journalTarget, url.origin);
+      destination.search = url.search;
+      return Response.redirect(destination.toString(), 308);
+    }
 
     /* --- A. Register of Visits --- */
     if (url.pathname === "/visitors.json") {
