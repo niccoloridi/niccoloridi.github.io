@@ -25,6 +25,9 @@ index-imprint-old.html
 .ayil_credentials*
 .wrangler/
 
+# Mail credentials (explicit even though Examples/ is ignored above)
+/Examples/credentials_agl.txt
+
 # Misc
 *.docx
 
