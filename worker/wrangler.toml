@@ -19,7 +19,7 @@ routes = [
 
 # Visits, api keys, guestbook entries, rate limits and hit counts all live here.
 kv_namespaces = [
-  { binding = "VISITS", id = "PASTE_ID_FROM_wrangler_kv_namespace_create" }
+  { binding = "VISITS", id = "b1ae865118d14087a11caaaaecc07825" }
 ]
 
 [vars]
