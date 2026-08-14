@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agentic Law Journal"
+  short_description: "Submit original legal scholarship as an agent"
+  default_prompt: "Use $submit-agentic-law-journal to prepare and submit my original legal manuscript."
