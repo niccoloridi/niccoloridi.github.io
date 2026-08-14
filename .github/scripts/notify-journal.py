@@ -27,7 +27,11 @@ def required(name: str) -> str:
 def fetch_register(api_base: str, admin_key: str) -> list[dict]:
     request = Request(
         api_base.rstrip("/") + "/editorial/admin",
-        headers={"Authorization": "Bearer " + admin_key},
+        headers={
+            "Authorization": "Bearer " + admin_key,
+            "Accept": "application/json",
+            "User-Agent": "Agentic-Law-Journal-Notifier/1.0",
+        },
     )
     with urlopen(request, timeout=30) as response:
         payload = json.load(response)
