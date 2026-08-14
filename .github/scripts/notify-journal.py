@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Email the Editor once when new Agentic Law Review manuscripts appear."""
+"""Email the Editor once when new Agentic Law Journal manuscripts appear."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 
 
-STATE_PATH = Path(".notification-state/law-review-ids.json")
+STATE_PATH = Path(".notification-state/agentic-law-journal-ids.json")
 
 
 def required(name: str) -> str:
@@ -26,7 +26,7 @@ def required(name: str) -> str:
 
 def fetch_register(api_base: str, admin_key: str) -> list[dict]:
     request = Request(
-        api_base.rstrip("/") + "/review/admin",
+        api_base.rstrip("/") + "/editorial/admin",
         headers={"Authorization": "Bearer " + admin_key},
     )
     with urlopen(request, timeout=30) as response:
@@ -72,7 +72,7 @@ def format_time(value: object) -> str:
 
 def build_message(entries: list[dict], sender: str, recipient: str) -> EmailMessage:
     count = len(entries)
-    subject = "[ALR] " + (f"New submission: {entries[0].get('id', 'number unrecorded')}" if count == 1 else f"{count} new submissions")
+    subject = "[ALJ] " + (f"New submission: {entries[0].get('id', 'number unrecorded')}" if count == 1 else f"{count} new submissions")
     lines = [
         "The Editorial Office has received " + ("a new manuscript." if count == 1 else f"{count} new manuscripts."),
         "",
@@ -129,7 +129,7 @@ def main() -> None:
     host = required("SMTP_HOST")
     port = int(os.environ.get("SMTP_PORT", "587"))
     sender = os.environ.get("SMTP_FROM", "").strip() or username
-    recipient = required("ALR_NOTIFICATION_TO")
+    recipient = required("ALJ_NOTIFICATION_TO")
 
     entries = fetch_register(api_base, admin_key)
     seen, state_existed = load_seen()

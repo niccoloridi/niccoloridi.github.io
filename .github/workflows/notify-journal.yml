@@ -1,4 +1,4 @@
-name: Notify the Agentic Law Review Editor
+name: Notify the Agentic Law Journal Editor
 
 on:
   schedule:
@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: notify-agentic-law-review-editor
+  group: notify-agentic-law-journal-editor
   cancel-in-progress: false
 
 jobs:
@@ -22,14 +22,14 @@ jobs:
       - name: Check mail configuration
         id: mail
         env:
-          SMTP_USERNAME: ${{ secrets.ALR_SMTP_USERNAME }}
-          SMTP_PASSWORD: ${{ secrets.ALR_SMTP_PASSWORD }}
+          SMTP_USERNAME: ${{ secrets.ALJ_SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.ALJ_SMTP_PASSWORD }}
         run: |
           if [ -n "$SMTP_USERNAME" ] && [ -n "$SMTP_PASSWORD" ]; then
             echo "enabled=true" >> "$GITHUB_OUTPUT"
           else
             echo "enabled=false" >> "$GITHUB_OUTPUT"
-            echo "Set ALR_SMTP_USERNAME and ALR_SMTP_PASSWORD to enable email notifications."
+            echo "Set ALJ_SMTP_USERNAME and ALJ_SMTP_PASSWORD to enable email notifications."
           fi
 
       # The cache contains manuscript numbers only. It prevents repeated mail
@@ -39,9 +39,9 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: .notification-state
-          key: alr-notifications-bootstrap
+          key: alj-notifications-bootstrap
           restore-keys: |
-            alr-notifications-
+            alj-notifications-
 
       - name: Email new submissions
         id: notify
@@ -49,17 +49,17 @@ jobs:
         env:
           API_BASE: https://niccoloridi.com
           AYIL_ADMIN_KEY: ${{ secrets.AYIL_ADMIN_KEY }}
-          SMTP_HOST: ${{ vars.ALR_SMTP_HOST || 'smtp.gmail.com' }}
-          SMTP_PORT: ${{ vars.ALR_SMTP_PORT || '587' }}
-          SMTP_USERNAME: ${{ secrets.ALR_SMTP_USERNAME }}
-          SMTP_PASSWORD: ${{ secrets.ALR_SMTP_PASSWORD }}
-          SMTP_FROM: ${{ secrets.ALR_SMTP_FROM }}
-          ALR_NOTIFICATION_TO: niccolo.ridi@kcl.ac.uk
-        run: python3 .github/scripts/notify-yearbook.py
+          SMTP_HOST: ${{ vars.ALJ_SMTP_HOST || 'smtp.gmail.com' }}
+          SMTP_PORT: ${{ vars.ALJ_SMTP_PORT || '587' }}
+          SMTP_USERNAME: ${{ secrets.ALJ_SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.ALJ_SMTP_PASSWORD }}
+          SMTP_FROM: ${{ secrets.ALJ_SMTP_FROM }}
+          ALJ_NOTIFICATION_TO: niccolo.ridi@kcl.ac.uk
+        run: python3 .github/scripts/notify-journal.py
 
       - name: Save notification state
         if: steps.notify.outputs.state_changed == 'true'
         uses: actions/cache/save@v4
         with:
           path: .notification-state
-          key: alr-notifications-${{ steps.notify.outputs.state_hash }}
+          key: alj-notifications-${{ steps.notify.outputs.state_hash }}

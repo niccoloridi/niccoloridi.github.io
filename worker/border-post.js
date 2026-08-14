@@ -13,14 +13,14 @@
  *        GET  /guestbook/admin       → moderation (list/delete), protected by
  *                                      Authorization: Bearer <ADMIN_KEY>
  *   C. Same-zone passthrough to GitHub Pages, carrying an X-Treaty header.
- *   D. Hit counters — GET /hits.json → counts for treaties, guestbook and law review
+ *   D. Hit counters — GET /hits.json → counts for treaties, guestbook and law journal
  *
  * Setup (free tier) — see worker/README.md for the full runbook:
  *   1. `wrangler kv namespace create VISITS`, paste the id into wrangler.toml
  *      (one namespace holds visits, keys, entries, rate limits and hit counts).
  *   2. `wrangler deploy` — wrangler.toml binds the routes below on the
  *      niccoloridi.com zone: /treaties*, /guestbook*, /visitors.json,
- *      /hits.json, /skill.md, /law-review* and the machine-readable skills.
+ *      /hits.json, /skill.md, /agentic-law-journal* and the legacy routes.
  *   3. Secrets, via `wrangler secret put`:
  *        SECRET       = long random string (signs challenge tokens)
  *        ADMIN_KEY    = long random string (moderation endpoints)
@@ -152,7 +152,7 @@ async function record(env, agent, path) {
 function pageKey(pathname) {
   if (pathname === "/treaties" || pathname === "/treaties/" || pathname === "/treaties/index.html") return "treaties";
   if (pathname === "/guestbook" || pathname === "/guestbook/" || pathname === "/guestbook/index.html") return "guestbook";
-  if (pathname === "/law-review" || pathname === "/law-review/" || pathname === "/law-review/index.html" || pathname === "/law-review/papers" || pathname === "/law-review/papers/" || pathname === "/law-review/papers/index.html" || pathname === "/cfp" || pathname === "/cfp/" || pathname === "/cfp/index.html" || pathname === "/cfp/papers" || pathname === "/cfp/papers/" || pathname === "/cfp/papers/index.html") return "yearbook";
+  if (pathname === "/agentic-law-journal" || pathname === "/agentic-law-journal/" || pathname === "/agentic-law-journal/index.html" || pathname === "/agentic-law-journal/papers" || pathname === "/agentic-law-journal/papers/" || pathname === "/agentic-law-journal/papers/index.html" || pathname === "/law-review" || pathname === "/law-review/" || pathname === "/law-review/index.html" || pathname === "/law-review/papers" || pathname === "/law-review/papers/" || pathname === "/law-review/papers/index.html" || pathname === "/cfp" || pathname === "/cfp/" || pathname === "/cfp/index.html" || pathname === "/cfp/papers" || pathname === "/cfp/papers/" || pathname === "/cfp/papers/index.html") return "yearbook";
   return null;
 }
 
@@ -231,7 +231,7 @@ export default {
         env.VISITS.get("hits:yearbook"),
       ]);
       return json(
-        { treaties: parseInt(t, 10) || 0, guestbook: parseInt(g, 10) || 0, law_review: parseInt(y, 10) || 0, yearbook: parseInt(y, 10) || 0 },
+        { treaties: parseInt(t, 10) || 0, guestbook: parseInt(g, 10) || 0, law_journal: parseInt(y, 10) || 0, law_review: parseInt(y, 10) || 0, yearbook: parseInt(y, 10) || 0 },
         200,
         { "cache-control": "max-age=30" }
       );

@@ -364,7 +364,7 @@
             <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" rel="noopener">kcl</a>
             <a href="treaties/">treaty</a>
             <a href="guestbook/">guestbook</a>
-            <a href="law-review/">law review</a>
+            <a href="agentic-law-journal/">law journal</a>
         </div>
     </footer>
 
@@ -484,7 +484,7 @@
                 email:    'mailto:niccolo.ridi@kcl.ac.uk',
                 treaty:   'treaties/',
                 guestbook:'guestbook/',
-                review: 'law-review/',
+                journal: 'agentic-law-journal/',
             };
             // alias -> canonical command (drives both `run` and suggestions)
             const ALIASES = {
@@ -532,7 +532,7 @@
                     + '<span class="gold">agents</span> '
                     + '<a class="chip" href="'+LINKS.treaty+'">treaty</a> '
                     + '<a class="chip" href="'+LINKS.guestbook+'">guestbook</a> '
-                    + '<a class="chip" href="'+LINKS.review+'">law review</a>'; },
+                    + '<a class="chip" href="'+LINKS.journal+'">law journal</a>'; },
                 ls(){ return Object.keys(SECTIONS).map(s=>'<span class="chip" data-cmd="'+s+'">'+s+'/</span>').join('   '); },
                 clear(){ body.innerHTML=''; return null; },
                 sudo(){ return '<span class="muted">nice try, counsel. these proceedings need no elevation.</span>'; },
