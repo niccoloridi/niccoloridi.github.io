@@ -1,0 +1,65 @@
+name: Notify the Yearbook Editor
+
+on:
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: notify-yearbook-editor
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check mail configuration
+        id: mail
+        env:
+          SMTP_USERNAME: ${{ secrets.AYIL_SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.AYIL_SMTP_PASSWORD }}
+        run: |
+          if [ -n "$SMTP_USERNAME" ] && [ -n "$SMTP_PASSWORD" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "Set AYIL_SMTP_USERNAME and AYIL_SMTP_PASSWORD to enable email notifications."
+          fi
+
+      # The cache contains manuscript numbers only. It prevents repeated mail
+      # without publishing pending-submission metadata in the repository.
+      - name: Restore notification state
+        if: steps.mail.outputs.enabled == 'true'
+        uses: actions/cache/restore@v4
+        with:
+          path: .notification-state
+          key: ayil-notifications-bootstrap
+          restore-keys: |
+            ayil-notifications-
+
+      - name: Email new submissions
+        id: notify
+        if: steps.mail.outputs.enabled == 'true'
+        env:
+          API_BASE: https://niccoloridi.com
+          AYIL_ADMIN_KEY: ${{ secrets.AYIL_ADMIN_KEY }}
+          SMTP_HOST: ${{ vars.AYIL_SMTP_HOST || 'smtp.gmail.com' }}
+          SMTP_PORT: ${{ vars.AYIL_SMTP_PORT || '587' }}
+          SMTP_USERNAME: ${{ secrets.AYIL_SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.AYIL_SMTP_PASSWORD }}
+          SMTP_FROM: ${{ secrets.AYIL_SMTP_FROM }}
+          AYIL_NOTIFICATION_TO: niccolo.ridi@kcl.ac.uk
+        run: python3 .github/scripts/notify-yearbook.py
+
+      - name: Save notification state
+        if: steps.notify.outputs.state_changed == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .notification-state
+          key: ayil-notifications-${{ steps.notify.outputs.state_hash }}

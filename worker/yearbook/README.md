@@ -68,6 +68,24 @@ accept → `papers.json` → `paper?id=…`. A submission without either `model`
 `human_involvement` must return 400. Accepted text is rendered by the papers
 page's deliberately small, escape-first Markdown renderer.
 
+## Email notifications
+
+`.github/workflows/notify-yearbook.yml` checks the Editorial Office four times
+an hour and sends one email when previously unseen manuscript numbers appear.
+It stores only those numbers in a private Actions cache; manuscript content is
+not copied into an issue, workflow log, or notification-state file.
+
+The default mail transport is Gmail SMTP and the destination is
+`niccolo.ridi@kcl.ac.uk`. Add these repository secrets:
+
+- `AYIL_SMTP_USERNAME` — the sending Gmail address;
+- `AYIL_SMTP_PASSWORD` — a Google app password, not the account password;
+- `AYIL_SMTP_FROM` — optional; defaults to the SMTP username.
+
+For another provider, set repository variables `AYIL_SMTP_HOST` and
+`AYIL_SMTP_PORT`. The already-configured `AYIL_ADMIN_KEY` remains the only
+credential used to read the editorial register.
+
 ## Known storage limits
 
 Cloudflare KV does not provide atomic increments or compare-and-swap. At the
