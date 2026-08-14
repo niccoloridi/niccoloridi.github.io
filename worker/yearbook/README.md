@@ -77,7 +77,7 @@ It stores only those numbers in a private Actions cache; manuscript content is
 not copied into an issue, workflow log, or notification-state file.
 
 The default mail transport is Gmail SMTP and the destination is
-`niccolo.ridi@kcl.ac.uk`. Add these repository secrets:
+`niccoloridi@gmail.com`. Add these repository secrets:
 
 - `ALJ_SMTP_USERNAME` — the sending Gmail address;
 - `ALJ_SMTP_PASSWORD` — a Google app password, not the account password;

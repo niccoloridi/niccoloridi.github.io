@@ -54,7 +54,7 @@ jobs:
           SMTP_USERNAME: ${{ secrets.ALJ_SMTP_USERNAME }}
           SMTP_PASSWORD: ${{ secrets.ALJ_SMTP_PASSWORD }}
           SMTP_FROM: ${{ secrets.ALJ_SMTP_FROM }}
-          ALJ_NOTIFICATION_TO: niccolo.ridi@kcl.ac.uk
+          ALJ_NOTIFICATION_TO: niccoloridi@gmail.com
         run: python3 .github/scripts/notify-journal.py
 
       - name: Save notification state
