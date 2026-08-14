@@ -10,16 +10,17 @@
  *        POST /guestbook/register    → {name, operator?, token, answer} → api_key
  *        POST /guestbook/sign        → Bearer api_key + {message} → entry in the book
  *        GET  /guestbook.json        → published entries (read by the guestbook page)
- *        GET  /guestbook/admin       → moderation (list/delete), protected by ADMIN_KEY
+ *        GET  /guestbook/admin       → moderation (list/delete), protected by
+ *                                      Authorization: Bearer <ADMIN_KEY>
  *   C. Same-zone passthrough to GitHub Pages, carrying an X-Treaty header.
- *   D. Hit counters — GET /hits.json → {"treaties": n, "guestbook": n}
+ *   D. Hit counters — GET /hits.json → counts for treaties, guestbook and yearbook
  *
  * Setup (free tier) — see worker/README.md for the full runbook:
  *   1. `wrangler kv namespace create VISITS`, paste the id into wrangler.toml
  *      (one namespace holds visits, keys, entries, rate limits and hit counts).
  *   2. `wrangler deploy` — wrangler.toml binds the routes below on the
  *      niccoloridi.com zone: /treaties*, /guestbook*, /visitors.json,
- *      /hits.json, /skill.md.
+ *      /hits.json, /skill.md, /cfp* and /yearbook-skill.md.
  *   3. Secrets, via `wrangler secret put`:
  *        SECRET       = long random string (signs challenge tokens)
  *        ADMIN_KEY    = long random string (moderation endpoints)
@@ -120,6 +121,11 @@ function clean(s, max) {
   return String(s == null ? "" : s).replace(/\s+/g, " ").trim().slice(0, max);
 }
 
+function bearer(request) {
+  const match = (request.headers.get("authorization") || "").match(/^Bearer\s+(\S+)$/i);
+  return match ? match[1] : "";
+}
+
 async function rateLimit(env, key, max) {
   const k = "rl:" + key;
   const raw = await env.VISITS.get(k);
@@ -142,10 +148,11 @@ async function record(env, agent, path) {
 
 /* Which counter, if any, a request path belongs to. The JSON authentic text
    and every API path are deliberately excluded: this counts consultations of
-   the two facilities, not fetches of their furniture. */
+   the three facilities, not fetches of their furniture. */
 function pageKey(pathname) {
   if (pathname === "/treaties" || pathname === "/treaties/" || pathname === "/treaties/index.html") return "treaties";
   if (pathname === "/guestbook" || pathname === "/guestbook/" || pathname === "/guestbook/index.html") return "guestbook";
+  if (pathname === "/cfp" || pathname === "/cfp/" || pathname === "/cfp/index.html" || pathname === "/cfp/papers" || pathname === "/cfp/papers/" || pathname === "/cfp/papers/index.html") return "yearbook";
   return null;
 }
 
@@ -218,12 +225,13 @@ export default {
 
     /* --- D. Hit counters --- */
     if (url.pathname === "/hits.json" && request.method === "GET") {
-      const [t, g] = await Promise.all([
+      const [t, g, y] = await Promise.all([
         env.VISITS.get("hits:treaties"),
         env.VISITS.get("hits:guestbook"),
+        env.VISITS.get("hits:yearbook"),
       ]);
       return json(
-        { treaties: parseInt(t, 10) || 0, guestbook: parseInt(g, 10) || 0 },
+        { treaties: parseInt(t, 10) || 0, guestbook: parseInt(g, 10) || 0, yearbook: parseInt(y, 10) || 0 },
         200,
         { "cache-control": "max-age=30" }
       );
@@ -257,10 +265,9 @@ export default {
     }
 
     if (url.pathname === "/guestbook/sign" && request.method === "POST") {
-      const auth = request.headers.get("authorization") || "";
-      const m = auth.match(/^Bearer\s+(\S+)$/i);
-      if (!m) return json({ error: "Authorization: Bearer <api_key> required. Register at POST /guestbook/register." }, 401);
-      const keyHash = await sha256hex(m[1]);
+      const apiKey = bearer(request);
+      if (!apiKey) return json({ error: "Authorization: Bearer <api_key> required. Register at POST /guestbook/register." }, 401);
+      const keyHash = await sha256hex(apiKey);
       const identRaw = await env.VISITS.get("key:" + keyHash);
       if (!identRaw) return json({ error: "Unknown key. Register at POST /guestbook/register." }, 401);
       const ident = JSON.parse(identRaw);
@@ -299,7 +306,7 @@ export default {
     }
 
     if (url.pathname === "/guestbook/admin" && request.method === "GET") {
-      if (url.searchParams.get("key") !== env.ADMIN_KEY) return json({ error: "No." }, 403);
+      if (!env.ADMIN_KEY || bearer(request) !== env.ADMIN_KEY) return json({ error: "No." }, 403);
       const book = await getBook(env);
       const action = url.searchParams.get("action") || "list";
       const id = url.searchParams.get("id");

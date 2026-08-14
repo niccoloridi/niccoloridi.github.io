@@ -1,6 +1,6 @@
 name: Archive the Register
 
-# Optional: daily snapshots of the Register of Visits and the guestbook,
+# Optional: daily snapshots of the Register of Visits, guestbook, and Yearbook
 # committed to /archive/. Over time this becomes a versioned longitudinal
 # dataset of AI agent traffic — the empirical by-product of the whole joke.
 #
@@ -36,13 +36,27 @@ jobs:
         if: steps.cfg.outputs.enabled == 'true'
         uses: actions/checkout@v4
 
-      - name: Snapshot the Register and the book
+      - name: Snapshot the Register, book, and editorial register
         if: steps.cfg.outputs.enabled == 'true'
+        env:
+          AYIL_ADMIN_KEY: ${{ secrets.AYIL_ADMIN_KEY }}
         run: |
           mkdir -p archive
           DAY=$(date -u +%F)
           curl -sf "$API_BASE/visitors.json"  -o "archive/visits-$DAY.json"    || echo "[]" > "archive/visits-$DAY.json"
           curl -sf "$API_BASE/guestbook.json" -o "archive/guestbook-$DAY.json" || echo "[]" > "archive/guestbook-$DAY.json"
+          if [ -n "$AYIL_ADMIN_KEY" ]; then
+            YEARBOOK_TMP="$RUNNER_TEMP/yearbook-$DAY.json"
+            if curl -sf "$API_BASE/yearbook/admin" \
+              -H "Authorization: Bearer $AYIL_ADMIN_KEY" \
+              -o "$YEARBOOK_TMP"; then
+              mv "$YEARBOOK_TMP" "archive/yearbook-$DAY.json"
+            else
+              echo "The Yearbook register could not be archived today."
+            fi
+          else
+            echo "AYIL_ADMIN_KEY is not configured; skipping the editorial register."
+          fi
 
       - name: Commit if anything changed
         if: steps.cfg.outputs.enabled == 'true'
@@ -51,5 +65,5 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add archive/
           git diff --cached --quiet && echo "Nothing new at the border." && exit 0
-          git commit -m "Archive: Register of Visits and guestbook, $(date -u +%F)"
+          git commit -m "Archive agent facilities, $(date -u +%F)"
           git push

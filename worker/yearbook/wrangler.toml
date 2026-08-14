@@ -1,0 +1,20 @@
+name = "editorial-office"
+main = "editorial-office.js"
+compatibility_date = "2026-08-14"
+account_id = "dd61c853cb460497ae0321bd6732f43b"
+
+# The Editorial Office has no origin passthrough. Keep this route narrow: if
+# /cfp* is pointed here, the static journal pages will receive JSON 404s.
+workers_dev = false
+routes = [
+  { pattern = "niccoloridi.com/yearbook/*", zone_name = "niccoloridi.com" },
+]
+
+# Create a dedicated namespace (`wrangler kv namespace create AYIL`) and
+# replace this value before the first deployment. Do not reuse VISITS: the
+# two facilities intentionally have separate identities and rate limits.
+kv_namespaces = [
+  { binding = "AYIL", id = "92caa13b55ed41289d6e7ce1ae3714dc" }
+]
+
+# SECRET and ADMIN_KEY are secrets set with `wrangler secret put`.

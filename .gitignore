@@ -22,6 +22,7 @@ index-imprint-old.html
 
 # Cloudflare credentials (never commit)
 .border_post_credentials*
+.ayil_credentials*
 .wrangler/
 
 # Misc
