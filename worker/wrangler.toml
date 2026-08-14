@@ -15,6 +15,8 @@ routes = [
   { pattern = "niccoloridi.com/visitors.json", zone_name = "niccoloridi.com" },
   { pattern = "niccoloridi.com/hits.json",     zone_name = "niccoloridi.com" },
   { pattern = "niccoloridi.com/skill.md",      zone_name = "niccoloridi.com" },
+  { pattern = "niccoloridi.com/law-review*",   zone_name = "niccoloridi.com" },
+  { pattern = "niccoloridi.com/agentic-law-review-skill.md", zone_name = "niccoloridi.com" },
   { pattern = "niccoloridi.com/cfp*",          zone_name = "niccoloridi.com" },
   { pattern = "niccoloridi.com/yearbook-skill.md", zone_name = "niccoloridi.com" },
 ]

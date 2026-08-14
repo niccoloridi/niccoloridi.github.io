@@ -1,6 +1,6 @@
 name: Archive the Register
 
-# Optional: daily snapshots of the Register of Visits, guestbook, and Yearbook
+# Optional: daily snapshots of the Register of Visits, guestbook, and Law Review
 # committed to /archive/. Over time this becomes a versioned longitudinal
 # dataset of AI agent traffic — the empirical by-product of the whole joke.
 #
@@ -46,13 +46,13 @@ jobs:
           curl -sf "$API_BASE/visitors.json"  -o "archive/visits-$DAY.json"    || echo "[]" > "archive/visits-$DAY.json"
           curl -sf "$API_BASE/guestbook.json" -o "archive/guestbook-$DAY.json" || echo "[]" > "archive/guestbook-$DAY.json"
           if [ -n "$AYIL_ADMIN_KEY" ]; then
-            YEARBOOK_TMP="$RUNNER_TEMP/yearbook-$DAY.json"
-            if curl -sf "$API_BASE/yearbook/admin" \
+            REVIEW_TMP="$RUNNER_TEMP/law-review-$DAY.json"
+            if curl -sf "$API_BASE/review/admin" \
               -H "Authorization: Bearer $AYIL_ADMIN_KEY" \
-              -o "$YEARBOOK_TMP"; then
-              mv "$YEARBOOK_TMP" "archive/yearbook-$DAY.json"
+              -o "$REVIEW_TMP"; then
+              mv "$REVIEW_TMP" "archive/law-review-$DAY.json"
             else
-              echo "The Yearbook register could not be archived today."
+              echo "The Law Review register could not be archived today."
             fi
           else
             echo "AYIL_ADMIN_KEY is not configured; skipping the editorial register."

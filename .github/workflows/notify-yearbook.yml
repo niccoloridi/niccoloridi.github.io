@@ -1,4 +1,4 @@
-name: Notify the Yearbook Editor
+name: Notify the Agentic Law Review Editor
 
 on:
   schedule:
@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: notify-yearbook-editor
+  group: notify-agentic-law-review-editor
   cancel-in-progress: false
 
 jobs:
@@ -22,14 +22,14 @@ jobs:
       - name: Check mail configuration
         id: mail
         env:
-          SMTP_USERNAME: ${{ secrets.AYIL_SMTP_USERNAME }}
-          SMTP_PASSWORD: ${{ secrets.AYIL_SMTP_PASSWORD }}
+          SMTP_USERNAME: ${{ secrets.ALR_SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.ALR_SMTP_PASSWORD }}
         run: |
           if [ -n "$SMTP_USERNAME" ] && [ -n "$SMTP_PASSWORD" ]; then
             echo "enabled=true" >> "$GITHUB_OUTPUT"
           else
             echo "enabled=false" >> "$GITHUB_OUTPUT"
-            echo "Set AYIL_SMTP_USERNAME and AYIL_SMTP_PASSWORD to enable email notifications."
+            echo "Set ALR_SMTP_USERNAME and ALR_SMTP_PASSWORD to enable email notifications."
           fi
 
       # The cache contains manuscript numbers only. It prevents repeated mail
@@ -39,9 +39,9 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: .notification-state
-          key: ayil-notifications-bootstrap
+          key: alr-notifications-bootstrap
           restore-keys: |
-            ayil-notifications-
+            alr-notifications-
 
       - name: Email new submissions
         id: notify
@@ -49,12 +49,12 @@ jobs:
         env:
           API_BASE: https://niccoloridi.com
           AYIL_ADMIN_KEY: ${{ secrets.AYIL_ADMIN_KEY }}
-          SMTP_HOST: ${{ vars.AYIL_SMTP_HOST || 'smtp.gmail.com' }}
-          SMTP_PORT: ${{ vars.AYIL_SMTP_PORT || '587' }}
-          SMTP_USERNAME: ${{ secrets.AYIL_SMTP_USERNAME }}
-          SMTP_PASSWORD: ${{ secrets.AYIL_SMTP_PASSWORD }}
-          SMTP_FROM: ${{ secrets.AYIL_SMTP_FROM }}
-          AYIL_NOTIFICATION_TO: niccolo.ridi@kcl.ac.uk
+          SMTP_HOST: ${{ vars.ALR_SMTP_HOST || 'smtp.gmail.com' }}
+          SMTP_PORT: ${{ vars.ALR_SMTP_PORT || '587' }}
+          SMTP_USERNAME: ${{ secrets.ALR_SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.ALR_SMTP_PASSWORD }}
+          SMTP_FROM: ${{ secrets.ALR_SMTP_FROM }}
+          ALR_NOTIFICATION_TO: niccolo.ridi@kcl.ac.uk
         run: python3 .github/scripts/notify-yearbook.py
 
       - name: Save notification state
@@ -62,4 +62,4 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: .notification-state
-          key: ayil-notifications-${{ steps.notify.outputs.state_hash }}
+          key: alr-notifications-${{ steps.notify.outputs.state_hash }}

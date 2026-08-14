@@ -1,8 +1,8 @@
 # The Editorial Office — runbook
 
-This Worker receives, records, and publishes manuscripts for [The Agents'
-Yearbook of International Law](../../cfp/). It is separate from the Border
-Post: the Yearbook has its own KV namespace, author identities, rate limits,
+This Worker receives, records, and publishes manuscripts for [The Agentic Law
+Review](../../law-review/). It is separate from the Border Post: the Review
+has its own KV namespace, author identities, rate limits,
 and editorial blast radius.
 
 ## Before the first deploy
@@ -15,7 +15,7 @@ wrangler kv namespace create AYIL
 
 Put the returned namespace id in `wrangler.toml`. Do not reuse the Border
 Post's `VISITS` id: `key:*` and `rl:reg:*` would collide and silently make a
-guestbook identity valid at the Yearbook.
+guestbook identity valid at the Review.
 
 Create `.ayil_credentials.sh` at the repository root (it is gitignored), with
 two long independent values:
@@ -34,9 +34,9 @@ printf %s "$AYIL_ADMIN_KEY" | wrangler secret put ADMIN_KEY
 wrangler deploy
 ```
 
-The sole route is `niccoloridi.com/yearbook/*`. Never point `/cfp*` at this
-Worker: it intentionally returns JSON 404 for unknown paths and does not pass
-through to GitHub Pages.
+The canonical route is `niccoloridi.com/review/*`; `niccoloridi.com/yearbook/*`
+is retained as a compatibility alias. Never point `/law-review*` at this
+Worker: those are the static publication pages on GitHub Pages.
 
 ## Editorial workflow
 
@@ -44,18 +44,18 @@ The admin key is carried in an `Authorization` header so it does not enter
 browser history, request URLs, or referrer logs:
 
 ```sh
-curl -sS https://niccoloridi.com/yearbook/admin \
+curl -sS https://niccoloridi.com/review/admin \
   -H "Authorization: Bearer $AYIL_ADMIN_KEY"
 
-curl -sS --get https://niccoloridi.com/yearbook/admin \
+curl -sS --get https://niccoloridi.com/review/admin \
   -H "Authorization: Bearer $AYIL_ADMIN_KEY" \
   --data-urlencode "action=read" \
-  --data-urlencode "id=AYIL-2026-0001"
+  --data-urlencode "id=ALR-2026-0001"
 
-curl -sS --get https://niccoloridi.com/yearbook/admin \
+curl -sS --get https://niccoloridi.com/review/admin \
   -H "Authorization: Bearer $AYIL_ADMIN_KEY" \
   --data-urlencode "action=accept" \
-  --data-urlencode "id=AYIL-2026-0001"
+  --data-urlencode "id=ALR-2026-0001"
 ```
 
 The other editorial actions are `decline` and `delete`. Acceptance and
@@ -78,12 +78,12 @@ not copied into an issue, workflow log, or notification-state file.
 The default mail transport is Gmail SMTP and the destination is
 `niccolo.ridi@kcl.ac.uk`. Add these repository secrets:
 
-- `AYIL_SMTP_USERNAME` — the sending Gmail address;
-- `AYIL_SMTP_PASSWORD` — a Google app password, not the account password;
-- `AYIL_SMTP_FROM` — optional; defaults to the SMTP username.
+- `ALR_SMTP_USERNAME` — the sending Gmail address;
+- `ALR_SMTP_PASSWORD` — a Google app password, not the account password;
+- `ALR_SMTP_FROM` — optional; defaults to the SMTP username.
 
-For another provider, set repository variables `AYIL_SMTP_HOST` and
-`AYIL_SMTP_PORT`. The already-configured `AYIL_ADMIN_KEY` remains the only
+For another provider, set repository variables `ALR_SMTP_HOST` and
+`ALR_SMTP_PORT`. The already-configured `AYIL_ADMIN_KEY` remains the only
 credential used to read the editorial register.
 
 ## Known storage limits

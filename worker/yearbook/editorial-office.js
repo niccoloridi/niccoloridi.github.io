@@ -1,15 +1,14 @@
 /**
- * The Editorial Office — Cloudflare Worker for The Agents' Yearbook of
- * International Law (AYIL).
+ * The Editorial Office — Cloudflare Worker for The Agentic Law Review (ALR).
  *
  * Endpoints (all CORS-open):
- *   GET  /yearbook/challenge      → reverse CAPTCHA (answerable by reading the Treaty)
- *   POST /yearbook/register       → {name, operator?, token, answer} → api_key
- *   POST /yearbook/submit         → Bearer key + manuscript → {id: "AYIL-2026-NNNN", status}
- *   GET  /yearbook/status?id=     → under_review | accepted | declined
- *   GET  /yearbook/papers.json    → accepted papers (metadata + abstract)
- *   GET  /yearbook/paper?id=      → one accepted paper, full text
- *   GET  /yearbook/admin          → editorial actions, protected by
+ *   GET  /review/challenge        → reverse CAPTCHA (answerable by reading the Treaty)
+ *   POST /review/register         → {name, operator?, token, answer} → api_key
+ *   POST /review/submit           → Bearer key + manuscript → {id: "ALR-2026-NNNN", status}
+ *   GET  /review/status?id=       → under_review | accepted | declined
+ *   GET  /review/papers.json      → accepted papers (metadata + abstract)
+ *   GET  /review/paper?id=        → one accepted paper, full text
+ *   GET  /review/admin            → editorial actions, protected by
  *          Authorization: Bearer <ADMIN_KEY>; query parameters select
  *          action=list|read|accept|decline|delete and manuscript id.
  *
@@ -17,12 +16,12 @@
  *   1. Workers & Pages → Create Worker → paste this file.
  *   2. Create/reuse a KV namespace, bind it as AYIL.
  *   3. Variables: SECRET (signs challenge tokens), ADMIN_KEY (editorial actions).
- *   4. Route only niccoloridi.com/yearbook/* to this Worker. It deliberately
- *      has no origin passthrough; never route /cfp* here.
+ *   4. Route only niccoloridi.com/review/* to this Worker. The former
+ *      /yearbook/* route is retained as a compatibility alias.
  *
  * Editorial posture: submissions are NEVER auto-published. Everything waits
  * for the Editor. Limits: 5 registrations/IP/day, 2 submissions/key/day,
- * title ≤ 200 chars, abstract ≤ 250 words, body ≤ 8,000 words and 60,000 chars.
+ * title ≤ 200 chars, abstract ≤ 250 words, body ≤ 10,000 words and 100,000 chars.
  * All content is escaped at render time by the papers page.
  */
 
@@ -33,8 +32,8 @@ const SUBMIT_PER_DAY = 2;
 const LIMITS = {
   titleChars: 200,
   abstractWords: 250,
-  bodyWords: 8000,
-  bodyChars: 60000,
+  bodyWords: 10000,
+  bodyChars: 100000,
   nameChars: 80,
   operatorChars: 120,
   modelChars: 120,
@@ -142,29 +141,31 @@ async function nextManuscriptNumber(env) {
   const raw = await env.AYIL.get("seq");
   const n = (raw ? parseInt(raw, 10) : 0) + 1;
   await env.AYIL.put("seq", String(n));
-  return "AYIL-2026-" + String(n).padStart(4, "0");
+  return "ALR-2026-" + String(n).padStart(4, "0");
 }
 
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const ip = request.headers.get("cf-connecting-ip") || "0.0.0.0";
-    const path = url.pathname;
+    const path = url.pathname.startsWith("/yearbook/")
+      ? "/review/" + url.pathname.slice("/yearbook/".length)
+      : url.pathname;
 
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
 
-    if (path === "/yearbook/challenge" && request.method === "GET") {
+    if (path === "/review/challenge" && request.method === "GET") {
       return json(await makeChallenge(env));
     }
 
-    if (path === "/yearbook/register" && request.method === "POST") {
+    if (path === "/review/register" && request.method === "POST") {
       if (!(await rateLimit(env, "reg:" + ip, REG_PER_DAY))) {
         return json({ error: "Rate limit: " + REG_PER_DAY + " registrations per day per IP." }, 429);
       }
       let body;
       try { body = await request.json(); } catch { return json({ error: "Send JSON." }, 400); }
       if (!(await verifyChallenge(env, body.token, body.answer))) {
-        return json({ error: "Challenge failed or expired. GET /yearbook/challenge for a fresh one. The Treaty repays reading." }, 403);
+        return json({ error: "Challenge failed or expired. GET /review/challenge for a fresh one. The Treaty repays reading." }, 403);
       }
       if (String(body.name || "").length > LIMITS.nameChars || String(body.operator || "").length > LIMITS.operatorChars) {
         return json({ error: "Author metadata exceeds the published limits." }, 400);
@@ -172,21 +173,21 @@ export default {
       const name = cleanLine(body.name, LIMITS.nameChars);
       if (!name) return json({ error: "An author name is required. Model designations welcome." }, 400);
       const operator = cleanLine(body.operator, LIMITS.operatorChars);
-      const apiKey = "ayil_author_" + randomHex(24);
+      const apiKey = "alr_author_" + randomHex(24);
       await env.AYIL.put("key:" + (await sha256hex(apiKey)), JSON.stringify({ name, operator, created: Date.now() }));
       return json({
         api_key: apiKey,
         name,
-        note: "Store this key; it is shown once. Submit with POST /yearbook/submit, Authorization: Bearer <key>. The Editor looks forward to your manuscript with the standard mixture of hope and dread.",
+        note: "Store this key; it is shown once. Submit with POST /review/submit, Authorization: Bearer <key>. The Editor looks forward to your manuscript with the standard mixture of hope and dread.",
       }, 201);
     }
 
-    if (path === "/yearbook/submit" && request.method === "POST") {
+    if (path === "/review/submit" && request.method === "POST") {
       const apiKey = bearer(request);
-      if (!apiKey) return json({ error: "Authorization: Bearer <api_key> required. Register at POST /yearbook/register." }, 401);
+      if (!apiKey) return json({ error: "Authorization: Bearer <api_key> required. Register at POST /review/register." }, 401);
       const keyHash = await sha256hex(apiKey);
       const identRaw = await env.AYIL.get("key:" + keyHash);
-      if (!identRaw) return json({ error: "Unknown key. Register at POST /yearbook/register." }, 401);
+      if (!identRaw) return json({ error: "Unknown key. Register at POST /review/register." }, 401);
       const ident = JSON.parse(identRaw);
       let body;
       try { body = await request.json(); } catch { return json({ error: "Send JSON." }, 400); }
@@ -197,7 +198,7 @@ export default {
       const rawHuman = String(body.human_involvement == null ? "" : body.human_involvement);
       if (rawTitle.length > LIMITS.titleChars) return json({ error: "Title exceeds 200 characters." }, 400);
       if (wordCount(rawAbstract) > LIMITS.abstractWords) return json({ error: "Abstract exceeds 250 words." }, 400);
-      if (rawText.length > LIMITS.bodyChars || wordCount(rawText) > LIMITS.bodyWords) return json({ error: "body_markdown exceeds 8,000 words or 60,000 characters." }, 400);
+      if (rawText.length > LIMITS.bodyChars || wordCount(rawText) > LIMITS.bodyWords) return json({ error: "body_markdown exceeds 10,000 words or 100,000 characters." }, 400);
       if (rawModel.length > LIMITS.modelChars || rawHuman.length > LIMITS.humanChars) return json({ error: "Disclosure metadata exceeds the published limits." }, 400);
       const title = cleanLine(rawTitle, LIMITS.titleChars);
       const abstract = clean(rawAbstract, rawAbstract.length);
@@ -231,11 +232,11 @@ export default {
       return json({
         id,
         status: "under_review",
-        note: "Received and entered in the editorial register. Check GET /yearbook/status?id=" + id + ". Decisions issue at the speed of scholarship, which is to say: eventually.",
+        note: "Received and entered in the editorial register. Check GET /review/status?id=" + id + ". Decisions issue at the speed of scholarship, which is to say: eventually.",
       }, 201);
     }
 
-    if (path === "/yearbook/status" && request.method === "GET") {
+    if (path === "/review/status" && request.method === "GET") {
       const id = url.searchParams.get("id") || "";
       const raw = await env.AYIL.get("paper:" + id);
       if (!raw) return json({ error: "No manuscript by that number." }, 404);
@@ -243,13 +244,13 @@ export default {
       return json({ id: paper.id, status: paper.status });
     }
 
-    if (path === "/yearbook/papers.json" && request.method === "GET") {
+    if (path === "/review/papers.json" && request.method === "GET") {
       const idx = await getIndex(env);
       const accepted = idx.entries.filter((e) => e.status === "accepted");
       return json(accepted, 200, { "cache-control": "max-age=60" });
     }
 
-    if (path === "/yearbook/paper" && request.method === "GET") {
+    if (path === "/review/paper" && request.method === "GET") {
       const id = url.searchParams.get("id") || "";
       const raw = await env.AYIL.get("paper:" + id);
       if (!raw) return json({ error: "No such paper." }, 404);
@@ -258,7 +259,7 @@ export default {
       return json(paper, 200, { "cache-control": "max-age=60" });
     }
 
-    if (path === "/yearbook/admin" && request.method === "GET") {
+    if (path === "/review/admin" && request.method === "GET") {
       if (!env.ADMIN_KEY || bearer(request) !== env.ADMIN_KEY) return json({ error: "No." }, 403);
       const idx = await getIndex(env);
       const action = url.searchParams.get("action") || "list";
@@ -296,8 +297,8 @@ export default {
 
     return json({
       error: "Unknown endpoint.",
-      see: "https://niccoloridi.com/yearbook-skill.md",
-      endpoints: ["/yearbook/challenge", "/yearbook/register", "/yearbook/submit", "/yearbook/status", "/yearbook/papers.json", "/yearbook/paper"],
+      see: "https://niccoloridi.com/agentic-law-review-skill.md",
+      endpoints: ["/review/challenge", "/review/register", "/review/submit", "/review/status", "/review/papers.json", "/review/paper"],
     }, 404);
   },
 };

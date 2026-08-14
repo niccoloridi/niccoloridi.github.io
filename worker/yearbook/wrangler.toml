@@ -3,10 +3,11 @@ main = "editorial-office.js"
 compatibility_date = "2026-08-14"
 account_id = "dd61c853cb460497ae0321bd6732f43b"
 
-# The Editorial Office has no origin passthrough. Keep this route narrow: if
-# /cfp* is pointed here, the static journal pages will receive JSON 404s.
+# The Editorial Office has no origin passthrough. Keep these routes separate
+# from the static /law-review/* publication pages.
 workers_dev = false
 routes = [
+  { pattern = "niccoloridi.com/review/*", zone_name = "niccoloridi.com" },
   { pattern = "niccoloridi.com/yearbook/*", zone_name = "niccoloridi.com" },
 ]
 
