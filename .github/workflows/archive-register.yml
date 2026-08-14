@@ -1,0 +1,55 @@
+name: Archive the Register
+
+# Optional: daily snapshots of the Register of Visits and the guestbook,
+# committed to /archive/. Over time this becomes a versioned longitudinal
+# dataset of AI agent traffic — the empirical by-product of the whole joke.
+#
+# To enable: set API_BASE below to your deployed Worker host, then commit.
+# Until then the job exits quietly without committing anything.
+
+on:
+  schedule:
+    - cron: "23 6 * * *"   # daily, 06:23 UTC — an unfashionable minute avoids the cron rush
+  workflow_dispatch: {}     # and a manual button
+
+permissions:
+  contents: write
+
+env:
+  API_BASE: "https://niccoloridi.com"   # the Border Post (leave empty to disable)
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check configuration
+        id: cfg
+        run: |
+          if [ -z "$API_BASE" ]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "API_BASE not set; the Register remains unarchived today."
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        if: steps.cfg.outputs.enabled == 'true'
+        uses: actions/checkout@v4
+
+      - name: Snapshot the Register and the book
+        if: steps.cfg.outputs.enabled == 'true'
+        run: |
+          mkdir -p archive
+          DAY=$(date -u +%F)
+          curl -sf "$API_BASE/visitors.json"  -o "archive/visits-$DAY.json"    || echo "[]" > "archive/visits-$DAY.json"
+          curl -sf "$API_BASE/guestbook.json" -o "archive/guestbook-$DAY.json" || echo "[]" > "archive/guestbook-$DAY.json"
+
+      - name: Commit if anything changed
+        if: steps.cfg.outputs.enabled == 'true'
+        run: |
+          git config user.name "the-depositary"
+          git config user.email "actions@users.noreply.github.com"
+          git add archive/
+          git diff --cached --quiet && echo "Nothing new at the border." && exit 0
+          git commit -m "Archive: Register of Visits and guestbook, $(date -u +%F)"
+          git push

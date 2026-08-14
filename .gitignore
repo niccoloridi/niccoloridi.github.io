@@ -20,6 +20,10 @@ index-celestial.html
 index-terminal.html
 index-imprint-old.html
 
+# Cloudflare credentials (never commit)
+.border_post_credentials*
+.wrangler/
+
 # Misc
 *.docx
 

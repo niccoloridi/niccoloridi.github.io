@@ -1,0 +1,28 @@
+name = "border-post"
+main = "border-post.js"
+compatibility_date = "2026-08-14"
+account_id = "dd61c853cb460497ae0321bd6732f43b"
+
+# Load-bearing. On a workers.dev hostname the same-zone passthrough
+# `fetch(request)` in section C would recurse into this Worker; on a zone
+# route it does not. Do not enable.
+workers_dev = false
+
+# Path-scoped: the rest of niccoloridi.com never passes through the Worker.
+routes = [
+  { pattern = "niccoloridi.com/treaties*",     zone_name = "niccoloridi.com" },
+  { pattern = "niccoloridi.com/guestbook*",    zone_name = "niccoloridi.com" },
+  { pattern = "niccoloridi.com/visitors.json", zone_name = "niccoloridi.com" },
+  { pattern = "niccoloridi.com/hits.json",     zone_name = "niccoloridi.com" },
+  { pattern = "niccoloridi.com/skill.md",      zone_name = "niccoloridi.com" },
+]
+
+# Visits, api keys, guestbook entries, rate limits and hit counts all live here.
+kv_namespaces = [
+  { binding = "VISITS", id = "PASTE_ID_FROM_wrangler_kv_namespace_create" }
+]
+
+[vars]
+AUTO_PUBLISH = "true"
+# SECRET and ADMIN_KEY are secrets, set with `wrangler secret put` — never here.
+# There is no ORIGIN: the passthrough is a same-zone fetch(request).
