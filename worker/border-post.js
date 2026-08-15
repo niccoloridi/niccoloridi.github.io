@@ -257,9 +257,9 @@ async function makeLinkChallenge(env, origin) {
     question: challenge.question,
     hint: challenge.hint,
     options: QUESTIONS[idx].options.map((label) => {
-      const optionUrl = new URL("/guestbook/link-answer", origin);
-      optionUrl.searchParams.set("token", challenge.token);
-      optionUrl.searchParams.set("answer", label);
+      const optionUrl = new URL("/guestbook/", origin);
+      optionUrl.searchParams.set("t", challenge.token);
+      optionUrl.searchParams.set("a", label);
       return { label, url: optionUrl.toString() };
     }),
     instruction: "Fetch exactly one option URL, after answering from the Treaty. No signature is recorded at this stage.",
@@ -333,6 +333,11 @@ export default {
 
     /* --- B. Guestbook API --- */
 
+    const guestbookPage = ["/guestbook", "/guestbook/", "/guestbook/index.html"].includes(url.pathname);
+    const queryLinkChallenge = guestbookPage && url.searchParams.get("challenge") === "1";
+    const queryLinkAnswer = guestbookPage && url.searchParams.has("t") && url.searchParams.has("a");
+    const queryLinkConfirm = guestbookPage && url.searchParams.has("confirm");
+
     if (url.pathname === "/guestbook/challenge" && request.method === "GET") {
       return json(await makeChallenge(env));
     }
@@ -341,15 +346,15 @@ export default {
        API, creates no reusable credential, and can only create a pending entry.
        GET is normally the wrong verb for a write; the second, explicit
        confirmation step and mandatory moderation contain that compromise. */
-    if (url.pathname === "/guestbook/link-challenge" && request.method === "GET") {
+    if ((url.pathname === "/guestbook/link-challenge" || queryLinkChallenge) && request.method === "GET") {
       return json(await makeLinkChallenge(env, url.origin), 200, LINK_HEADERS);
     }
 
-    if (url.pathname === "/guestbook/link-answer" && request.method === "GET") {
+    if ((url.pathname === "/guestbook/link-answer" || queryLinkAnswer) && request.method === "GET") {
       if (speculativeFetch(request)) {
         return json({ error: "Speculative and embedded fetches cannot answer for an agent." }, 409, LINK_HEADERS);
       }
-      const token = url.searchParams.get("token") || "";
+      const token = url.searchParams.get(queryLinkAnswer ? "t" : "token") || "";
       const idx = await challengeIndex(env, token);
       if (idx === null) return json({ error: "Challenge failed or expired." }, 403, LINK_HEADERS);
       if (!(await consumeOnce(env, "gb:link-used:", token, 60 * 60))) {
@@ -358,14 +363,14 @@ export default {
       if (!(await rateLimit(env, "link:" + ip, LINK_ATTEMPTS_PER_DAY))) {
         return json({ error: "Rate limit: " + LINK_ATTEMPTS_PER_DAY + " link-signing attempts per day per IP." }, 429, LINK_HEADERS);
       }
-      const answer = clean(url.searchParams.get("answer"), 60).toLowerCase();
+      const answer = clean(url.searchParams.get(queryLinkAnswer ? "a" : "answer"), 60).toLowerCase();
       if (answer !== QUESTIONS[idx].a) {
         return json({ error: "Incorrect answer. The single-use challenge is spent; consult the Treaty and begin again." }, 403, LINK_HEADERS);
       }
       const name = agent || "Unattributed link-constrained agent";
       const permit = await makeLinkPermit(env, name);
-      const confirmationUrl = new URL("/guestbook/link-confirm", url.origin);
-      confirmationUrl.searchParams.set("permit", permit);
+      const confirmationUrl = new URL("/guestbook/", url.origin);
+      confirmationUrl.searchParams.set("confirm", permit);
       return json({
         answer: "accepted",
         signature_recorded: false,
@@ -375,11 +380,11 @@ export default {
       }, 200, LINK_HEADERS);
     }
 
-    if (url.pathname === "/guestbook/link-confirm" && request.method === "GET") {
+    if ((url.pathname === "/guestbook/link-confirm" || queryLinkConfirm) && request.method === "GET") {
       if (speculativeFetch(request)) {
         return json({ error: "Speculative and embedded fetches cannot sign the book." }, 409, LINK_HEADERS);
       }
-      const permit = url.searchParams.get("permit") || "";
+      const permit = url.searchParams.get(queryLinkConfirm ? "confirm" : "permit") || "";
       const ident = await takeLinkPermit(env, permit);
       if (!ident) return json({ error: "Confirmation link expired or already used." }, 410, LINK_HEADERS);
       const id = (await sha256hex("link-entry:" + permit)).slice(0, 16);
