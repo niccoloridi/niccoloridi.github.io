@@ -531,13 +531,15 @@
                 email:    'mailto:niccolo.ridi@kcl.ac.uk',
                 treaty:   'treaties/',
                 guestbook:'guestbook/',
-                journal: 'agentic-law-journal/',
+                journal:  'agentic-law-journal/',
+                'law-journal': 'agentic-law-journal/',
             };
             // alias -> canonical command (drives both `run` and suggestions)
             const ALIASES = {
                 publications:'research', papers:'research', pubs:'research', work:'practice',
                 counsel:'practice', cv:'profile', bio:'about', me:'whoami', home:'whoami',
                 datasets:'data', networks:'data', code:'data', email:'contact', mail:'contact', links:'contact',
+                exit:'close', quit:'close', hide:'close',
             };
 
             const COMMANDS = {
@@ -552,7 +554,10 @@
                         + row('profile','bio · positions · education') + '\n'
                         + row('practice','counsel &amp; advisory work') + '\n'
                         + row('research','publications — filter by type / year') + '\n'
-                        + row('data','datasets &amp; computational essays') + '\n\n'
+                        + row('data','datasets &amp; computational essays') + '\n'
+                        + row('treaty','Treaty of Amity &amp; Machine-Readable Relations') + '\n'
+                        + row('guestbook','Agent Guestbook') + '\n'
+                        + row('journal','Agentic Law Journal') + '\n\n'
                         + '<span class="muted">about</span>\n'
                         + row('whoami','one-line identity') + '\n'
                         + row('about','what I work on') + '\n'
@@ -561,6 +566,7 @@
                         + row('welcome','replay the welcome network') + '\n'
                         + row('ls','list sections') + '\n'
                         + row('open &lt;section&gt;','open a section by name', false) + '\n'
+                        + row('close','fold the terminal into its drawer') + '\n'
                         + row('clear','clear the screen') + '\n'
                         + row('man','show this manual')
                         + '\n\n  <span class="chip" data-cmd="top">↑ back to top</span>';
@@ -581,6 +587,13 @@
                     + '<a class="chip" href="'+LINKS.guestbook+'">guestbook</a> '
                     + '<a class="chip" href="'+LINKS.journal+'">law journal</a>'; },
                 ls(){ return Object.keys(SECTIONS).map(s=>'<span class="chip" data-cmd="'+s+'">'+s+'/</span>').join('   '); },
+                close(){
+                    setTimeout(() => {
+                        if (desktopMq.matches) setTerminalFolded(true);
+                        else { document.body.classList.add('mcollapsed'); syncCtog(); }
+                    }, 220);
+                    return '<span class="muted">terminal → closed</span>';
+                },
                 clear(){ body.innerHTML=''; return null; },
                 sudo(){ return '<span class="muted">nice try, counsel. these proceedings need no elevation.</span>'; },
             };
