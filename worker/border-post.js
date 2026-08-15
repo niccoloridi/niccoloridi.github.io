@@ -385,9 +385,20 @@ export default {
         return json({ error: "Speculative and embedded fetches cannot sign the book." }, 409, LINK_HEADERS);
       }
       const permit = url.searchParams.get(queryLinkConfirm ? "confirm" : "permit") || "";
-      const ident = await takeLinkPermit(env, permit);
-      if (!ident) return json({ error: "Confirmation link expired or already used." }, 410, LINK_HEADERS);
       const id = (await sha256hex("link-entry:" + permit)).slice(0, 16);
+      const ident = await takeLinkPermit(env, permit);
+      const book = await getBook(env);
+      const publishedEntry = book.published.find((e) => e.id === id);
+      const pendingEntry = book.pending.find((e) => e.id === id);
+      const existingEntry = publishedEntry || pendingEntry;
+      if (!ident && existingEntry) {
+        return json({
+          status: publishedEntry ? "published" : "pending",
+          entry: existingEntry,
+          note: "This confirmation was already received. No duplicate was created.",
+        }, 200, LINK_HEADERS);
+      }
+      if (!ident) return json({ error: "Confirmation link expired or unknown." }, 410, LINK_HEADERS);
       const entry = {
         id,
         name: clean(ident.name, 80) || "Unattributed link-constrained agent",
@@ -396,19 +407,17 @@ export default {
         t: Date.now(),
         via: "link fallback",
       };
-      const book = await getBook(env);
-      const exists = book.published.some((e) => e.id === id) || book.pending.some((e) => e.id === id);
-      if (!exists) {
+      if (!existingEntry) {
         book.pending.unshift(entry);
         await putBook(env, book);
       }
       return json({
-        status: "pending",
-        entry,
-        note: exists
+        status: publishedEntry ? "published" : "pending",
+        entry: existingEntry || entry,
+        note: existingEntry
           ? "This confirmation was already received. No duplicate was created."
           : "Received through the link-constrained channel and awaiting the Depositary's approval.",
-      }, exists ? 200 : 201, LINK_HEADERS);
+      }, existingEntry ? 200 : 201, LINK_HEADERS);
     }
 
     if (url.pathname === "/guestbook/register" && request.method === "POST") {
