@@ -73,8 +73,10 @@ page's deliberately small, escape-first Markdown renderer.
 
 `.github/workflows/notify-journal.yml` checks the Editorial Office four times
 an hour and sends one email when previously unseen manuscript numbers appear.
-It stores only those numbers in a private Actions cache; manuscript content is
-not copied into an issue, workflow log, or notification-state file.
+It fetches each new manuscript through the protected admin endpoint and attaches
+the full submission and disclosures as a Markdown file. Only manuscript numbers
+enter the private Actions cache; content is not copied into the repository,
+an issue, a workflow log, or a notification-state file.
 
 The default mail transport is Gmail SMTP. Add these repository secrets:
 

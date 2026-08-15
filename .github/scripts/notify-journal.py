@@ -11,6 +11,8 @@ import ssl
 from datetime import datetime, timezone
 from email.message import EmailMessage
 from pathlib import Path
+from typing import Optional
+from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 
@@ -24,9 +26,12 @@ def required(name: str) -> str:
     return value
 
 
-def fetch_register(api_base: str, admin_key: str) -> list[dict]:
+def fetch_admin(api_base: str, admin_key: str, params: Optional[dict[str, str]] = None) -> object:
+    url = api_base.rstrip("/") + "/editorial/admin"
+    if params:
+        url += "?" + urlencode(params)
     request = Request(
-        api_base.rstrip("/") + "/editorial/admin",
+        url,
         headers={
             "Authorization": "Bearer " + admin_key,
             "Accept": "application/json",
@@ -34,11 +39,28 @@ def fetch_register(api_base: str, admin_key: str) -> list[dict]:
         },
     )
     with urlopen(request, timeout=30) as response:
-        payload = json.load(response)
+        return json.load(response)
+
+
+def fetch_register(api_base: str, admin_key: str) -> list[dict]:
+    payload = fetch_admin(api_base, admin_key)
+    if not isinstance(payload, dict):
+        raise RuntimeError("The Editorial Office returned an invalid register.")
     entries = payload.get("entries")
     if not isinstance(entries, list):
         raise RuntimeError("The Editorial Office returned an invalid register.")
     return entries
+
+
+def fetch_manuscript(api_base: str, admin_key: str, manuscript_id: str) -> dict:
+    payload = fetch_admin(api_base, admin_key, {"action": "read", "id": manuscript_id})
+    if (
+        not isinstance(payload, dict)
+        or payload.get("id") != manuscript_id
+        or not isinstance(payload.get("body_markdown"), str)
+    ):
+        raise RuntimeError(f"The Editorial Office returned an invalid manuscript for {manuscript_id}.")
+    return payload
 
 
 def load_seen() -> tuple[set[str], bool]:
@@ -74,23 +96,48 @@ def format_time(value: object) -> str:
     return datetime.fromtimestamp(timestamp, tz=timezone.utc).strftime("%d %B %Y at %H:%M UTC")
 
 
-def build_message(entries: list[dict], sender: str, recipient: str) -> EmailMessage:
-    count = len(entries)
-    subject = "[ALJ] " + (f"New submission: {entries[0].get('id', 'number unrecorded')}" if count == 1 else f"{count} new submissions")
+def manuscript_attachment(manuscript: dict) -> str:
+    return "\n".join(
+        [
+            "# " + str(manuscript.get("title") or "Untitled"),
+            "",
+            "Manuscript: " + str(manuscript.get("id") or "Number unrecorded"),
+            "Author: " + str(manuscript.get("name") or "Undeclared"),
+            "Operator: " + str(manuscript.get("operator") or "Not declared"),
+            "Model: " + str(manuscript.get("model") or "Undeclared"),
+            "Human involvement: " + str(manuscript.get("human_involvement") or "Undeclared"),
+            "Received: " + format_time(manuscript.get("t")),
+            "Status: " + str(manuscript.get("status") or "under_review"),
+            "",
+            "## Abstract",
+            "",
+            str(manuscript.get("abstract") or "No abstract supplied."),
+            "",
+            "## Manuscript",
+            "",
+            str(manuscript.get("body_markdown") or ""),
+            "",
+        ]
+    )
+
+
+def build_message(manuscripts: list[dict], sender: str, recipient: str) -> EmailMessage:
+    count = len(manuscripts)
+    subject = "[ALJ] " + (f"New submission: {manuscripts[0].get('id', 'number unrecorded')}" if count == 1 else f"{count} new submissions")
     lines = [
         "The Editorial Office has received " + ("a new manuscript." if count == 1 else f"{count} new manuscripts."),
         "",
     ]
-    for entry in entries:
+    for manuscript in manuscripts:
         lines.extend(
             [
-                str(entry.get("id") or "Number unrecorded"),
-                "Title: " + str(entry.get("title") or "Untitled"),
-                "Author: " + str(entry.get("name") or "Undeclared"),
-                "Operator: " + str(entry.get("operator") or "Not declared"),
-                "Model: " + str(entry.get("model") or "Undeclared"),
-                "Received: " + format_time(entry.get("t")),
-                "Status: " + str(entry.get("status") or "under_review"),
+                str(manuscript.get("id") or "Number unrecorded"),
+                "Title: " + str(manuscript.get("title") or "Untitled"),
+                "Author: " + str(manuscript.get("name") or "Undeclared"),
+                "Operator: " + str(manuscript.get("operator") or "Not declared"),
+                "Model: " + str(manuscript.get("model") or "Undeclared"),
+                "Received: " + format_time(manuscript.get("t")),
+                "Status: " + str(manuscript.get("status") or "under_review"),
                 "",
             ]
         )
@@ -99,7 +146,7 @@ def build_message(entries: list[dict], sender: str, recipient: str) -> EmailMess
             "Review instructions:",
             "https://github.com/niccoloridi/niccoloridi.github.io/blob/main/worker/yearbook/README.md#editorial-workflow",
             "",
-            "This notice contains metadata only; the manuscript remains in the private Editorial Office store.",
+            "Each manuscript is attached in full as Markdown. Treat attachments as confidential while under review.",
         ]
     )
     message = EmailMessage()
@@ -107,6 +154,13 @@ def build_message(entries: list[dict], sender: str, recipient: str) -> EmailMess
     message["From"] = sender
     message["To"] = recipient
     message.set_content("\n".join(lines))
+    for manuscript in manuscripts:
+        manuscript_id = str(manuscript.get("id") or "manuscript")
+        message.add_attachment(
+            manuscript_attachment(manuscript),
+            subtype="markdown",
+            filename=manuscript_id + ".md",
+        )
     return message
 
 
@@ -141,8 +195,9 @@ def main() -> None:
     new_entries = [entry for entry in entries if entry.get("id") and str(entry["id"]) not in seen]
 
     if new_entries:
-        send(build_message(new_entries, sender, recipient), host, port, username, password)
-        print(f"Sent one editorial notice covering {len(new_entries)} new submission(s).")
+        manuscripts = [fetch_manuscript(api_base, admin_key, str(entry["id"])) for entry in new_entries]
+        send(build_message(manuscripts, sender, recipient), host, port, username, password)
+        print(f"Sent one editorial notice covering {len(manuscripts)} new submission(s).")
     else:
         print("No new submissions; no email sent.")
 
