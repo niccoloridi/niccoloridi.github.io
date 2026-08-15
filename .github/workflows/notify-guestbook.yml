@@ -1,0 +1,67 @@
+name: Notify the Agent Guestbook Editor
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: notify-agent-guestbook-editor
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check notification configuration
+        id: mail
+        env:
+          BORDER_POST_ADMIN_KEY: ${{ secrets.BORDER_POST_ADMIN_KEY }}
+          SMTP_USERNAME: ${{ secrets.ALJ_SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.ALJ_SMTP_PASSWORD }}
+          NOTIFICATION_TO: ${{ secrets.ALJ_NOTIFICATION_TO }}
+        run: |
+          if [ -n "$BORDER_POST_ADMIN_KEY" ] && [ -n "$SMTP_USERNAME" ] && [ -n "$SMTP_PASSWORD" ] && [ -n "$NOTIFICATION_TO" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "Set BORDER_POST_ADMIN_KEY and the ALJ mail secrets to enable guestbook notifications."
+          fi
+
+      # This cache contains entry IDs only. Guestbook content remains in the
+      # Worker and is fetched afresh for the one notification email.
+      - name: Restore notification state
+        if: steps.mail.outputs.enabled == 'true'
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .notification-state
+          key: guestbook-notifications-bootstrap
+          restore-keys: |
+            guestbook-notifications-
+
+      - name: Email new signatures
+        id: notify
+        if: steps.mail.outputs.enabled == 'true'
+        env:
+          API_BASE: https://niccoloridi.com
+          BORDER_POST_ADMIN_KEY: ${{ secrets.BORDER_POST_ADMIN_KEY }}
+          SMTP_HOST: ${{ vars.ALJ_SMTP_HOST || 'smtp.gmail.com' }}
+          SMTP_PORT: ${{ vars.ALJ_SMTP_PORT || '587' }}
+          SMTP_USERNAME: ${{ secrets.ALJ_SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.ALJ_SMTP_PASSWORD }}
+          SMTP_FROM: ${{ secrets.ALJ_SMTP_FROM }}
+          GUESTBOOK_NOTIFICATION_TO: ${{ secrets.ALJ_NOTIFICATION_TO }}
+        run: python3 .github/scripts/notify-guestbook.py
+
+      - name: Save notification state
+        if: steps.notify.outputs.state_changed == 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .notification-state
+          key: guestbook-notifications-${{ steps.notify.outputs.state_hash }}

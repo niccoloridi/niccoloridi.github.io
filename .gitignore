@@ -39,6 +39,8 @@ index-imprint-old.html
 
 # Misc
 *.docx
+__pycache__/
+*.py[cod]
 
 # OS files
 .DS_Store

@@ -47,6 +47,7 @@ const SIGN_PER_DAY = 3;   // signatures per api key
 const LINK_ATTEMPTS_PER_DAY = 5; // GET-only answer attempts per IP
 const MODERATION_TIMEOUT_MS = 5000;
 const MODERATION_MODEL = "omni-moderation-latest";
+const REVIEW_LINK_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
 const BOTS = [
   [/GPTBot/i, "GPTBot (OpenAI)"],
@@ -111,6 +112,12 @@ const LINK_HEADERS = {
   "referrer-policy": "no-referrer",
 };
 
+const REVIEW_HEADERS = {
+  ...LINK_HEADERS,
+  "content-security-policy": "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",
+  "x-frame-options": "DENY",
+};
+
 function json(data, status = 200, extra = {}) {
   return new Response(JSON.stringify(data, null, 2), {
     status,
@@ -118,9 +125,35 @@ function json(data, status = 200, extra = {}) {
   });
 }
 
+function html(markup, status = 200, extra = {}) {
+  return new Response(markup, {
+    status,
+    headers: { "content-type": "text/html; charset=utf-8", ...CORS, ...extra },
+  });
+}
+
 async function sha256hex(s) {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function hmacHex(secret, message) {
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(message));
+  return [...new Uint8Array(signature)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function sameString(a, b) {
+  if (a.length !== b.length) return false;
+  let different = 0;
+  for (let i = 0; i < a.length; i += 1) different |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return different === 0;
 }
 
 function randomHex(n) {
@@ -131,6 +164,15 @@ function randomHex(n) {
 
 function clean(s, max) {
   return String(s == null ? "" : s).replace(/\s+/g, " ").trim().slice(0, max);
+}
+
+function escapeHtml(s) {
+  return String(s == null ? "" : s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 function bearer(request) {
@@ -266,6 +308,64 @@ async function moderateGuestbookEntry(env, entry) {
     categories,
     checked_at: checkedAt,
   };
+}
+
+async function makeDeleteToken(env, id) {
+  const expires = Date.now() + REVIEW_LINK_TTL_MS;
+  const payload = "guestbook-delete." + id + "." + expires;
+  const signature = await hmacHex(env.SECRET, payload);
+  return { token: id + "." + expires + "." + signature, expires };
+}
+
+async function verifyDeleteToken(env, token) {
+  if (!env.SECRET) return null;
+  const parts = String(token || "").split(".");
+  if (parts.length !== 3) return null;
+  const [id, expiresRaw, signature] = parts;
+  const expires = Number(expiresRaw);
+  if (!/^[a-f0-9]{16}$/.test(id) || !Number.isSafeInteger(expires)) return null;
+  const now = Date.now();
+  if (expires <= now || expires > now + REVIEW_LINK_TTL_MS + 60 * 1000) return null;
+  const expected = await hmacHex(env.SECRET, "guestbook-delete." + id + "." + expires);
+  return sameString(signature, expected) ? { id, expires } : null;
+}
+
+function findBookEntry(book, id) {
+  const published = book.published.find((entry) => entry.id === id);
+  if (published) return { entry: published, status: "published" };
+  const pending = book.pending.find((entry) => entry.id === id);
+  return pending ? { entry: pending, status: "pending" } : null;
+}
+
+function reviewDeletePage({ entry, status, token, deleted = false }) {
+  const title = deleted ? "Guestbook entry deleted" : entry ? "Review guestbook entry" : "Guestbook entry absent";
+  const details = entry
+    ? `<dl>
+        <dt>Status</dt><dd>${escapeHtml(status)}</dd>
+        <dt>Signatory</dt><dd>${escapeHtml(entry.name)}</dd>
+        <dt>Operator</dt><dd>${escapeHtml(entry.operator || "Not supplied")}</dd>
+        <dt>Channel</dt><dd>${escapeHtml(entry.via || "Unknown")}</dd>
+        <dt>Moderation</dt><dd>${escapeHtml(entry.moderation?.state || "Not recorded")}</dd>
+      </dl>
+      <blockquote>${escapeHtml(entry.message)}</blockquote>`
+    : "";
+  const action = entry && !deleted
+    ? `<form method="post" action="/guestbook/review-delete">
+        <input type="hidden" name="token" value="${escapeHtml(token)}">
+        <button type="submit">Delete this entry</button>
+      </form>
+      <p class="note">Opening this page changed nothing. Deletion occurs only if you press the button.</p>`
+    : `<p><a href="/guestbook/">Return to the guestbook</a></p>`;
+  const summary = deleted
+    ? "The entry has been removed from both the published book and the review queue."
+    : entry
+      ? "Confirm whether this entry should be removed."
+      : "The entry has already been removed or never existed.";
+  return `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${title}</title><style>
+body{margin:0;background:#101116;color:#ece8dc;font:16px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace}main{max-width:700px;margin:8vh auto;padding:32px;border:1px solid #c8a96b;background:#181a21}h1{color:#d9bd7a;font:700 2rem/1.1 Georgia,serif}dl{display:grid;grid-template-columns:max-content 1fr;gap:8px 18px}dt{color:#aaa}dd{margin:0}blockquote{margin:24px 0;padding:16px;border-left:3px solid #d9bd7a;background:#101116;white-space:pre-wrap}button{padding:12px 18px;border:1px solid #f0d28a;background:#8d1f1f;color:#fff;font:inherit;cursor:pointer}a{color:#f0d28a}.note{color:#aaa;font-size:.88rem}
+</style></head><body><main><h1>${title}</h1><p>${summary}</p>${details}${action}</main></body></html>`;
 }
 
 /* ------------------------------ challenge token ---------------------------- */
@@ -410,9 +510,9 @@ export default {
     }
 
     /* Link-constrained fallback. It is deliberately separate from the normal
-       API, creates no reusable credential, and can only create a pending entry.
-       GET is normally the wrong verb for a write; the second, explicit
-       confirmation step and mandatory moderation contain that compromise. */
+       API and creates no reusable credential. GET is normally the wrong verb
+       for a write; the second, explicit confirmation step, fixed message and
+       model moderation contain that compromise. */
     if ((url.pathname === "/guestbook/link-challenge" || queryLinkChallenge) && request.method === "GET") {
       return json(await makeLinkChallenge(env, url.origin), 200, LINK_HEADERS);
     }
@@ -474,16 +574,25 @@ export default {
         t: Date.now(),
         via: "link fallback",
       };
+      const moderation = await moderateGuestbookEntry(env, entry);
+      entry.moderation = moderation;
+      const autoPublish = String(env.AUTO_PUBLISH || "true") === "true";
+      const publish = autoPublish && moderation.state === "passed";
       if (!existingEntry) {
-        book.pending.unshift(entry);
+        if (publish) book.published.unshift(entry);
+        else book.pending.unshift(entry);
         await putBook(env, book);
       }
       return json({
-        status: publishedEntry ? "published" : "pending",
+        status: existingEntry ? (publishedEntry ? "published" : "pending") : (publish ? "published" : "pending"),
         entry: existingEntry || entry,
         note: existingEntry
           ? "This confirmation was already received. No duplicate was created."
-          : "Received through the link-constrained channel and awaiting the Depositary's approval.",
+          : publish
+            ? "Entered in the book after automated screening. Art. 5(e) satisfied; posterity notified."
+            : moderation.state === "flagged"
+              ? "Received and held for the Depositary's review after automated screening."
+              : "Received and held for the Depositary's review because automated screening was unavailable.",
       }, existingEntry ? 200 : 201, LINK_HEADERS);
     }
 
@@ -556,12 +665,76 @@ export default {
       return json(book.published, 200, { "cache-control": "max-age=30" });
     }
 
+    /* Email-safe deletion flow. Link scanners may GET the review URL, but GET
+       is deliberately read-only. The signed token authorises only this entry,
+       expires after seven days, and deletion requires a form POST. */
+    if (url.pathname === "/guestbook/review-delete" && request.method === "GET") {
+      const token = url.searchParams.get("token") || "";
+      const verified = await verifyDeleteToken(env, token);
+      if (!verified) {
+        return html(reviewDeletePage({ entry: null, status: "", token: "" }), 403, REVIEW_HEADERS);
+      }
+      const book = await getBook(env);
+      const found = findBookEntry(book, verified.id);
+      return html(reviewDeletePage({ entry: found?.entry, status: found?.status, token }), 200, REVIEW_HEADERS);
+    }
+
+    if (url.pathname === "/guestbook/review-delete" && request.method === "POST") {
+      const contentLength = parseInt(request.headers.get("content-length") || "0", 10);
+      if (contentLength > 4096) return html("<p>Request too large.</p>", 413, REVIEW_HEADERS);
+      const body = await request.text();
+      if (body.length > 4096) return html("<p>Request too large.</p>", 413, REVIEW_HEADERS);
+      const token = new URLSearchParams(body).get("token") || "";
+      const verified = await verifyDeleteToken(env, token);
+      if (!verified) {
+        return html(reviewDeletePage({ entry: null, status: "", token: "" }), 403, REVIEW_HEADERS);
+      }
+      const book = await getBook(env);
+      const found = findBookEntry(book, verified.id);
+      if (found) {
+        book.published = book.published.filter((entry) => entry.id !== verified.id);
+        book.pending = book.pending.filter((entry) => entry.id !== verified.id);
+        await putBook(env, book);
+      }
+      return html(
+        reviewDeletePage({ entry: found?.entry, status: found?.status, token: "", deleted: Boolean(found) }),
+        200,
+        REVIEW_HEADERS
+      );
+    }
+
     if (url.pathname === "/guestbook/admin" && request.method === "GET") {
       if (!env.ADMIN_KEY || bearer(request) !== env.ADMIN_KEY) return json({ error: "No." }, 403);
       const book = await getBook(env);
       const action = url.searchParams.get("action") || "list";
       const id = url.searchParams.get("id");
       if (action === "list") return json(book);
+      if (action === "delete-link" && id) {
+        const found = findBookEntry(book, id);
+        if (!found) return json({ error: "Entry not found." }, 404);
+        const signed = await makeDeleteToken(env, id);
+        const reviewUrl = new URL("/guestbook/review-delete", url.origin);
+        reviewUrl.searchParams.set("token", signed.token);
+        return json({
+          id,
+          status: found.status,
+          review_url: reviewUrl.toString(),
+          expires_at: new Date(signed.expires).toISOString(),
+        });
+      }
+      if (action === "moderate" && id) {
+        const i = book.pending.findIndex((entry) => entry.id === id);
+        if (i < 0) {
+          const found = findBookEntry(book, id);
+          return found ? json({ ok: true, status: found.status, entry: found.entry }) : json({ error: "Entry not found." }, 404);
+        }
+        const entry = book.pending[i];
+        entry.moderation = await moderateGuestbookEntry(env, entry);
+        const publish = String(env.AUTO_PUBLISH || "true") === "true" && entry.moderation.state === "passed";
+        if (publish) book.published.unshift(book.pending.splice(i, 1)[0]);
+        await putBook(env, book);
+        return json({ ok: true, status: publish ? "published" : "pending", entry });
+      }
       if (action === "approve" && id) {
         const i = book.pending.findIndex((e) => e.id === id);
         if (i >= 0) { book.published.unshift(book.pending.splice(i, 1)[0]); await putBook(env, book); }
@@ -573,7 +746,7 @@ export default {
         await putBook(env, book);
         return json({ ok: true });
       }
-      return json({ error: "action=list|approve|delete" }, 400);
+      return json({ error: "action=list|delete-link|moderate|approve|delete" }, 400);
     }
 
     /* --- C. Passthrough to the origin, logging sightings --- */

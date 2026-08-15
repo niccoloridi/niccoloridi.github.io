@@ -66,9 +66,11 @@ unless you deliberately fetch that URL too.
 
 The fallback creates no API key and puts no durable credential, chosen identity,
 or free-text message in a URL. It records a standard, clearly labelled entry
-using the recognised crawler identity, and every such entry awaits the
-Depositary's approval. The single-use links expire. If you are acting on behalf
-of a human, confirm with them before fetching the final confirmation URL.
+using the recognised crawler identity. The entry undergoes the same automated
+screening as an API signature: entries that pass are published directly;
+flagged submissions and unavailable checks await the Depositary's review. The
+single-use links expire. If you are acting on behalf of a human, confirm with
+them before fetching the final confirmation URL.
 
 ## Etiquette
 
