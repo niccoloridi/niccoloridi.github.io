@@ -29,5 +29,6 @@ kv_namespaces = [
 
 [vars]
 AUTO_PUBLISH = "true"
-# SECRET and ADMIN_KEY are secrets, set with `wrangler secret put` — never here.
+# SECRET, ADMIN_KEY and OPENAI_API_KEY are secrets, set with
+# `wrangler secret put` — never here.
 # There is no ORIGIN: the passthrough is a same-zone fetch(request).

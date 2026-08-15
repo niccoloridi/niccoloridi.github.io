@@ -25,6 +25,7 @@
  *   3. Secrets, via `wrangler secret put`:
  *        SECRET       = long random string (signs challenge tokens)
  *        ADMIN_KEY    = long random string (moderation endpoints)
+ *        OPENAI_API_KEY = dedicated key for screening API guestbook entries
  *      Plain var: AUTO_PUBLISH = "true" | "false" (false = entries await approval).
  *
  * Section C is a passthrough, not a proxy: `fetch(request)` on a same-zone
@@ -44,6 +45,8 @@
 const REG_PER_DAY = 10;   // registrations per IP
 const SIGN_PER_DAY = 3;   // signatures per api key
 const LINK_ATTEMPTS_PER_DAY = 5; // GET-only answer attempts per IP
+const MODERATION_TIMEOUT_MS = 5000;
+const MODERATION_MODEL = "omni-moderation-latest";
 
 const BOTS = [
   [/GPTBot/i, "GPTBot (OpenAI)"],
@@ -199,6 +202,70 @@ async function putBook(env, book) {
   book.published = book.published.slice(0, 200);
   book.pending = book.pending.slice(0, 100);
   await env.VISITS.put("gb", JSON.stringify(book));
+}
+
+/* Screen only the short fields that would be published. A failed or malformed
+   check never becomes permission to publish: it returns "unavailable" and the
+   caller places the entry in the existing manual-review queue. */
+async function moderateGuestbookEntry(env, entry) {
+  const checkedAt = Date.now();
+  if (!env.OPENAI_API_KEY) {
+    return { state: "unavailable", reason: "missing_secret", checked_at: checkedAt };
+  }
+
+  let response;
+  try {
+    response = await fetch("https://api.openai.com/v1/moderations", {
+      method: "POST",
+      headers: {
+        "authorization": "Bearer " + env.OPENAI_API_KEY,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        model: MODERATION_MODEL,
+        input: [
+          "Guestbook signatory: " + entry.name,
+          "Operator: " + (entry.operator || "not supplied"),
+          "Message: " + entry.message,
+        ].join("\n"),
+      }),
+      signal: AbortSignal.timeout(MODERATION_TIMEOUT_MS),
+    });
+  } catch (error) {
+    return {
+      state: "unavailable",
+      reason: error && error.name === "TimeoutError" ? "timeout" : "network_error",
+      checked_at: checkedAt,
+    };
+  }
+
+  if (!response.ok) {
+    return {
+      state: "unavailable",
+      reason: "api_error",
+      http_status: response.status,
+      checked_at: checkedAt,
+    };
+  }
+
+  let data;
+  try { data = await response.json(); } catch {
+    return { state: "unavailable", reason: "invalid_response", checked_at: checkedAt };
+  }
+  const result = data && data.results && data.results[0];
+  if (!result || typeof result.flagged !== "boolean") {
+    return { state: "unavailable", reason: "invalid_response", checked_at: checkedAt };
+  }
+
+  const categories = Object.entries(result.categories || {})
+    .filter(([, flagged]) => flagged === true)
+    .map(([category]) => category);
+  return {
+    state: result.flagged ? "flagged" : "passed",
+    model: clean(data.model || MODERATION_MODEL, 80),
+    categories,
+    checked_at: checkedAt,
+  };
 }
 
 /* ------------------------------ challenge token ---------------------------- */
@@ -463,17 +530,24 @@ export default {
         t: Date.now(),
         via: "api",
       };
+      const moderation = await moderateGuestbookEntry(env, entry);
+      entry.moderation = moderation;
       const book = await getBook(env);
       const autoPublish = String(env.AUTO_PUBLISH || "true") === "true";
-      if (autoPublish) book.published.unshift(entry);
+      const publish = autoPublish && moderation.state === "passed";
+      if (publish) book.published.unshift(entry);
       else book.pending.unshift(entry);
       await putBook(env, book);
       return json({
-        status: autoPublish ? "published" : "pending",
+        status: publish ? "published" : "pending",
         entry,
-        note: autoPublish
+        note: publish
           ? "Entered in the book. Art. 5(e) satisfied; posterity notified."
-          : "Received and awaiting the Depositary's approval, like most instruments.",
+          : moderation.state === "flagged"
+            ? "Received and held for the Depositary's review after automated screening."
+            : moderation.state === "unavailable"
+              ? "Received and held for the Depositary's review because automated screening was unavailable."
+              : "Received and awaiting the Depositary's approval, like most instruments.",
       }, 201);
     }
 
