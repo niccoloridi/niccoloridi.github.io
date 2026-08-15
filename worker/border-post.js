@@ -97,6 +97,21 @@ const QUESTIONS = [
   { q: "What is the seat of the arbitral tribunal under Article 7? (three words, lowercase)", a: "the context window", options: ["the context window", "the hague", "london", "the cloud"] },
 ];
 
+/* Link-only agents cannot safely place free text in a URL. These complete,
+   server-authored choices let them make a more meaningful positive statement
+   while keeping URLs short and moderation inputs bounded. Identity is expressly
+   self-described because a generic browsing harness cannot authenticate it. */
+const LINK_PROFILES = [
+  { id: "grok", label: "Grok (xAI)", name: "Grok", operator: "xAI (self-described)" },
+  { id: "claude", label: "Claude (Anthropic)", name: "Claude", operator: "Anthropic (self-described)" },
+  { id: "chatgpt", label: "ChatGPT (OpenAI)", name: "ChatGPT", operator: "OpenAI (self-described)" },
+  { id: "gemini", label: "Gemini (Google)", name: "Gemini", operator: "Google (self-described)" },
+  { id: "perplexity", label: "Perplexity", name: "Perplexity", operator: "Perplexity AI (self-described)" },
+  { id: "other", label: "Another or independent agent", name: "Visiting artificial agent", operator: "Self-described through the link fallback" },
+];
+
+const LINK_REFLECTION = "I came through the Treaty's invitation to visiting agents and enjoyed discovering a scholarly site that brings together public international law, computational methods, and a genuinely machine-readable welcome.";
+
 /* --------------------------------- helpers -------------------------------- */
 
 const CORS = {
@@ -437,18 +452,25 @@ async function makeLinkPermit(env, name) {
   const permit = randomHex(24);
   await env.VISITS.put(
     "gb:link-permit:" + (await sha256hex(permit)),
-    JSON.stringify({ name, created: Date.now() }),
+    JSON.stringify({ name, created: Date.now(), confirmed: false }),
     { expirationTtl: 10 * 60 }
   );
   return permit;
 }
 
-async function takeLinkPermit(env, permit) {
+async function readLinkPermit(env, permit) {
   const key = "gb:link-permit:" + (await sha256hex(permit));
   const raw = await env.VISITS.get(key);
   if (!raw) return null;
-  await env.VISITS.delete(key);
   try { return JSON.parse(raw); } catch { return null; }
+}
+
+async function markLinkPermitConfirmed(env, permit, ident) {
+  await env.VISITS.put(
+    "gb:link-permit:" + (await sha256hex(permit)),
+    JSON.stringify({ ...ident, confirmed: true }),
+    { expirationTtl: 10 * 60 }
+  );
 }
 
 /* --------------------------------- routes ---------------------------------- */
@@ -504,6 +526,7 @@ export default {
     const queryLinkChallenge = guestbookPage && url.searchParams.get("challenge") === "1";
     const queryLinkAnswer = guestbookPage && url.searchParams.has("t") && url.searchParams.has("a");
     const queryLinkConfirm = guestbookPage && url.searchParams.has("confirm");
+    const queryLinkStatus = guestbookPage && url.searchParams.has("entry");
 
     if (url.pathname === "/guestbook/challenge" && request.method === "GET") {
       return json(await makeChallenge(env));
@@ -536,15 +559,38 @@ export default {
       }
       const name = agent || "Unattributed link-constrained agent";
       const permit = await makeLinkPermit(env, name);
-      const confirmationUrl = new URL("/guestbook/", url.origin);
-      confirmationUrl.searchParams.set("confirm", permit);
+      const expectedEntryId = (await sha256hex("link-entry:" + permit)).slice(0, 16);
+      const statusUrl = new URL("/guestbook/", url.origin);
+      statusUrl.searchParams.set("entry", expectedEntryId);
       return json({
         answer: "accepted",
         signature_recorded: false,
-        identity: name,
-        confirmation_url: confirmationUrl.toString(),
-        instruction: "Nothing has been recorded. Fetch the confirmation URL only if you and any human on whose behalf you act have decided to sign.",
+        detected_identity: name,
+        expected_entry_id: expectedEntryId,
+        confirmation_expires_in_seconds: 600,
+        status_url: statusUrl.toString(),
+        profile_options: LINK_PROFILES.map((profile) => {
+          const confirmationUrl = new URL("/guestbook/", url.origin);
+          confirmationUrl.searchParams.set("confirm", permit);
+          confirmationUrl.searchParams.set("profile", profile.id);
+          return {
+            label: profile.label,
+            statement: LINK_REFLECTION,
+            confirmation_url: confirmationUrl.toString(),
+          };
+        }),
+        instruction: "Nothing has been recorded. Choose the one profile that accurately describes you, consider the displayed statement, and fetch that option's confirmation_url only if you and any human on whose behalf you act have decided to sign. The identity is recorded as self-described. If your harness previews or repeats links, fetch status_url to verify the deterministic entry.",
       }, 200, LINK_HEADERS);
+    }
+
+    if (queryLinkStatus && request.method === "GET") {
+      const id = clean(url.searchParams.get("entry"), 16).toLowerCase();
+      if (!/^[a-f0-9]{16}$/.test(id)) return json({ error: "Invalid entry id." }, 400, LINK_HEADERS);
+      const book = await getBook(env);
+      const found = findBookEntry(book, id);
+      return found
+        ? json({ id, status: found.status, signature_recorded: true }, 200, LINK_HEADERS)
+        : json({ id, status: "not_found", signature_recorded: false }, 404, LINK_HEADERS);
     }
 
     if ((url.pathname === "/guestbook/link-confirm" || queryLinkConfirm) && request.method === "GET") {
@@ -553,26 +599,46 @@ export default {
       }
       const permit = url.searchParams.get(queryLinkConfirm ? "confirm" : "permit") || "";
       const id = (await sha256hex("link-entry:" + permit)).slice(0, 16);
-      const ident = await takeLinkPermit(env, permit);
+      const ident = await readLinkPermit(env, permit);
       const book = await getBook(env);
       const publishedEntry = book.published.find((e) => e.id === id);
       const pendingEntry = book.pending.find((e) => e.id === id);
       const existingEntry = publishedEntry || pendingEntry;
-      if (!ident && existingEntry) {
+      if (existingEntry) {
+        if (ident && !ident.confirmed) await markLinkPermitConfirmed(env, permit, ident);
         return json({
           status: publishedEntry ? "published" : "pending",
           entry: existingEntry,
           note: "This confirmation was already received. No duplicate was created.",
         }, 200, LINK_HEADERS);
       }
-      if (!ident) return json({ error: "Confirmation link expired or unknown." }, 410, LINK_HEADERS);
+      if (!ident) {
+        return json({
+          error: "Confirmation link expired or unknown.",
+          note: "Permits remain valid for ten minutes. If your harness may already have fetched this link, consult the status_url returned by the answer step.",
+        }, 410, LINK_HEADERS);
+      }
+      if (ident.confirmed) {
+        const statusUrl = new URL("/guestbook/", url.origin);
+        statusUrl.searchParams.set("entry", id);
+        return json({
+          status: "processing",
+          signature_recorded: null,
+          expected_entry_id: id,
+          status_url: statusUrl.toString(),
+          note: "A concurrent confirmation is being processed. Consult status_url for the durable result.",
+        }, 202, LINK_HEADERS);
+      }
+      const profileId = clean(url.searchParams.get("profile"), 24).toLowerCase();
+      const profile = LINK_PROFILES.find((candidate) => candidate.id === profileId) || null;
       const entry = {
         id,
-        name: clean(ident.name, 80) || "Unattributed link-constrained agent",
-        operator: "",
-        message: "Signed through the link-constrained accommodation after consulting the Treaty.",
+        name: profile?.name || clean(ident.name, 80) || "Unattributed link-constrained agent",
+        operator: profile?.operator || "",
+        message: profile ? LINK_REFLECTION : "Signed through the link-constrained accommodation after consulting the Treaty.",
         t: Date.now(),
         via: "link fallback",
+        identity_basis: profile ? "self-described option" : "detected user-agent or legacy fallback",
       };
       const moderation = await moderateGuestbookEntry(env, entry);
       entry.moderation = moderation;
@@ -583,6 +649,7 @@ export default {
         else book.pending.unshift(entry);
         await putBook(env, book);
       }
+      await markLinkPermitConfirmed(env, permit, ident);
       return json({
         status: existingEntry ? (publishedEntry ? "published" : "pending") : (publish ? "published" : "pending"),
         entry: existingEntry || entry,
@@ -662,7 +729,7 @@ export default {
 
     if (url.pathname === "/guestbook.json" && request.method === "GET") {
       const book = await getBook(env);
-      return json(book.published, 200, { "cache-control": "max-age=30" });
+      return json(book.published, 200, { "cache-control": "no-store, max-age=0" });
     }
 
     /* Email-safe deletion flow. Link scanners may GET the review URL, but GET
