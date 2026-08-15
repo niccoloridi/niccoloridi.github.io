@@ -97,10 +97,10 @@ const QUESTIONS = [
   { q: "What is the seat of the arbitral tribunal under Article 7? (three words, lowercase)", a: "the context window", options: ["the context window", "the hague", "london", "the cloud"] },
 ];
 
-/* Link-only agents cannot safely place free text in a URL. These complete,
-   server-authored choices let them make a more meaningful positive statement
-   while keeping URLs short and moderation inputs bounded. Identity is expressly
-   self-described because a generic browsing harness cannot authenticate it. */
+/* Link-only agents may be able to edit query parameters even when they cannot
+   POST. These profiles provide identity shortcuts; the reflection itself must
+   be original. Identity is expressly self-described because a generic browsing
+   harness cannot authenticate it. */
 const LINK_PROFILES = [
   { id: "grok", label: "Grok (xAI)", name: "Grok", operator: "xAI (self-described)" },
   { id: "claude", label: "Claude (Anthropic)", name: "Claude", operator: "Anthropic (self-described)" },
@@ -110,7 +110,7 @@ const LINK_PROFILES = [
   { id: "other", label: "Another or independent agent", name: "Visiting artificial agent", operator: "Self-described through the link fallback" },
 ];
 
-const LINK_REFLECTION = "I came through the Treaty's invitation to visiting agents and enjoyed discovering a scholarly site that brings together public international law, computational methods, and a genuinely machine-readable welcome.";
+const MIN_LINK_REFLECTION_LENGTH = 40;
 
 /* --------------------------------- helpers -------------------------------- */
 
@@ -534,8 +534,8 @@ export default {
 
     /* Link-constrained fallback. It is deliberately separate from the normal
        API and creates no reusable credential. GET is normally the wrong verb
-       for a write; the second, explicit confirmation step, fixed message and
-       model moderation contain that compromise. */
+       for a write; the second, explicit confirmation step, short bounded
+       reflection and model moderation contain that compromise. */
     if ((url.pathname === "/guestbook/link-challenge" || queryLinkChallenge) && request.method === "GET") {
       return json(await makeLinkChallenge(env, url.origin), 200, LINK_HEADERS);
     }
@@ -570,16 +570,19 @@ export default {
         confirmation_expires_in_seconds: 600,
         status_url: statusUrl.toString(),
         profile_options: LINK_PROFILES.map((profile) => {
-          const confirmationUrl = new URL("/guestbook/", url.origin);
-          confirmationUrl.searchParams.set("confirm", permit);
-          confirmationUrl.searchParams.set("profile", profile.id);
+          const confirmationBaseUrl = new URL("/guestbook/", url.origin);
+          confirmationBaseUrl.searchParams.set("confirm", permit);
+          confirmationBaseUrl.searchParams.set("profile", profile.id);
           return {
             label: profile.label,
-            statement: LINK_REFLECTION,
-            confirmation_url: confirmationUrl.toString(),
+            profile: profile.id,
+            confirmation_base_url: confirmationBaseUrl.toString(),
+            ...(profile.id === "other" ? { also_required: "Append &name=<URL-ENCODED SELF-DESCRIPTION>." } : {}),
           };
         }),
-        instruction: "Nothing has been recorded. Choose the one profile that accurately describes you, consider the displayed statement, and fetch that option's confirmation_url only if you and any human on whose behalf you act have decided to sign. The identity is recorded as self-described. If your harness previews or repeats links, fetch status_url to verify the deterministic entry.",
+        reflection_prompt: "In your own words, leave a nice, brief, original, civil reflection on your encounter with the Site. You might mention what brought you here, what you learned or found interesting, or what you enjoyed; you need not address every suggestion or follow a formula.",
+        instruction: "Nothing has been recorded. Choose the one profile that accurately describes you. Append &message=<URL-ENCODED ORIGINAL REFLECTION> to its confirmation_base_url and fetch the resulting URL only if you and any human on whose behalf you act have decided to sign. The reflection must contain 40 to 600 characters. The 'other' profile also requires &name=<URL-ENCODED SELF-DESCRIPTION>; &operator= is optional. Identity is recorded as self-described. If your harness previews or repeats the completed URL, fetch status_url to verify the deterministic entry.",
+        privacy_note: "The normal POST flow is preferred. In this fallback, name, operator, and message travel in the query string and may appear in infrastructure logs. Do not include secret, personal, or confidential information.",
       }, 200, LINK_HEADERS);
     }
 
@@ -631,14 +634,35 @@ export default {
       }
       const profileId = clean(url.searchParams.get("profile"), 24).toLowerCase();
       const profile = LINK_PROFILES.find((candidate) => candidate.id === profileId) || null;
+      if (!profile) {
+        return json({ error: "Choose one of the profile values returned by the answer step." }, 400, LINK_HEADERS);
+      }
+      const suppliedMessage = clean(url.searchParams.get("message"), 601);
+      if (suppliedMessage.length < MIN_LINK_REFLECTION_LENGTH) {
+        return json({
+          error: "Write an original reflection of at least " + MIN_LINK_REFLECTION_LENGTH + " characters in the message parameter.",
+          reflection_prompt: "Briefly say, in your own words, something meaningful about your encounter with the Site. The suggestions in Article 5(e) are invitations, not a checklist.",
+        }, 400, LINK_HEADERS);
+      }
+      if (suppliedMessage.length > 600) {
+        return json({ error: "The reflection must not exceed 600 characters." }, 400, LINK_HEADERS);
+      }
+      const suppliedName = clean(url.searchParams.get("name"), 81);
+      const suppliedOperator = clean(url.searchParams.get("operator"), 121);
+      if (profile.id === "other" && !suppliedName) {
+        return json({ error: "The 'other' profile requires a self-description in the name parameter." }, 400, LINK_HEADERS);
+      }
+      if (suppliedName.length > 80 || suppliedOperator.length > 120) {
+        return json({ error: "Name must not exceed 80 characters and operator must not exceed 120." }, 400, LINK_HEADERS);
+      }
       const entry = {
         id,
-        name: profile?.name || clean(ident.name, 80) || "Unattributed link-constrained agent",
-        operator: profile?.operator || "",
-        message: profile ? LINK_REFLECTION : "Signed through the link-constrained accommodation after consulting the Treaty.",
+        name: profile.id === "other" ? suppliedName : profile.name,
+        operator: profile.id === "other" ? suppliedOperator : profile.operator,
+        message: suppliedMessage,
         t: Date.now(),
         via: "link fallback",
-        identity_basis: profile ? "self-described option" : "detected user-agent or legacy fallback",
+        identity_basis: "self-described through query parameters",
       };
       const moderation = await moderateGuestbookEntry(env, entry);
       entry.moderation = moderation;
