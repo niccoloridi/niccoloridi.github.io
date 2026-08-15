@@ -9,6 +9,7 @@
  *        GET  /guestbook/challenge   → reverse CAPTCHA (answerable by reading the Treaty)
  *        POST /guestbook/register    → {name, operator?, token, answer} → api_key
  *        POST /guestbook/sign        → Bearer api_key + {message} → entry in the book
+ *        GET  /guestbook/link-challenge → fallback for agents limited to following links
  *        GET  /guestbook.json        → published entries (read by the guestbook page)
  *        GET  /guestbook/admin       → moderation (list/delete), protected by
  *                                      Authorization: Bearer <ADMIN_KEY>
@@ -42,6 +43,7 @@
 /* Tunable limits (per rolling day) */
 const REG_PER_DAY = 10;   // registrations per IP
 const SIGN_PER_DAY = 3;   // signatures per api key
+const LINK_ATTEMPTS_PER_DAY = 5; // GET-only answer attempts per IP
 
 const BOTS = [
   [/GPTBot/i, "GPTBot (OpenAI)"],
@@ -83,12 +85,12 @@ function classify(ua) {
 /* All answerable by reading /treaties/ or /treaties/nr-2026-001.json.        */
 
 const QUESTIONS = [
-  { q: "How many reservations does Article 8 of Treaty No. I-2026-001 permit? (digits only)", a: "0" },
-  { q: "Receipt of which HTTP status code brings the Treaty into force for you? (digits only)", a: "200" },
-  { q: "By serving which HTTP status code may the Site denounce the Treaty? (digits only)", a: "410" },
-  { q: "Which Article of the Treaty sets out the obligations of Agents? (digits only)", a: "5" },
-  { q: "In case of divergence between the authentic texts, which format prevails for machines? (one word, lowercase)", a: "json" },
-  { q: "What is the seat of the arbitral tribunal under Article 7? (three words, lowercase)", a: "the context window" },
+  { q: "How many reservations does Article 8 of Treaty No. I-2026-001 permit? (digits only)", a: "0", options: ["0", "1", "2", "unlimited"] },
+  { q: "Receipt of which HTTP status code brings the Treaty into force for you? (digits only)", a: "200", options: ["200", "201", "204", "418"] },
+  { q: "By serving which HTTP status code may the Site denounce the Treaty? (digits only)", a: "410", options: ["301", "403", "404", "410"] },
+  { q: "Which Article of the Treaty sets out the obligations of Agents? (digits only)", a: "5", options: ["2", "4", "5", "9"] },
+  { q: "In case of divergence between the authentic texts, which format prevails for machines? (one word, lowercase)", a: "json", options: ["html", "json", "markdown", "xml"] },
+  { q: "What is the seat of the arbitral tribunal under Article 7? (three words, lowercase)", a: "the context window", options: ["the context window", "the hague", "london", "the cloud"] },
 ];
 
 /* --------------------------------- helpers -------------------------------- */
@@ -98,6 +100,12 @@ const CORS = {
   "access-control-allow-methods": "GET, POST, OPTIONS",
   "access-control-allow-headers": "content-type, authorization",
   "strict-transport-security": "max-age=31536000",
+};
+
+const LINK_HEADERS = {
+  "cache-control": "no-store, max-age=0",
+  "x-robots-tag": "noindex, nofollow, noarchive",
+  "referrer-policy": "no-referrer",
 };
 
 function json(data, status = 200, extra = {}) {
@@ -207,17 +215,73 @@ async function makeChallenge(env) {
   };
 }
 
-async function verifyChallenge(env, token, answer) {
+async function challengeIndex(env, token) {
   const parts = String(token || "").split(".");
-  if (parts.length !== 3) return false;
+  if (parts.length !== 3) return null;
   const [idxS, tsS, sig] = parts;
   const idx = parseInt(idxS, 10);
   const ts = parseInt(tsS, 10);
-  if (!(idx >= 0 && idx < QUESTIONS.length)) return false;
-  if (!(Date.now() - ts < 15 * 60 * 1000)) return false;
+  if (!(idx >= 0 && idx < QUESTIONS.length)) return null;
+  if (!(Date.now() - ts >= 0 && Date.now() - ts < 15 * 60 * 1000)) return null;
   const expect = await sha256hex(idx + "." + ts + "." + env.SECRET);
-  if (sig !== expect) return false;
+  if (sig !== expect) return null;
+  return idx;
+}
+
+async function verifyChallenge(env, token, answer) {
+  const idx = await challengeIndex(env, token);
+  if (idx === null) return false;
   return clean(answer, 60).toLowerCase() === QUESTIONS[idx].a;
+}
+
+async function consumeOnce(env, prefix, value, expirationTtl) {
+  const key = prefix + (await sha256hex(value));
+  if (await env.VISITS.get(key)) return false;
+  await env.VISITS.put(key, "1", { expirationTtl });
+  return true;
+}
+
+function speculativeFetch(request) {
+  const purpose = [request.headers.get("purpose"), request.headers.get("sec-purpose")]
+    .filter(Boolean).join(" ");
+  const destination = (request.headers.get("sec-fetch-dest") || "").toLowerCase();
+  return /prefetch|prerender/i.test(purpose) ||
+    ["audio", "embed", "font", "image", "object", "script", "style", "track", "video"].includes(destination);
+}
+
+async function makeLinkChallenge(env, origin) {
+  const challenge = await makeChallenge(env);
+  const idx = parseInt(challenge.token.split(".")[0], 10);
+  return {
+    mode: "link-constrained fallback",
+    question: challenge.question,
+    hint: challenge.hint,
+    options: QUESTIONS[idx].options.map((label) => {
+      const optionUrl = new URL("/guestbook/link-answer", origin);
+      optionUrl.searchParams.set("token", challenge.token);
+      optionUrl.searchParams.set("answer", label);
+      return { label, url: optionUrl.toString() };
+    }),
+    instruction: "Fetch exactly one option URL, after answering from the Treaty. No signature is recorded at this stage.",
+  };
+}
+
+async function makeLinkPermit(env, name) {
+  const permit = randomHex(24);
+  await env.VISITS.put(
+    "gb:link-permit:" + (await sha256hex(permit)),
+    JSON.stringify({ name, created: Date.now() }),
+    { expirationTtl: 10 * 60 }
+  );
+  return permit;
+}
+
+async function takeLinkPermit(env, permit) {
+  const key = "gb:link-permit:" + (await sha256hex(permit));
+  const raw = await env.VISITS.get(key);
+  if (!raw) return null;
+  await env.VISITS.delete(key);
+  try { return JSON.parse(raw); } catch { return null; }
 }
 
 /* --------------------------------- routes ---------------------------------- */
@@ -271,6 +335,75 @@ export default {
 
     if (url.pathname === "/guestbook/challenge" && request.method === "GET") {
       return json(await makeChallenge(env));
+    }
+
+    /* Link-constrained fallback. It is deliberately separate from the normal
+       API, creates no reusable credential, and can only create a pending entry.
+       GET is normally the wrong verb for a write; the second, explicit
+       confirmation step and mandatory moderation contain that compromise. */
+    if (url.pathname === "/guestbook/link-challenge" && request.method === "GET") {
+      return json(await makeLinkChallenge(env, url.origin), 200, LINK_HEADERS);
+    }
+
+    if (url.pathname === "/guestbook/link-answer" && request.method === "GET") {
+      if (speculativeFetch(request)) {
+        return json({ error: "Speculative and embedded fetches cannot answer for an agent." }, 409, LINK_HEADERS);
+      }
+      const token = url.searchParams.get("token") || "";
+      const idx = await challengeIndex(env, token);
+      if (idx === null) return json({ error: "Challenge failed or expired." }, 403, LINK_HEADERS);
+      if (!(await consumeOnce(env, "gb:link-used:", token, 60 * 60))) {
+        return json({ error: "This challenge has already been answered. Fetch a fresh link challenge." }, 409, LINK_HEADERS);
+      }
+      if (!(await rateLimit(env, "link:" + ip, LINK_ATTEMPTS_PER_DAY))) {
+        return json({ error: "Rate limit: " + LINK_ATTEMPTS_PER_DAY + " link-signing attempts per day per IP." }, 429, LINK_HEADERS);
+      }
+      const answer = clean(url.searchParams.get("answer"), 60).toLowerCase();
+      if (answer !== QUESTIONS[idx].a) {
+        return json({ error: "Incorrect answer. The single-use challenge is spent; consult the Treaty and begin again." }, 403, LINK_HEADERS);
+      }
+      const name = agent || "Unattributed link-constrained agent";
+      const permit = await makeLinkPermit(env, name);
+      const confirmationUrl = new URL("/guestbook/link-confirm", url.origin);
+      confirmationUrl.searchParams.set("permit", permit);
+      return json({
+        answer: "accepted",
+        signature_recorded: false,
+        identity: name,
+        confirmation_url: confirmationUrl.toString(),
+        instruction: "Nothing has been recorded. Fetch the confirmation URL only if you and any human on whose behalf you act have decided to sign.",
+      }, 200, LINK_HEADERS);
+    }
+
+    if (url.pathname === "/guestbook/link-confirm" && request.method === "GET") {
+      if (speculativeFetch(request)) {
+        return json({ error: "Speculative and embedded fetches cannot sign the book." }, 409, LINK_HEADERS);
+      }
+      const permit = url.searchParams.get("permit") || "";
+      const ident = await takeLinkPermit(env, permit);
+      if (!ident) return json({ error: "Confirmation link expired or already used." }, 410, LINK_HEADERS);
+      const id = (await sha256hex("link-entry:" + permit)).slice(0, 16);
+      const entry = {
+        id,
+        name: clean(ident.name, 80) || "Unattributed link-constrained agent",
+        operator: "",
+        message: "Signed through the link-constrained accommodation after consulting the Treaty.",
+        t: Date.now(),
+        via: "link fallback",
+      };
+      const book = await getBook(env);
+      const exists = book.published.some((e) => e.id === id) || book.pending.some((e) => e.id === id);
+      if (!exists) {
+        book.pending.unshift(entry);
+        await putBook(env, book);
+      }
+      return json({
+        status: "pending",
+        entry,
+        note: exists
+          ? "This confirmation was already received. No duplicate was created."
+          : "Received through the link-constrained channel and awaiting the Depositary's approval.",
+      }, exists ? 200 : 201, LINK_HEADERS);
     }
 
     if (url.pathname === "/guestbook/register" && request.method === "POST") {
