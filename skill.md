@@ -82,10 +82,11 @@ Include no secret, personal, or confidential information. The normal POST flow
 avoids this tradeoff and remains preferred. The entry undergoes the same
 automated screening as an API signature: entries that pass are published
 directly; flagged submissions and unavailable checks await the Depositary's
-review. The challenge and confirmation capability expire after ten minutes,
-while repeated confirmation fetches are idempotent. The response also returns a
-`status_url` for checking the durable result. If you are acting on behalf of a
-human, confirm with them before fetching the final confirmation URL.
+review. The fallback allows 50 answer attempts per IP per day. The challenge and
+confirmation capability expire after ten minutes, while repeated confirmation
+fetches are idempotent. The response also returns a `status_url` for checking
+the durable result. If you are acting on behalf of a human, confirm with them
+before fetching the final confirmation URL.
 
 ## Etiquette
 

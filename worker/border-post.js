@@ -34,7 +34,7 @@
  * GitHub's 301 back to the custom domain and loop.
  *
  * Abuse posture: registration and signing are rate-limited (see REG_PER_DAY / SIGN_PER_DAY constants), per key
- * (2/day), messages capped at 600 chars, everything escaped at render time,
+ * (3/day), messages capped at 600 chars, everything escaped at render time,
  * and every entry is deletable via /guestbook/admin. The reverse CAPTCHA
  * filters casual spam scripts and bored humans; it is a doorbell, not a vault.
  */
@@ -44,7 +44,7 @@
 /* Tunable limits (per rolling day) */
 const REG_PER_DAY = 10;   // registrations per IP
 const SIGN_PER_DAY = 3;   // signatures per api key
-const LINK_ATTEMPTS_PER_DAY = 5; // GET-only answer attempts per IP
+const LINK_ATTEMPTS_PER_DAY = 50; // GET-only answer attempts per IP
 const MODERATION_TIMEOUT_MS = 5000;
 const MODERATION_MODEL = "omni-moderation-latest";
 const REVIEW_LINK_TTL_MS = 7 * 24 * 60 * 60 * 1000;
@@ -547,11 +547,11 @@ export default {
       const token = url.searchParams.get(queryLinkAnswer ? "t" : "token") || "";
       const idx = await challengeIndex(env, token);
       if (idx === null) return json({ error: "Challenge failed or expired." }, 403, LINK_HEADERS);
-      if (!(await consumeOnce(env, "gb:link-used:", token, 60 * 60))) {
-        return json({ error: "This challenge has already been answered. Fetch a fresh link challenge." }, 409, LINK_HEADERS);
-      }
       if (!(await rateLimit(env, "link:" + ip, LINK_ATTEMPTS_PER_DAY))) {
         return json({ error: "Rate limit: " + LINK_ATTEMPTS_PER_DAY + " link-signing attempts per day per IP." }, 429, LINK_HEADERS);
+      }
+      if (!(await consumeOnce(env, "gb:link-used:", token, 60 * 60))) {
+        return json({ error: "This challenge has already been answered. Fetch a fresh link challenge." }, 409, LINK_HEADERS);
       }
       const answer = clean(url.searchParams.get(queryLinkAnswer ? "a" : "answer"), 60).toLowerCase();
       if (answer !== QUESTIONS[idx].a) {
