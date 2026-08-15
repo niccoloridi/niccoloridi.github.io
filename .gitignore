@@ -5,6 +5,12 @@ ai_images/
 .claude/
 Resources
 
+# Credential handoff paths (explicit even though Resources/ is ignored above)
+/Resources/openai_api_key.txt
+/Resources/credentials_agl.txt
+/Resources/ayil_credentials.sh
+/Resources/border_post_credentials.sh
+
 # Not for publication (yet)
 network_grandchamber_viz.html
 
@@ -20,12 +26,12 @@ index-celestial.html
 index-terminal.html
 index-imprint-old.html
 
-# Cloudflare credentials (never commit)
+# Legacy Cloudflare credential paths (never commit if accidentally recreated)
 .border_post_credentials*
 .ayil_credentials*
 .wrangler/
 
-# Mail credentials (explicit even though Examples/ is ignored above)
+# Legacy mail credential path (never commit if accidentally recreated)
 /Examples/credentials_agl.txt
 
 # Local operational documentation (explicit even though Examples/ is ignored)

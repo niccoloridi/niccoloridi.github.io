@@ -17,8 +17,8 @@ Put the returned namespace id in `wrangler.toml`. Do not reuse the Border
 Post's `VISITS` id: `key:*` and `rl:reg:*` would collide and silently make a
 guestbook identity valid at the Journal.
 
-Create `.ayil_credentials.sh` at the repository root (it is gitignored), with
-two long independent values:
+Create `Resources/ayil_credentials.sh` at the repository root (both the
+directory and the exact path are gitignored), with two long independent values:
 
 ```sh
 AYIL_SECRET=...
@@ -28,7 +28,7 @@ AYIL_ADMIN_KEY=...
 Then provision and deploy:
 
 ```sh
-source ../../.ayil_credentials.sh
+source ../../Resources/ayil_credentials.sh
 printf %s "$AYIL_SECRET"    | wrangler secret put SECRET
 printf %s "$AYIL_ADMIN_KEY" | wrangler secret put ADMIN_KEY
 wrangler deploy
