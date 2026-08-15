@@ -65,6 +65,8 @@
         .hero-kicker::before { content:''; width: 26px; height: 1px; background: var(--gold); display:inline-block; }
         .wordmark { font-family: var(--grotesk); font-weight: 700; font-size: clamp(2.2rem, 7vw, 5.2rem);
             line-height: 0.92; letter-spacing: -0.02em; text-transform: uppercase; }
+        .wordmark-home { display: block; width: fit-content; }
+        .wordmark-home:focus-visible { outline: 2px solid var(--gold); outline-offset: 0.35rem; }
         .wordmark .l2 { display: inline-block; color: transparent; -webkit-text-stroke: 1.2px var(--fg); }
         .wordmark .dot { color: var(--gold); }
         .lede { font-family: var(--mono); font-size: clamp(0.78rem,1.1vw,0.92rem); letter-spacing: 0.01em;
@@ -312,7 +314,7 @@
     <main>
         <section class="hero">
             <div class="hero-kicker">public international law // computational analysis</div>
-            <h1 class="wordmark"><span class="l1">Niccolò<span class="dot">.</span></span> <span class="l2">Ridi</span></h1>
+            <a class="wordmark-home" href="index.html" aria-label="Niccolò Ridi — return to homepage"><h1 class="wordmark"><span class="l1">Niccolò<span class="dot">.</span></span> <span class="l2">Ridi</span></h1></a>
             <p class="lede">Welcome to my website. Mostly research on <span class="b">public international law, at scale.</span></p>
             <button class="console-toggle" id="console-toggle" type="button" aria-label="toggle console">▸ console</button>
 
@@ -790,8 +792,11 @@
                 if (VIEW[key]) { e.preventDefault(); if (canFocus) input.focus(); autorun(key); }
             }));
             // wordmark / id returns to the home view
-            const idLink = document.querySelector('header .id');
-            if (idLink) idLink.addEventListener('click', e => { if (document.body.classList.contains('mode-section')) { e.preventDefault(); closeSection(); } });
+            document.querySelectorAll('header .id, .wordmark-home').forEach(link => {
+                link.addEventListener('click', e => {
+                    if (document.body.classList.contains('mode-section')) { e.preventDefault(); closeSection(); }
+                });
+            });
 
             // mobile: re-summon / dismiss the terminal+network after the intro collapse
             const ctog = document.getElementById('console-toggle');
