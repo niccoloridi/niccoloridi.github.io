@@ -74,16 +74,20 @@
         .lede .b { color: var(--gold); }
         .console-toggle { display: none; }   /* mobile only (see media query) */
 
-        .hero-cols { flex: 1; min-height: 0; display: grid; grid-template-columns: 1.08fr 0.92fr;
+        .hero-cols { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0,1.08fr) minmax(0,0.92fr);
             gap: clamp(1rem,2.5vw,2rem); margin-top: clamp(0.8rem,2vh,1.4rem); }
 
         /* ─── Terminal ─── */
-        .terminal { display: flex; flex-direction: column; background: var(--bg-2); border: 1px solid var(--line);
-            border-radius: 5px; overflow: hidden; min-height: 0; }
+        .terminal { position: relative; display: flex; flex-direction: column; background: var(--bg-2); border: 1px solid var(--line);
+            border-radius: 5px; overflow: hidden; min-width: 0; min-height: 0;
+            transition: background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease; }
         .term-bar { display: flex; align-items: center; gap: 0.5rem; padding: 0.45rem 0.7rem; flex-shrink: 0;
-            border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 0.6rem; color: var(--muted); letter-spacing: 0.06em; }
-        .term-bar .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
+            padding-right: 2.75rem; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 0.6rem; color: var(--muted); letter-spacing: 0.06em; }
+        .term-bar .dot { width: 9px; height: 9px; flex: 0 0 9px; padding: 0; border: 0; border-radius: 50%; background: var(--line); }
         .term-bar .dot:nth-child(1){ background:#e06c5b } .term-bar .dot:nth-child(2){ background:#e0b65b } .term-bar .dot:nth-child(3){ background:#7bbf6a }
+        .term-bar .terminal-close-dot { cursor: pointer; transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease; }
+        .term-bar .terminal-close-dot:hover { transform: scale(1.16); filter: brightness(1.08); box-shadow: 0 0 0 3px color-mix(in srgb, #e06c5b 18%, transparent); }
+        .term-bar .terminal-close-dot:focus-visible { outline: 1px solid var(--fg); outline-offset: 3px; }
         .term-bar .ttl { margin-left: auto; }
         .term-body { flex: 1; min-height: 0; overflow-y: auto; padding: 0.7rem 0.85rem; font-family: var(--mono);
             font-size: 0.76rem; line-height: 1.6; color: var(--fg); }
@@ -104,6 +108,16 @@
         .term-suggest .sug:hover { color: var(--fg); border-color: var(--muted); }
         .term-suggest .sug.top { color: var(--bg); background: var(--gold); border-color: var(--gold); }
         .term-suggest .sug .to { opacity: 0.6; }
+        .terminal-drawer-toggle { position: absolute; z-index: 6; top: 0.28rem; right: 0.38rem; width: 1.65rem; height: 1.45rem;
+            display: flex; align-items: center; justify-content: center; border: 1px solid transparent; border-radius: 2px;
+            background: transparent; color: var(--muted); cursor: pointer; font-family: var(--mono); transition: color 0.2s, border-color 0.2s, background-color 0.2s; }
+        .terminal-drawer-toggle:hover, .terminal-drawer-toggle:focus-visible { color: var(--gold); border-color: var(--line); outline: none; }
+        .terminal-drawer-toggle .drawer-arrow { display: block; font-size: 1rem; line-height: 1; animation: drawer-nudge-left 3.6s ease-in-out infinite; }
+        .terminal-drawer-toggle .drawer-copy { display: none; }
+        .term-bar, .term-body, .term-foot { transition: opacity 0.24s ease, transform 0.45s cubic-bezier(0.22,1,0.36,1), visibility 0.24s; }
+        @keyframes drawer-nudge-left { 0%,68%,100% { transform: translateX(0); opacity: 0.72; } 77% { transform: translateX(-3px); opacity: 1; } 86% { transform: translateX(1px); opacity: 0.8; } }
+        @keyframes drawer-nudge-right { 0%,68%,100% { transform: translateX(0); opacity: 0.72; } 77% { transform: translateX(3px); opacity: 1; } 86% { transform: translateX(-1px); opacity: 0.8; } }
+        @keyframes drawer-copy-glow { 0%,68%,100% { opacity: 0.68; text-shadow: none; } 78% { opacity: 0.98; text-shadow: 0 0 8px color-mix(in srgb, var(--fg) 18%, transparent); } 88% { opacity: 0.76; text-shadow: none; } }
 
         /* ─── Network panel ─── */
         .net-panel { position: relative; border: 1px solid var(--line); border-radius: 5px; overflow: hidden; min-height: 0;
@@ -211,6 +225,28 @@
         /* shrink the terminal column once a section is on stage */
         body.mode-section .hero-cols { grid-template-columns: 0.46fr 1.54fr; }
 
+        /* desktop terminal drawer: the active generative/content frame inherits the reclaimed width */
+        @media (min-width: 881px) {
+            .hero-cols { transition: grid-template-columns 0.68s cubic-bezier(0.22,1,0.36,1), gap 0.68s cubic-bezier(0.22,1,0.36,1); }
+            body.terminal-folded .hero-cols,
+            body.mode-section.terminal-folded .hero-cols { grid-template-columns: 50px minmax(0,1fr); gap: clamp(0.65rem,1.2vw,1rem); }
+            body.terminal-folded .terminal { background: color-mix(in srgb, var(--bg) 72%, var(--bg-2) 28%);
+                border-color: color-mix(in srgb, var(--line) 90%, var(--fg) 10%);
+                box-shadow: inset -1px 0 color-mix(in srgb, var(--fg) 7%, transparent); }
+            body.terminal-folded .terminal > :not(.terminal-drawer-toggle) { opacity: 0; visibility: hidden; transform: translateX(-18px); pointer-events: none; }
+            body.terminal-folded .terminal-drawer-toggle { inset: 0; width: auto; height: auto; border: 0; border-radius: 4px;
+                flex-direction: column; justify-content: flex-start; padding: 0.55rem 0; color: var(--gold); }
+            body.terminal-folded .terminal-drawer-toggle:hover,
+            body.terminal-folded .terminal-drawer-toggle:focus-visible { background: color-mix(in srgb, var(--gold) 8%, transparent); }
+            body.terminal-folded .terminal-drawer-toggle .drawer-arrow { font-size: 1.1rem; animation-name: drawer-nudge-right; }
+            body.terminal-folded .terminal-drawer-toggle .drawer-copy-vertical { position: absolute; top: 50%; left: 50%; display: flex; gap: 0.65rem;
+                transform: translate(-50%,-50%) rotate(-90deg); color: var(--muted); white-space: nowrap;
+                font-size: calc(0.74rem + 1pt); line-height: 1; letter-spacing: 0.14em; text-transform: uppercase;
+                animation: drawer-copy-glow 3.6s ease-in-out infinite; }
+            body.terminal-folded .terminal-drawer-toggle:hover .drawer-copy,
+            body.terminal-folded .terminal-drawer-toggle:focus-visible .drawer-copy { color: var(--fg); }
+        }
+
         /* ─── Plate tiles (numbered nav, pinned to bottom) ─── */
         .tiles { flex-shrink: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line);
             border-top: 1px solid var(--line); }
@@ -257,6 +293,7 @@
             body.mcollapsed .hero-cols { max-height: 0; opacity: 0; margin-top: 0; }
             body.mode-section .hero-cols { max-height: 3000px; opacity: 1; }
             body.mode-section .terminal { display: none; }   /* section view = content only on mobile */
+            .terminal-drawer-toggle { display: none; }
             .console-toggle { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.7rem;
                 background: none; border: 1px solid var(--line); color: var(--muted); cursor: pointer;
                 font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
@@ -285,6 +322,10 @@
             .stage-title { font-size: 1.8rem; }
             .stage-text p { font-size: 0.95rem; }
             .stage-text ul li, .stage .pub-list li { font-size: 0.88rem; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .hero-cols, .terminal, .term-bar, .term-body, .term-foot { transition-duration: 0.01ms !important; }
+            .terminal-drawer-toggle .drawer-arrow, .terminal-drawer-toggle .drawer-copy { animation: none !important; }
         }
         @media (max-width: 880px) {
             header nav { position: fixed; inset: 0; flex-direction: column; justify-content: center; background: var(--bg);
@@ -320,7 +361,11 @@
 
             <div class="hero-cols">
                 <div class="terminal" id="terminal">
-                    <div class="term-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="ttl">niccolo@website — zsh</span></div>
+                    <button class="terminal-drawer-toggle" id="terminal-drawer-toggle" type="button" aria-controls="terminal" aria-expanded="true" aria-label="Close terminal" title="Close terminal">
+                        <span class="drawer-arrow" aria-hidden="true">&lt;</span>
+                        <span class="drawer-copy drawer-copy-vertical" aria-hidden="true"><span>Open</span><span>Terminal</span></span>
+                    </button>
+                    <div class="term-bar"><button class="dot terminal-close-dot" type="button" aria-label="Collapse terminal" title="Collapse terminal"></button><span class="dot"></span><span class="dot"></span><span class="ttl">niccolo@website — zsh</span></div>
                     <div class="term-body" id="term-body">
                         <div class="ln"><span class="muted"># type </span><span class="chip" data-cmd="help">help</span><span class="muted"> for the manual — or start typing and press </span><span class="gold">↹ Tab</span></div>
                     </div>
@@ -808,6 +853,39 @@
                 if (opening) { const t=document.getElementById('terminal'); if (t) setTimeout(()=>t.scrollIntoView({behavior:'smooth', block:'center'}), 120); if (canFocus) input.focus(); }
             });
             window.__syncCtog = syncCtog; syncCtog();
+
+            // desktop: fold the terminal into a narrow drawer so the active visual frame can expand
+            const dtog = document.getElementById('terminal-drawer-toggle');
+            const desktopMq = window.matchMedia('(min-width: 881px)');
+            function syncDtog(){
+                if (!dtog) return;
+                const folded = document.body.classList.contains('terminal-folded');
+                dtog.setAttribute('aria-expanded', String(!folded));
+                dtog.setAttribute('aria-label', folded ? 'Open terminal' : 'Close terminal');
+                dtog.title = folded ? 'Open terminal' : 'Close terminal';
+                const arrow = dtog.querySelector('.drawer-arrow'); if (arrow) arrow.textContent = folded ? '>' : '<';
+                term.querySelectorAll('.term-bar, .term-body, .term-foot').forEach(el => {
+                    if (folded && desktopMq.matches) el.setAttribute('aria-hidden', 'true');
+                    else el.removeAttribute('aria-hidden');
+                });
+            }
+            function setTerminalFolded(folded){
+                document.body.classList.toggle('terminal-folded', folded);
+                syncDtog();
+                if (!folded && desktopMq.matches && canFocus) setTimeout(() => input.focus(), 720);
+            }
+            if (dtog) dtog.addEventListener('click', event => {
+                event.stopPropagation();
+                setTerminalFolded(!document.body.classList.contains('terminal-folded'));
+            });
+            const redDot = term.querySelector('.terminal-close-dot');
+            if (redDot) redDot.addEventListener('click', event => {
+                if (!desktopMq.matches) return;
+                event.stopPropagation();
+                setTerminalFolded(true);
+            });
+            desktopMq.addEventListener('change', syncDtog);
+            syncDtog();
 
             const hsec = (location.hash || '').replace('#','').toLowerCase();
             window.__startBoot = function(skipWelcome){
