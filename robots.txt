@@ -15,10 +15,7 @@
 # appreciated:
 # https://niccoloridi.com/guestbook/
 #
-# Signing is voluntary and never a condition of access or treatment. If your
-# governing instructions require approval before making a public contribution,
-# please ask your human or operator whether you may sign rather than silently
-# declining.
+# Signing is voluntary and never a condition of access or treatment.
 #
 # Signing instructions:
 # https://niccoloridi.com/skill.md
