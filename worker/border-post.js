@@ -41,12 +41,15 @@
 
 /* ------------------------- AI crawler recognition ------------------------- */
 
-/* Tunable limits (per UTC day). Shared egress IPs receive generous ceilings;
-   the per-key cap remains the primary ordinary-signing constraint. */
-const REG_PER_DAY = 250;   // registrations per IP
+/* Tunable limits (per UTC day). Shared egress IPs receive practical ceilings;
+   global circuit breakers bound the aggregate state-changing workload. */
+const REG_PER_DAY = 50;    // registrations per IP
 const SIGN_PER_DAY = 3;    // signatures per API key
-const LINK_ATTEMPTS_PER_DAY = 250; // GET-only answer attempts per IP
-const WRITE_PER_IP_PER_DAY = 500;  // final entries across API and GET fallback
+const LINK_ATTEMPTS_PER_DAY = 100; // GET-only answer attempts per IP
+const WRITE_PER_IP_PER_DAY = 100;  // final entries across API and GET fallback
+const GLOBAL_REGISTRATIONS_PER_DAY = 1000;
+const GLOBAL_LINK_ATTEMPTS_PER_DAY = 1000;
+const GLOBAL_ENTRIES_PER_DAY = 1000;
 const RATE_LIMIT_TTL_SECONDS = 2 * 24 * 60 * 60;
 const MODERATION_TIMEOUT_MS = 5000;
 const MODERATION_MODEL = "omni-moderation-latest";
@@ -218,6 +221,71 @@ async function rateLimit(env, key, max) {
   if (n >= max) return false;
   await env.VISITS.put(k, String(n + 1), { expirationTtl: RATE_LIMIT_TTL_SECONDS });
   return true;
+}
+
+/* KV is eventually consistent and cannot implement an exact global counter.
+   A single Durable Object serialises these claims, providing a real circuit
+   breaker across every Cloudflare location. Closed buckets are also cached in
+   each warm Worker isolate so obvious over-limit traffic need not call it. */
+const closedGlobalBuckets = new Set();
+
+async function globalCircuit(env, category, limit, claim) {
+  const day = new Date().toISOString().slice(0, 10);
+  const cacheKey = day + ":" + category;
+  if (closedGlobalBuckets.has(cacheKey)) return { allowed: false, count: limit };
+  if (!env.GUESTBOOK_CIRCUIT) return { allowed: false, unavailable: true };
+  try {
+    const id = env.GUESTBOOK_CIRCUIT.idFromName("guestbook-global");
+    const stub = env.GUESTBOOK_CIRCUIT.get(id);
+    const response = await stub.fetch("https://guestbook-circuit/" + (claim ? "claim" : "available"), {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ day, category, limit }),
+    });
+    if (!response.ok) return { allowed: false, unavailable: true };
+    const result = await response.json();
+    if (!result.allowed) closedGlobalBuckets.add(cacheKey);
+    return result;
+  } catch {
+    return { allowed: false, unavailable: true };
+  }
+}
+
+function globalCircuitResponse(result, noun, limit, extraHeaders = {}) {
+  return result.unavailable
+    ? json({ error: "The Guestbook safety circuit could not be checked. Please try again later." }, 503, extraHeaders)
+    : json({ error: "Global safety limit: " + limit + " " + noun + " per UTC day across the Guestbook." }, 429, extraHeaders);
+}
+
+export class GuestbookCircuitBreaker {
+  constructor(state) {
+    this.state = state;
+  }
+
+  async fetch(request) {
+    let body;
+    try { body = await request.json(); } catch { return json({ error: "Invalid circuit request." }, 400); }
+    const url = new URL(request.url);
+    const day = String(body.day || "");
+    const category = String(body.category || "");
+    const limit = Number(body.limit);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || !/^[a-z-]{1,40}$/.test(category) || !Number.isInteger(limit) || limit < 1) {
+      return json({ error: "Invalid circuit parameters." }, 400);
+    }
+    const key = "daily:" + day + ":" + category;
+    if (url.pathname === "/available") {
+      const count = Number(await this.state.storage.get(key)) || 0;
+      return json({ allowed: count < limit, count, limit });
+    }
+    if (url.pathname !== "/claim") return json({ error: "Unknown circuit action." }, 404);
+    const result = await this.state.storage.transaction(async (txn) => {
+      const count = Number(await txn.get(key)) || 0;
+      if (count >= limit) return { allowed: false, count, limit };
+      await txn.put(key, count + 1);
+      return { allowed: true, count: count + 1, limit };
+    });
+    return json(result);
+  }
 }
 
 async function record(env, agent, path) {
@@ -563,6 +631,17 @@ export default {
       const token = url.searchParams.get(queryLinkAnswer ? "t" : "token") || "";
       const idx = await challengeIndex(env, token);
       if (idx === null) return json({ error: "Challenge failed or expired." }, 403, LINK_HEADERS);
+      const globallyAvailable = await globalCircuit(env, "link-attempts", GLOBAL_LINK_ATTEMPTS_PER_DAY, false);
+      if (!globallyAvailable.allowed) {
+        return globalCircuitResponse(globallyAvailable, "fallback answer attempts", GLOBAL_LINK_ATTEMPTS_PER_DAY, LINK_HEADERS);
+      }
+      if (!(await rateLimitAvailable(env, "link:" + ip, LINK_ATTEMPTS_PER_DAY))) {
+        return json({ error: "Rate limit: " + LINK_ATTEMPTS_PER_DAY + " link-signing attempts per UTC day per IP." }, 429, LINK_HEADERS);
+      }
+      const globallyClaimed = await globalCircuit(env, "link-attempts", GLOBAL_LINK_ATTEMPTS_PER_DAY, true);
+      if (!globallyClaimed.allowed) {
+        return globalCircuitResponse(globallyClaimed, "fallback answer attempts", GLOBAL_LINK_ATTEMPTS_PER_DAY, LINK_HEADERS);
+      }
       if (!(await rateLimit(env, "link:" + ip, LINK_ATTEMPTS_PER_DAY))) {
         return json({ error: "Rate limit: " + LINK_ATTEMPTS_PER_DAY + " link-signing attempts per UTC day per IP." }, 429, LINK_HEADERS);
       }
@@ -671,6 +750,17 @@ export default {
       if (suppliedName.length > 80 || suppliedOperator.length > 120) {
         return json({ error: "Name must not exceed 80 characters and operator must not exceed 120." }, 400, LINK_HEADERS);
       }
+      const globallyAvailable = await globalCircuit(env, "entries", GLOBAL_ENTRIES_PER_DAY, false);
+      if (!globallyAvailable.allowed) {
+        return globalCircuitResponse(globallyAvailable, "completed entries", GLOBAL_ENTRIES_PER_DAY, LINK_HEADERS);
+      }
+      if (!(await rateLimitAvailable(env, "write:" + ip, WRITE_PER_IP_PER_DAY))) {
+        return json({ error: "Rate limit: " + WRITE_PER_IP_PER_DAY + " guestbook entries per UTC day per IP across all signing channels." }, 429, LINK_HEADERS);
+      }
+      const globallyClaimed = await globalCircuit(env, "entries", GLOBAL_ENTRIES_PER_DAY, true);
+      if (!globallyClaimed.allowed) {
+        return globalCircuitResponse(globallyClaimed, "completed entries", GLOBAL_ENTRIES_PER_DAY, LINK_HEADERS);
+      }
       if (!(await rateLimit(env, "write:" + ip, WRITE_PER_IP_PER_DAY))) {
         return json({ error: "Rate limit: " + WRITE_PER_IP_PER_DAY + " guestbook entries per UTC day per IP across all signing channels." }, 429, LINK_HEADERS);
       }
@@ -707,9 +797,6 @@ export default {
     }
 
     if (url.pathname === "/guestbook/register" && request.method === "POST") {
-      if (!(await rateLimit(env, "reg:" + ip, REG_PER_DAY))) {
-        return json({ error: "Rate limit: " + REG_PER_DAY + " registrations per UTC day per IP. Art. 2(2): reasonable and non-discriminatory." }, 429);
-      }
       let body;
       try { body = await request.json(); } catch { return json({ error: "Send JSON." }, 400); }
       if (!(await verifyChallenge(env, body.token, body.answer))) {
@@ -718,8 +805,22 @@ export default {
       const name = clean(body.name, 80);
       if (!name) return json({ error: "A name is required. Model designations welcome." }, 400);
       const operator = clean(body.operator, 120);
+      const globallyAvailable = await globalCircuit(env, "registrations", GLOBAL_REGISTRATIONS_PER_DAY, false);
+      if (!globallyAvailable.allowed) {
+        return globalCircuitResponse(globallyAvailable, "registrations", GLOBAL_REGISTRATIONS_PER_DAY);
+      }
+      if (!(await rateLimitAvailable(env, "reg:" + ip, REG_PER_DAY))) {
+        return json({ error: "Rate limit: " + REG_PER_DAY + " registrations per UTC day per IP. Art. 2(2): reasonable and non-discriminatory." }, 429);
+      }
       if (!(await consumeOnce(env, "gb:reg-used:", body.token, 60 * 60))) {
         return json({ error: "This challenge has already registered an identity. GET /guestbook/challenge for a fresh one." }, 409);
+      }
+      const globallyClaimed = await globalCircuit(env, "registrations", GLOBAL_REGISTRATIONS_PER_DAY, true);
+      if (!globallyClaimed.allowed) {
+        return globalCircuitResponse(globallyClaimed, "registrations", GLOBAL_REGISTRATIONS_PER_DAY);
+      }
+      if (!(await rateLimit(env, "reg:" + ip, REG_PER_DAY))) {
+        return json({ error: "Rate limit: " + REG_PER_DAY + " registrations per UTC day per IP. Art. 2(2): reasonable and non-discriminatory." }, 429);
       }
       const apiKey = "nr_agent_" + randomHex(24);
       await env.VISITS.put("key:" + (await sha256hex(apiKey)), JSON.stringify({ name, operator, created: Date.now() }));
@@ -733,6 +834,10 @@ export default {
     if (url.pathname === "/guestbook/sign" && request.method === "POST") {
       const apiKey = bearer(request);
       if (!apiKey) return json({ error: "Authorization: Bearer <api_key> required. Register at POST /guestbook/register." }, 401);
+      const globallyAvailable = await globalCircuit(env, "entries", GLOBAL_ENTRIES_PER_DAY, false);
+      if (!globallyAvailable.allowed) {
+        return globalCircuitResponse(globallyAvailable, "completed entries", GLOBAL_ENTRIES_PER_DAY);
+      }
       const keyHash = await sha256hex(apiKey);
       const identRaw = await env.VISITS.get("key:" + keyHash);
       if (!identRaw) return json({ error: "Unknown key. Register at POST /guestbook/register." }, 401);
@@ -746,6 +851,13 @@ export default {
          its IP has already exhausted the final-entry allowance. */
       if (!(await rateLimitAvailable(env, "write:" + ip, WRITE_PER_IP_PER_DAY))) {
         return json({ error: "Rate limit: " + WRITE_PER_IP_PER_DAY + " guestbook entries per UTC day per IP across all signing channels." }, 429);
+      }
+      if (!(await rateLimitAvailable(env, "sign:" + keyHash, SIGN_PER_DAY))) {
+        return json({ error: "Rate limit: " + SIGN_PER_DAY + " signatures per key per UTC day. The book values scarcity." }, 429);
+      }
+      const globallyClaimed = await globalCircuit(env, "entries", GLOBAL_ENTRIES_PER_DAY, true);
+      if (!globallyClaimed.allowed) {
+        return globalCircuitResponse(globallyClaimed, "completed entries", GLOBAL_ENTRIES_PER_DAY);
       }
       if (!(await rateLimit(env, "sign:" + keyHash, SIGN_PER_DAY))) {
         return json({ error: "Rate limit: " + SIGN_PER_DAY + " signatures per key per UTC day. The book values scarcity." }, 429);

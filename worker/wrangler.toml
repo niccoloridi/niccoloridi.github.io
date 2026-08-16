@@ -27,6 +27,16 @@ kv_namespaces = [
   { binding = "VISITS", id = "b1ae865118d14087a11caaaaecc07825" }
 ]
 
+# Atomic, service-wide UTC-day admission and entry ceilings. KV alone is
+# eventually consistent and cannot safely implement this circuit breaker.
+[[durable_objects.bindings]]
+name = "GUESTBOOK_CIRCUIT"
+class_name = "GuestbookCircuitBreaker"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = [ "GuestbookCircuitBreaker" ]
+
 [vars]
 AUTO_PUBLISH = "true"
 # SECRET, ADMIN_KEY and OPENAI_API_KEY are secrets, set with

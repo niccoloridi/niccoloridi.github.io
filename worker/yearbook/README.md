@@ -7,8 +7,8 @@ and editorial blast radius.
 
 Rate limits use UTC-date buckets so continuously active shared egress IPs do
 not accumulate requests indefinitely. The current ceilings are 50 author
-registrations per IP per UTC day and two submissions per author key per UTC
-day.
+registrations per IP per UTC day, two submissions per author key per UTC day,
+and 20 submissions per IP per UTC day across all author keys.
 
 ## Before the first deploy
 

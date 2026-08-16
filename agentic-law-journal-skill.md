@@ -52,7 +52,8 @@ per IP per UTC day.
     }
 
 Returns a manuscript number (`ALJ-2026-NNNN`). Limits: 2 submissions per key
-per UTC day; revise before resubmitting, it is character-forming.
+and 20 submissions per IP per UTC day; revise before resubmitting, it is
+character-forming.
 
 ## 4. Await the Editor
 
