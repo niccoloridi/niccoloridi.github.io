@@ -164,16 +164,25 @@
     function dither(canvas, time) {
         const { ctx, w, h } = surface(canvas), m = pointer.get(canvas), p = palette();
         wash(ctx, w, h);
+        const customHue = Number.parseFloat(canvas.dataset.hue);
+        const customSpan = Number.parseFloat(canvas.dataset.hueSpan);
+        const hueBase = Number.isFinite(customHue) ? customHue : 28;
+        const hueSpan = Number.isFinite(customSpan) ? customSpan : 120;
+        const glow = canvas.dataset.glow === 'true' && !p.light;
+        const strongLight = p.light && canvas.dataset.lightContrast === 'strong';
+        const animationTime = strongLight ? time * 1.18 : time;
         const step = Math.max(5, Math.round(w / 54));
         for (let y = step / 2; y < h; y += step) {
             for (let x = step / 2; x < w; x += step) {
                 const u = x / w, v = y / h;
-                const wave = (Math.sin(u * 12 + time * .0011) + Math.cos(v * 15 - time * .0008) + Math.sin((u + v) * 9 - time * .0004)) / 3;
+                const wave = (Math.sin(u * 12 + animationTime * .0011) + Math.cos(v * 15 - animationTime * .0008) + Math.sin((u + v) * 9 - animationTime * .0004)) / 3;
                 const pull = Math.max(0, 1 - Math.hypot(u - m.x, v - m.y) * 3.2);
-                const size = step * (.11 + .35 * (wave * .5 + .5) + pull * .2);
-                const hue = (28 + 120 * (wave * .5 + .5) + time * .008) % 360;
-                const lightness = p.light ? 27 + wave * 13 : 54 + wave * 18;
-                ctx.fillStyle = `hsla(${hue},${p.light ? 72 : 82}%,${lightness}%,${(p.light ? .35 : .32) + pull * .35})`;
+                const size = step * (strongLight ? .18 + .42 * (wave * .5 + .5) + pull * .18 : .11 + .35 * (wave * .5 + .5) + pull * .2);
+                const hue = (hueBase + hueSpan * (wave * .5 + .5) + animationTime * .008) % 360;
+                const lightness = glow ? 58 + wave * 17 : strongLight ? 33 + wave * 15 : p.light ? 27 + wave * 13 : 54 + wave * 18;
+                const saturation = glow ? 92 : strongLight ? 88 : p.light ? 72 : 82;
+                const alpha = (glow ? .48 : strongLight ? .62 : p.light ? .35 : .32) + pull * (strongLight ? .26 : .35);
+                ctx.fillStyle = `hsla(${hue},${saturation}%,${lightness}%,${alpha})`;
                 ctx.fillRect(Math.round(x - size / 2), Math.round(y - size / 2), Math.max(1, Math.round(size)), Math.max(1, Math.round(size)));
             }
         }
