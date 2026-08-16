@@ -17,6 +17,8 @@ from urllib.request import Request, urlopen
 
 
 STATE_PATH = Path(".notification-state/guestbook-ids.json")
+VOLUME_STATE_PATH = Path(".notification-state/guestbook-volume.json")
+ROLLING_WINDOW_MS = 24 * 60 * 60 * 1000
 
 
 def required(name: str) -> str:
@@ -85,11 +87,43 @@ def save_seen(ids: set[str]) -> None:
     STATE_PATH.write_text(json.dumps(sorted(ids), indent=2) + "\n", encoding="utf-8")
 
 
-def set_action_outputs(ids: set[str], changed: bool) -> None:
+def load_volume_alert() -> tuple[bool, bool]:
+    try:
+        payload = json.loads(VOLUME_STATE_PATH.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return False, False
+    if not isinstance(payload, dict) or not isinstance(payload.get("active"), bool):
+        raise RuntimeError("The guestbook volume-alert state is invalid.")
+    return payload["active"], True
+
+
+def save_volume_alert(active: bool) -> None:
+    VOLUME_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    VOLUME_STATE_PATH.write_text(
+        json.dumps({"active": active}, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
+def rolling_entry_count(entries: list[dict], now_ms: int) -> int:
+    earliest = now_ms - ROLLING_WINDOW_MS
+    count = 0
+    for entry in entries:
+        try:
+            timestamp = float(entry.get("t"))
+        except (TypeError, ValueError):
+            continue
+        if earliest <= timestamp <= now_ms:
+            count += 1
+    return count
+
+
+def set_action_outputs(ids: set[str], volume_active: bool, changed: bool) -> None:
     output_path = os.environ.get("GITHUB_OUTPUT", "").strip()
     if not output_path:
         return
-    digest = hashlib.sha256("\n".join(sorted(ids)).encode("utf-8")).hexdigest()[:20]
+    state = "\n".join(sorted(ids)) + f"\nvolume_active={volume_active}"
+    digest = hashlib.sha256(state.encode("utf-8")).hexdigest()[:20]
     with open(output_path, "a", encoding="utf-8") as output:
         output.write(f"state_changed={'true' if changed else 'false'}\n")
         output.write(f"state_hash={digest}\n")
@@ -114,13 +148,38 @@ def moderation_summary(entry: dict) -> str:
     return state
 
 
-def build_message(entries: list[dict], sender: str, recipient: str) -> EmailMessage:
+def build_message(
+    entries: list[dict],
+    sender: str,
+    recipient: str,
+    volume_alert: Optional[tuple[int, int]] = None,
+) -> EmailMessage:
     count = len(entries)
-    subject = "[Guestbook] " + ("New signature" if count == 1 else f"{count} new signatures")
-    lines = [
-        "The Agent Guestbook has received " + ("a new signature." if count == 1 else f"{count} new signatures."),
-        "",
-    ]
+    if volume_alert:
+        rolling_count, threshold = volume_alert
+        subject = f"[Guestbook] HIGH VOLUME: {rolling_count} signatures in 24 hours"
+    else:
+        subject = "[Guestbook] " + ("New signature" if count == 1 else f"{count} new signatures")
+    lines = []
+    if count:
+        lines.extend(
+            [
+                "The Agent Guestbook has received "
+                + ("a new signature." if count == 1 else f"{count} new signatures."),
+                "",
+            ]
+        )
+    if volume_alert:
+        rolling_count, threshold = volume_alert
+        lines.extend(
+            [
+                f"HIGH-VOLUME WARNING: {rolling_count} signatures have been received in the rolling 24-hour window.",
+                f"The configured warning threshold is {threshold}.",
+                "This warning is sent once while traffic remains at or above the threshold.",
+                "Normal per-signature notifications and moderation remain active.",
+                "",
+            ]
+        )
     for entry in entries:
         lines.extend(
             [
@@ -179,24 +238,44 @@ def main() -> None:
     port = int(os.environ.get("SMTP_PORT", "587"))
     sender = os.environ.get("SMTP_FROM", "").strip() or username
     recipient = required("GUESTBOOK_NOTIFICATION_TO")
+    volume_threshold = int(os.environ.get("GUESTBOOK_VOLUME_ALERT_THRESHOLD", "50"))
+    if volume_threshold < 1:
+        raise RuntimeError("GUESTBOOK_VOLUME_ALERT_THRESHOLD must be a positive integer.")
 
     entries = fetch_entries(api_base, admin_key)
     seen, state_existed = load_seen()
+    previous_volume_active, volume_state_existed = load_volume_alert()
     current_ids = {str(entry["id"]) for entry in entries}
     new_entries = [entry for entry in entries if str(entry["id"]) not in seen]
+    now_ms = int(datetime.now(tz=timezone.utc).timestamp() * 1000)
+    rolling_count = rolling_entry_count(entries, now_ms)
+    volume_active = rolling_count >= volume_threshold
+    volume_crossed = volume_active and not previous_volume_active
 
     if new_entries:
         for entry in new_entries:
             entry["_review_url"] = fetch_review_url(api_base, admin_key, str(entry["id"]))
-        send(build_message(new_entries, sender, recipient), host, port, username, password)
+        alert = (rolling_count, volume_threshold) if volume_crossed else None
+        send(build_message(new_entries, sender, recipient, alert), host, port, username, password)
         print(f"Sent one guestbook notice covering {len(new_entries)} new signature(s).")
+        if volume_crossed:
+            print(f"Included a high-volume warning for {rolling_count} signatures in 24 hours.")
+    elif volume_crossed:
+        send(build_message([], sender, recipient, (rolling_count, volume_threshold)), host, port, username, password)
+        print(f"Sent a high-volume warning for {rolling_count} signatures in 24 hours.")
     else:
         print("No new guestbook signatures; no email sent.")
 
     updated_seen = seen | current_ids
-    state_changed = not state_existed or updated_seen != seen
+    state_changed = (
+        not state_existed
+        or updated_seen != seen
+        or not volume_state_existed
+        or volume_active != previous_volume_active
+    )
     save_seen(updated_seen)
-    set_action_outputs(updated_seen, state_changed)
+    save_volume_alert(volume_active)
+    set_action_outputs(updated_seen, volume_active, state_changed)
 
 
 if __name__ == "__main__":

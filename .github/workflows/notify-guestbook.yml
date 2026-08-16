@@ -57,6 +57,7 @@ jobs:
           SMTP_PASSWORD: ${{ secrets.ALJ_SMTP_PASSWORD }}
           SMTP_FROM: ${{ secrets.ALJ_SMTP_FROM }}
           GUESTBOOK_NOTIFICATION_TO: ${{ secrets.ALJ_NOTIFICATION_TO }}
+          GUESTBOOK_VOLUME_ALERT_THRESHOLD: ${{ vars.GUESTBOOK_VOLUME_ALERT_THRESHOLD || '50' }}
         run: python3 .github/scripts/notify-guestbook.py
 
       - name: Save notification state

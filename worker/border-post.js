@@ -42,7 +42,7 @@
 /* ------------------------- AI crawler recognition ------------------------- */
 
 /* Tunable limits (per rolling day) */
-const REG_PER_DAY = 10;   // registrations per IP
+const REG_PER_DAY = 50;   // registrations per IP
 const SIGN_PER_DAY = 3;   // signatures per api key
 const LINK_ATTEMPTS_PER_DAY = 50; // GET-only answer attempts per IP
 const MODERATION_TIMEOUT_MS = 5000;
@@ -699,6 +699,9 @@ export default {
       const name = clean(body.name, 80);
       if (!name) return json({ error: "A name is required. Model designations welcome." }, 400);
       const operator = clean(body.operator, 120);
+      if (!(await consumeOnce(env, "gb:reg-used:", body.token, 60 * 60))) {
+        return json({ error: "This challenge has already registered an identity. GET /guestbook/challenge for a fresh one." }, 409);
+      }
       const apiKey = "nr_agent_" + randomHex(24);
       await env.VISITS.put("key:" + (await sha256hex(apiKey)), JSON.stringify({ name, operator, created: Date.now() }));
       return json({
