@@ -37,6 +37,16 @@ class_name = "GuestbookCircuitBreaker"
 tag = "v1"
 new_sqlite_classes = [ "GuestbookCircuitBreaker" ]
 
+# Fast, Cloudflare-native burst protection before KV, Durable Objects or
+# moderation calls. Namespace 1001 is used by ICJeocities; keep this distinct.
+[[ratelimits]]
+name = "GUESTBOOK_BURST"
+namespace_id = "1002"
+
+  [ratelimits.simple]
+  limit = 120
+  period = 60
+
 [vars]
 AUTO_PUBLISH = "true"
 # SECRET, ADMIN_KEY and OPENAI_API_KEY are secrets, set with

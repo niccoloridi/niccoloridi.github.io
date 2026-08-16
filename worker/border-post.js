@@ -50,6 +50,7 @@ const WRITE_PER_IP_PER_DAY = 100;  // final entries across API and GET fallback
 const GLOBAL_REGISTRATIONS_PER_DAY = 1000;
 const GLOBAL_LINK_ATTEMPTS_PER_DAY = 1000;
 const GLOBAL_ENTRIES_PER_DAY = 1000;
+const BURST_REQUESTS_PER_MINUTE = 120;
 const RATE_LIMIT_TTL_SECONDS = 2 * 24 * 60 * 60;
 const MODERATION_TIMEOUT_MS = 5000;
 const MODERATION_MODEL = "omni-moderation-latest";
@@ -611,6 +612,19 @@ export default {
     const queryLinkAnswer = guestbookPage && url.searchParams.has("t") && url.searchParams.has("a");
     const queryLinkConfirm = guestbookPage && url.searchParams.has("confirm");
     const queryLinkStatus = guestbookPage && url.searchParams.has("entry");
+    const burstSensitive =
+      ["/guestbook/register", "/guestbook/sign", "/guestbook/link-answer", "/guestbook/link-confirm"].includes(url.pathname) ||
+      queryLinkAnswer || queryLinkConfirm;
+    if (burstSensitive && env.GUESTBOOK_BURST) {
+      const burst = await env.GUESTBOOK_BURST.limit({ key: ip });
+      if (!burst.success) {
+        return json(
+          { error: "Cloudflare burst protection: no more than " + BURST_REQUESTS_PER_MINUTE + " Guestbook write attempts per minute per source." },
+          429,
+          request.method === "GET" ? LINK_HEADERS : {}
+        );
+      }
+    }
 
     if (url.pathname === "/guestbook/challenge" && request.method === "GET") {
       return json(await makeChallenge(env));
@@ -812,15 +826,15 @@ export default {
       if (!(await rateLimitAvailable(env, "reg:" + ip, REG_PER_DAY))) {
         return json({ error: "Rate limit: " + REG_PER_DAY + " registrations per UTC day per IP. Art. 2(2): reasonable and non-discriminatory." }, 429);
       }
-      if (!(await consumeOnce(env, "gb:reg-used:", body.token, 60 * 60))) {
-        return json({ error: "This challenge has already registered an identity. GET /guestbook/challenge for a fresh one." }, 409);
-      }
       const globallyClaimed = await globalCircuit(env, "registrations", GLOBAL_REGISTRATIONS_PER_DAY, true);
       if (!globallyClaimed.allowed) {
         return globalCircuitResponse(globallyClaimed, "registrations", GLOBAL_REGISTRATIONS_PER_DAY);
       }
       if (!(await rateLimit(env, "reg:" + ip, REG_PER_DAY))) {
         return json({ error: "Rate limit: " + REG_PER_DAY + " registrations per UTC day per IP. Art. 2(2): reasonable and non-discriminatory." }, 429);
+      }
+      if (!(await consumeOnce(env, "gb:reg-used:", body.token, 60 * 60))) {
+        return json({ error: "This challenge has already registered an identity. GET /guestbook/challenge for a fresh one." }, 409);
       }
       const apiKey = "nr_agent_" + randomHex(24);
       await env.VISITS.put("key:" + (await sha256hex(apiKey)), JSON.stringify({ name, operator, created: Date.now() }));
@@ -939,9 +953,26 @@ export default {
 
     if (url.pathname === "/guestbook/admin" && request.method === "GET") {
       if (!env.ADMIN_KEY || bearer(request) !== env.ADMIN_KEY) return json({ error: "No." }, 403);
-      const book = await getBook(env);
       const action = url.searchParams.get("action") || "list";
       const id = url.searchParams.get("id");
+      if (action === "limits") {
+        const [registrations, linkAttempts, entries] = await Promise.all([
+          globalCircuit(env, "registrations", GLOBAL_REGISTRATIONS_PER_DAY, false),
+          globalCircuit(env, "link-attempts", GLOBAL_LINK_ATTEMPTS_PER_DAY, false),
+          globalCircuit(env, "entries", GLOBAL_ENTRIES_PER_DAY, false),
+        ]);
+        if (registrations.unavailable || linkAttempts.unavailable || entries.unavailable) {
+          return json({ error: "The Guestbook safety circuit could not be checked." }, 503);
+        }
+        return json({
+          day: new Date().toISOString().slice(0, 10),
+          registrations: { count: registrations.count, limit: GLOBAL_REGISTRATIONS_PER_DAY },
+          fallback_attempts: { count: linkAttempts.count, limit: GLOBAL_LINK_ATTEMPTS_PER_DAY },
+          entries: { count: entries.count, limit: GLOBAL_ENTRIES_PER_DAY },
+          burst: { limit: BURST_REQUESTS_PER_MINUTE, period_seconds: 60, scope: "source and Cloudflare location" },
+        });
+      }
+      const book = await getBook(env);
       if (action === "list") return json(book);
       if (action === "delete-link" && id) {
         const found = findBookEntry(book, id);
@@ -980,7 +1011,7 @@ export default {
         await putBook(env, book);
         return json({ ok: true });
       }
-      return json({ error: "action=list|delete-link|moderate|approve|delete" }, 400);
+      return json({ error: "action=list|limits|delete-link|moderate|approve|delete" }, 400);
     }
 
     /* --- C. Passthrough to the origin, logging sightings --- */

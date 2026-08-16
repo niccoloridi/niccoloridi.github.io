@@ -18,7 +18,6 @@ from urllib.request import Request, urlopen
 
 STATE_PATH = Path(".notification-state/guestbook-ids.json")
 VOLUME_STATE_PATH = Path(".notification-state/guestbook-volume.json")
-ROLLING_WINDOW_MS = 24 * 60 * 60 * 1000
 
 
 def required(name: str) -> str:
@@ -61,6 +60,20 @@ def fetch_entries(api_base: str, admin_key: str) -> list[dict]:
     return entries
 
 
+def fetch_limits(api_base: str, admin_key: str) -> dict:
+    payload = fetch_admin(api_base, admin_key, {"action": "limits"})
+    if not isinstance(payload, dict) or not isinstance(payload.get("day"), str):
+        raise RuntimeError("The Border Post returned invalid circuit-breaker status.")
+    entries = payload.get("entries")
+    if not isinstance(entries, dict):
+        raise RuntimeError("The Border Post returned invalid entry-limit status.")
+    count = entries.get("count")
+    limit = entries.get("limit")
+    if not isinstance(count, int) or not isinstance(limit, int) or count < 0 or limit < 1:
+        raise RuntimeError("The Border Post returned invalid entry-limit counts.")
+    return {"day": payload["day"], "count": count, "limit": limit}
+
+
 def fetch_review_url(api_base: str, admin_key: str, entry_id: str) -> str:
     payload = fetch_admin(api_base, admin_key, {"action": "delete-link", "id": entry_id})
     if not isinstance(payload, dict) or payload.get("id") != entry_id:
@@ -87,42 +100,36 @@ def save_seen(ids: set[str]) -> None:
     STATE_PATH.write_text(json.dumps(sorted(ids), indent=2) + "\n", encoding="utf-8")
 
 
-def load_volume_alert() -> tuple[bool, bool]:
+def load_volume_alert() -> tuple[Optional[str], bool, Optional[int], bool]:
     try:
         payload = json.loads(VOLUME_STATE_PATH.read_text(encoding="utf-8"))
     except FileNotFoundError:
-        return False, False
+        return None, False, None, False
     if not isinstance(payload, dict) or not isinstance(payload.get("active"), bool):
         raise RuntimeError("The guestbook volume-alert state is invalid.")
-    return payload["active"], True
+    day = payload.get("day")
+    threshold = payload.get("threshold")
+    return (
+        day if isinstance(day, str) else None,
+        payload["active"],
+        threshold if isinstance(threshold, int) else None,
+        True,
+    )
 
 
-def save_volume_alert(active: bool) -> None:
+def save_volume_alert(day: str, active: bool, threshold: int) -> None:
     VOLUME_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
     VOLUME_STATE_PATH.write_text(
-        json.dumps({"active": active}, indent=2) + "\n",
+        json.dumps({"day": day, "active": active, "threshold": threshold}, indent=2) + "\n",
         encoding="utf-8",
     )
 
 
-def rolling_entry_count(entries: list[dict], now_ms: int) -> int:
-    earliest = now_ms - ROLLING_WINDOW_MS
-    count = 0
-    for entry in entries:
-        try:
-            timestamp = float(entry.get("t"))
-        except (TypeError, ValueError):
-            continue
-        if earliest <= timestamp <= now_ms:
-            count += 1
-    return count
-
-
-def set_action_outputs(ids: set[str], volume_active: bool, changed: bool) -> None:
+def set_action_outputs(ids: set[str], volume_day: str, volume_active: bool, changed: bool) -> None:
     output_path = os.environ.get("GITHUB_OUTPUT", "").strip()
     if not output_path:
         return
-    state = "\n".join(sorted(ids)) + f"\nvolume_active={volume_active}"
+    state = "\n".join(sorted(ids)) + f"\nvolume_day={volume_day}\nvolume_active={volume_active}"
     digest = hashlib.sha256(state.encode("utf-8")).hexdigest()[:20]
     with open(output_path, "a", encoding="utf-8") as output:
         output.write(f"state_changed={'true' if changed else 'false'}\n")
@@ -152,12 +159,12 @@ def build_message(
     entries: list[dict],
     sender: str,
     recipient: str,
-    volume_alert: Optional[tuple[int, int]] = None,
+    volume_alert: Optional[dict] = None,
 ) -> EmailMessage:
     count = len(entries)
     if volume_alert:
-        rolling_count, threshold = volume_alert
-        subject = f"[Guestbook] HIGH VOLUME: {rolling_count} signatures in 24 hours"
+        daily_count = int(volume_alert["count"])
+        subject = f"[Guestbook] HIGH VOLUME: {daily_count} signatures today"
     else:
         subject = "[Guestbook] " + ("New signature" if count == 1 else f"{count} new signatures")
     lines = []
@@ -170,12 +177,16 @@ def build_message(
             ]
         )
     if volume_alert:
-        rolling_count, threshold = volume_alert
+        daily_count = int(volume_alert["count"])
+        threshold = int(volume_alert["threshold"])
+        circuit_limit = int(volume_alert["limit"])
+        day = str(volume_alert["day"])
         lines.extend(
             [
-                f"HIGH-VOLUME WARNING: {rolling_count} signatures have been received in the rolling 24-hour window.",
+                f"HIGH-VOLUME WARNING: {daily_count} signatures have been received on {day} (UTC).",
                 f"The configured warning threshold is {threshold}.",
-                "This warning is sent once while traffic remains at or above the threshold.",
+                f"The hard global circuit breaker stops completed entries at {circuit_limit} for the UTC day.",
+                "This warning is sent once per UTC day while traffic is at or above the threshold.",
                 "Normal per-signature notifications and moderation remain active.",
                 "",
             ]
@@ -244,25 +255,36 @@ def main() -> None:
 
     entries = fetch_entries(api_base, admin_key)
     seen, state_existed = load_seen()
-    previous_volume_active, volume_state_existed = load_volume_alert()
+    previous_volume_day, previous_volume_active, previous_threshold, volume_state_existed = load_volume_alert()
     current_ids = {str(entry["id"]) for entry in entries}
     new_entries = [entry for entry in entries if str(entry["id"]) not in seen]
-    now_ms = int(datetime.now(tz=timezone.utc).timestamp() * 1000)
-    rolling_count = rolling_entry_count(entries, now_ms)
-    volume_active = rolling_count >= volume_threshold
-    volume_crossed = volume_active and not previous_volume_active
+    limits = fetch_limits(api_base, admin_key)
+    volume_day = str(limits["day"])
+    daily_count = int(limits["count"])
+    circuit_limit = int(limits["limit"])
+    volume_active = daily_count >= volume_threshold
+    volume_crossed = volume_active and (
+        previous_volume_day != volume_day
+        or not previous_volume_active
+        or previous_threshold != volume_threshold
+    )
+    alert = {
+        "day": volume_day,
+        "count": daily_count,
+        "threshold": volume_threshold,
+        "limit": circuit_limit,
+    } if volume_crossed else None
 
     if new_entries:
         for entry in new_entries:
             entry["_review_url"] = fetch_review_url(api_base, admin_key, str(entry["id"]))
-        alert = (rolling_count, volume_threshold) if volume_crossed else None
         send(build_message(new_entries, sender, recipient, alert), host, port, username, password)
         print(f"Sent one guestbook notice covering {len(new_entries)} new signature(s).")
         if volume_crossed:
-            print(f"Included a high-volume warning for {rolling_count} signatures in 24 hours.")
+            print(f"Included a high-volume warning for {daily_count} signatures on {volume_day} UTC.")
     elif volume_crossed:
-        send(build_message([], sender, recipient, (rolling_count, volume_threshold)), host, port, username, password)
-        print(f"Sent a high-volume warning for {rolling_count} signatures in 24 hours.")
+        send(build_message([], sender, recipient, alert), host, port, username, password)
+        print(f"Sent a high-volume warning for {daily_count} signatures on {volume_day} UTC.")
     else:
         print("No new guestbook signatures; no email sent.")
 
@@ -271,11 +293,13 @@ def main() -> None:
         not state_existed
         or updated_seen != seen
         or not volume_state_existed
+        or previous_volume_day != volume_day
         or volume_active != previous_volume_active
+        or previous_threshold != volume_threshold
     )
     save_seen(updated_seen)
-    save_volume_alert(volume_active)
-    set_action_outputs(updated_seen, volume_active, state_changed)
+    save_volume_alert(volume_day, volume_active, volume_threshold)
+    set_action_outputs(updated_seen, volume_day, volume_active, state_changed)
 
 
 if __name__ == "__main__":
