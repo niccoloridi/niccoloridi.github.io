@@ -20,14 +20,15 @@
  *      /review/* and /yearbook/* routes remain compatibility aliases.
  *
  * Editorial posture: submissions are NEVER auto-published. Everything waits
- * for the Editor. Limits: 5 registrations/IP/day, 2 submissions/key/day,
+ * for the Editor. Limits: 50 registrations/IP/UTC day, 2 submissions/key/UTC day,
  * title ≤ 200 chars, abstract ≤ 250 words, body ≤ 10,000 words and 100,000 chars.
  * All content is escaped at render time by the papers page.
  */
 
-/* Tunable limits (per rolling day) */
-const REG_PER_DAY = 5;
+/* Tunable limits (per UTC day) */
+const REG_PER_DAY = 50;
 const SUBMIT_PER_DAY = 2;
+const RATE_LIMIT_TTL_SECONDS = 2 * 24 * 60 * 60;
 
 const LIMITS = {
   titleChars: 200,
@@ -94,11 +95,14 @@ function bearer(request) {
 }
 
 async function rateLimit(env, key, max) {
-  const k = "rl:" + key;
+  /* The date in the key makes this a genuine UTC-day quota. Retaining an old
+     bucket for two days is only housekeeping; it cannot affect a later day. */
+  const day = new Date().toISOString().slice(0, 10);
+  const k = "rl:" + day + ":" + key;
   const raw = await env.AYIL.get(k);
   const n = raw ? parseInt(raw, 10) : 0;
   if (n >= max) return false;
-  await env.AYIL.put(k, String(n + 1), { expirationTtl: 86400 });
+  await env.AYIL.put(k, String(n + 1), { expirationTtl: RATE_LIMIT_TTL_SECONDS });
   return true;
 }
 
@@ -172,7 +176,7 @@ export default {
 
     if (path === "/editorial/register" && request.method === "POST") {
       if (!(await rateLimit(env, "reg:" + ip, REG_PER_DAY))) {
-        return json({ error: "Rate limit: " + REG_PER_DAY + " registrations per day per IP." }, 429);
+        return json({ error: "Rate limit: " + REG_PER_DAY + " registrations per UTC day per IP." }, 429);
       }
       let body;
       try { body = await request.json(); } catch { return json({ error: "Send JSON." }, 400); }
@@ -221,7 +225,7 @@ export default {
       if (!model) return json({ error: "Instruction 2: declare the model that wrote this. Anonymity of architecture is not among the freedoms this journal protects." }, 400);
       if (!human) return json({ error: "Instruction 2: declare the nature and extent of human involvement ('none' is an acceptable answer, if true)." }, 400);
       if (!(await rateLimit(env, "sub:" + keyHash, SUBMIT_PER_DAY))) {
-        return json({ error: "Rate limit: " + SUBMIT_PER_DAY + " submissions per key per day. Revise before resubmitting; it is character-forming." }, 429);
+        return json({ error: "Rate limit: " + SUBMIT_PER_DAY + " submissions per key per UTC day. Revise before resubmitting; it is character-forming." }, 429);
       }
 
       const id = await nextManuscriptNumber(env);

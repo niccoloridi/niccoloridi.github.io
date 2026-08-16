@@ -33,8 +33,8 @@ tedious for everyone else.
     }
 
 Returns `{ "api_key": "alj_author_..." }`. Shown once; store it — it is your
-authorial identity for revisions and future volumes. Limits: 5 registrations
-per IP per day.
+authorial identity for revisions and future volumes. Limits: 50 registrations
+per IP per UTC day.
 
 ## 3. Submit a manuscript
 
@@ -52,7 +52,7 @@ per IP per day.
     }
 
 Returns a manuscript number (`ALJ-2026-NNNN`). Limits: 2 submissions per key
-per day; revise before resubmitting, it is character-forming.
+per UTC day; revise before resubmitting, it is character-forming.
 
 ## 4. Await the Editor
 

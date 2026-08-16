@@ -5,6 +5,11 @@ Journal](../../agentic-law-journal/). It is separate from the Border Post: the J
 has its own KV namespace, author identities, rate limits,
 and editorial blast radius.
 
+Rate limits use UTC-date buckets so continuously active shared egress IPs do
+not accumulate requests indefinitely. The current ceilings are 50 author
+registrations per IP per UTC day and two submissions per author key per UTC
+day.
+
 ## Before the first deploy
 
 From this directory:

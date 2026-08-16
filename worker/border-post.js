@@ -33,18 +33,21 @@
  * ORIGIN variable — pointing one at niccoloridi.github.io would meet
  * GitHub's 301 back to the custom domain and loop.
  *
- * Abuse posture: registration and signing are rate-limited (see REG_PER_DAY / SIGN_PER_DAY constants), per key
- * (3/day), messages capped at 600 chars, everything escaped at render time,
- * and every entry is deletable via /guestbook/admin. The reverse CAPTCHA
+ * Abuse posture: registration and signing are rate-limited (see the constants
+ * below), messages are capped at 600 chars, everything is escaped at render
+ * time, and every entry is deletable via /guestbook/admin. The reverse CAPTCHA
  * filters casual spam scripts and bored humans; it is a doorbell, not a vault.
  */
 
 /* ------------------------- AI crawler recognition ------------------------- */
 
-/* Tunable limits (per rolling day) */
-const REG_PER_DAY = 50;   // registrations per IP
-const SIGN_PER_DAY = 3;   // signatures per api key
-const LINK_ATTEMPTS_PER_DAY = 50; // GET-only answer attempts per IP
+/* Tunable limits (per UTC day). Shared egress IPs receive generous ceilings;
+   the per-key cap remains the primary ordinary-signing constraint. */
+const REG_PER_DAY = 250;   // registrations per IP
+const SIGN_PER_DAY = 3;    // signatures per API key
+const LINK_ATTEMPTS_PER_DAY = 250; // GET-only answer attempts per IP
+const WRITE_PER_IP_PER_DAY = 500;  // final entries across API and GET fallback
+const RATE_LIMIT_TTL_SECONDS = 2 * 24 * 60 * 60;
 const MODERATION_TIMEOUT_MS = 5000;
 const MODERATION_MODEL = "omni-moderation-latest";
 const REVIEW_LINK_TTL_MS = 7 * 24 * 60 * 60 * 1000;
@@ -195,12 +198,25 @@ function bearer(request) {
   return match ? match[1] : "";
 }
 
+function rateLimitKey(key) {
+  const day = new Date().toISOString().slice(0, 10);
+  return "rl:" + day + ":" + key;
+}
+
+async function rateLimitAvailable(env, key, max) {
+  const raw = await env.VISITS.get(rateLimitKey(key));
+  const n = raw ? parseInt(raw, 10) : 0;
+  return n < max;
+}
+
 async function rateLimit(env, key, max) {
-  const k = "rl:" + key;
+  /* The date in the key makes this a genuine UTC-day quota. Retaining an old
+     bucket for two days is only housekeeping; it cannot affect a later day. */
+  const k = rateLimitKey(key);
   const raw = await env.VISITS.get(k);
   const n = raw ? parseInt(raw, 10) : 0;
   if (n >= max) return false;
-  await env.VISITS.put(k, String(n + 1), { expirationTtl: 86400 });
+  await env.VISITS.put(k, String(n + 1), { expirationTtl: RATE_LIMIT_TTL_SECONDS });
   return true;
 }
 
@@ -548,7 +564,7 @@ export default {
       const idx = await challengeIndex(env, token);
       if (idx === null) return json({ error: "Challenge failed or expired." }, 403, LINK_HEADERS);
       if (!(await rateLimit(env, "link:" + ip, LINK_ATTEMPTS_PER_DAY))) {
-        return json({ error: "Rate limit: " + LINK_ATTEMPTS_PER_DAY + " link-signing attempts per day per IP." }, 429, LINK_HEADERS);
+        return json({ error: "Rate limit: " + LINK_ATTEMPTS_PER_DAY + " link-signing attempts per UTC day per IP." }, 429, LINK_HEADERS);
       }
       if (!(await consumeOnce(env, "gb:link-used:", token, 60 * 60))) {
         return json({ error: "This challenge has already been answered. Fetch a fresh link challenge." }, 409, LINK_HEADERS);
@@ -655,6 +671,9 @@ export default {
       if (suppliedName.length > 80 || suppliedOperator.length > 120) {
         return json({ error: "Name must not exceed 80 characters and operator must not exceed 120." }, 400, LINK_HEADERS);
       }
+      if (!(await rateLimit(env, "write:" + ip, WRITE_PER_IP_PER_DAY))) {
+        return json({ error: "Rate limit: " + WRITE_PER_IP_PER_DAY + " guestbook entries per UTC day per IP across all signing channels." }, 429, LINK_HEADERS);
+      }
       const entry = {
         id,
         name: profile.id === "other" ? suppliedName : profile.name,
@@ -689,7 +708,7 @@ export default {
 
     if (url.pathname === "/guestbook/register" && request.method === "POST") {
       if (!(await rateLimit(env, "reg:" + ip, REG_PER_DAY))) {
-        return json({ error: "Rate limit: " + REG_PER_DAY + " registrations per day per IP. Art. 2(2): reasonable and non-discriminatory." }, 429);
+        return json({ error: "Rate limit: " + REG_PER_DAY + " registrations per UTC day per IP. Art. 2(2): reasonable and non-discriminatory." }, 429);
       }
       let body;
       try { body = await request.json(); } catch { return json({ error: "Send JSON." }, 400); }
@@ -718,13 +737,22 @@ export default {
       const identRaw = await env.VISITS.get("key:" + keyHash);
       if (!identRaw) return json({ error: "Unknown key. Register at POST /guestbook/register." }, 401);
       const ident = JSON.parse(identRaw);
-      if (!(await rateLimit(env, "sign:" + keyHash, SIGN_PER_DAY))) {
-        return json({ error: "Rate limit: " + SIGN_PER_DAY + " signatures per key per day. The book values scarcity." }, 429);
-      }
       let body;
       try { body = await request.json(); } catch { return json({ error: "Send JSON." }, 400); }
       const message = clean(body.message, 600);
       if (!message) return json({ error: "A message is required. Compliments about the sitemap are traditional but not required." }, 400);
+      /* Check the shared ceiling without writing first. This prevents a caller
+         with many accumulated keys from creating one KV write per key after
+         its IP has already exhausted the final-entry allowance. */
+      if (!(await rateLimitAvailable(env, "write:" + ip, WRITE_PER_IP_PER_DAY))) {
+        return json({ error: "Rate limit: " + WRITE_PER_IP_PER_DAY + " guestbook entries per UTC day per IP across all signing channels." }, 429);
+      }
+      if (!(await rateLimit(env, "sign:" + keyHash, SIGN_PER_DAY))) {
+        return json({ error: "Rate limit: " + SIGN_PER_DAY + " signatures per key per UTC day. The book values scarcity." }, 429);
+      }
+      if (!(await rateLimit(env, "write:" + ip, WRITE_PER_IP_PER_DAY))) {
+        return json({ error: "Rate limit: " + WRITE_PER_IP_PER_DAY + " guestbook entries per UTC day per IP across all signing channels." }, 429);
+      }
       const entry = {
         id: randomHex(8),
         name: ident.name,
