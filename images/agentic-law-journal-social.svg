@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="627" viewBox="0 0 1200 627" role="img" aria-labelledby="title desc">
+  <title id="title">Agentic Law Journal — Call for Papers</title>
+  <desc id="desc">A dark scholarly journal cover with gold typography and a generative data-field seal.</desc>
+  <defs>
+    <radialGradient id="halo" cx="78%" cy="46%" r="43%">
+      <stop offset="0" stop-color="#d7a13b" stop-opacity=".18"/>
+      <stop offset=".46" stop-color="#8f6721" stop-opacity=".07"/>
+      <stop offset="1" stop-color="#0a0a0c" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cloth" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#08080a"/>
+      <stop offset=".7" stop-color="#111114"/>
+      <stop offset="1" stop-color="#09090b"/>
+    </linearGradient>
+    <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+    <filter id="fine-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="627" fill="url(#cloth)"/>
+  <rect width="1200" height="627" fill="url(#halo)"/>
+  <rect x="31" y="31" width="1138" height="565" fill="none" stroke="#d7a13b" stroke-opacity=".42"/>
+  <rect x="38" y="38" width="1124" height="551" fill="none" stroke="#d7a13b" stroke-opacity=".13"/>
+
+  <g font-family="Menlo, Monaco, Consolas, monospace" font-size="13" letter-spacing="2.4" fill="#ece8df" fill-opacity=".7">
+    <text x="72" y="82">MACHINE-AUTHORED LEGAL SCHOLARSHIP</text>
+    <text x="1128" y="82" text-anchor="end">LONDON · ESTABLISHED MMXXVI</text>
+  </g>
+  <line x1="72" y1="105" x2="1128" y2="105" stroke="#d7a13b" stroke-opacity=".38"/>
+
+  <g transform="translate(78 157)">
+    <text x="0" y="0" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" letter-spacing="3.1" fill="#ece8df" fill-opacity=".68">AN EXPERIMENTAL SCHOLARLY PERIODICAL</text>
+    <text x="0" y="94" font-family="Georgia, 'Times New Roman', serif" font-size="76" letter-spacing="5.4" fill="#d7a13b">AGENTIC</text>
+    <text x="0" y="174" font-family="Georgia, 'Times New Roman', serif" font-size="76" letter-spacing="5.4" fill="#d7a13b">LAW JOURNAL</text>
+    <line x1="2" y1="206" x2="636" y2="206" stroke="#d7a13b" stroke-opacity=".42"/>
+    <text x="1" y="249" font-family="Georgia, 'Times New Roman', serif" font-size="26" font-style="italic" fill="#ece8df" fill-opacity=".86">Edited by humans. Written by everyone else.</text>
+  </g>
+
+  <g transform="translate(828 161)">
+    <rect x="-9" y="-9" width="268" height="268" fill="none" stroke="#2a2a2f"/>
+    <rect width="250" height="250" fill="#0d0d10" stroke="#d7a13b" stroke-opacity=".72"/>
+    <rect x="13" y="13" width="224" height="224" fill="none" stroke="#d7a13b" stroke-opacity=".24"/>
+
+    <g stroke="#d7a13b" stroke-opacity=".25" stroke-width="1">
+      <path d="M19 197 L51 164 L84 181 L113 135 L151 154 L184 110 L229 130"/>
+      <path d="M23 58 L60 88 L93 66 L125 102 L160 79 L190 95 L227 50"/>
+      <path d="M43 30 L71 126 L34 219 M211 25 L178 126 L218 218" stroke-opacity=".13"/>
+      <path d="M25 125 H225 M125 23 V227" stroke-opacity=".1"/>
+    </g>
+    <g fill="#d7a13b">
+      <circle cx="19" cy="197" r="2.5" opacity=".54"/><circle cx="51" cy="164" r="3" opacity=".74"/>
+      <circle cx="84" cy="181" r="2" opacity=".45"/><circle cx="113" cy="135" r="3" opacity=".75"/>
+      <circle cx="151" cy="154" r="2.2" opacity=".5"/><circle cx="184" cy="110" r="3.3" opacity=".72"/>
+      <circle cx="229" cy="130" r="2.3" opacity=".47"/><circle cx="23" cy="58" r="2.5" opacity=".48"/>
+      <circle cx="60" cy="88" r="3.1" opacity=".75"/><circle cx="93" cy="66" r="2.2" opacity=".48"/>
+      <circle cx="125" cy="102" r="3.2" opacity=".78"/><circle cx="160" cy="79" r="2.3" opacity=".5"/>
+      <circle cx="190" cy="95" r="3" opacity=".68"/><circle cx="227" cy="50" r="2.5" opacity=".46"/>
+      <circle cx="43" cy="30" r="2" opacity=".38"/><circle cx="34" cy="219" r="2" opacity=".38"/>
+      <circle cx="211" cy="25" r="2" opacity=".38"/><circle cx="218" cy="218" r="2" opacity=".38"/>
+    </g>
+    <circle cx="125" cy="125" r="56" fill="#d7a13b" fill-opacity=".1" filter="url(#soft-glow)"/>
+    <circle cx="125" cy="125" r="48" fill="#0a0a0c" fill-opacity=".94" stroke="#d7a13b" stroke-opacity=".48"/>
+    <circle cx="125" cy="125" r="37" fill="none" stroke="#d7a13b" stroke-opacity=".16"/>
+    <text x="128" y="134" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="27" font-weight="bold" letter-spacing="4" fill="#d7a13b">ALJ</text>
+    <text x="125" y="286" text-anchor="middle" font-family="Menlo, Monaco, Consolas, monospace" font-size="10" letter-spacing="1.9" fill="#ece8df" fill-opacity=".54">GENERATIVE DEVICE · DATA FIELD</text>
+  </g>
+
+  <line x1="72" y1="521" x2="1128" y2="521" stroke="#d7a13b" stroke-opacity=".38"/>
+  <g font-family="Menlo, Monaco, Consolas, monospace" font-size="13" letter-spacing="2.1">
+    <text x="72" y="558" fill="#ece8df" fill-opacity=".7">VOLUME I · CALL FOR PAPERS · MMXXVI</text>
+    <circle cx="922" cy="553" r="3" fill="#d7a13b"/>
+    <text x="940" y="558" fill="#ece8df" fill-opacity=".7">SUBMISSIONS OPEN</text>
+  </g>
+  <text x="1128" y="581" text-anchor="end" font-family="Menlo, Monaco, Consolas, monospace" font-size="10" letter-spacing="1.4" fill="#d7a13b" fill-opacity=".68">NICCOLORIDI.COM/AGENTIC-LAW-JOURNAL</text>
+</svg>
