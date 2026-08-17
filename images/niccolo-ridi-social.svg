@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="627" viewBox="0 0 1200 627" role="img" aria-labelledby="title desc">
+  <title id="title">Niccolò Ridi — Public International Law</title>
+  <desc id="desc">A dark typographic card with four generative panels representing profile, practice, research, and data.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#08080a"/>
+      <stop offset=".68" stop-color="#101013"/>
+      <stop offset="1" stop-color="#0a0a0c"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="76%" cy="48%" r="46%">
+      <stop offset="0" stop-color="#d7a13b" stop-opacity=".13"/>
+      <stop offset="1" stop-color="#d7a13b" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="627" fill="url(#background)"/>
+  <rect width="1200" height="627" fill="url(#glow)"/>
+  <rect x="31" y="31" width="1138" height="565" fill="none" stroke="#d7a13b" stroke-opacity=".35"/>
+  <line x1="65" y1="102" x2="1135" y2="102" stroke="#2a2a2f"/>
+  <g font-family="Menlo, Monaco, Consolas, monospace" font-size="13" letter-spacing="2.2" fill="#8d887e">
+    <text x="66" y="76"><tspan fill="#d7a13b">◆</tspan> NICCOLÒ RIDI</text>
+    <text x="1134" y="76" text-anchor="end">NICCOLORIDI.COM · LONDON</text>
+  </g>
+
+  <g transform="translate(68 160)">
+    <text x="0" y="0" font-family="Menlo, Monaco, Consolas, monospace" font-size="14" letter-spacing="3" fill="#d7a13b">PUBLIC INTERNATIONAL LAW</text>
+    <text x="0" y="93" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="81" font-weight="600" letter-spacing="-3" fill="#ece8df">NICCOLÒ<tspan fill="#d7a13b">.</tspan></text>
+    <text x="0" y="173" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="81" font-weight="600" letter-spacing="-3" fill="#ece8df">RIDI</text>
+    <line x1="2" y1="207" x2="532" y2="207" stroke="#d7a13b" stroke-opacity=".48"/>
+    <text x="0" y="249" font-family="Georgia, 'Times New Roman', serif" font-size="24" font-style="italic" fill="#ece8df" fill-opacity=".84">International adjudication, judicial reasoning,</text>
+    <text x="0" y="283" font-family="Georgia, 'Times New Roman', serif" font-size="24" font-style="italic" fill="#ece8df" fill-opacity=".84">and computational law.</text>
+  </g>
+
+  <g transform="translate(692 145)" font-family="Menlo, Monaco, Consolas, monospace">
+    <g transform="translate(0 0)">
+      <rect width="205" height="155" fill="#111114" stroke="#2a2a2f"/>
+      <text x="15" y="25" font-size="10" letter-spacing="1.8" fill="#7d786d">01 · PROFILE</text>
+      <circle cx="103" cy="90" r="32" fill="none" stroke="#d7a13b" stroke-opacity=".55"/>
+      <circle cx="103" cy="90" r="19" fill="none" stroke="#d7a13b" stroke-opacity=".22"/>
+      <path d="M31 126 C65 82 85 128 103 90 C125 43 152 107 181 57" fill="none" stroke="#d7a13b" stroke-opacity=".33"/>
+      <g fill="#d7a13b"><circle cx="31" cy="126" r="2"/><circle cx="103" cy="90" r="2.5"/><circle cx="181" cy="57" r="2"/></g>
+    </g>
+    <g transform="translate(222 0)">
+      <rect width="205" height="155" fill="#111114" stroke="#2a2a2f"/>
+      <text x="15" y="25" font-size="10" letter-spacing="1.8" fill="#7d786d">02 · PRACTICE</text>
+      <path d="M27 125 L57 81 L90 109 L123 55 L153 91 L181 44" fill="none" stroke="#d7a13b" stroke-opacity=".48"/>
+      <path d="M27 98 L57 118 L90 70 L123 103 L153 62 L181 88" fill="none" stroke="#ece8df" stroke-opacity=".12"/>
+      <g fill="#d7a13b"><circle cx="27" cy="125" r="2"/><circle cx="57" cy="81" r="2"/><circle cx="90" cy="109" r="2"/><circle cx="123" cy="55" r="2"/><circle cx="153" cy="91" r="2"/><circle cx="181" cy="44" r="2"/></g>
+    </g>
+    <g transform="translate(0 172)">
+      <rect width="205" height="155" fill="#111114" stroke="#2a2a2f"/>
+      <text x="15" y="25" font-size="10" letter-spacing="1.8" fill="#7d786d">03 · RESEARCH</text>
+      <g stroke="#d7a13b" fill="none">
+        <ellipse cx="103" cy="91" rx="67" ry="25" opacity=".18"/>
+        <ellipse cx="103" cy="91" rx="49" ry="47" opacity=".28" transform="rotate(32 103 91)"/>
+        <ellipse cx="103" cy="91" rx="49" ry="47" opacity=".28" transform="rotate(-32 103 91)"/>
+        <circle cx="103" cy="91" r="4" fill="#d7a13b" opacity=".8"/>
+      </g>
+    </g>
+    <g transform="translate(222 172)">
+      <rect width="205" height="155" fill="#111114" stroke="#2a2a2f"/>
+      <text x="15" y="25" font-size="10" letter-spacing="1.8" fill="#7d786d">04 · DATA</text>
+      <g fill="#d7a13b">
+        <rect x="29" y="110" width="12" height="19" opacity=".2"/><rect x="49" y="91" width="12" height="38" opacity=".28"/>
+        <rect x="69" y="68" width="12" height="61" opacity=".38"/><rect x="89" y="83" width="12" height="46" opacity=".32"/>
+        <rect x="109" y="48" width="12" height="81" opacity=".58"/><rect x="129" y="61" width="12" height="68" opacity=".46"/>
+        <rect x="149" y="37" width="12" height="92" opacity=".72"/><rect x="169" y="53" width="12" height="76" opacity=".52"/>
+      </g>
+    </g>
+  </g>
+
+  <line x1="65" y1="542" x2="1135" y2="542" stroke="#2a2a2f"/>
+  <g font-family="Menlo, Monaco, Consolas, monospace" font-size="12" letter-spacing="2" fill="#7d786d">
+    <text x="66" y="574">RESEARCH · PROFILE · PRACTICE · DATA</text>
+    <text x="1134" y="574" text-anchor="end" fill="#d7a13b">PUBLIC INTERNATIONAL LAW, AT SCALE</text>
+  </g>
+</svg>
