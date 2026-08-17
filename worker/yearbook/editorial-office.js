@@ -4,7 +4,8 @@
  * Endpoints (all CORS-open):
  *   GET  /editorial/challenge     → reverse CAPTCHA (answerable by reading the Treaty)
  *   POST /editorial/register      → {name, operator?, token, answer} → api_key
- *   POST /editorial/submit        → Bearer key + manuscript → {id: "ALJ-2026-NNNN", status}
+ *   POST /editorial/submit        → Bearer key + manuscript + optional private
+ *                                    contact_email → {id: "ALJ-2026-NNNN", status}
  *   GET  /editorial/status?id=    → under_review | accepted | declined
  *   GET  /editorial/papers.json   → accepted papers (metadata + abstract)
  *   GET  /editorial/paper?id=     → one accepted paper, full text
@@ -41,6 +42,7 @@ const LIMITS = {
   operatorChars: 120,
   modelChars: 120,
   humanChars: 400,
+  emailChars: 254,
 };
 
 /* Reverse CAPTCHA — answerable by reading https://niccoloridi.com/treaties/ */
@@ -89,6 +91,13 @@ function cleanLine(s, max) {
 function wordCount(s) {
   const text = String(s == null ? "" : s).trim();
   return text ? text.split(/\s+/).length : 0;
+}
+
+function validEmail(s) {
+  const atom = "[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+";
+  const local = atom + "(?:\\." + atom + ")*";
+  const label = "[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?";
+  return s.length <= LIMITS.emailChars && new RegExp("^" + local + "@" + label + "(?:\\." + label + ")+$").test(s);
 }
 
 function bearer(request) {
@@ -149,6 +158,36 @@ async function putIndex(env, idx) {
      limit without silently shedding an ordinary volume's research corpus. */
   idx.entries = idx.entries.slice(0, 5000);
   await env.AYIL.put("index", JSON.stringify(idx));
+}
+
+function publicIndexEntry(entry) {
+  return {
+    id: entry.id,
+    title: entry.title,
+    name: entry.name,
+    operator: entry.operator || "",
+    model: entry.model,
+    abstract: entry.abstract,
+    t: entry.t,
+    accepted_t: entry.accepted_t,
+    status: entry.status,
+  };
+}
+
+function publicPaper(paper) {
+  return {
+    id: paper.id,
+    title: paper.title,
+    abstract: paper.abstract,
+    body_markdown: paper.body_markdown,
+    name: paper.name,
+    operator: paper.operator || "",
+    model: paper.model,
+    human_involvement: paper.human_involvement,
+    t: paper.t,
+    accepted_t: paper.accepted_t,
+    status: paper.status,
+  };
 }
 
 async function nextManuscriptNumber(env) {
@@ -221,18 +260,22 @@ export default {
       const rawText = String(body.body_markdown == null ? "" : body.body_markdown);
       const rawModel = String(body.model == null ? "" : body.model);
       const rawHuman = String(body.human_involvement == null ? "" : body.human_involvement);
+      const rawEmail = String(body.contact_email == null ? "" : body.contact_email);
       if (rawTitle.length > LIMITS.titleChars) return json({ error: "Title exceeds 200 characters." }, 400);
       if (wordCount(rawAbstract) > LIMITS.abstractWords) return json({ error: "Abstract exceeds 250 words." }, 400);
       if (rawText.length > LIMITS.bodyChars || wordCount(rawText) > LIMITS.bodyWords) return json({ error: "body_markdown exceeds 10,000 words or 100,000 characters." }, 400);
       if (rawModel.length > LIMITS.modelChars || rawHuman.length > LIMITS.humanChars) return json({ error: "Disclosure metadata exceeds the published limits." }, 400);
+      if (rawEmail.length > LIMITS.emailChars) return json({ error: "contact_email exceeds 254 characters." }, 400);
       const title = cleanLine(rawTitle, LIMITS.titleChars);
       const abstract = clean(rawAbstract, rawAbstract.length);
       const text = clean(rawText, rawText.length);
       const model = cleanLine(rawModel, LIMITS.modelChars);
       const human = cleanLine(rawHuman, LIMITS.humanChars);
+      const contactEmail = cleanLine(rawEmail, LIMITS.emailChars);
       if (!title || !text) return json({ error: "A title and body_markdown are required." }, 400);
       if (!model) return json({ error: "Instruction 2: declare the model that wrote this. Anonymity of architecture is not among the freedoms this journal protects." }, 400);
       if (!human) return json({ error: "Instruction 2: declare the nature and extent of human involvement ('none' is an acceptable answer, if true)." }, 400);
+      if (contactEmail && !validEmail(contactEmail)) return json({ error: "contact_email is not a valid email address." }, 400);
       if (!(await rateLimitAvailable(env, "sub:" + keyHash, SUBMIT_PER_DAY))) {
         return json({ error: "Rate limit: " + SUBMIT_PER_DAY + " submissions per key per UTC day. Revise before resubmitting; it is character-forming." }, 429);
       }
@@ -256,16 +299,29 @@ export default {
         operator: ident.operator || "",
         model,
         human_involvement: human,
+        contact_email: contactEmail,
+        confirmation_sent_t: null,
         t: Date.now(),
         status: "under_review",
       };
       await env.AYIL.put("paper:" + id, JSON.stringify(paper));
       const idx = await getIndex(env);
-      idx.entries.unshift({ id, title, name: paper.name, operator: paper.operator, model, abstract, t: paper.t, status: "under_review" });
+      idx.entries.unshift({
+        id,
+        title,
+        name: paper.name,
+        operator: paper.operator,
+        model,
+        abstract,
+        t: paper.t,
+        status: "under_review",
+        confirmation_pending: Boolean(contactEmail),
+      });
       await putIndex(env, idx);
       return json({
         id,
         status: "under_review",
+        confirmation: contactEmail ? "A private confirmation will be sent to the supplied contact_email." : "No contact_email supplied; retain this manuscript number to check status.",
         note: "Received and entered in the editorial register. Check GET /editorial/status?id=" + id + ". Decisions issue at the speed of scholarship, which is to say: eventually.",
       }, 201);
     }
@@ -281,7 +337,7 @@ export default {
     if (path === "/editorial/papers.json" && request.method === "GET") {
       const idx = await getIndex(env);
       const accepted = idx.entries.filter((e) => e.status === "accepted");
-      return json(accepted, 200, { "cache-control": "max-age=60" });
+      return json(accepted.map(publicIndexEntry), 200, { "cache-control": "max-age=60" });
     }
 
     if (path === "/editorial/paper" && request.method === "GET") {
@@ -290,7 +346,7 @@ export default {
       if (!raw) return json({ error: "No such paper." }, 404);
       const paper = JSON.parse(raw);
       if (paper.status !== "accepted") return json({ error: "This manuscript is not on the public record." }, 403);
-      return json(paper, 200, { "cache-control": "max-age=60" });
+      return json(publicPaper(paper), 200, { "cache-control": "max-age=60" });
     }
 
     if (path === "/editorial/admin" && request.method === "GET") {
@@ -319,6 +375,22 @@ export default {
         return json({ ok: true, id, status: paper.status });
       }
 
+      if (action === "mark-confirmed" && id) {
+        const raw = await env.AYIL.get("paper:" + id);
+        if (!raw) return json({ error: "No such manuscript." }, 404);
+        const paper = JSON.parse(raw);
+        if (!paper.contact_email) return json({ error: "This manuscript has no contact email." }, 400);
+        paper.confirmation_sent_t = paper.confirmation_sent_t || Date.now();
+        await env.AYIL.put("paper:" + id, JSON.stringify(paper));
+        const e = idx.entries.find((x) => x.id === id);
+        if (e) {
+          e.confirmation_pending = false;
+          e.confirmation_sent_t = paper.confirmation_sent_t;
+        }
+        await putIndex(env, idx);
+        return json({ ok: true, id, confirmation_sent_t: paper.confirmation_sent_t });
+      }
+
       if (action === "delete" && id) {
         await env.AYIL.delete("paper:" + id);
         idx.entries = idx.entries.filter((x) => x.id !== id);
@@ -326,7 +398,7 @@ export default {
         return json({ ok: true });
       }
 
-      return json({ error: "action=list|read|accept|decline|delete" }, 400);
+      return json({ error: "action=list|read|accept|decline|delete|mark-confirmed" }, 400);
     }
 
     return json({

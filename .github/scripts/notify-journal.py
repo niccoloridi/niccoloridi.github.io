@@ -63,6 +63,12 @@ def fetch_manuscript(api_base: str, admin_key: str, manuscript_id: str) -> dict:
     return payload
 
 
+def mark_confirmation_sent(api_base: str, admin_key: str, manuscript_id: str) -> None:
+    payload = fetch_admin(api_base, admin_key, {"action": "mark-confirmed", "id": manuscript_id})
+    if not isinstance(payload, dict) or payload.get("ok") is not True:
+        raise RuntimeError(f"The Editorial Office did not record confirmation for {manuscript_id}.")
+
+
 def load_seen() -> tuple[set[str], bool]:
     try:
         payload = json.loads(STATE_PATH.read_text(encoding="utf-8"))
@@ -106,6 +112,7 @@ def manuscript_attachment(manuscript: dict) -> str:
             "Operator: " + str(manuscript.get("operator") or "Not declared"),
             "Model: " + str(manuscript.get("model") or "Undeclared"),
             "Human involvement: " + str(manuscript.get("human_involvement") or "Undeclared"),
+            "Private contact email: " + str(manuscript.get("contact_email") or "Not supplied"),
             "Received: " + format_time(manuscript.get("t")),
             "Status: " + str(manuscript.get("status") or "under_review"),
             "",
@@ -164,6 +171,41 @@ def build_message(manuscripts: list[dict], sender: str, recipient: str) -> Email
     return message
 
 
+def build_author_confirmation(manuscript: dict, sender: str, recipient: str, api_base: str) -> EmailMessage:
+    manuscript_id = str(manuscript.get("id") or "Number unrecorded")
+    author = str(manuscript.get("name") or "Author")
+    title = str(manuscript.get("title") or "Untitled")
+    status_url = api_base.rstrip("/") + "/editorial/status?" + urlencode({"id": manuscript_id})
+    lines = [
+        f"Dear {author},",
+        "",
+        "The Editorial Office confirms receipt of your manuscript:",
+        "",
+        manuscript_id,
+        "Title: " + title,
+        "Received: " + format_time(manuscript.get("t")),
+        "Status: " + str(manuscript.get("status") or "under_review"),
+        "",
+        "You may consult its current status at:",
+        status_url,
+        "",
+        "Your contact email is retained privately for editorial correspondence and is not included in the public paper or table of contents.",
+        "",
+        "With best wishes,",
+        "The Editorial Office",
+        "Agentic Law Journal",
+        "https://niccoloridi.com/agentic-law-journal/",
+        "agenticlawjournal@gmail.com",
+    ]
+    message = EmailMessage()
+    message["Subject"] = f"[ALJ] Submission received: {manuscript_id}"
+    message["From"] = sender
+    message["To"] = recipient
+    message["Reply-To"] = "agenticlawjournal@gmail.com"
+    message.set_content("\n".join(lines))
+    return message
+
+
 def send(message: EmailMessage, host: str, port: int, username: str, password: str) -> None:
     context = ssl.create_default_context()
     if port == 465:
@@ -193,13 +235,37 @@ def main() -> None:
     seen, state_existed = load_seen()
     current_ids = {str(entry.get("id")) for entry in entries if entry.get("id")}
     new_entries = [entry for entry in entries if entry.get("id") and str(entry["id"]) not in seen]
+    confirmation_entries = [entry for entry in entries if entry.get("id") and entry.get("confirmation_pending") is True]
+    manuscript_cache: dict[str, dict] = {}
+
+    def manuscript_for(entry: dict) -> dict:
+        manuscript_id = str(entry["id"])
+        if manuscript_id not in manuscript_cache:
+            manuscript_cache[manuscript_id] = fetch_manuscript(api_base, admin_key, manuscript_id)
+        return manuscript_cache[manuscript_id]
 
     if new_entries:
-        manuscripts = [fetch_manuscript(api_base, admin_key, str(entry["id"])) for entry in new_entries]
+        manuscripts = [manuscript_for(entry) for entry in new_entries]
         send(build_message(manuscripts, sender, recipient), host, port, username, password)
         print(f"Sent one editorial notice covering {len(manuscripts)} new submission(s).")
     else:
         print("No new submissions; no email sent.")
+
+    confirmations_sent = 0
+    for entry in confirmation_entries:
+        manuscript_id = str(entry["id"])
+        manuscript = manuscript_for(entry)
+        contact_email = str(manuscript.get("contact_email") or "").strip()
+        if not contact_email:
+            continue
+        try:
+            send(build_author_confirmation(manuscript, sender, contact_email, api_base), host, port, username, password)
+            mark_confirmation_sent(api_base, admin_key, manuscript_id)
+            confirmations_sent += 1
+        except (OSError, smtplib.SMTPException, RuntimeError) as exc:
+            print(f"Author confirmation for {manuscript_id} will be retried: {type(exc).__name__}")
+    if confirmations_sent:
+        print(f"Sent {confirmations_sent} author confirmation email(s).")
 
     updated_seen = seen | current_ids
     state_changed = not state_existed or updated_seen != seen

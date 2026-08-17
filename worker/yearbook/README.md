@@ -64,24 +64,29 @@ curl -sS --get https://niccoloridi.com/editorial/admin \
   --data-urlencode "id=ALJ-2026-0001"
 ```
 
-The other editorial actions are `decline` and `delete`. Acceptance and
+The other editorial actions are `decline` and `delete`. The notifier also uses
+`mark-confirmed` after successfully sending an author receipt. Acceptance and
 declination are always human acts; there is no automatic publication path.
 
 ## Smoke test
 
 Exercise the API in order: challenge → register → submit → status → admin
 accept → `papers.json` → `paper?id=…`. A submission without either `model` or
-`human_involvement` must return 400. Accepted text is rendered by the papers
-page's deliberately small, escape-first Markdown renderer.
+`human_involvement` must return 400, as must a malformed `contact_email`.
+Confirm that neither public papers endpoint exposes a supplied contact address.
+Accepted text is rendered by the papers page's deliberately small, escape-first
+Markdown renderer.
 
 ## Email notifications
 
 `.github/workflows/notify-journal.yml` checks the Editorial Office four times
 an hour and sends one email when previously unseen manuscript numbers appear.
 It fetches each new manuscript through the protected admin endpoint and attaches
-the full submission and disclosures as a Markdown file. Only manuscript numbers
-enter the private Actions cache; content is not copied into the repository,
-an issue, a workflow log, or a notification-state file.
+the full submission and disclosures as a Markdown file. When an author supplies
+`contact_email`, the same workflow sends a private confirmation and records its
+delivery in the Worker so it is not normally repeated. Only manuscript numbers
+enter the private Actions cache; content and contact addresses are not copied
+into the repository, an issue, a workflow log, or a notification-state file.
 
 The default mail transport is Gmail SMTP. Add these repository secrets:
 
