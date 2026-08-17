@@ -10,27 +10,62 @@
 <link rel="canonical" href="https://niccoloridi.com/agentic-law-journal/papers/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&amp;family=JetBrains+Mono:wght@400;500&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;display=swap" rel="stylesheet">
 <style>
   :root {
-    --cloth: #1f3a2d;
-    --cloth-deep: #16291f;
-    --gilt: #c9a227;
-    --paper: #f7f3e9;
-    --ink: #211d16;
-    --ink-soft: #5a5344;
-    --rule: #ccc2aa;
+    --cloth: #0a0a0c;
+    --cloth-deep: #111114;
+    --gilt: #d7a13b;
+    --gilt-rgb: 215, 161, 59;
+    --cover-copy-rgb: 236, 232, 223;
+    --seal-rgb: 10, 10, 12;
+    --paper: #111114;
+    --paper-alt: #17171b;
+    --paper-edge: #232327;
+    --ink: #ece8df;
+    --ink-soft: #938d82;
+    --rule: #2a2a2f;
+    --matter-accent: #d7a13b;
+    --matter-link: #ddb45f;
     --site-bg: #0a0a0c;
     --site-fg: #ece8df;
     --site-muted: #7d786d;
     --site-gold: #d7a13b;
     --site-line: #232327;
-    --site-mono: "IBM Plex Mono", ui-monospace, monospace;
+    --serif: "Source Serif 4", Georgia, serif;
+    --display: "Cormorant Garamond", Georgia, serif;
+    --site-mono: "JetBrains Mono", ui-monospace, monospace;
     --gutter: clamp(1.1rem, 3vw, 3rem);
+    --bg: #0a0a0c;
+    --gold: #d7a13b;
+    --fg: #ece8df;
   }
-  .light-mode { --site-bg:#ece7dc; --site-fg:#16140f; --site-muted:#6b6457; --site-gold:#9a7521; --site-line:#d3cab6; }
+  .light-mode {
+    --site-bg:#ece7dc;
+    --site-fg:#16140f;
+    --site-muted:#6b6457;
+    --site-gold:#9a7521;
+    --site-line:#d3cab6;
+    --cloth:#ece7dc;
+    --cloth-deep:#f4efe5;
+    --gilt:#9a7521;
+    --gilt-rgb:154, 117, 33;
+    --cover-copy-rgb:22, 20, 15;
+    --seal-rgb:244, 239, 229;
+    --paper:#f4efe5;
+    --paper-alt:#ece7dc;
+    --paper-edge:#d3cab6;
+    --ink:#16140f;
+    --ink-soft:#6b6457;
+    --rule:#d3cab6;
+    --matter-accent:#9a7521;
+    --matter-link:#765817;
+    --bg:#ece7dc;
+    --gold:#9a7521;
+    --fg:#16140f;
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--site-bg); color: var(--ink); font-family: "EB Garamond", Georgia, serif; font-size: 1.06rem; line-height: 1.6; min-height: 100vh; transition: background-color .3s; }
+  body { background: var(--site-bg); color: var(--ink); font-family: var(--serif); font-size: 1.06rem; line-height: 1.6; min-height: 100vh; transition: background-color .3s; }
   .main-header, .main-footer { font-family:var(--site-mono); color:var(--site-muted); letter-spacing:.04em; }
   .main-header { display:flex; justify-content:space-between; align-items:center; padding:.9rem var(--gutter); border-bottom:1px solid var(--site-line); font-size:.7rem; letter-spacing:.06em; text-transform:uppercase; }
   .main-header a, .main-footer a { color:var(--site-muted); text-decoration:none; }
@@ -40,50 +75,166 @@
   .tog:hover { color:var(--site-fg); border-color:var(--site-gold); }
   .publication { max-width:840px; margin:clamp(1rem,3vw,2.5rem) auto; padding:0 var(--gutter); }
   .band {
-    background: linear-gradient(175deg, var(--cloth), var(--cloth-deep));
+    background:
+      radial-gradient(circle at 82% 50%, rgba(var(--gilt-rgb),.14), transparent 29%),
+      linear-gradient(150deg, var(--cloth), var(--cloth-deep) 78%);
     color: var(--gilt);
-    text-align: center;
-    padding: 1.7rem 1.5rem;
+    min-height: 240px;
+    padding: 1.25rem clamp(1.5rem,5vw,3.4rem);
     border-bottom: 4px double var(--gilt);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    box-shadow: 0 24px 60px rgba(0,0,0,.28);
   }
-  .band h1 { font-weight: 500; font-size: 1.15rem; letter-spacing: .18em; text-transform: uppercase; }
-  .band p { font-variant: small-caps; letter-spacing: .16em; font-size: .85rem; opacity: .85; margin-top: .3rem; }
+  .band::before {
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:-1;
+    opacity:.7;
+    background:
+      radial-gradient(ellipse at 82% 50%, rgba(var(--gilt-rgb),.09), transparent 34%),
+      linear-gradient(112deg, rgba(var(--cover-copy-rgb),.025), transparent 39% 68%, rgba(var(--gilt-rgb),.035));
+  }
+  .band::after {
+    content:"";
+    position:absolute;
+    inset:.5rem;
+    border:1px solid rgba(var(--gilt-rgb),.4);
+    pointer-events:none;
+  }
+  .light-mode .band {
+    background:
+      radial-gradient(circle at 82% 50%, rgba(var(--gilt-rgb),.1), transparent 31%),
+      linear-gradient(150deg, var(--cloth), var(--cloth-deep) 78%);
+    box-shadow:0 22px 50px rgba(45,38,24,.13);
+  }
+  .band-layout {
+    min-height: 210px;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 150px;
+    align-items:center;
+    gap:clamp(2rem,7vw,5rem);
+    position:relative;
+    z-index:1;
+  }
+  .journal-name {
+    font-family:var(--site-mono);
+    font-size:.6rem;
+    letter-spacing:.17em;
+    text-transform:uppercase;
+    color:rgba(var(--cover-copy-rgb),.7);
+    margin-bottom:.65rem;
+  }
+  .band h1 {
+    font-family:var(--display);
+    font-weight:500;
+    font-size:clamp(2rem,5vw,3.1rem);
+    letter-spacing:.055em;
+    text-transform:uppercase;
+    line-height:1.05;
+  }
+  .band .volume {
+    color:rgba(var(--cover-copy-rgb),.75);
+    font-style:italic;
+    margin-top:.75rem;
+    padding-top:.7rem;
+    border-top:1px solid rgba(var(--gilt-rgb),.35);
+    max-width:27ch;
+  }
+  .band-field {
+    width:150px;
+    aspect-ratio:1;
+    position:relative;
+    justify-self:end;
+    background:var(--cloth-deep);
+    border:1px solid rgba(var(--gilt-rgb),.68);
+    outline:1px solid var(--rule);
+    outline-offset:7px;
+    box-shadow:inset 0 0 32px rgba(0,0,0,.16), 0 0 40px rgba(var(--gilt-rgb),.09);
+  }
+  .band-field::after {
+    content:"";
+    position:absolute;
+    inset:50%;
+    width:52px;
+    height:52px;
+    margin:-26px;
+    border:1px solid rgba(var(--gilt-rgb),.3);
+    border-radius:50%;
+    background:rgba(var(--seal-rgb),.82);
+    box-shadow:0 0 0 6px rgba(var(--seal-rgb),.3), 0 0 20px rgba(var(--gilt-rgb),.14);
+    pointer-events:none;
+  }
+  .band-field canvas { display:block; width:100%; height:100%; opacity:.92; }
+  .light-mode .band-field canvas { opacity:1; }
+  .band-seal {
+    position:absolute;
+    inset:50%;
+    width:52px;
+    height:52px;
+    margin:-26px;
+    display:grid;
+    place-items:center;
+    z-index:2;
+    font-size:.82rem;
+    font-weight:600;
+    letter-spacing:.13em;
+    padding-left:.13em;
+  }
   .matter {
-    max-width: 720px; margin: 0 auto; background: var(--paper);
+    max-width:720px;
+    margin:0 auto;
+    color:var(--ink);
+    background:var(--paper);
     padding: 2.4rem 3rem 3rem; min-height: 60vh;
     box-shadow: 0 0 60px rgba(0,0,0,.45);
+    border-left:1px solid var(--paper-edge);
+    border-right:1px solid var(--paper-edge);
   }
-  .matter a { color: #3f6ea5; }
-  .matter a:focus-visible { outline: 2px solid #3f6ea5; outline-offset: 2px; }
-  .back { font-size: .85rem; font-variant: small-caps; letter-spacing: .1em; }
-  .status { text-align: center; font-style: italic; color: var(--ink-soft); margin: 2.2rem 0; }
+  .matter a { color:var(--matter-link); }
+  .matter a:focus-visible { outline:2px solid var(--matter-link); outline-offset:2px; }
+  .back { font-family:var(--site-mono); font-size:.66rem; letter-spacing:.09em; text-transform:uppercase; }
+  .back a { text-decoration:none; }
+  .status { text-align:center; font-style:italic; color:var(--ink-soft); margin:3.4rem auto; max-width:42ch; }
   /* Table of contents */
-  .toc-item { border-bottom: 1px solid var(--rule); padding: 1.15rem 0; }
-  .toc-item .no { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: .68rem; color: var(--ink-soft); letter-spacing: .06em; }
-  .toc-item h2 { font-weight: 600; font-size: 1.16rem; margin: .2rem 0 .25rem; line-height: 1.35; }
+  .toc-item { border-bottom:1px solid var(--rule); padding:1.35rem 1rem 1.35rem 1.2rem; position:relative; transition:background-color .22s; }
+  .toc-item::before { content:""; position:absolute; left:0; top:1.5rem; bottom:1.5rem; width:2px; background:var(--matter-accent); opacity:.45; transition:opacity .22s; }
+  .toc-item:hover { background:var(--paper-alt); }
+  .toc-item:hover::before { opacity:1; }
+  .toc-item .no { font-family:var(--site-mono); font-size: .68rem; color: var(--ink-soft); letter-spacing: .06em; }
+  .toc-item h2 { font-family:var(--display); font-weight: 600; font-size: 1.28rem; margin: .2rem 0 .25rem; line-height: 1.25; }
   .toc-item h2 a { color: var(--ink); text-decoration: none; }
-  .toc-item h2 a:hover { text-decoration: underline; }
+  .toc-item h2 a:hover { color:var(--matter-accent); }
   .toc-item .byline { font-style: italic; color: var(--ink-soft); font-size: .92rem; }
   .toc-item .abstract { margin-top: .5rem; font-size: .93rem; text-align: justify; hyphens: auto; }
   /* Paper view */
-  .paper-head { text-align: center; margin: 1.6rem 0 2rem; }
-  .paper-head .no { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: .7rem; color: var(--ink-soft); letter-spacing: .08em; }
-  .paper-head h2 { font-weight: 600; font-size: 1.5rem; line-height: 1.3; margin: .5rem 0; }
+  .paper-head { text-align:center; margin:1.8rem 0 2rem; padding-bottom:1.7rem; border-bottom:1px solid var(--rule); }
+  .paper-head .no { font-family:var(--site-mono); font-size: .7rem; color: var(--ink-soft); letter-spacing: .08em; }
+  .paper-head h2 { font-family:var(--display); font-weight: 600; font-size: 1.7rem; line-height: 1.24; margin: .5rem 0; }
   .paper-head .byline { font-style: italic; color: var(--ink-soft); }
   .disclosure {
-    border: 1px solid var(--rule); background: #efe9da;
+    border:1px solid var(--rule); border-left:3px solid var(--matter-accent); background:var(--paper-alt);
     font-size: .85rem; padding: .7rem 1rem; margin: 0 0 1.8rem;
   }
   .disclosure b { font-variant: small-caps; font-weight: 600; letter-spacing: .06em; }
   .body p { margin-bottom: .95rem; text-align: justify; hyphens: auto; }
-  .body h3 { font-variant: small-caps; font-weight: 600; letter-spacing: .1em; font-size: 1.05rem; text-align: center; margin: 2rem 0 .8rem; }
-  .body h4 { font-weight: 600; font-style: italic; font-size: 1rem; margin: 1.4rem 0 .5rem; }
+  .body h3 { font-family:var(--display); font-variant: small-caps; font-weight: 600; letter-spacing: .1em; font-size: 1.16rem; text-align: center; margin: 2rem 0 .8rem; }
+  .body h4 { font-family:var(--display); font-weight: 600; font-style: italic; font-size: 1.12rem; margin: 1.4rem 0 .5rem; }
   .licence { margin-top: 2.4rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: .82rem; color: var(--ink-soft); text-align: center; }
   .main-footer { display:flex; justify-content:space-between; flex-wrap:wrap; gap:.5rem 1.5rem; padding:.9rem var(--gutter); border-top:1px solid var(--site-line); font-size:.68rem; }
   .main-footer .seg { display:flex; gap:1.3rem; flex-wrap:wrap; align-items:center; }
   .main-footer .gold { color:var(--site-gold); }
   a:focus-visible, .tog:focus-visible { outline:2px solid var(--site-gold); outline-offset:2px; }
-  @media (max-width: 760px) { .publication { margin:0; padding:0; } .matter { padding: 1.8rem 1.25rem 2.6rem; } }
+  @media (max-width:760px) {
+    .publication { margin:0; padding:0; }
+    .band { min-height:0; padding:1.2rem 1.3rem 1.4rem; }
+    .band-layout { grid-template-columns:1fr; text-align:center; gap:2.1rem; padding:1.3rem 0 1.8rem; }
+    .band .volume { margin-left:auto; margin-right:auto; }
+    .band-field { justify-self:center; width:135px; }
+    .matter { padding:1.8rem 1.25rem 2.6rem; }
+  }
 </style>
 </head>
 <body>
@@ -96,8 +247,17 @@
 <div class="publication">
 
 <header class="band">
-  <h1>Agentic Law Journal</h1>
-  <p>Volume I (2026) · Accepted Papers</p>
+  <div class="band-layout">
+    <div>
+      <p class="journal-name">Agentic Law Journal</p>
+      <h1>Accepted Papers</h1>
+      <p class="volume">Volume I · MMXXVI · The record</p>
+    </div>
+    <div class="band-field stage-generative" aria-label="Animated generative journal device">
+      <canvas data-plate="dither" aria-hidden="true"></canvas>
+      <span class="band-seal" aria-hidden="true">ALJ</span>
+    </div>
+  </div>
 </header>
 
 <main class="matter">
@@ -231,5 +391,6 @@
   function toggleTheme() { applyTheme(theme === 'light' ? 'dark' : 'light', true); }
   applyTheme(theme, false);
 </script>
+<script src="../../generative-plates.js"></script>
 </body>
 </html>

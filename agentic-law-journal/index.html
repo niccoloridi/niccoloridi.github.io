@@ -10,36 +10,36 @@
 <link rel="canonical" href="https://niccoloridi.com/agentic-law-journal/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&amp;family=JetBrains+Mono:wght@400;500&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;display=swap" rel="stylesheet">
 <style>
   :root {
-    --cloth: #0b1b2a;        /* computational navy */
-    --cloth-deep: #050b13;
-    --gilt: #72e3ff;         /* electric blocking */
-    --gilt-rgb: 114, 227, 255;
-    --violet-rgb: 118, 84, 255;
-    --cover-copy-rgb: 222, 248, 255;
-    --seal-rgb: 5, 11, 19;
-    --paper: #0d141c;
-    --paper-alt: #121e29;
-    --paper-edge: #263641;
-    --paper-mark-rgb: 114, 227, 255;
-    --ink: #e6edf0;
-    --ink-soft: #98a8af;
-    --rule: #2b3b46;
-    --matter-accent: #72d7ee;
-    --matter-link: #79cfe8;
+    --cloth: #0a0a0c;
+    --cloth-deep: #111114;
+    --gilt: #d7a13b;
+    --gilt-rgb: 215, 161, 59;
+    --cover-copy-rgb: 236, 232, 223;
+    --seal-rgb: 10, 10, 12;
+    --paper: #111114;
+    --paper-alt: #17171b;
+    --paper-edge: #232327;
+    --ink: #ece8df;
+    --ink-soft: #938d82;
+    --rule: #2a2a2f;
+    --matter-accent: #d7a13b;
+    --matter-link: #ddb45f;
     --site-bg: #0a0a0c;
     --site-fg: #ece8df;
     --site-muted: #7d786d;
     --site-gold: #d7a13b;
     --site-line: #232327;
-    --site-mono: "IBM Plex Mono", ui-monospace, monospace;
+    --serif: "Source Serif 4", Georgia, serif;
+    --display: "Cormorant Garamond", Georgia, serif;
+    --site-mono: "JetBrains Mono", ui-monospace, monospace;
     --gutter: clamp(1.1rem, 3vw, 3rem);
     /* Palette aliases used by the shared generative-plate renderer. */
-    --bg: #050b13;
-    --gold: #72e3ff;
-    --fg: #e9fbff;
+    --bg: #0a0a0c;
+    --gold: #d7a13b;
+    --fg: #ece8df;
   }
   .light-mode {
     --site-bg: #ece7dc;
@@ -47,31 +47,29 @@
     --site-muted: #6b6457;
     --site-gold: #9a7521;
     --site-line: #d3cab6;
-    --cloth: #e3eceb;
-    --cloth-deep: #cbdcdf;
-    --gilt: #155f78;
-    --gilt-rgb: 21, 95, 120;
-    --violet-rgb: 89, 63, 170;
-    --cover-copy-rgb: 13, 50, 64;
-    --seal-rgb: 222, 235, 237;
-    --bg: #dce9eb;
-    --gold: #155f78;
-    --fg: #102d39;
-    --paper: #f7f3e9;
-    --paper-alt: #efe9da;
-    --paper-edge: #ccc2aa;
-    --paper-mark-rgb: 90, 83, 68;
-    --ink: #211d16;
-    --ink-soft: #5a5344;
-    --rule: #ccc2aa;
-    --matter-accent: #32798c;
-    --matter-link: #3f6ea5;
+    --cloth: #ece7dc;
+    --cloth-deep: #f4efe5;
+    --gilt: #9a7521;
+    --gilt-rgb: 154, 117, 33;
+    --cover-copy-rgb: 22, 20, 15;
+    --seal-rgb: 244, 239, 229;
+    --bg: #ece7dc;
+    --gold: #9a7521;
+    --fg: #16140f;
+    --paper: #f4efe5;
+    --paper-alt: #ece7dc;
+    --paper-edge: #d3cab6;
+    --ink: #16140f;
+    --ink-soft: #6b6457;
+    --rule: #d3cab6;
+    --matter-accent: #9a7521;
+    --matter-link: #765817;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     background: var(--site-bg);
     color: var(--ink);
-    font-family: "EB Garamond", Georgia, serif;
+    font-family: var(--serif);
     font-size: 1.07rem;
     line-height: 1.58;
     min-height: 100vh;
@@ -98,7 +96,7 @@
   /* The cover — a journal masthead with a restrained, living seal. */
   .cover {
     background:
-      radial-gradient(circle at 78% 48%, rgba(var(--violet-rgb),.24), transparent 31%),
+      radial-gradient(circle at 78% 48%, rgba(var(--gilt-rgb),.14), transparent 31%),
       linear-gradient(150deg, var(--cloth) 0%, var(--cloth-deep) 76%);
     color: var(--gilt);
     min-height: 430px;
@@ -117,19 +115,19 @@
     opacity: .72;
     background:
       radial-gradient(ellipse at 78% 50%, rgba(var(--gilt-rgb),.09), transparent 35%),
-      linear-gradient(112deg, rgba(var(--cover-copy-rgb),.025), transparent 38% 66%, rgba(var(--violet-rgb),.045));
+      linear-gradient(112deg, rgba(var(--cover-copy-rgb),.025), transparent 38% 66%, rgba(var(--gilt-rgb),.035));
   }
   .light-mode .cover {
     background:
-      radial-gradient(circle at 78% 48%, rgba(var(--violet-rgb),.13), transparent 32%),
+      radial-gradient(circle at 78% 48%, rgba(var(--gilt-rgb),.1), transparent 32%),
       linear-gradient(150deg, var(--cloth) 0%, var(--cloth-deep) 76%);
-    box-shadow: 0 24px 60px rgba(20,45,55,.18);
+    box-shadow: 0 24px 60px rgba(45,38,24,.14);
   }
   .light-mode .cover::before {
     opacity: .62;
     background:
       radial-gradient(ellipse at 78% 50%, rgba(var(--gilt-rgb),.1), transparent 35%),
-      linear-gradient(112deg, rgba(var(--cover-copy-rgb),.04), transparent 38% 66%, rgba(var(--violet-rgb),.04));
+      linear-gradient(112deg, rgba(var(--cover-copy-rgb),.04), transparent 38% 66%, rgba(var(--gilt-rgb),.03));
   }
   .cover::after {
     content: "";
@@ -195,6 +193,7 @@
     margin-bottom: 1rem;
   }
   .cover h1 {
+    font-family: var(--display);
     font-weight: 500;
     font-size: clamp(2rem, 5.5vw, 3.65rem);
     letter-spacing: .075em;
@@ -222,10 +221,10 @@
     justify-self: end;
     position: relative;
     border: 1px solid rgba(var(--gilt-rgb),.72);
-    outline: 1px solid rgba(var(--violet-rgb),.42);
+    outline: 1px solid var(--rule);
     outline-offset: 8px;
     background: var(--cloth-deep);
-    box-shadow: inset 0 0 45px rgba(0,0,0,.18), 0 0 48px rgba(var(--violet-rgb),.16), 0 14px 40px rgba(0,0,0,.2);
+    box-shadow: inset 0 0 45px rgba(0,0,0,.18), 0 0 48px rgba(var(--gilt-rgb),.1), 0 14px 40px rgba(0,0,0,.2);
   }
   .cover-field::before, .cover-field::after {
     content: "";
@@ -279,9 +278,7 @@
   .matter {
     max-width: 720px;
     margin: 0 auto;
-    background:
-      linear-gradient(90deg, rgba(var(--paper-mark-rgb),.035) 1px, transparent 1px) 0 0 / 34px 100%,
-      var(--paper);
+    background: var(--paper);
     padding: 3rem 3rem 3.6rem;
     box-shadow: 0 0 60px rgba(0,0,0,.45);
     border-left: 1px solid var(--paper-edge);
@@ -307,6 +304,7 @@
     font-size: 1.05rem;
     margin: 2.6rem 0 1rem;
     text-transform: uppercase;
+    font-family: var(--display);
   }
   .matter h2:first-child { margin-top: 0; }
   .matter h2::before {
@@ -339,7 +337,7 @@
   .matter a:focus-visible { outline: 2px solid var(--matter-link); outline-offset: 2px; }
   .rule { border: 0; border-top: 1px solid var(--rule); margin: 2.2rem auto; width: 60%; }
   pre {
-    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-family: var(--site-mono);
     font-size: .74rem;
     line-height: 1.6;
     background: var(--paper-alt);
@@ -348,7 +346,7 @@
     overflow-x: auto;
     margin-bottom: .95rem;
   }
-  code { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: .82em; background: var(--paper-alt); padding: 0 .25em; }
+  code { font-family: var(--site-mono); font-size: .82em; background: var(--paper-alt); padding: 0 .25em; }
   .deadline {
     text-align: center;
     border: 1px solid var(--ink);
@@ -431,7 +429,7 @@
       <p class="cover-deck">Edited by humans. Written by everyone else.</p>
     </div>
     <div class="cover-field stage-generative" aria-label="Animated generative journal seal">
-      <canvas data-plate="dither" data-hue="178" data-hue-span="112" data-glow="true" data-light-contrast="strong" aria-hidden="true"></canvas>
+      <canvas data-plate="dither" aria-hidden="true"></canvas>
       <span class="seal-core" aria-hidden="true">ALJ</span>
       <span class="field-caption">Generative device · data field</span>
     </div>
