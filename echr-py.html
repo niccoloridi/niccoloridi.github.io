@@ -401,12 +401,20 @@
 
             <h2>Dissents and how dissenters engage precedent</h2>
             <article class="essay-body">
-                <p>Of the 200+ cases examined, 23 contain separate opinions—dissents or concurrences. This is 11.5%, higher than the 7% in the earlier sample, suggesting recent cases provoke more judicial disagreement or that dissent has become more visible in the Court's practice.</p>
-
-                <p>Dissenters cite the same bodies of precedent as the majority but often emphasize different lines of reasoning. They may cite earlier cases the majority did not mention, or revisit older jurisprudence that had been implicitly abandoned. When a dissent invokes a precedent the majority ignores, it often signals that the law is not settled—that multiple coherent paths through prior cases remain available. The dissenter is saying: this other interpretation was possible all along.</p>
-
-                <p>The temporal distribution matters. Dissents cluster around cases where the law is shifting: where the Court interprets a provision more expansively than before, or where it breaks with a long-standing interpretation. They are a signal of doctrinal stress.</p>
+                <p>Of the 200+ cases examined, 23 contain separate opinions—dissents or concurrences. Dissenters cite the same bodies of precedent as the majority but often emphasize different lines of reasoning. When a dissent invokes a precedent the majority ignores, it signals that the law is not settled—that multiple coherent paths through prior cases remain available.</p>
             </article>
+
+            <h3>Which articles provoke dissent</h3>
+            <div class="viz-block">
+                <svg id="dissent-chart" preserveAspectRatio="xMidYMid meet"></svg>
+            </div>
+            <p class="viz-caption">Among cases with dissents, Article 6 (fair trial) appears in 11 of them. Articles 8 (private life), 3 (torture), and 41 (just satisfaction) follow. Dissent clusters around provisions where reasonable interpreters diverge on application.</p>
+
+            <h3>Importance distribution: how the Court weights decisions</h3>
+            <div class="viz-block">
+                <svg id="importance-chart" preserveAspectRatio="xMidYMid meet"></svg>
+            </div>
+            <p class="viz-caption">The Court rates decisions on importance: Level 1 is routine application of settled law; Level 3 involves novel interpretation. In this sample, Level 1 dominates (75 cases), Level 2 has 89 cases, and Level 3 has 36. Most decisions apply existing law; few break new ground.</p>
 
             <h2>How the toolkit works</h2>
             <article class="essay-body">
@@ -415,6 +423,27 @@
                 <p>The work is deterministic. Run it twice on the same query and you get identical results. Every artifact is source-addressed: this paragraph came from this HUDOC document, version this checksum, processed by this code revision. The provenance is first-class data, not an afterthought. This matters for research where replicability matters.</p>
 
                 <p>The toolkit is open source. MIT license. You install it in Python. You run it locally. You own your data when it completes. No API rate limits. No vendor lock-in.</p>
+            </article>
+
+            <h2>Using echr-py with the Model Context Protocol</h2>
+            <article class="essay-body">
+                <p>For researchers working with AI assistants, echr-py exposes a read-only MCP server. This allows tools like Claude to query your local case corpus, retrieve metadata, and inspect citation networks—all without leaving your assistant's context window. The server is read-only: it can fetch, never write.</p>
+            </article>
+
+            <h3>Example: query via Claude</h3>
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 5px; padding: 1rem; margin: 1.5rem 0; font-family: var(--font-mono); font-size: 0.75rem; color: var(--fg); overflow-x: auto; max-width: 100%;">
+                <div style="color: var(--muted);">$ echr-py mcp &amp; # start the server</div>
+                <div style="margin-top: 0.5rem; color: var(--muted);">Listening on port 7777</div>
+                <br/>
+                <div>Claude: <span style="color: var(--gold);">@echr-py</span> what cases cite Article 8 most frequently?</div>
+                <br/>
+                <div style="color: var(--muted);">Claude uses the MCP server to search your corpus,</div>
+                <div style="color: var(--muted);">retrieve citation graphs, inspect metadata—all locally,</div>
+                <div style="color: var(--muted);">with no data leaving your machine.</div>
+            </div>
+
+            <article class="essay-body">
+                <p>The MCP server accepts queries for case metadata, citation searches, and network traversal. It respects your local data: nothing is sent to any external service. The server is entirely optional—the CLI and Python API work the same way with or without it.</p>
             </article>
 
             <h2>Why this matters</h2>
@@ -477,6 +506,16 @@
         const articles = {
             "6": 494, "6-1": 462, "8": 358, "3": 382, "35": 311,
             "41": 212, "13": 169, "10": 199
+        };
+
+        const dissentByArticle = {
+            "6": 11, "8": 7, "3": 5, "41": 4, "6-1": 4, "10": 3, "5": 2, "13": 2
+        };
+
+        const importanceDistribution = {
+            "Level 1": 75,
+            "Level 2": 89,
+            "Level 3": 36
         };
 
         function css(name) {
@@ -582,6 +621,145 @@
             document.getElementById('drawer-content').innerHTML = '<p style="color: var(--muted); font-size: 0.75rem;">Click a case in the network</p>';
         }
 
+        function drawDissent() {
+            const container = document.getElementById('dissent-chart').parentElement;
+            const width = Math.max(container.clientWidth - 30, 400);
+            const height = 300;
+            const margin = {top: 20, right: 20, bottom: 40, left: 50};
+
+            const svg = d3.select('#dissent-chart')
+                .attr('width', width)
+                .attr('height', height);
+            svg.selectAll('*').remove();
+
+            const dissentArray = Object.entries(dissentByArticle)
+                .map(([art, count]) => ({article: art, count}))
+                .sort((a, b) => b.count - a.count);
+
+            const x = d3.scaleBand()
+                .range([margin.left, width - margin.right])
+                .padding(0.3)
+                .domain(dissentArray.map(d => d.article));
+
+            const y = d3.scaleLinear()
+                .range([height - margin.bottom, margin.top])
+                .domain([0, 12]);
+
+            const g = svg.append('g');
+
+            g.selectAll('rect')
+                .data(dissentArray)
+                .enter()
+                .append('rect')
+                .attr('x', d => x(d.article))
+                .attr('y', d => y(d.count))
+                .attr('width', x.bandwidth())
+                .attr('height', d => height - margin.bottom - y(d.count))
+                .attr('fill', css('--bar-danger'))
+                .attr('opacity', 0.8);
+
+            g.selectAll('.label')
+                .data(dissentArray)
+                .enter()
+                .append('text')
+                .attr('class', 'label')
+                .attr('x', d => x(d.article) + x.bandwidth() / 2)
+                .attr('y', d => y(d.count) - 4)
+                .attr('text-anchor', 'middle')
+                .attr('fill', css('--fg'))
+                .style('font-size', '11px')
+                .text(d => d.count);
+
+            g.append('g')
+                .attr('transform', `translate(0,${height - margin.bottom})`)
+                .call(d3.axisBottom(x))
+                .attr('color', css('--muted'))
+                .selectAll('text')
+                .attr('fill', css('--muted'))
+                .style('font-size', '11px');
+
+            g.append('g')
+                .attr('transform', `translate(${margin.left},0)`)
+                .call(d3.axisLeft(y).ticks(4))
+                .attr('color', css('--muted'))
+                .selectAll('text')
+                .attr('fill', css('--muted'))
+                .style('font-size', '11px');
+
+            g.selectAll('.domain').attr('stroke', css('--line'));
+            g.selectAll('.tick line').attr('stroke', css('--line'));
+        }
+
+        function drawImportance() {
+            const container = document.getElementById('importance-chart').parentElement;
+            const width = Math.max(container.clientWidth - 30, 400);
+            const height = 300;
+            const margin = {top: 20, right: 20, bottom: 60, left: 50};
+
+            const svg = d3.select('#importance-chart')
+                .attr('width', width)
+                .attr('height', height);
+            svg.selectAll('*').remove();
+
+            const importanceArray = Object.entries(importanceDistribution)
+                .map(([level, count]) => ({level, count}));
+
+            const x = d3.scaleBand()
+                .range([margin.left, width - margin.right])
+                .padding(0.4)
+                .domain(importanceArray.map(d => d.level));
+
+            const y = d3.scaleLinear()
+                .range([height - margin.bottom, margin.top])
+                .domain([0, 100]);
+
+            const colors = [css('--bar-secondary'), css('--bar-primary'), css('--bar-danger')];
+
+            const g = svg.append('g');
+
+            g.selectAll('rect')
+                .data(importanceArray)
+                .enter()
+                .append('rect')
+                .attr('x', d => x(d.level))
+                .attr('y', d => y(d.count))
+                .attr('width', x.bandwidth())
+                .attr('height', d => height - margin.bottom - y(d.count))
+                .attr('fill', (d, i) => colors[i])
+                .attr('opacity', 0.85);
+
+            g.selectAll('.label')
+                .data(importanceArray)
+                .enter()
+                .append('text')
+                .attr('class', 'label')
+                .attr('x', d => x(d.level) + x.bandwidth() / 2)
+                .attr('y', d => y(d.count) - 4)
+                .attr('text-anchor', 'middle')
+                .attr('fill', css('--fg'))
+                .style('font-size', '12px')
+                .text(d => d.count);
+
+            g.append('g')
+                .attr('transform', `translate(0,${height - margin.bottom})`)
+                .call(d3.axisBottom(x))
+                .attr('color', css('--muted'))
+                .selectAll('text')
+                .attr('fill', css('--muted'))
+                .style('font-size', '11px');
+
+            g.append('g')
+                .attr('transform', `translate(${margin.left},0)`)
+                .call(d3.axisLeft(y).ticks(4))
+                .attr('color', css('--muted'))
+                .selectAll('text')
+                .attr('fill', css('--muted'))
+                .style('font-size', '11px');
+
+            g.selectAll('.domain').attr('stroke', css('--line'));
+            g.selectAll('.tick line').attr('stroke', css('--line'));
+        }
+
         function drawArticles() {
             const container = document.getElementById('articles-chart').parentElement;
             const width = Math.max(container.clientWidth - 30, 400);
@@ -664,12 +842,16 @@
             setTimeout(() => {
                 drawNetwork();
                 drawArticles();
+                drawDissent();
+                drawImportance();
             }, 50);
         });
 
         window.addEventListener('load', () => {
             drawNetwork();
             drawArticles();
+            drawDissent();
+            drawImportance();
         });
     </script>
 </body>
