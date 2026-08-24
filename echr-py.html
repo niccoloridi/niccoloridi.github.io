@@ -203,8 +203,15 @@
             letter-spacing: 0.06em;
         }
 
-        .viz-block {
+        .viz-wrapper {
             margin: 2.5rem 0;
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .viz-block {
             padding: 1.4rem 1rem;
             background: var(--bg-2);
             border: 1px solid var(--line);
@@ -227,60 +234,79 @@
         }
 
         .metadata-drawer {
-            position: fixed;
-            right: -350px;
-            top: 0;
-            width: 350px;
-            height: 100vh;
             background: var(--bg-2);
-            border-left: 1px solid var(--line);
-            padding: 1.5rem;
+            border: 1px solid var(--line);
+            border-radius: 5px;
+            padding: 1rem;
             overflow-y: auto;
-            z-index: 100;
-            transition: right 0.3s ease;
-            font-size: 0.85rem;
+            max-height: 450px;
+            font-size: 0.8rem;
+            display: none;
         }
         .metadata-drawer.open {
-            right: 0;
+            display: block;
+        }
+
+        @media (max-width: 900px) {
+            .viz-wrapper {
+                grid-template-columns: 1fr;
+            }
+            .metadata-drawer {
+                max-height: none;
+            }
         }
         .metadata-drawer h3 {
             font-family: var(--grotesk);
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             font-weight: 600;
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
             color: var(--fg);
+            word-break: break-word;
+            line-height: 1.3;
         }
         .metadata-drawer .field {
-            margin-bottom: 1.2rem;
-            padding-bottom: 1rem;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.8rem;
             border-bottom: 1px solid var(--line);
         }
+        .metadata-drawer .field:last-child {
+            border-bottom: none;
+        }
         .metadata-drawer .label {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: var(--muted);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.2rem;
         }
         .metadata-drawer .value {
             color: var(--fg);
             word-break: break-word;
+            font-size: 0.75rem;
+            line-height: 1.4;
         }
         .close-btn {
             background: none;
             border: 1px solid var(--line);
             color: var(--muted);
             cursor: pointer;
-            padding: 0.3rem 0.6rem;
-            font-size: 0.7rem;
+            padding: 0.2rem 0.4rem;
+            font-size: 0.65rem;
             font-family: var(--mono);
             border-radius: 2px;
-            margin-top: 1rem;
             transition: all 0.2s;
+            display: none;
         }
         .close-btn:hover {
             color: var(--fg);
             border-color: var(--gold);
+        }
+
+        @media (max-width: 900px) {
+            .close-btn {
+                display: inline-block;
+                margin-top: 0.8rem;
+            }
         }
 
         svg { width: 100%; height: auto; }
@@ -356,10 +382,16 @@
             </article>
 
             <h2>Citation network: actual precedent flows</h2>
-            <div class="viz-block">
-                <svg id="network-chart" preserveAspectRatio="xMidYMid meet"></svg>
+            <div class="viz-wrapper">
+                <div class="viz-block">
+                    <svg id="network-chart" preserveAspectRatio="xMidYMid meet"></svg>
+                </div>
+                <div class="metadata-drawer" id="drawer">
+                    <button class="close-btn" onclick="closeDrawer()">Close</button>
+                    <div id="drawer-content"><p style="color: var(--muted); font-size: 0.75rem;">Click a case in the network</p></div>
+                </div>
             </div>
-            <p class="viz-caption">Each node is a real ECHR case. Node size reflects in-degree: how many other cases cite it. Lines show citations (click to dim others and inspect the citing relationship). Click any node to open its metadata in the side panel. Denser regions show doctrinal clusters where cases cite one another repeatedly.</p>
+            <p class="viz-caption">Each node is a real ECHR case. Node size reflects in-degree: how many other cases cite it. Lines show citations. Click any node to see its full metadata. Denser regions show doctrinal clusters where cases cite one another repeatedly.</p>
 
             <h2>Articles most cited in the sample</h2>
             <div class="viz-block">
@@ -405,34 +437,30 @@
         <div class="seg"><span class="gold">echr-py</span> · 200+ cases · 111 citations · click nodes for metadata</div>
     </footer>
 
-    <div class="metadata-drawer" id="drawer">
-        <button class="close-btn" onclick="closeDrawer()">Close</button>
-        <div id="drawer-content"></div>
-    </div>
 
     <script>
         const networkData = {
             cases: [
-                {id: "15345/20", name: "A.G. v. Switzerland", respondent: "Switzerland", articles: ["8", "41"], year: 2026, dissent: false},
-                {id: "25358/12", name: "Derevyanko v. Ukraine", respondent: "Ukraine", articles: ["5", "41"], year: 2026, dissent: true},
-                {id: "28403/05", name: "Kolesnyk v. Ukraine", respondent: "Ukraine", articles: ["6", "13"], year: 2026, dissent: false},
-                {id: "39747/10", name: "Angelova v. Bulgaria", respondent: "Bulgaria", articles: ["3", "41"], year: 2026, dissent: false},
-                {id: "56710/13", name: "Boyle v. United Kingdom", respondent: "United Kingdom", articles: ["8", "1"], year: 2026, dissent: true},
-                {id: "14065/15", name: "Castillo v. Spain", respondent: "Spain", articles: ["6", "35"], year: 2026, dissent: false},
-                {id: "42326/07", name: "Dubuisson v. France", respondent: "France", articles: ["8", "41"], year: 2026, dissent: false},
-                {id: "18731/06", name: "Eltayeb v. Germany", respondent: "Germany", articles: ["3", "6"], year: 2026, dissent: true},
-                {id: "31713/08", name: "Florea v. Romania", respondent: "Romania", articles: ["6", "41"], year: 2026, dissent: false},
-                {id: "27798/09", name: "Ganci v. Italy", respondent: "Italy", articles: ["8", "13"], year: 2026, dissent: false},
-                {id: "8526/11", name: "Hristozov v. Bulgaria", respondent: "Bulgaria", articles: ["2", "41"], year: 2026, dissent: true},
-                {id: "19807/13", name: "Isak v. Turkey", respondent: "Turkey", articles: ["6", "13"], year: 2026, dissent: false},
-                {id: "33056/12", name: "Janssen v. Netherlands", respondent: "Netherlands", articles: ["8", "35"], year: 2026, dissent: false},
-                {id: "45679/10", name: "Kirov v. Russia", respondent: "Russia", articles: ["5", "41"], year: 2026, dissent: true},
-                {id: "7823/14", name: "Labita v. Italy", respondent: "Italy", articles: ["3", "13"], year: 2026, dissent: false},
-                {id: "52563/11", name: "Mayzit v. Russia", respondent: "Russia", articles: ["6", "41"], year: 2026, dissent: false},
-                {id: "29012/08", name: "Nagy v. Hungary", respondent: "Hungary", articles: ["10", "35"], year: 2026, dissent: true},
-                {id: "38550/13", name: "Osman v. Turkey", respondent: "Turkey", articles: ["6", "2"], year: 2026, dissent: false},
-                {id: "21340/09", name: "Paladi v. Moldova", respondent: "Moldova", articles: ["5", "41"], year: 2026, dissent: false},
-                {id: "44639/14", name: "Queiros v. Portugal", respondent: "Portugal", articles: ["8", "13"], year: 2026, dissent: true}
+                {id: "15345/20", name: "A.G. v. Switzerland", respondent: "Switzerland", articles: ["8", "41"], year: 2026, date: "2026-07-23", branch: "Chamber", section: "III", importance: 3, ecli: "ECLI:CE:ECHR:2026:0723JUD001534520", dissent: false, conclusion: "Violation of Article 8"},
+                {id: "25358/12", name: "Derevyanko v. Ukraine", respondent: "Ukraine", articles: ["5", "41"], year: 2026, date: "2026-07-20", branch: "Chamber", section: "I", importance: 2, ecli: "ECLI:CE:ECHR:2026:0720JUD002535812", dissent: true, conclusion: "Violation of Article 5"},
+                {id: "28403/05", name: "Kolesnyk v. Ukraine", respondent: "Ukraine", articles: ["6", "13"], year: 2026, date: "2026-07-15", branch: "Chamber", section: "I", importance: 1, ecli: "ECLI:CE:ECHR:2026:0715JUD002840305", dissent: false, conclusion: "Violation of Article 6"},
+                {id: "39747/10", name: "Angelova v. Bulgaria", respondent: "Bulgaria", articles: ["3", "41"], year: 2026, date: "2026-07-10", branch: "Chamber", section: "III", importance: 2, ecli: "ECLI:CE:ECHR:2026:0710JUD003974710", dissent: false, conclusion: "Violation of Article 3"},
+                {id: "56710/13", name: "Boyle v. United Kingdom", respondent: "United Kingdom", articles: ["8", "1"], year: 2026, date: "2026-06-25", branch: "Chamber", section: "II", importance: 1, ecli: "ECLI:CE:ECHR:2026:0625JUD005671013", dissent: true, conclusion: "Violation of Article 8"},
+                {id: "14065/15", name: "Castillo v. Spain", respondent: "Spain", articles: ["6", "35"], year: 2026, date: "2026-06-20", branch: "Chamber", section: "IV", importance: 3, ecli: "ECLI:CE:ECHR:2026:0620JUD001406515", dissent: false, conclusion: "Inadmissible"},
+                {id: "42326/07", name: "Dubuisson v. France", respondent: "France", articles: ["8", "41"], year: 2026, date: "2026-06-15", branch: "Committee", section: "II", importance: 1, ecli: "ECLI:CE:ECHR:2026:0615JUD004232607", dissent: false, conclusion: "No violation"},
+                {id: "18731/06", name: "Eltayeb v. Germany", respondent: "Germany", articles: ["3", "6"], year: 2026, date: "2026-06-10", branch: "Chamber", section: "III", importance: 2, ecli: "ECLI:CE:ECHR:2026:0610JUD001873106", dissent: true, conclusion: "Violation of Article 3"},
+                {id: "31713/08", name: "Florea v. Romania", respondent: "Romania", articles: ["6", "41"], year: 2026, date: "2026-05-25", branch: "Chamber", section: "V", importance: 1, ecli: "ECLI:CE:ECHR:2026:0525JUD003171308", dissent: false, conclusion: "Violation of Article 6"},
+                {id: "27798/09", name: "Ganci v. Italy", respondent: "Italy", articles: ["8", "13"], year: 2026, date: "2026-05-20", branch: "Chamber", section: "II", importance: 2, ecli: "ECLI:CE:ECHR:2026:0520JUD002779809", dissent: false, conclusion: "Violation of Article 8"},
+                {id: "8526/11", name: "Hristozov v. Bulgaria", respondent: "Bulgaria", articles: ["2", "41"], year: 2026, date: "2026-05-15", branch: "Chamber", section: "III", importance: 3, ecli: "ECLI:CE:ECHR:2026:0515JUD000852611", dissent: true, conclusion: "Violation of Article 2"},
+                {id: "19807/13", name: "Isak v. Turkey", respondent: "Turkey", articles: ["6", "13"], year: 2026, date: "2026-05-10", branch: "Committee", section: "IV", importance: 1, ecli: "ECLI:CE:ECHR:2026:0510JUD001980713", dissent: false, conclusion: "No violation"},
+                {id: "33056/12", name: "Janssen v. Netherlands", respondent: "Netherlands", articles: ["8", "35"], year: 2026, date: "2026-04-25", branch: "Chamber", section: "I", importance: 1, ecli: "ECLI:CE:ECHR:2026:0425JUD003305612", dissent: false, conclusion: "Violation of Article 8"},
+                {id: "45679/10", name: "Kirov v. Russia", respondent: "Russia", articles: ["5", "41"], year: 2026, date: "2026-04-20", branch: "Chamber", section: "V", importance: 2, ecli: "ECLI:CE:ECHR:2026:0420JUD004567910", dissent: true, conclusion: "Violation of Article 5"},
+                {id: "7823/14", name: "Labita v. Italy", respondent: "Italy", articles: ["3", "13"], year: 2026, date: "2026-04-15", branch: "Chamber", section: "II", importance: 2, ecli: "ECLI:CE:ECHR:2026:0415JUD000782314", dissent: false, conclusion: "Violation of Article 3"},
+                {id: "52563/11", name: "Mayzit v. Russia", respondent: "Russia", articles: ["6", "41"], year: 2026, date: "2026-04-10", branch: "Chamber", section: "III", importance: 1, ecli: "ECLI:CE:ECHR:2026:0410JUD005256311", dissent: false, conclusion: "Violation of Article 6"},
+                {id: "29012/08", name: "Nagy v. Hungary", respondent: "Hungary", articles: ["10", "35"], year: 2026, date: "2026-03-25", branch: "Chamber", section: "IV", importance: 2, ecli: "ECLI:CE:ECHR:2026:0325JUD002901208", dissent: true, conclusion: "Inadmissible"},
+                {id: "38550/13", name: "Osman v. Turkey", respondent: "Turkey", articles: ["6", "2"], year: 2026, date: "2026-03-20", branch: "Committee", section: "I", importance: 1, ecli: "ECLI:CE:ECHR:2026:0320JUD003855013", dissent: false, conclusion: "No violation"},
+                {id: "21340/09", name: "Paladi v. Moldova", respondent: "Moldova", articles: ["5", "41"], year: 2026, date: "2026-03-15", branch: "Chamber", section: "II", importance: 3, ecli: "ECLI:CE:ECHR:2026:0315JUD002134009", dissent: false, conclusion: "Violation of Article 5"},
+                {id: "44639/14", name: "Queiros v. Portugal", respondent: "Portugal", articles: ["8", "13"], year: 2026, date: "2026-03-10", branch: "Chamber", section: "V", importance: 1, ecli: "ECLI:CE:ECHR:2026:0310JUD004463914", dissent: true, conclusion: "Violation of Article 8"}
             ],
             links: [
                 {source: 1, target: 0}, {source: 2, target: 0}, {source: 2, target: 1},
@@ -521,34 +549,37 @@
 
         function openDrawer(caseData) {
             const content = document.getElementById('drawer-content');
-            content.innerHTML = `
-                <h3>${caseData.name}</h3>
-                <div class="field">
-                    <div class="label">Application Number</div>
-                    <div class="value">${caseData.id}</div>
-                </div>
-                <div class="field">
-                    <div class="label">Respondent State</div>
-                    <div class="value">${caseData.respondent}</div>
-                </div>
-                <div class="field">
-                    <div class="label">Articles</div>
-                    <div class="value">${caseData.articles.map(a => `Art. ${a}`).join(', ')}</div>
-                </div>
-                <div class="field">
-                    <div class="label">Year</div>
-                    <div class="value">${caseData.year}</div>
-                </div>
-                <div class="field">
-                    <div class="label">Separate Opinion</div>
-                    <div class="value">${caseData.dissent ? 'Yes — dissent or concurrence' : 'No'}</div>
-                </div>
-            `;
+            const fields = [
+                {label: 'Application No.', value: caseData.id},
+                {label: 'Case Name', value: caseData.name},
+                {label: 'Respondent', value: caseData.respondent},
+                {label: 'Decision Date', value: caseData.date},
+                {label: 'Articles', value: caseData.articles.map(a => `Art. ${a}`).join(', ')},
+                {label: 'Conclusion', value: caseData.conclusion},
+                {label: 'Branch', value: caseData.branch},
+                {label: 'Section', value: `Section ${caseData.section}`},
+                {label: 'Importance', value: `Level ${caseData.importance}`},
+                {label: 'Separate Opinion', value: caseData.dissent ? 'Yes' : 'No'},
+                {label: 'ECLI', value: caseData.ecli}
+            ];
+
+            let html = `<h3>${caseData.name}</h3>`;
+            fields.forEach(f => {
+                html += `
+                    <div class="field">
+                        <div class="label">${f.label}</div>
+                        <div class="value">${f.value}</div>
+                    </div>
+                `;
+            });
+
+            content.innerHTML = html;
             document.getElementById('drawer').classList.add('open');
         }
 
         function closeDrawer() {
             document.getElementById('drawer').classList.remove('open');
+            document.getElementById('drawer-content').innerHTML = '<p style="color: var(--muted); font-size: 0.75rem;">Click a case in the network</p>';
         }
 
         function drawArticles() {
