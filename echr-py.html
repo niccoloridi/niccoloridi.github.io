@@ -425,25 +425,41 @@
                 <p>The toolkit is open source. MIT license. You install it in Python. You run it locally. You own your data when it completes. No API rate limits. No vendor lock-in.</p>
             </article>
 
-            <h2>Using echr-py with the Model Context Protocol</h2>
+            <h2>Replicating Voeten & Lupu: Hub cases in the ECHR network</h2>
             <article class="essay-body">
-                <p>For researchers working with AI assistants, echr-py exposes a read-only MCP server. This allows tools like Claude to query your local case corpus, retrieve metadata, and inspect citation networks—all without leaving your assistant's context window. The server is read-only: it can fetch, never write.</p>
+                <p>In their 2011 paper <em>Precedent in International Courts: A Network Analysis of Case Citations by the European Court of Human Rights</em>, Yonatan Lupu and Erik Voeten asked: which ECHR cases disproportionately influence the Court's jurisprudence? They used network analysis to identify "hub" cases—decisions cited by many others—and found that the Court strategically embeds judgments in precedent when facing external pressure to comply.</p>
+
+                <p>The key insight: not all citations are equal. A case cited by 20 others has shaped doctrine more than one cited by three. By measuring in-degree (how many other cases cite you), we can identify which decisions are foundational to the Court's body of law.</p>
+
+                <p>We replicate this analysis below. The network you see above shows exactly this: node size is in-degree. Larger nodes are the hubs.</p>
             </article>
 
-            <h3>Example: query via Claude</h3>
-            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 5px; padding: 1rem; margin: 1.5rem 0; font-family: var(--font-mono); font-size: 0.75rem; color: var(--fg); overflow-x: auto; max-width: 100%;">
-                <div style="color: var(--muted);">$ echr-py mcp &amp; # start the server</div>
-                <div style="margin-top: 0.5rem; color: var(--muted);">Listening on port 7777</div>
-                <br/>
-                <div>Claude: <span style="color: var(--gold);">@echr-py</span> what cases cite Article 8 most frequently?</div>
-                <br/>
-                <div style="color: var(--muted);">Claude uses the MCP server to search your corpus,</div>
-                <div style="color: var(--muted);">retrieve citation graphs, inspect metadata—all locally,</div>
-                <div style="color: var(--muted);">with no data leaving your machine.</div>
+            <h3>How to run this analysis yourself</h3>
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 5px; padding: 1.2rem; margin: 1.5rem 0; font-family: var(--mono); font-size: 0.8rem; color: var(--fg); overflow-x: auto; line-height: 1.6;">
+                <div style="color: var(--muted); margin-bottom: 1rem;"># 1. Install echr-py</div>
+                <div>$ pip install "echr-py[citations,analysis]"</div>
+
+                <div style="color: var(--muted); margin-top: 1.5rem; margin-bottom: 0.5rem;"># 2. Search HUDOC and build a citation network</div>
+                <div>$ echr-py corpus build --article 8 --respondent FRA \</div>
+                <div style="margin-left: 2rem;">--limit 500 --citations --out france-art8/</div>
+
+                <div style="color: var(--muted); margin-top: 1.5rem; margin-bottom: 0.5rem;"># 3. Export the citation graph</div>
+                <div>$ echr-py graph export --kind case-case \</div>
+                <div style="margin-left: 2rem;">--format json --in france-art8/citations --out network.json</div>
+
+                <div style="color: var(--muted); margin-top: 1.5rem; margin-bottom: 0.5rem;"># 4. Analyze hub scores in Python</div>
+                <div style="margin-top: 0.5rem;">import json, networkx as nx</div>
+                <div>with open('network.json') as f:</div>
+                <div style="margin-left: 2rem;">data = json.load(f)</div>
+                <div>G = nx.node_link_graph(data)</div>
+                <div>hubs = dict(G.in_degree())</div>
+                <div>top = sorted(hubs.items(), key=lambda x: x[1], reverse=True)[:10]</div>
+                <div>for case, indegree in top:</div>
+                <div style="margin-left: 2rem;">print(f"{case}: cited {indegree} times")</div>
             </div>
 
             <article class="essay-body">
-                <p>The MCP server accepts queries for case metadata, citation searches, and network traversal. It respects your local data: nothing is sent to any external service. The server is entirely optional—the CLI and Python API work the same way with or without it.</p>
+                <p>This replicates Lupu and Voeten's method at scale. The cases at the top of that output—the highest in-degree—are the hubs that structure the Court's jurisprudence on that article, in that country. By comparing hub composition across articles and respondents, we can see how doctrine shifts and where the Court's reasoning clusters.</p>
             </article>
 
             <h2>Why this matters</h2>
