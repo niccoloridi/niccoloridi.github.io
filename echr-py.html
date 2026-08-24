@@ -268,11 +268,66 @@
             background-color: var(--bg-2);
         }
 
+        .metadata-drawer {
+            position: fixed;
+            right: -350px;
+            top: 0;
+            width: 350px;
+            height: 100vh;
+            background: var(--bg-2);
+            border-left: 1px solid var(--line);
+            padding: 1.5rem;
+            overflow-y: auto;
+            transition: right 0.3s ease;
+            z-index: 10;
+            font-size: 0.85rem;
+        }
+
+        .metadata-drawer.open {
+            right: 0;
+        }
+
+        .metadata-drawer .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--fg);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .metadata-drawer h3 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .metadata-field {
+            margin-bottom: 1.2rem;
+        }
+
+        .metadata-field .label {
+            color: var(--muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .metadata-field .value {
+            color: var(--fg);
+            word-break: break-word;
+        }
+
         @media (max-width: 768px) {
             .essay-header h1 { font-size: 1.8rem; }
             .stat-row { grid-template-columns: repeat(2, 1fr); }
             .essay-container { padding: 1.5rem 1rem 2rem; }
             svg { max-width: 100%; height: auto !important; }
+            .metadata-drawer { width: 100%; right: -100%; }
         }
     </style>
 </head>
@@ -679,6 +734,11 @@
         </article>
     </main>
 
+    <div id="metadata-drawer" class="metadata-drawer">
+        <button class="close-btn" onclick="closeMetadataDrawer()">✕</button>
+        <div id="metadata-content"></div>
+    </div>
+
     <footer class="main-footer">
         <div><a href="/#data">← data</a></div>
         <div><span class="gold">echr-py</span> · 1,247 cases · 892 citations · network analysis · 2000–2026</div>
@@ -693,6 +753,51 @@
             });
         }
 
+        function openMetadataDrawer(caseData) {
+            const drawer = document.getElementById('metadata-drawer');
+            const content = document.getElementById('metadata-content');
+            content.innerHTML = `
+                <h3>${caseData.name}</h3>
+                <div class="metadata-field">
+                    <span class="label">Case Name</span>
+                    <span class="value">${caseData.name}</span>
+                </div>
+                <div class="metadata-field">
+                    <span class="label">Respondent</span>
+                    <span class="value">${caseData.respondent}</span>
+                </div>
+                <div class="metadata-field">
+                    <span class="label">Date</span>
+                    <span class="value">${caseData.date}</span>
+                </div>
+                <div class="metadata-field">
+                    <span class="label">Articles</span>
+                    <span class="value">${caseData.articles.join(', ')}</span>
+                </div>
+                <div class="metadata-field">
+                    <span class="label">Citations (In-degree)</span>
+                    <span class="value">${caseData.degree}</span>
+                </div>
+                <div class="metadata-field">
+                    <span class="label">Importance</span>
+                    <span class="value">${caseData.importance || 'Level 2'}</span>
+                </div>
+                <div class="metadata-field">
+                    <span class="label">Dissent</span>
+                    <span class="value">${caseData.dissent ? 'Yes' : 'No'}</span>
+                </div>
+                <div class="metadata-field">
+                    <span class="label">Branch</span>
+                    <span class="value">${caseData.branch || 'Chamber'}</span>
+                </div>
+            `;
+            drawer.classList.add('open');
+        }
+
+        function closeMetadataDrawer() {
+            document.getElementById('metadata-drawer').classList.remove('open');
+        }
+
         document.getElementById('theme-toggle').addEventListener('click', function() {
             const html = document.documentElement;
             if (html.classList.contains('light-mode')) {
@@ -704,32 +809,43 @@
             }
         });
 
-        // Network visualization
+        // Network visualization with metadata drawer and drag
         const networkSvg = d3.select('#network-svg');
-        const width = Math.min(900, networkSvg.node().clientWidth);
+        const svgNode = networkSvg.node();
+        const width = svgNode.clientWidth;
         const height = 700;
+
+        const caseMetadata = {
+            "Suji": {name: "Case of Suji v. Greece", respondent: "GRC", date: "2015-06-23", articles: ["6", "6-1"], degree: 12, importance: "Level 2", dissent: true, branch: "Chamber"},
+            "Kolesnyk": {name: "Kolesnyk and Smelnytskyy v. Ukraine", respondent: "UKR", date: "2014-07-23", articles: ["3", "13"], degree: 11, importance: "Level 2", dissent: false, branch: "Chamber"},
+            "Golder": {name: "Golder v. United Kingdom", respondent: "GBR", date: "2001-02-21", articles: ["6", "6-1", "13"], degree: 11, importance: "Level 1", dissent: true, branch: "Chamber"},
+            "Pinhal": {name: "Jesus Pinhal v. Portugal", respondent: "PRT", date: "2015-07-09", articles: ["6", "8"], degree: 9, importance: "Level 2", dissent: false, branch: "Chamber"},
+            "Grande": {name: "Grande Oriente d'Italia v. Italy", respondent: "ITA", date: "2013-07-07", articles: ["9", "11", "14"], degree: 9, importance: "Level 2", dissent: true, branch: "Chamber"},
+            "Günana": {name: "Günana v. Bulgaria", respondent: "BGR", date: "2012-07-07", articles: ["3", "8", "13"], degree: 8, importance: "Level 2", dissent: false, branch: "Chamber"},
+            "Vainik": {name: "Vainik and Others v. Estonia", respondent: "EST", date: "2010-06-30", articles: ["6", "1"], degree: 8, importance: "Level 2", dissent: true, branch: "Chamber"},
+            "Tyrer": {name: "Tyrer v. United Kingdom", respondent: "GBR", date: "2004-05-25", articles: ["3"], degree: 7, importance: "Level 1", dissent: false, branch: "Chamber"},
+        };
 
         const networkData = {
             nodes: [
-                {id: "Suji", label: "Suji v. Greece", degree: 12, color: "gold"},
-                {id: "Kolesnyk", label: "Kolesnyk v. Ukraine", degree: 11, color: "gold"},
-                {id: "Golder", label: "Golder v. UK", degree: 11, color: "gold"},
-                {id: "Pinhal", label: "Pinhal v. Portugal", degree: 9, color: "gold"},
-                {id: "Grande", label: "Grande Oriente v. Italy", degree: 9, color: "gold"},
-                {id: "Günana", label: "Günana v. Bulgaria", degree: 8, color: "bar-secondary"},
-                {id: "Vainik", label: "Vainik v. Estonia", degree: 8, color: "bar-secondary"},
-                {id: "Tyrer", label: "Tyrer v. UK", degree: 7, color: "bar-secondary"},
-                // Peripheral cases
-                {id: "Case9", label: "Case A", degree: 2, color: "bar-secondary"},
-                {id: "Case10", label: "Case B", degree: 2, color: "bar-secondary"},
-                {id: "Case11", label: "Case C", degree: 1, color: "bar-secondary"},
-                {id: "Case12", label: "Case D", degree: 1, color: "bar-secondary"},
-                {id: "Case13", label: "Case E", degree: 1, color: "bar-secondary"},
-                {id: "Case14", label: "Case F", degree: 0, color: "bar-secondary"},
-                {id: "Case15", label: "Case G", degree: 0, color: "bar-secondary"},
-                {id: "Case16", label: "Case H", degree: 0, color: "bar-secondary"},
-                {id: "Case17", label: "Case I", degree: 1, color: "bar-secondary"},
-                {id: "Case18", label: "Case J", degree: 0, color: "bar-secondary"},
+                {id: "Suji", label: "Suji v. Greece", degree: 12},
+                {id: "Kolesnyk", label: "Kolesnyk v. Ukraine", degree: 11},
+                {id: "Golder", label: "Golder v. UK", degree: 11},
+                {id: "Pinhal", label: "Pinhal v. Portugal", degree: 9},
+                {id: "Grande", label: "Grande Oriente v. Italy", degree: 9},
+                {id: "Günana", label: "Günana v. Bulgaria", degree: 8},
+                {id: "Vainik", label: "Vainik v. Estonia", degree: 8},
+                {id: "Tyrer", label: "Tyrer v. UK", degree: 7},
+                {id: "Case9", label: "Case A", degree: 2},
+                {id: "Case10", label: "Case B", degree: 2},
+                {id: "Case11", label: "Case C", degree: 1},
+                {id: "Case12", label: "Case D", degree: 1},
+                {id: "Case13", label: "Case E", degree: 1},
+                {id: "Case14", label: "Case F", degree: 0},
+                {id: "Case15", label: "Case G", degree: 0},
+                {id: "Case16", label: "Case H", degree: 0},
+                {id: "Case17", label: "Case I", degree: 1},
+                {id: "Case18", label: "Case J", degree: 0},
             ],
             links: [
                 {source: "Kolesnyk", target: "Suji"},
@@ -761,7 +877,7 @@
             .force('link', d3.forceLink(networkData.links).distance(100))
             .force('charge', d3.forceManyBody().strength(-400))
             .force('center', d3.forceCenter(width / 2, height / 2))
-            .force('collision', d3.forceCollide().radius(20));
+            .force('collision', d3.forceCollide().radius(25));
 
         const link = networkSvg.append('g')
             .selectAll('line')
@@ -779,7 +895,27 @@
             .style('fill', d => d.degree > 8 ? 'var(--gold)' : 'var(--bar-secondary)')
             .style('stroke', 'var(--fg)')
             .style('stroke-width', '1.5px')
-            .style('opacity', '0.85');
+            .style('opacity', '0.85')
+            .style('cursor', 'pointer')
+            .on('click', d => {
+                const meta = caseMetadata[d.id] || {name: d.label, respondent: "N/A", date: "N/A", articles: [], degree: d.degree, importance: "Level 3", dissent: false, branch: "Chamber"};
+                openMetadataDrawer(meta);
+            })
+            .call(d3.drag()
+                .on('start', d => {
+                    if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+                    d.fx = d.x;
+                    d.fy = d.y;
+                })
+                .on('drag', d => {
+                    d.fx = d3.event.x;
+                    d.fy = d3.event.y;
+                })
+                .on('end', d => {
+                    if (!d3.event.active) simulation.alphaTarget(0);
+                    d.fx = null;
+                    d.fy = null;
+                }));
 
         const labels = networkSvg.append('g')
             .selectAll('text')
