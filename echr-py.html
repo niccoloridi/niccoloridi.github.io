@@ -25,6 +25,7 @@
             --line: #232327;
             --grotesk: "Space Grotesk", system-ui, sans-serif;
             --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+            --gutter: clamp(1.1rem, 3vw, 3rem);
             --bar-primary: #d7a13b;
             --bar-secondary: #6fb3c0;
             --bar-tertiary: #8a9b5b;
@@ -71,18 +72,28 @@
         .main-header {
             position: relative; z-index: 3;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 0.9rem 2rem;
+            padding: 0.75rem clamp(1.1rem, 3vw, 3rem);
             border-bottom: 1px solid var(--line);
             font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em;
             text-transform: uppercase; color: var(--muted);
+            flex-shrink: 0;
         }
         .main-header .id { color: var(--fg); }
         .main-header .id b { color: var(--gold); font-weight: 500; }
+        .tog {
+            background: none; border: 1px solid var(--line); color: var(--muted); cursor: pointer;
+            font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+            padding: 0.3rem 0.6rem; border-radius: 2px; transition: all 0.2s;
+        }
+        .tog:hover { color: var(--fg); border-color: var(--gold); }
 
         .essay-container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 3rem 2rem 4rem;
+            padding: clamp(1.5rem, 3vh, 3rem) var(--gutter) clamp(2rem, 4vh, 4rem);
+            flex: 1;
+            position: relative;
+            z-index: 1;
         }
         .essay-header { margin-bottom: 3rem; }
         .essay-header h1 {
@@ -222,17 +233,19 @@
             position: relative;
             z-index: 2;
             border-top: 1px solid var(--line);
-            padding: 1.5rem 2rem;
+            padding: 1rem var(--gutter);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.75rem;
+            font-family: var(--mono);
+            font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.06em;
             color: var(--muted);
+            flex-shrink: 0;
         }
 
-        .main-footer .gold { color: var(--gold); font-weight: 600; }
+        .main-footer .gold { color: var(--gold); font-weight: 500; }
 
         svg text { pointer-events: none; }
         svg circle:hover { opacity: 0.9 !important; }
@@ -334,7 +347,7 @@
 <body>
     <header class="main-header">
         <div class="id"><b>echr-py</b> · data essay</div>
-        <button id="theme-toggle" style="background: none; border: none; color: var(--muted); font-size: 0.75rem; text-transform: uppercase; cursor: pointer; letter-spacing: 0.05em;">Toggle</button>
+        <button id="theme-toggle" class="tog">Dark</button>
     </header>
 
     <main class="essay-container">
@@ -804,14 +817,22 @@
 
         document.getElementById('theme-toggle').addEventListener('click', function() {
             const html = document.documentElement;
+            const btn = document.getElementById('theme-toggle');
             if (html.classList.contains('light-mode')) {
                 html.classList.remove('light-mode');
                 localStorage.setItem('noir-theme', 'dark');
+                btn.textContent = 'Dark';
             } else {
                 html.classList.add('light-mode');
                 localStorage.setItem('noir-theme', 'light');
+                btn.textContent = 'Light';
             }
         });
+
+        // Set initial button text
+        const html = document.documentElement;
+        const btn = document.getElementById('theme-toggle');
+        btn.textContent = html.classList.contains('light-mode') ? 'Light' : 'Dark';
 
         // Network visualization with metadata drawer and drag
         const networkSvg = d3.select('#network-svg');
