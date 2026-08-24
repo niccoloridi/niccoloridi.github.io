@@ -49,8 +49,8 @@
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
         body {
-            font-family: var(--mono);
-            line-height: 1.8;
+            font-family: var(--grotesk);
+            line-height: 1.6;
             background-color: var(--bg);
             color: var(--fg);
             display: flex;
@@ -63,7 +63,7 @@
             background: radial-gradient(120% 90% at 70% 0%, transparent 55%, rgba(0,0,0,0.55) 100%);
         }
 
-        main { flex: 1; position: relative; z-index: 1; }
+        main { flex: 1; position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 0; }
         a { color: var(--fg); text-decoration: none; }
         a:hover { color: var(--fg); }
         .essay-body a { border-bottom: 1px solid transparent; transition: border-color 0.2s; }
@@ -72,7 +72,7 @@
         .main-header {
             position: relative; z-index: 3;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 0.75rem clamp(1.1rem, 3vw, 3rem);
+            padding: 0.9rem var(--gutter);
             border-bottom: 1px solid var(--line);
             font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em;
             text-transform: uppercase; color: var(--muted);
@@ -88,12 +88,14 @@
         .tog:hover { color: var(--fg); border-color: var(--gold); }
 
         .essay-container {
-            max-width: 800px;
+            max-width: 760px;
             margin: 0 auto;
-            padding: clamp(1.5rem, 3vh, 3rem) var(--gutter) clamp(2rem, 4vh, 4rem);
+            padding: clamp(2rem, 5vh, 3.5rem) var(--gutter) 4rem;
             flex: 1;
             position: relative;
             z-index: 1;
+            width: 100%;
+            overflow-y: auto;
         }
         .essay-header { margin-bottom: 3rem; }
         .essay-header h1 {
@@ -114,8 +116,8 @@
             color: var(--muted);
         }
 
-        .essay-body { margin-bottom: 2.5rem; }
-        .essay-body p { margin-bottom: 1.2rem; line-height: 1.8; }
+        .essay-body { margin-bottom: 2.5rem; font-family: var(--grotesk); font-size: 0.95rem; }
+        .essay-body p { margin-bottom: 1.2rem; line-height: 1.6; }
         .essay-body code {
             background-color: var(--bg-2);
             padding: 0.2rem 0.5rem;
@@ -912,6 +914,22 @@
             .style('stroke-width', '1.5px')
             .style('opacity', '0.5');
 
+        const drag = d3.drag()
+            .on('start', (event, d) => {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            })
+            .on('drag', (event, d) => {
+                d.fx = event.x;
+                d.fy = event.y;
+            })
+            .on('end', (event, d) => {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            });
+
         const node = networkSvg.append('g')
             .selectAll('circle')
             .data(networkData.nodes)
@@ -921,26 +939,15 @@
             .style('stroke', 'var(--fg)')
             .style('stroke-width', '1.5px')
             .style('opacity', '0.85')
-            .style('cursor', 'pointer')
-            .on('click', d => {
+            .style('cursor', 'grab')
+            .on('mouseenter', function() {
+                d3.select(this).style('cursor', 'grab');
+            })
+            .on('click', (event, d) => {
                 const meta = caseMetadata[d.id] || {name: d.label, respondent: "N/A", date: "N/A", articles: [], degree: d.degree, importance: "Level 3", dissent: false, branch: "Chamber"};
                 openMetadataDrawer(meta);
             })
-            .call(d3.drag()
-                .on('start', d => {
-                    if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-                    d.fx = d.x;
-                    d.fy = d.y;
-                })
-                .on('drag', d => {
-                    d.fx = d3.event.x;
-                    d.fy = d3.event.y;
-                })
-                .on('end', d => {
-                    if (!d3.event.active) simulation.alphaTarget(0);
-                    d.fx = null;
-                    d.fy = null;
-                }));
+            .call(drag);
 
         const labels = networkSvg.append('g')
             .selectAll('text')
