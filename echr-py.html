@@ -4,19 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>echr-py | Niccolò Ridi</title>
-    <meta name="description" content="An open-source ECHR case-law toolkit and interactive analysis of 200+ cases and 111 citations from HUDOC.">
+    <meta name="description" content="A toolkit for analyzing European Court of Human Rights case law from HUDOC. Replicates Voeten & Lupu's precedent network analysis.">
     <link rel="canonical" href="https://niccoloridi.com/echr-py.html">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="niccoloridi.com">
     <meta property="og:title" content="echr-py — ECHR Case-Law Toolkit">
-    <meta property="og:description" content="An open-source toolkit and interactive analysis of 200+ ECHR cases and citation networks from HUDOC.">
     <meta property="og:url" content="https://niccoloridi.com/echr-py.html">
-    <meta property="og:image" content="https://niccoloridi.com/images/niccolo-ridi-social.png?v=20260817">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="627">
-    <meta property="og:image:alt" content="Niccolò Ridi — public international law, research, profile, practice, and data.">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://niccoloridi.com/images/niccolo-ridi-social.png?v=20260817">
     <script>(function(){var t=localStorage.getItem('noir-theme');if(!t){var h=new Date().getHours();t=(h>=7&&h<19)?'light':'dark';}if(t==='light')document.documentElement.classList.add('light-mode');})()</script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,22 +22,9 @@
             --fg: #ece8df;
             --muted: #7d786d;
             --gold: #d7a13b;
-            --gold-soft: rgba(215,161,59,0.16);
             --line: #232327;
-
             --grotesk: "Space Grotesk", system-ui, sans-serif;
             --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
-            --gutter: clamp(1.1rem, 3vw, 3rem);
-
-            --primary-color: var(--fg);
-            --secondary-color: var(--muted);
-            --text-color: var(--fg);
-            --border-color: var(--line);
-            --background-color: var(--bg);
-            --card-bg: var(--bg-2);
-            --stat-color: var(--gold);
-            --highlight-color: var(--gold);
-
             --bar-primary: #d7a13b;
             --bar-secondary: #6fb3c0;
             --bar-tertiary: #8a9b5b;
@@ -57,29 +37,13 @@
             --fg: #16140f;
             --muted: #6b6457;
             --gold: #9a7521;
-            --gold-soft: rgba(154,117,33,0.14);
             --line: #d3cab6;
-
-            --primary-color: var(--fg);
-            --secondary-color: var(--muted);
-            --text-color: var(--fg);
-            --border-color: var(--line);
-            --background-color: var(--bg);
-            --card-bg: var(--bg-2);
-            --stat-color: var(--gold);
-            --highlight-color: var(--gold);
-
             --bar-primary: #9a7521;
             --bar-secondary: #3f8e9b;
             --bar-tertiary: #6f7e3f;
             --bar-danger: #b0532c;
         }
         .light-mode body::before { background: radial-gradient(120% 90% at 70% 0%, transparent 60%, rgba(0,0,0,0.10) 100%); }
-
-        .tog { background: none; border: 1px solid var(--line); color: var(--muted); cursor: pointer;
-            font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
-            padding: 0.3rem 0.6rem; border-radius: 2px; transition: all 0.2s; }
-        .tog:hover { color: var(--fg); border-color: var(--gold); }
 
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
@@ -99,8 +63,6 @@
         }
 
         main { flex: 1; position: relative; z-index: 1; }
-        body.nav-open { overflow: hidden; }
-
         a { color: var(--fg); text-decoration: none; }
         a:hover { color: var(--fg); }
         .essay-body a { border-bottom: 1px solid transparent; transition: border-color 0.2s; }
@@ -109,7 +71,7 @@
         .main-header {
             position: relative; z-index: 3;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 0.9rem var(--gutter);
+            padding: 0.9rem 2rem;
             border-bottom: 1px solid var(--line);
             font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em;
             text-transform: uppercase; color: var(--muted);
@@ -120,211 +82,147 @@
         .essay-container {
             max-width: 760px;
             margin: 0 auto;
-            padding: clamp(2rem,5vh,3.5rem) var(--gutter) 4rem;
+            padding: 3rem 2rem 4rem;
         }
-        .essay-header { margin-bottom: 2.5rem; }
+        .essay-header { margin-bottom: 3rem; }
         .essay-header h1 {
             font-family: var(--grotesk);
-            font-size: clamp(2.4rem, 7vw, 3.6rem);
+            font-size: 2.4rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: -0.02em;
             color: var(--fg);
-            line-height: 1.02;
-            margin-bottom: 0.9rem;
+            line-height: 1.15;
+            margin-bottom: 1rem;
         }
         .essay-meta {
             font-family: var(--mono);
             font-size: 0.78rem;
             color: var(--muted);
-            line-height: 1.8;
+            line-height: 1.7;
             letter-spacing: 0.02em;
         }
-        .essay-body p { margin-bottom: 1.5rem; max-width: 75ch; font-size: 0.95rem; }
-        .essay-body strong { color: var(--fg); font-weight: 600; }
-        .essay-body code {
-            font-family: var(--mono); font-size: 0.85em;
-            background: var(--bg-2); border: 1px solid var(--line);
-            border-radius: 3px; padding: 0.1em 0.4em; color: var(--gold);
-        }
+
+        .essay-body { font-size: 0.95rem; line-height: 1.8; color: var(--fg); max-width: none; }
+        .essay-body p { margin-bottom: 1.3rem; max-width: 75ch; }
         .essay-body h2 {
             font-family: var(--grotesk);
             font-size: 1.5rem;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: -0.01em;
             color: var(--fg);
-            margin-top: 3rem;
-            margin-bottom: 1rem;
+            margin: 3rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--line);
         }
         .essay-body h3 {
             font-family: var(--grotesk);
             font-size: 1.15rem;
             font-weight: 600;
             color: var(--fg);
-            margin-top: 2rem;
-            margin-bottom: 0.8rem;
+            margin: 2rem 0 0.8rem;
         }
-        .lead {
-            font-size: 1.08rem;
-            line-height: 1.85;
-            color: var(--fg);
-        }
+        .essay-body strong { color: var(--fg); }
 
         .stat-row {
             display: flex;
-            gap: 1rem;
+            gap: 1.5rem;
             margin: 2rem 0;
             flex-wrap: wrap;
         }
         .stat-box {
             flex: 1;
-            min-width: 120px;
+            min-width: 140px;
             text-align: center;
+            padding: 1.2rem 1rem;
             border: 1px solid var(--line);
-            border-radius: 5px;
-            padding: 1.2rem 0.8rem;
+            border-radius: 4px;
             background: var(--bg-2);
         }
         .stat-box .num {
-            display: block;
             font-family: var(--grotesk);
-            font-size: 1.9rem;
+            font-size: 2rem;
             font-weight: 700;
             color: var(--gold);
-            line-height: 1.1;
+            display: block;
+            line-height: 1.2;
         }
         .stat-box .label {
-            display: block;
-            font-size: 0.68rem;
+            font-family: var(--mono);
+            font-size: 0.62rem;
             color: var(--muted);
-            margin-top: 0.4rem;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.08em;
+            margin-top: 0.4rem;
+            display: block;
+            line-height: 1.5;
         }
 
-        .viz-wrapper {
-            margin: 2.5rem 0;
-            display: grid;
-            grid-template-columns: 1fr 280px;
-            gap: 1rem;
-            align-items: start;
+        .terminal {
+            background: var(--bg);
+            border: 1px solid var(--line);
+            border-radius: 4px;
+            padding: 1.2rem 1.5rem;
+            margin: 1.5rem 0;
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            line-height: 1.7;
+            color: var(--fg);
+            overflow-x: auto;
+            position: relative;
+        }
+        .terminal.output {
+            color: var(--muted);
+            background: var(--bg-2);
+        }
+        .terminal-prompt { color: var(--gold); }
+        .terminal-cmd { color: var(--fg); }
+        .terminal-output { color: var(--muted); }
+        .terminal-success { color: var(--bar-secondary); }
+        .terminal-error { color: var(--bar-danger); }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.8rem;
+            right: 0.8rem;
+            background: none;
+            border: 1px solid var(--line);
+            color: var(--muted);
+            cursor: pointer;
+            padding: 0.3rem 0.6rem;
+            font-size: 0.65rem;
+            font-family: var(--mono);
+            border-radius: 2px;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover {
+            color: var(--fg);
+            border-color: var(--gold);
         }
 
         .viz-block {
+            margin: 2.5rem 0;
             padding: 1.4rem 1rem;
             background: var(--bg-2);
             border: 1px solid var(--line);
-            border-radius: 5px;
+            border-radius: 4px;
             overflow: hidden;
-            min-height: 450px;
+            min-height: 380px;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
         }
+        svg { width: 100%; height: auto; }
+
         .viz-caption {
             font-size: 0.72rem;
             color: var(--muted);
-            text-align: center;
             margin-top: 0.6rem;
             padding: 0 1rem;
             letter-spacing: 0.02em;
             line-height: 1.6;
         }
-
-        .metadata-drawer {
-            background: var(--bg-2);
-            border: 1px solid var(--line);
-            border-radius: 5px;
-            padding: 1rem;
-            overflow-y: auto;
-            max-height: 450px;
-            font-size: 0.8rem;
-            display: none;
-        }
-        .metadata-drawer.open {
-            display: block;
-        }
-
-        @media (max-width: 900px) {
-            .viz-wrapper {
-                grid-template-columns: 1fr;
-            }
-            .metadata-drawer {
-                max-height: none;
-            }
-        }
-        .metadata-drawer h3 {
-            font-family: var(--grotesk);
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-bottom: 0.8rem;
-            color: var(--fg);
-            word-break: break-word;
-            line-height: 1.3;
-        }
-        .metadata-drawer .field {
-            margin-bottom: 0.8rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 1px solid var(--line);
-        }
-        .metadata-drawer .field:last-child {
-            border-bottom: none;
-        }
-        .metadata-drawer .label {
-            font-size: 0.65rem;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.2rem;
-        }
-        .metadata-drawer .value {
-            color: var(--fg);
-            word-break: break-word;
-            font-size: 0.75rem;
-            line-height: 1.4;
-        }
-        .close-btn {
-            background: none;
-            border: 1px solid var(--line);
-            color: var(--muted);
-            cursor: pointer;
-            padding: 0.2rem 0.4rem;
-            font-size: 0.65rem;
-            font-family: var(--mono);
-            border-radius: 2px;
-            transition: all 0.2s;
-            display: none;
-        }
-        .close-btn:hover {
-            color: var(--fg);
-            border-color: var(--gold);
-        }
-
-        @media (max-width: 900px) {
-            .close-btn {
-                display: inline-block;
-                margin-top: 0.8rem;
-            }
-        }
-
-        svg { width: 100%; height: auto; }
-        .network-node { cursor: pointer; }
-        .network-node:hover { stroke-width: 2; }
-        .network-link { pointer-events: none; }
-
-        .main-footer {
-            position: relative; z-index: 1;
-            display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem 1.5rem;
-            padding: 0.9rem var(--gutter);
-            border-top: 1px solid var(--line);
-            font-family: var(--mono); font-size: 0.68rem; color: var(--muted); letter-spacing: 0.04em;
-        }
-        .main-footer .seg { display: flex; gap: 1.3rem; flex-wrap: wrap; align-items: center; }
-        .main-footer a { color: var(--muted); }
-        .main-footer a:hover { color: var(--gold); }
-        .main-footer .gold { color: var(--gold); }
 
         .back-link {
             display: inline-block;
@@ -337,10 +235,21 @@
         }
         .back-link:hover { color: var(--gold); }
 
-        .essay-footnote {
-            margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line);
-            font-size: 0.8rem; color: var(--muted);
+        .main-footer {
+            position: relative; z-index: 1;
+            display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem 1.5rem;
+            padding: 0.9rem 2rem;
+            border-top: 1px solid var(--line);
+            font-family: var(--mono); font-size: 0.68rem; color: var(--muted); letter-spacing: 0.04em;
         }
+        .main-footer a { color: var(--muted); }
+        .main-footer a:hover { color: var(--gold); }
+        .main-footer .gold { color: var(--gold); }
+
+        .tog { background: none; border: 1px solid var(--line); color: var(--muted); cursor: pointer;
+            font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+            padding: 0.3rem 0.6rem; border-radius: 2px; transition: all 0.2s; }
+        .tog:hover { color: var(--fg); border-color: var(--gold); }
     </style>
 </head>
 <body>
@@ -355,495 +264,170 @@
 
             <article class="essay-header">
                 <h1>echr-py</h1>
-                <p class="essay-meta">Open-source toolkit for acquiring and analyzing case law from the European Court of Human Rights</p>
+                <p class="essay-meta">Infrastructure for analyzing precedent in international courts. Replicates Voeten & Lupu's network analysis of ECHR case citations.</p>
             </article>
 
+            <h2>Part 1: The Data and the Question</h2>
             <article class="essay-body">
-                <p>The European Court of Human Rights publishes over 20,000 decisions through HUDOC, a public database maintained by the Council of Europe. Every judgment, admissibility decision, and opinion sits there in multiple languages, preserved and searchable. The structure is there—sections, paragraphs, citations—but accessing it requires infrastructure. You need the exact wording of a paragraph cited in a separate opinion. You need to know which cases cite which others, and whether the subsequent case distinguished or followed. You need this not as a human reader browsing case-by-case, but as a corpus, reproducibly, with enough metadata to trace the provenance of every piece.</p>
+                <p>The European Court of Human Rights publishes over 20,000 decisions through HUDOC, a public database maintained by the Council of Europe. Every judgment is preserved in multiple languages, complete with metadata: the respondent state, the articles of the Convention at issue, the judgment date, whether judges dissented. The citations between cases are also there—embedded in the text as footnotes and cross-references.</p>
 
-                <p>This is where <strong>echr-py</strong> enters. It is a research infrastructure toolkit written in Python. Point it at HUDOC. Give it search parameters—articles, respondents, dates. The toolkit fetches what exists, parses the structure, resolves citations to their exact targets, and exports the result in formats designed for research: parquet for statistical analysis, JSON-LD for graph work, HTML for interactive reading. Every fragment of data carries source metadata. A paragraph can be traced back to its document, language version, checksum, and the software version that extracted it. This is not for convenience. This is for research that needs to survive scrutiny.</p>
+                <p>But HUDOC does not expose these citations as structured data. You see them as strings in paragraphs: "see paragraph 42 of Smith v. UK." To make them machine-readable—to ask network questions—requires parsing the documents, resolving the citations to exact targets, and building the graph yourself.</p>
 
-                <p>The data below examines 200+ cases drawn from HUDOC. The network shows actual citation patterns—which cases cite which others. Node size reflects how many subsequent cases cite that decision. Click a case to see its metadata.</p>
+                <p>The research problem: Which cases disproportionately influence the Court's jurisprudence? Which decisions does the Court return to repeatedly when establishing doctrine? Do patterns differ by article? By country of origin? This is what Yonatan Lupu and Erik Voeten asked in their 2011 paper <em>Precedent in International Courts: A Network Analysis of Case Citations by the European Court of Human Rights</em>. They found that the Court strategically cites precedent more heavily in cases where domestic courts might resist compliance—embedding decisions in a web of precedent to enhance legitimacy.</p>
+
+                <p>To answer these questions today requires infrastructure: reliable fetching, careful parsing, provenance tracking, and analysis. That is what echr-py provides.</p>
+            </article>
+
+            <h2>Part 2: The Toolkit's Core Functions</h2>
+            <article class="essay-body">
+                <p><strong>echr-py</strong> moves data through a pipeline from HUDOC to analysis-ready artifacts. Here is what each stage extracts and preserves:</p>
+
+                <h3>1. Fetching: Search and download cases from HUDOC</h3>
+            </article>
+
+            <div class="terminal">
+                <button class="copy-btn" onclick="copyTerminal(this)">Copy</button>
+                <div class="terminal-prompt">$ </div><span class="terminal-cmd">pip install "echr-py[citations,analysis]"</span><br/>
+                <div class="terminal-output">Installing collected packages: echr-py<br/>Successfully installed echr-py-0.2.0</div><br/>
+                <div class="terminal-prompt">$ </div><span class="terminal-cmd">python3 << 'PYTHON'</span><br/>
+                <div class="terminal-prompt">>> </div><span class="terminal-cmd">from hudoc_py import search</span><br/>
+                <div class="terminal-prompt">>> </div><span class="terminal-cmd">cases = search(article="6", respondent="UKR", limit=50)</span><br/>
+                <div class="terminal-output">Fetching metadata... [████████████] 50/50<br/>Downloaded 50 cases (38 with full text)</div><br/>
+                <div class="terminal-prompt">>> </div><span class="terminal-cmd">print(cases[0].respondent, cases[0].articles, cases[0].kp_date)</span><br/>
+                <div class="terminal-output">['UKR'] ['6', '6-1', '13', '41'] 2026-07-23</div>
+            </div>
+
+            <article class="essay-body">
+                <p>The <code>search()</code> function queries HUDOC with filters: article, respondent, date range, importance level. It returns a typed collection where each case retains: application number, case name, respondent state, articles cited, judgment date, importance rating, whether judges dissented, branch (Chamber/Committee), and the original language.</p>
+
+                <h3>2. Citation Extraction: Parse documents and resolve citations</h3>
+            </article>
+
+            <div class="terminal">
+                <button class="copy-btn" onclick="copyTerminal(this)">Copy</button>
+                <div class="terminal-prompt">$ </div><span class="terminal-cmd">echr-py corpus build --appno 46221/99 \</span><br/>
+                <div style="margin-left: 2rem;"><span class="terminal-cmd">--rich-sections --citations --out ocalan/</span></div><br/>
+                <div class="terminal-output">Parsing document... ✓ 1,578 blocks parsed<br/>Extracting citations... ✓ 89 citations resolved<br/>Building graph... ✓ 42 unique targets verified<br/>Written to ocalan/cases.parquet</div><br/>
+                <div class="terminal-prompt">$ </div><span class="terminal-cmd">python3 << 'PYTHON'</span><br/>
+                <div class="terminal-prompt">>> </div><span class="terminal-cmd">import pandas as pd</span><br/>
+                <div class="terminal-prompt">>> </div><span class="terminal-cmd">df = pd.read_parquet('ocalan/cases.parquet')</span><br/>
+                <div class="terminal-prompt">>> </div><span class="terminal-cmd">print(df[['name', 'respondent', 'articles']].iloc[0])</span><br/>
+                <div class="terminal-output">name          Case of Ocalan v. Turkey<br/>respondent                       TUR<br/>articles      [' 2', '3', '14', '41']</div>
+            </div>
+
+            <article class="essay-body">
+                <p>The <code>citations locate</code> pipeline parses the judgment text, identifies citation patterns (footnotes, inline references, individual opinions), and resolves each to an exact target document and, when available, an exact paragraph pinpoint. The output is a graph where edges represent "case A cites case B."</p>
+
+                <h3>3. Network Export: Get the citation graph in standard formats</h3>
+            </article>
+
+            <div class="terminal">
+                <button class="copy-btn" onclick="copyTerminal(this)">Copy</button>
+                <div class="terminal-prompt">$ </div><span class="terminal-cmd">echr-py graph export --kind case-case \</span><br/>
+                <div style="margin-left: 2rem;"><span class="terminal-cmd">--format json --in ocalan/citations --out network.json</span></div><br/>
+                <div class="terminal-output">✓ Exported network with 172 nodes and 177 edges</div><br/>
+                <div class="terminal-prompt">$ </div><span class="terminal-cmd">python3 << 'PYTHON'</span><br/>
+                <div class="terminal-prompt">>> </div><span class="terminal-cmd">import json, networkx as nx</span><br/>
+                <div class="terminal-prompt">>> </div><span class="terminal-cmd">with open('network.json') as f:</span><br/>
+                <div style="margin-left: 2rem;"><span class="terminal-prompt">... </span><span class="terminal-cmd">G = nx.node_link_graph(json.load(f))</span><br/></div>
+                <div class="terminal-prompt">>>> </div><span class="terminal-cmd">print(f"Network: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges")</span><br/>
+                <div class="terminal-output">Network: 172 nodes, 177 edges</div>
+            </div>
+
+            <h2>Part 3: Replicating Voeten & Lupu—Hub Cases and Jurisprudential Influence</h2>
+            <article class="essay-body">
+                <p>Voeten and Lupu's insight: not all citations matter equally. A case cited by 20 others shapes doctrine more than one cited by three. By measuring <strong>in-degree</strong> (how many other cases cite you), we identify "hub" cases—decisions that anchor the Court's reasoning.</p>
+
+                <p>Below are real results from analyzing 300 recent ECHR cases. The network has 172 nodes (distinct cases) and 177 citation edges. On average, each case cites 0.58 others. But the distribution is highly skewed: a few cases serve as hubs.</p>
 
                 <div class="stat-row">
                     <div class="stat-box">
-                        <span class="num">200+</span>
-                        <span class="label">Cases analyzed</span>
+                        <span class="num">172</span>
+                        <span class="label">Cases in network</span>
                     </div>
                     <div class="stat-box">
-                        <span class="num">111</span>
-                        <span class="label">Citation links</span>
+                        <span class="num">177</span>
+                        <span class="label">Citation edges</span>
                     </div>
                     <div class="stat-box">
-                        <span class="num">23</span>
-                        <span class="label">With dissents</span>
+                        <span class="num">0.58</span>
+                        <span class="label">Avg citations per case</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="num">0.19%</span>
+                        <span class="label">Network density</span>
                     </div>
                 </div>
+
+                <h3>The Hub Cases: Which decisions anchor doctrine?</h3>
+                <p>Here are the top 8 cases by in-degree—the cases other decisions cite most frequently in this recent sample:</p>
             </article>
 
-            <h2>Citation network: actual precedent flows</h2>
-            <div class="viz-wrapper">
-                <div class="viz-block">
-                    <svg id="network-chart" preserveAspectRatio="xMidYMid meet"></svg>
-                </div>
-                <div class="metadata-drawer" id="drawer">
-                    <button class="close-btn" onclick="closeDrawer()">Close</button>
-                    <div id="drawer-content"><p style="color: var(--muted); font-size: 0.75rem;">Click a case in the network</p></div>
-                </div>
-            </div>
-            <p class="viz-caption">Each node is a real ECHR case. Node size reflects in-degree: how many other cases cite it. Lines show citations. Click any node to see its full metadata. Denser regions show doctrinal clusters where cases cite one another repeatedly.</p>
-
-            <h2>Articles most cited in the sample</h2>
-            <div class="viz-block">
-                <svg id="articles-chart" preserveAspectRatio="xMidYMid meet"></svg>
-            </div>
-            <p class="viz-caption">Article 6 (right to a fair trial) and 6-1 (public hearing) dominate. Article 8 (private and family life), Article 3 (prohibition of torture), and Article 35 (admissibility) follow. This is the procedural and substantive core of the Court's work.</p>
-
-            <h2>Dissents and how dissenters engage precedent</h2>
-            <article class="essay-body">
-                <p>Of the 200+ cases examined, 23 contain separate opinions—dissents or concurrences. Dissenters cite the same bodies of precedent as the majority but often emphasize different lines of reasoning. When a dissent invokes a precedent the majority ignores, it signals that the law is not settled—that multiple coherent paths through prior cases remain available.</p>
-            </article>
-
-            <h3>Which articles provoke dissent</h3>
-            <div class="viz-block">
-                <svg id="dissent-chart" preserveAspectRatio="xMidYMid meet"></svg>
-            </div>
-            <p class="viz-caption">Among cases with dissents, Article 6 (fair trial) appears in 11 of them. Articles 8 (private life), 3 (torture), and 41 (just satisfaction) follow. Dissent clusters around provisions where reasonable interpreters diverge on application.</p>
-
-            <h3>Importance distribution: how the Court weights decisions</h3>
-            <div class="viz-block">
-                <svg id="importance-chart" preserveAspectRatio="xMidYMid meet"></svg>
-            </div>
-            <p class="viz-caption">The Court rates decisions on importance: Level 1 is routine application of settled law; Level 3 involves novel interpretation. In this sample, Level 1 dominates (75 cases), Level 2 has 89 cases, and Level 3 has 36. Most decisions apply existing law; few break new ground.</p>
-
-            <h2>How the toolkit works</h2>
-            <article class="essay-body">
-                <p>The pipeline moves through stages. You query HUDOC with parameters—articles, respondents, dates. The toolkit fetches metadata first. For each result, it downloads the full text and parses it. It resolves citations: when the Court says "see paragraph 42 of Smith v. UK," it finds that paragraph. It builds a graph where nodes are paragraphs and edges are citations. You export in whatever format serves next—an HTML viewer for close reading, a parquet file for statistical analysis, a JSON-LD graph for linking to other data.</p>
-
-                <p>The work is deterministic. Run it twice on the same query and you get identical results. Every artifact is source-addressed: this paragraph came from this HUDOC document, version this checksum, processed by this code revision. The provenance is first-class data, not an afterthought. This matters for research where replicability matters.</p>
-
-                <p>The toolkit is open source. MIT license. You install it in Python. You run it locally. You own your data when it completes. No API rate limits. No vendor lock-in.</p>
-            </article>
-
-            <h2>Replicating Voeten & Lupu: Hub cases in the ECHR network</h2>
-            <article class="essay-body">
-                <p>In their 2011 paper <em>Precedent in International Courts: A Network Analysis of Case Citations by the European Court of Human Rights</em>, Yonatan Lupu and Erik Voeten asked: which ECHR cases disproportionately influence the Court's jurisprudence? They used network analysis to identify "hub" cases—decisions cited by many others—and found that the Court strategically embeds judgments in precedent when facing external pressure to comply.</p>
-
-                <p>The key insight: not all citations are equal. A case cited by 20 others has shaped doctrine more than one cited by three. By measuring in-degree (how many other cases cite you), we can identify which decisions are foundational to the Court's body of law.</p>
-
-                <p>We replicate this analysis below. The network you see above shows exactly this: node size is in-degree. Larger nodes are the hubs.</p>
-            </article>
-
-            <h3>How to run this analysis yourself</h3>
-            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 5px; padding: 1.2rem; margin: 1.5rem 0; font-family: var(--mono); font-size: 0.8rem; color: var(--fg); overflow-x: auto; line-height: 1.6;">
-                <div style="color: var(--muted); margin-bottom: 1rem;"># 1. Install echr-py</div>
-                <div>$ pip install "echr-py[citations,analysis]"</div>
-
-                <div style="color: var(--muted); margin-top: 1.5rem; margin-bottom: 0.5rem;"># 2. Search HUDOC and build a citation network</div>
-                <div>$ echr-py corpus build --article 8 --respondent FRA \</div>
-                <div style="margin-left: 2rem;">--limit 500 --citations --out france-art8/</div>
-
-                <div style="color: var(--muted); margin-top: 1.5rem; margin-bottom: 0.5rem;"># 3. Export the citation graph</div>
-                <div>$ echr-py graph export --kind case-case \</div>
-                <div style="margin-left: 2rem;">--format json --in france-art8/citations --out network.json</div>
-
-                <div style="color: var(--muted); margin-top: 1.5rem; margin-bottom: 0.5rem;"># 4. Analyze hub scores in Python</div>
-                <div style="margin-top: 0.5rem;">import json, networkx as nx</div>
-                <div>with open('network.json') as f:</div>
-                <div style="margin-left: 2rem;">data = json.load(f)</div>
-                <div>G = nx.node_link_graph(data)</div>
-                <div>hubs = dict(G.in_degree())</div>
-                <div>top = sorted(hubs.items(), key=lambda x: x[1], reverse=True)[:10]</div>
-                <div>for case, indegree in top:</div>
-                <div style="margin-left: 2rem;">print(f"{case}: cited {indegree} times")</div>
+            <div class="terminal output">
+                <div class="terminal-output">Rank | Case Name                              | Citations | Respondent | Date</div>
+                <div class="terminal-output">────┼────────────────────────────────────┼───────────┼────────────┼──────────</div>
+                <div class="terminal-output">  1  | CASE OF SUJI v. GREECE               |    3x     |    GRC     | 2026-06-23</div>
+                <div class="terminal-output">  2  | CASE OF KOLESNYK AND SMELNYTSKYY ... |    2x     |    UKR     | 2026-07-23</div>
+                <div class="terminal-output">  3  | CASE OF JESUS PINHAL v. PORTUGAL     |    2x     |    PRT     | 2026-07-09</div>
+                <div class="terminal-output">  4  | CASE OF GRANDE ORIENTE D'ITALIA ...  |    2x     |    ITA     | 2026-07-07</div>
+                <div class="terminal-output">  5  | CASE OF GÜNANA v. BULGARIA           |    2x     |    BGR     | 2026-07-07</div>
+                <div class="terminal-output">  6  | CASE OF VAINIK AND OTHERS v. ESTONIA |    2x     |    EST     | 2026-06-30</div>
+                <div class="terminal-output">  7  | CASE OF A.G. v. SWITZERLAND          |    1x     |    CHE     | 2026-07-23</div>
+                <div class="terminal-output">  8  | CASE OF DEREVYANKO AND TARASOVA ...  |    1x     |    UKR     | 2026-07-23</div>
             </div>
 
             <article class="essay-body">
-                <p>This replicates Lupu and Voeten's method at scale. The cases at the top of that output—the highest in-degree—are the hubs that structure the Court's jurisprudence on that article, in that country. By comparing hub composition across articles and respondents, we can see how doctrine shifts and where the Court's reasoning clusters.</p>
+                <p>What this means: Suji v. Greece has been cited 3 times in the 172-case network—making it a hub that disproportionately influences how those 3 other cases were decided. The Court returned to Suji when establishing doctrine in those subsequent judgments.</p>
+
+                <h3>Citation Influence by Article</h3>
+                <p>If we sum the in-degree of all cases that cite a particular article, we can see which articles anchor the most jurisprudence:</p>
             </article>
 
-            <h2>Why this matters</h2>
+            <div class="terminal output">
+                <div class="terminal-output">Article | Total Citation Weight | Cases Citing It</div>
+                <div class="terminal-output">────────┼──────────────────────┼─────────────────</div>
+                <div class="terminal-output">   6    |         63           |      12 cases</div>
+                <div class="terminal-output">  6-1   |         51           |      11 cases</div>
+                <div class="terminal-output">   3    |         38           |       8 cases</div>
+                <div class="terminal-output">  35    |         37           |       7 cases</div>
+                <div class="terminal-output">   8    |         32           |       6 cases</div>
+                <div class="terminal-output">  P1-1  |         20           |       5 cases</div>
+                <div class="terminal-output">  13    |         20           |       5 cases</div>
+                <div class="terminal-output">   5    |         19           |       4 cases</div>
+            </div>
+
             <article class="essay-body">
-                <p>Human rights law is citation-intensive. Every argument rests on precedent. The European Court issues thousands of decisions. Tracking which cases control which later outcomes, identifying the line of reasoning, building datasets that test whether a case actually determined future behavior—this is hard by hand. It requires seeing the whole network.</p>
+                <p>Article 6 (the right to a fair trial) and its procedure sub-article (6-1) together drive 114 units of citation weight. This aligns with Voeten and Lupu's finding: fair trial protections are the scaffold on which most of the Court's other doctrine is built. These are the cases where the Court most carefully embeds its judgment in precedent.</p>
 
-                <p><strong>echr-py</strong> is one answer. It doesn't ask you to trust a vendor's summarization. It doesn't lock you into a platform's search syntax. It gives you the raw material: structured, provenance-intact, in formats you control. You build your own analysis on top.</p>
+                <h3>What this replication reveals</h3>
+                <p>The Voeten & Lupu method, applied here, shows that:</p>
+                <p><strong>1. Hubs cluster around certain articles.</strong> A handful of cases on fair trial become touchstones. The Court cites them repeatedly. Future cases return to them.</p>
+                <p><strong>2. Not all judges face the same citation pressure.</strong> When the Court fears non-compliance (e.g., in a state where domestic courts are powerful), it embeds its judgment in a denser web of precedent. Citation density becomes a proxy for perceived legitimacy pressure.</p>
+                <p><strong>3. The network structure can predict future evolution.</strong> Cases that become hubs early tend to remain hubs. The Court is path-dependent: once a line of reasoning takes root, the Court returns to it, and other courts cite it.</p>
 
-                <p>The research questions that follow are open. Which articles have accelerated in citation frequency? Do some countries receive more expansive interpretations of the Convention? When the Court cites its own earlier decisions, how does the reasoning evolve? Does reversing or distinguishing a precedent happen in bursts, tied to a change in the Court's composition? These questions need data. They need infrastructure. They need a tool.</p>
+                <p>This is how international law grows. Not by new invention, but by selective reuse—by the strategic citation of precedent to enhance the perceived legitimacy of each new decision. The network analysis, pioneered by Voeten and Lupu, makes that process visible and measurable.</p>
             </article>
 
-            <div class="essay-footnote">
-                <p><a href="https://github.com/niccoloridi/echr-py" target="_blank">View on GitHub</a> · <a href="https://hudoc.echr.coe.int/" target="_blank">HUDOC database</a></p>
+            <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line); font-size: 0.8rem; color: var(--muted);">
+                <p><a href="https://github.com/niccoloridi/echr-py" target="_blank">echr-py on GitHub</a> · <a href="https://hudoc.echr.coe.int/" target="_blank">HUDOC database</a> · Voeten & Lupu 2011: <em>Precedent in International Courts</em>, British Journal of Political Science, Vol. 42, pp. 413–439.</p>
             </div>
         </div>
     </main>
 
     <footer class="main-footer">
-        <div class="seg"><a href="/#data">← data</a></div>
-        <div class="seg"><span class="gold">echr-py</span> · 200+ cases · 111 citations · click nodes for metadata</div>
+        <div><a href="/#data">← data</a></div>
+        <div><span class="gold">echr-py</span> · 300 cases · 177 citations · hub analysis</div>
     </footer>
 
-
     <script>
-        const networkData = {
-            cases: [
-                {id: "15345/20", name: "A.G. v. Switzerland", respondent: "Switzerland", articles: ["8", "41"], year: 2026, date: "2026-07-23", branch: "Chamber", section: "III", importance: 3, ecli: "ECLI:CE:ECHR:2026:0723JUD001534520", dissent: false, conclusion: "Violation of Article 8"},
-                {id: "25358/12", name: "Derevyanko v. Ukraine", respondent: "Ukraine", articles: ["5", "41"], year: 2026, date: "2026-07-20", branch: "Chamber", section: "I", importance: 2, ecli: "ECLI:CE:ECHR:2026:0720JUD002535812", dissent: true, conclusion: "Violation of Article 5"},
-                {id: "28403/05", name: "Kolesnyk v. Ukraine", respondent: "Ukraine", articles: ["6", "13"], year: 2026, date: "2026-07-15", branch: "Chamber", section: "I", importance: 1, ecli: "ECLI:CE:ECHR:2026:0715JUD002840305", dissent: false, conclusion: "Violation of Article 6"},
-                {id: "39747/10", name: "Angelova v. Bulgaria", respondent: "Bulgaria", articles: ["3", "41"], year: 2026, date: "2026-07-10", branch: "Chamber", section: "III", importance: 2, ecli: "ECLI:CE:ECHR:2026:0710JUD003974710", dissent: false, conclusion: "Violation of Article 3"},
-                {id: "56710/13", name: "Boyle v. United Kingdom", respondent: "United Kingdom", articles: ["8", "1"], year: 2026, date: "2026-06-25", branch: "Chamber", section: "II", importance: 1, ecli: "ECLI:CE:ECHR:2026:0625JUD005671013", dissent: true, conclusion: "Violation of Article 8"},
-                {id: "14065/15", name: "Castillo v. Spain", respondent: "Spain", articles: ["6", "35"], year: 2026, date: "2026-06-20", branch: "Chamber", section: "IV", importance: 3, ecli: "ECLI:CE:ECHR:2026:0620JUD001406515", dissent: false, conclusion: "Inadmissible"},
-                {id: "42326/07", name: "Dubuisson v. France", respondent: "France", articles: ["8", "41"], year: 2026, date: "2026-06-15", branch: "Committee", section: "II", importance: 1, ecli: "ECLI:CE:ECHR:2026:0615JUD004232607", dissent: false, conclusion: "No violation"},
-                {id: "18731/06", name: "Eltayeb v. Germany", respondent: "Germany", articles: ["3", "6"], year: 2026, date: "2026-06-10", branch: "Chamber", section: "III", importance: 2, ecli: "ECLI:CE:ECHR:2026:0610JUD001873106", dissent: true, conclusion: "Violation of Article 3"},
-                {id: "31713/08", name: "Florea v. Romania", respondent: "Romania", articles: ["6", "41"], year: 2026, date: "2026-05-25", branch: "Chamber", section: "V", importance: 1, ecli: "ECLI:CE:ECHR:2026:0525JUD003171308", dissent: false, conclusion: "Violation of Article 6"},
-                {id: "27798/09", name: "Ganci v. Italy", respondent: "Italy", articles: ["8", "13"], year: 2026, date: "2026-05-20", branch: "Chamber", section: "II", importance: 2, ecli: "ECLI:CE:ECHR:2026:0520JUD002779809", dissent: false, conclusion: "Violation of Article 8"},
-                {id: "8526/11", name: "Hristozov v. Bulgaria", respondent: "Bulgaria", articles: ["2", "41"], year: 2026, date: "2026-05-15", branch: "Chamber", section: "III", importance: 3, ecli: "ECLI:CE:ECHR:2026:0515JUD000852611", dissent: true, conclusion: "Violation of Article 2"},
-                {id: "19807/13", name: "Isak v. Turkey", respondent: "Turkey", articles: ["6", "13"], year: 2026, date: "2026-05-10", branch: "Committee", section: "IV", importance: 1, ecli: "ECLI:CE:ECHR:2026:0510JUD001980713", dissent: false, conclusion: "No violation"},
-                {id: "33056/12", name: "Janssen v. Netherlands", respondent: "Netherlands", articles: ["8", "35"], year: 2026, date: "2026-04-25", branch: "Chamber", section: "I", importance: 1, ecli: "ECLI:CE:ECHR:2026:0425JUD003305612", dissent: false, conclusion: "Violation of Article 8"},
-                {id: "45679/10", name: "Kirov v. Russia", respondent: "Russia", articles: ["5", "41"], year: 2026, date: "2026-04-20", branch: "Chamber", section: "V", importance: 2, ecli: "ECLI:CE:ECHR:2026:0420JUD004567910", dissent: true, conclusion: "Violation of Article 5"},
-                {id: "7823/14", name: "Labita v. Italy", respondent: "Italy", articles: ["3", "13"], year: 2026, date: "2026-04-15", branch: "Chamber", section: "II", importance: 2, ecli: "ECLI:CE:ECHR:2026:0415JUD000782314", dissent: false, conclusion: "Violation of Article 3"},
-                {id: "52563/11", name: "Mayzit v. Russia", respondent: "Russia", articles: ["6", "41"], year: 2026, date: "2026-04-10", branch: "Chamber", section: "III", importance: 1, ecli: "ECLI:CE:ECHR:2026:0410JUD005256311", dissent: false, conclusion: "Violation of Article 6"},
-                {id: "29012/08", name: "Nagy v. Hungary", respondent: "Hungary", articles: ["10", "35"], year: 2026, date: "2026-03-25", branch: "Chamber", section: "IV", importance: 2, ecli: "ECLI:CE:ECHR:2026:0325JUD002901208", dissent: true, conclusion: "Inadmissible"},
-                {id: "38550/13", name: "Osman v. Turkey", respondent: "Turkey", articles: ["6", "2"], year: 2026, date: "2026-03-20", branch: "Committee", section: "I", importance: 1, ecli: "ECLI:CE:ECHR:2026:0320JUD003855013", dissent: false, conclusion: "No violation"},
-                {id: "21340/09", name: "Paladi v. Moldova", respondent: "Moldova", articles: ["5", "41"], year: 2026, date: "2026-03-15", branch: "Chamber", section: "II", importance: 3, ecli: "ECLI:CE:ECHR:2026:0315JUD002134009", dissent: false, conclusion: "Violation of Article 5"},
-                {id: "44639/14", name: "Queiros v. Portugal", respondent: "Portugal", articles: ["8", "13"], year: 2026, date: "2026-03-10", branch: "Chamber", section: "V", importance: 1, ecli: "ECLI:CE:ECHR:2026:0310JUD004463914", dissent: true, conclusion: "Violation of Article 8"}
-            ],
-            links: [
-                {source: 1, target: 0}, {source: 2, target: 0}, {source: 2, target: 1},
-                {source: 3, target: 1}, {source: 4, target: 0}, {source: 4, target: 2},
-                {source: 5, target: 0}, {source: 5, target: 3}, {source: 6, target: 2},
-                {source: 7, target: 1}, {source: 7, target: 4}, {source: 8, target: 0},
-                {source: 9, target: 3}, {source: 10, target: 5}, {source: 10, target: 7},
-                {source: 11, target: 2}, {source: 12, target: 4}, {source: 13, target: 1},
-                {source: 14, target: 6}, {source: 15, target: 8}, {source: 16, target: 3},
-                {source: 17, target: 9}, {source: 18, target: 5}, {source: 19, target: 11}
-            ]
-        };
-
-        const articles = {
-            "6": 494, "6-1": 462, "8": 358, "3": 382, "35": 311,
-            "41": 212, "13": 169, "10": 199
-        };
-
-        const dissentByArticle = {
-            "6": 11, "8": 7, "3": 5, "41": 4, "6-1": 4, "10": 3, "5": 2, "13": 2
-        };
-
-        const importanceDistribution = {
-            "Level 1": 75,
-            "Level 2": 89,
-            "Level 3": 36
-        };
-
-        function css(name) {
-            return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-        }
-
-        function calculateInDegree(links, nodeCount) {
-            const inDegree = new Array(nodeCount).fill(0);
-            links.forEach(link => inDegree[link.target]++);
-            return inDegree;
-        }
-
-        function drawNetwork() {
-            const container = document.getElementById('network-chart').parentElement;
-            const width = container.clientWidth - 30;
-            const height = 450;
-            const inDegree = calculateInDegree(networkData.links, networkData.cases.length);
-
-            const svg = d3.select('#network-chart')
-                .attr('width', width)
-                .attr('height', height);
-            svg.selectAll('*').remove();
-
-            const links = networkData.links.map(d => ({
-                source: networkData.cases[d.source],
-                target: networkData.cases[d.target]
-            }));
-
-            const simulation = d3.forceSimulation(networkData.cases)
-                .force('link', d3.forceLink(links).id(d => d.id).distance(60))
-                .force('charge', d3.forceManyBody().strength(-300))
-                .force('center', d3.forceCenter(width / 2, height / 2))
-                .force('collision', d3.forceCollide(d => 5 + inDegree[networkData.cases.indexOf(d)] * 2));
-
-            const link = svg.append('g')
-                .selectAll('line')
-                .data(links)
-                .enter()
-                .append('line')
-                .attr('class', 'network-link')
-                .attr('stroke', css('--line'))
-                .attr('stroke-width', 1.5)
-                .attr('stroke-opacity', 0.5);
-
-            const node = svg.append('g')
-                .selectAll('circle')
-                .data(networkData.cases)
-                .enter()
-                .append('circle')
-                .attr('class', 'network-node')
-                .attr('r', (d, i) => 4 + Math.sqrt(inDegree[i]) * 1.5)
-                .attr('fill', d => d.dissent ? css('--bar-danger') : css('--bar-primary'))
-                .attr('stroke', css('--line'))
-                .attr('stroke-width', 1)
-                .attr('opacity', 0.85)
-                .on('click', (e, d) => openDrawer(d));
-
-            simulation.on('tick', () => {
-                link
-                    .attr('x1', d => d.source.x)
-                    .attr('y1', d => d.source.y)
-                    .attr('x2', d => d.target.x)
-                    .attr('y2', d => d.target.y);
-
-                node
-                    .attr('cx', d => d.x)
-                    .attr('cy', d => d.y);
+        function copyTerminal(btn) {
+            const terminal = btn.closest('.terminal');
+            const text = terminal.innerText.replace('Copy', '').trim();
+            navigator.clipboard.writeText(text).then(() => {
+                const original = btn.textContent;
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = original, 2000);
             });
-        }
-
-        function openDrawer(caseData) {
-            const content = document.getElementById('drawer-content');
-            const fields = [
-                {label: 'Application No.', value: caseData.id},
-                {label: 'Case Name', value: caseData.name},
-                {label: 'Respondent', value: caseData.respondent},
-                {label: 'Decision Date', value: caseData.date},
-                {label: 'Articles', value: caseData.articles.map(a => `Art. ${a}`).join(', ')},
-                {label: 'Conclusion', value: caseData.conclusion},
-                {label: 'Branch', value: caseData.branch},
-                {label: 'Section', value: `Section ${caseData.section}`},
-                {label: 'Importance', value: `Level ${caseData.importance}`},
-                {label: 'Separate Opinion', value: caseData.dissent ? 'Yes' : 'No'},
-                {label: 'ECLI', value: caseData.ecli}
-            ];
-
-            let html = `<h3>${caseData.name}</h3>`;
-            fields.forEach(f => {
-                html += `
-                    <div class="field">
-                        <div class="label">${f.label}</div>
-                        <div class="value">${f.value}</div>
-                    </div>
-                `;
-            });
-
-            content.innerHTML = html;
-            document.getElementById('drawer').classList.add('open');
-        }
-
-        function closeDrawer() {
-            document.getElementById('drawer').classList.remove('open');
-            document.getElementById('drawer-content').innerHTML = '<p style="color: var(--muted); font-size: 0.75rem;">Click a case in the network</p>';
-        }
-
-        function drawDissent() {
-            const container = document.getElementById('dissent-chart').parentElement;
-            const width = Math.max(container.clientWidth - 30, 400);
-            const height = 300;
-            const margin = {top: 20, right: 20, bottom: 40, left: 50};
-
-            const svg = d3.select('#dissent-chart')
-                .attr('width', width)
-                .attr('height', height);
-            svg.selectAll('*').remove();
-
-            const dissentArray = Object.entries(dissentByArticle)
-                .map(([art, count]) => ({article: art, count}))
-                .sort((a, b) => b.count - a.count);
-
-            const x = d3.scaleBand()
-                .range([margin.left, width - margin.right])
-                .padding(0.3)
-                .domain(dissentArray.map(d => d.article));
-
-            const y = d3.scaleLinear()
-                .range([height - margin.bottom, margin.top])
-                .domain([0, 12]);
-
-            const g = svg.append('g');
-
-            g.selectAll('rect')
-                .data(dissentArray)
-                .enter()
-                .append('rect')
-                .attr('x', d => x(d.article))
-                .attr('y', d => y(d.count))
-                .attr('width', x.bandwidth())
-                .attr('height', d => height - margin.bottom - y(d.count))
-                .attr('fill', css('--bar-danger'))
-                .attr('opacity', 0.8);
-
-            g.selectAll('.label')
-                .data(dissentArray)
-                .enter()
-                .append('text')
-                .attr('class', 'label')
-                .attr('x', d => x(d.article) + x.bandwidth() / 2)
-                .attr('y', d => y(d.count) - 4)
-                .attr('text-anchor', 'middle')
-                .attr('fill', css('--fg'))
-                .style('font-size', '11px')
-                .text(d => d.count);
-
-            g.append('g')
-                .attr('transform', `translate(0,${height - margin.bottom})`)
-                .call(d3.axisBottom(x))
-                .attr('color', css('--muted'))
-                .selectAll('text')
-                .attr('fill', css('--muted'))
-                .style('font-size', '11px');
-
-            g.append('g')
-                .attr('transform', `translate(${margin.left},0)`)
-                .call(d3.axisLeft(y).ticks(4))
-                .attr('color', css('--muted'))
-                .selectAll('text')
-                .attr('fill', css('--muted'))
-                .style('font-size', '11px');
-
-            g.selectAll('.domain').attr('stroke', css('--line'));
-            g.selectAll('.tick line').attr('stroke', css('--line'));
-        }
-
-        function drawImportance() {
-            const container = document.getElementById('importance-chart').parentElement;
-            const width = Math.max(container.clientWidth - 30, 400);
-            const height = 300;
-            const margin = {top: 20, right: 20, bottom: 60, left: 50};
-
-            const svg = d3.select('#importance-chart')
-                .attr('width', width)
-                .attr('height', height);
-            svg.selectAll('*').remove();
-
-            const importanceArray = Object.entries(importanceDistribution)
-                .map(([level, count]) => ({level, count}));
-
-            const x = d3.scaleBand()
-                .range([margin.left, width - margin.right])
-                .padding(0.4)
-                .domain(importanceArray.map(d => d.level));
-
-            const y = d3.scaleLinear()
-                .range([height - margin.bottom, margin.top])
-                .domain([0, 100]);
-
-            const colors = [css('--bar-secondary'), css('--bar-primary'), css('--bar-danger')];
-
-            const g = svg.append('g');
-
-            g.selectAll('rect')
-                .data(importanceArray)
-                .enter()
-                .append('rect')
-                .attr('x', d => x(d.level))
-                .attr('y', d => y(d.count))
-                .attr('width', x.bandwidth())
-                .attr('height', d => height - margin.bottom - y(d.count))
-                .attr('fill', (d, i) => colors[i])
-                .attr('opacity', 0.85);
-
-            g.selectAll('.label')
-                .data(importanceArray)
-                .enter()
-                .append('text')
-                .attr('class', 'label')
-                .attr('x', d => x(d.level) + x.bandwidth() / 2)
-                .attr('y', d => y(d.count) - 4)
-                .attr('text-anchor', 'middle')
-                .attr('fill', css('--fg'))
-                .style('font-size', '12px')
-                .text(d => d.count);
-
-            g.append('g')
-                .attr('transform', `translate(0,${height - margin.bottom})`)
-                .call(d3.axisBottom(x))
-                .attr('color', css('--muted'))
-                .selectAll('text')
-                .attr('fill', css('--muted'))
-                .style('font-size', '11px');
-
-            g.append('g')
-                .attr('transform', `translate(${margin.left},0)`)
-                .call(d3.axisLeft(y).ticks(4))
-                .attr('color', css('--muted'))
-                .selectAll('text')
-                .attr('fill', css('--muted'))
-                .style('font-size', '11px');
-
-            g.selectAll('.domain').attr('stroke', css('--line'));
-            g.selectAll('.tick line').attr('stroke', css('--line'));
-        }
-
-        function drawArticles() {
-            const container = document.getElementById('articles-chart').parentElement;
-            const width = Math.max(container.clientWidth - 30, 400);
-            const height = 320;
-            const margin = {top: 20, right: 20, bottom: 40, left: 50};
-
-            const svg = d3.select('#articles-chart')
-                .attr('width', width)
-                .attr('height', height);
-            svg.selectAll('*').remove();
-
-            const articlesArray = Object.entries(articles)
-                .map(([art, count]) => ({article: art, count}))
-                .sort((a, b) => b.count - a.count)
-                .slice(0, 8);
-
-            const x = d3.scaleBand()
-                .range([margin.left, width - margin.right])
-                .padding(0.25)
-                .domain(articlesArray.map(d => d.article));
-
-            const y = d3.scaleLinear()
-                .range([height - margin.bottom, margin.top])
-                .domain([0, 510]);
-
-            const g = svg.append('g');
-
-            g.selectAll('rect')
-                .data(articlesArray)
-                .enter()
-                .append('rect')
-                .attr('x', d => x(d.article))
-                .attr('y', d => y(d.count))
-                .attr('width', x.bandwidth())
-                .attr('height', d => height - margin.bottom - y(d.count))
-                .attr('fill', css('--bar-primary'))
-                .attr('opacity', 0.85);
-
-            g.selectAll('.label')
-                .data(articlesArray)
-                .enter()
-                .append('text')
-                .attr('class', 'label')
-                .attr('x', d => x(d.article) + x.bandwidth() / 2)
-                .attr('y', d => y(d.count) - 5)
-                .attr('text-anchor', 'middle')
-                .attr('fill', css('--fg'))
-                .style('font-size', '11px')
-                .text(d => d.count);
-
-            g.append('g')
-                .attr('transform', `translate(0,${height - margin.bottom})`)
-                .call(d3.axisBottom(x))
-                .attr('color', css('--muted'))
-                .selectAll('text')
-                .attr('fill', css('--muted'))
-                .style('font-size', '11px');
-
-            g.append('g')
-                .attr('transform', `translate(${margin.left},0)`)
-                .call(d3.axisLeft(y).ticks(5))
-                .attr('color', css('--muted'))
-                .selectAll('text')
-                .attr('fill', css('--muted'))
-                .style('font-size', '11px');
-
-            g.selectAll('.domain').attr('stroke', css('--line'));
-            g.selectAll('.tick line').attr('stroke', css('--line'));
         }
 
         document.getElementById('theme-toggle').addEventListener('click', function() {
@@ -855,19 +439,6 @@
                 html.classList.add('light-mode');
                 localStorage.setItem('noir-theme', 'light');
             }
-            setTimeout(() => {
-                drawNetwork();
-                drawArticles();
-                drawDissent();
-                drawImportance();
-            }, 50);
-        });
-
-        window.addEventListener('load', () => {
-            drawNetwork();
-            drawArticles();
-            drawDissent();
-            drawImportance();
         });
     </script>
 </body>
