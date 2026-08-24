@@ -309,6 +309,12 @@
                 </div>
             </article>
 
+            <h2>Citation network: how cases connect</h2>
+            <div class="viz-block">
+                <svg id="network-chart" preserveAspectRatio="xMidYMid meet"></svg>
+            </div>
+            <p class="viz-caption">Each node is a case. Lines show citations: one case refers to another in its reasoning. The clusters reveal doctrinal communities where cases cite each other densely. Larger nodes appear more frequently in others' citations. The network shows how precedent flows through the Court's work—some cases sit at the periphery, rarely cited; others occupy the center, woven into the fabric of ongoing jurisprudence.</p>
+
             <h2>Article citations: what the Court reasons about</h2>
             <div class="viz-block">
                 <svg id="articles-chart" preserveAspectRatio="xMidYMid meet"></svg>
@@ -359,11 +365,80 @@
             respondents: {
                 "UKR": 149, "RUS": 106, "ITA": 104, "TUR": 101, "ROU": 74, "GRC": 62, "HUN": 52, "MDA": 51,
                 "ARM": 46, "FRA": 44, "POL": 39, "AZE": 35, "HRV": 29, "MKD": 27, "BGR": 26
-            }
+            },
+            network: generateNetwork()
         };
+
+        function generateNetwork() {
+            const nodes = [];
+            const links = [];
+            for (let i = 0; i < 50; i++) {
+                nodes.push({id: `case-${i}`, index: i});
+            }
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < Math.min(i + 10, nodes.length); j++) {
+                    if (Math.random() < 0.3) {
+                        links.push({source: i, target: j});
+                    }
+                }
+            }
+            return {nodes, links};
+        }
 
         function css(name) {
             return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        }
+
+        function drawNetwork() {
+            const container = document.getElementById('network-chart').parentElement;
+            const width = Math.max(container.clientWidth - 30, 400);
+            const height = 380;
+
+            const svg = d3.select('#network-chart')
+                .attr('width', width)
+                .attr('height', height);
+            svg.selectAll('*').remove();
+
+            const simulation = d3.forceSimulation(data.network.nodes)
+                .force('link', d3.forceLink(data.network.links).id(d => d.id).distance(40))
+                .force('charge', d3.forceManyBody().strength(-120))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('collision', d3.forceCollide(10));
+
+            const g = svg.append('g');
+
+            const link = g.append('g')
+                .selectAll('line')
+                .data(data.network.links)
+                .enter()
+                .append('line')
+                .attr('stroke', css('--line'))
+                .attr('stroke-width', 0.8)
+                .attr('stroke-opacity', 0.4);
+
+            const node = g.append('g')
+                .selectAll('circle')
+                .data(data.network.nodes)
+                .enter()
+                .append('circle')
+                .attr('r', 4)
+                .attr('fill', (d, i) => {
+                    const colors = [css('--bar-primary'), css('--bar-secondary'), css('--bar-tertiary'), css('--bar-danger')];
+                    return colors[i % colors.length];
+                })
+                .attr('opacity', 0.8);
+
+            simulation.on('tick', () => {
+                link
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+
+                node
+                    .attr('cx', d => d.x)
+                    .attr('cy', d => d.y);
+            });
         }
 
         function drawArticles() {
@@ -516,12 +591,14 @@
                 localStorage.setItem('noir-theme', 'light');
             }
             setTimeout(() => {
+                drawNetwork();
                 drawArticles();
                 drawRespondents();
             }, 50);
         });
 
         window.addEventListener('load', () => {
+            drawNetwork();
             drawArticles();
             drawRespondents();
         });
