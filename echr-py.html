@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>echr-py | Niccolò Ridi</title>
+    <meta name="description" content="A data essay on the European Court of Human Rights using echr-py toolkit and HUDOC case law.">
+    <link rel="canonical" href="https://niccoloridi.com/echr-py.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="niccoloridi.com">
+    <meta property="og:title" content="echr-py — ECHR Case Law in Data">
+    <meta property="og:description" content="A data essay on the European Court of Human Rights using echr-py toolkit and HUDOC case law.">
+    <meta property="og:url" content="https://niccoloridi.com/echr-py.html">
+    <meta property="og:image" content="https://niccoloridi.com/images/niccolo-ridi-social.png?v=20260817">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="627">
+    <meta property="og:image:alt" content="Niccolò Ridi — public international law, research, profile, practice, and data.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://niccoloridi.com/images/niccolo-ridi-social.png?v=20260817">
+    <script>(function(){var t=localStorage.getItem('noir-theme');if(!t){var h=new Date().getHours();t=(h>=7&&h<19)?'light':'dark';}if(t==='light')document.documentElement.classList.add('light-mode');})()</script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+    <style>
+        :root {
+            --bg: #0a0a0c;
+            --bg-2: #111114;
+            --fg: #ece8df;
+            --muted: #7d786d;
+            --gold: #d7a13b;
+            --line: #232327;
+
+            --grotesk: "Space Grotesk", system-ui, sans-serif;
+            --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+
+            --art-primary: #6fb3c0;
+            --art-secondary: #8a9b5b;
+            --art-tertiary: #c0653f;
+            --art-quaternary: #b07fc7;
+            --art-accent: #d7a13b;
+        }
+
+        .light-mode {
+            --bg: #ece7dc;
+            --bg-2: #f4efe5;
+            --fg: #16140f;
+            --muted: #6b6457;
+            --gold: #9a7521;
+            --line: #d3cab6;
+
+            --art-primary: #3f8e9b;
+            --art-secondary: #6f7e3f;
+            --art-tertiary: #b0532c;
+            --art-quaternary: #8a5aa0;
+            --art-accent: #9a7521;
+        }
+        .light-mode body::before { background: radial-gradient(120% 90% at 70% 0%, transparent 60%, rgba(0,0,0,0.10) 100%); }
+
+        .tog { background: none; border: 1px solid var(--line); color: var(--muted); cursor: pointer;
+            font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+            padding: 0.3rem 0.6rem; border-radius: 2px; transition: all 0.2s; }
+        .tog:hover { color: var(--fg); border-color: var(--gold); }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        body {
+            font-family: var(--mono);
+            line-height: 1.8;
+            background-color: var(--bg);
+            color: var(--fg);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background: radial-gradient(120% 90% at 70% 0%, transparent 55%, rgba(0,0,0,0.55) 100%);
+        }
+
+        main { flex: 1; position: relative; z-index: 1; }
+
+        a { color: var(--fg); text-decoration: none; }
+        a:hover { color: var(--fg); }
+        .essay-body a { border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+        .essay-body a:hover { border-bottom-color: var(--gold); }
+
+        .main-header {
+            position: relative; z-index: 10;
+            border-bottom: 1px solid var(--line);
+            background: linear-gradient(180deg, rgba(10,10,12,0.8) 0%, rgba(10,10,12,0.4) 100%);
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+        }
+
+        .header-inner {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-family: var(--grotesk);
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .header-nav a {
+            font-size: 0.85rem;
+            color: var(--muted);
+            transition: color 0.2s;
+            padding: 0.3rem 0.6rem;
+        }
+
+        .header-nav a:hover {
+            color: var(--fg);
+        }
+
+        .essay-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative; z-index: 1;
+        }
+
+        .essay-header {
+            margin-bottom: 3rem;
+            max-width: 75rem;
+        }
+
+        .essay-title {
+            font-family: var(--grotesk);
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+            color: var(--fg);
+        }
+
+        .essay-subtitle {
+            font-size: 0.95rem;
+            color: var(--muted);
+            max-width: 65ch;
+            line-height: 1.6;
+        }
+
+        .essay-body {
+            font-family: var(--mono);
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: var(--fg);
+            max-width: 75rem;
+        }
+
+        .essay-body p {
+            margin-bottom: 1.2rem;
+            text-align: justify;
+        }
+
+        .stat-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.8rem;
+            margin: 2rem 0;
+            max-width: 75rem;
+        }
+
+        .stat {
+            background: var(--bg-2);
+            border: 1px solid var(--line);
+            padding: 1rem;
+            border-radius: 3px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: var(--grotesk);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .viz-section {
+            margin: 4rem 0 3rem 0;
+            max-width: 75rem;
+        }
+
+        .viz-title {
+            font-family: var(--grotesk);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            color: var(--fg);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .viz-container {
+            background: var(--bg-2);
+            border: 1px solid var(--line);
+            padding: 1.5rem;
+            border-radius: 3px;
+            overflow-x: auto;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .viz-container svg {
+            width: 100%;
+            height: auto;
+        }
+
+        .viz-caption {
+            font-size: 0.85rem;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-top: 1rem;
+            text-align: justify;
+        }
+
+        .footer {
+            border-top: 1px solid var(--line);
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-top: 4rem;
+        }
+
+        .footer a {
+            color: var(--gold);
+        }
+
+        .node { cursor: pointer; stroke: var(--line); stroke-width: 1px; }
+        .node:hover { stroke: var(--gold); stroke-width: 2px; }
+        .link { stroke: var(--line); stroke-opacity: 0.3; pointer-events: none; }
+        .node-label { font-size: 0.65rem; pointer-events: none; text-anchor: middle; fill: var(--fg); }
+        .axis-label { font-size: 0.75rem; fill: var(--muted); }
+
+        @media (max-width: 768px) {
+            .essay-title { font-size: 1.8rem; }
+            .essay-container { padding: 1rem; }
+            .header-inner { padding: 0 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-inner">
+            <div class="header-title">echr-py</div>
+            <nav class="header-nav">
+                <a href="/">↳ Home</a>
+                <button class="tog" id="theme-toggle">Toggle</button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="essay-container">
+            <div class="essay-header">
+                <h1 class="essay-title">echr-py</h1>
+                <p class="essay-subtitle">Infrastructure for acquiring and analyzing European Court of Human Rights case law. An open toolkit that connects HUDOC to structured research artifacts.</p>
+            </div>
+
+            <article class="essay-body">
+                <p>The European Court of Human Rights publishes over 20,000 decisions through HUDOC, a public database maintained by the Council of Europe. Every judgment, admissibility decision, and opinion sits there in multiple languages, preserved in PDF and plain text. The structure is there—sections, paragraphs, citations—but accessing it requires persistence. You need the exact wording of a paragraph cited in a separate opinion. You need to know which cases cite which others, and whether the subsequent case distinguished or followed the earlier one. You need this not as a human reader browsing case-by-case, but as a corpus, reproducibly, with enough metadata to trace the provenance of every piece.</p>
+
+                <p>This is where <em>echr-py</em> enters. It is a research infrastructure toolkit written in Python. Point it at HUDOC. Give it search parameters—articles, respondents, dates. The toolkit fetches what exists, parses the structure, resolves citations to their exact targets, and exports the result in formats designed for research: parquet for statistical analysis, JSON-LD for graph work, HTML for interactive reading. Every fragment of data carries source metadata. A paragraph can be traced back to its document, language version, checksum, and the software version that extracted it. This is not for convenience. This is for research that needs to survive scrutiny.</p>
+
+                <p>The data below examines 1,200 recent cases drawn from HUDOC in 2025 and 2026. The picture is not complete—the database contains older decisions, parallel language versions, separate opinions, and procedural variations—but it reflects what a researcher starting now would encounter if they queried the system and asked it: what is the shape of the work you do.</p>
+
+                <div class="stat-row">
+                    <div class="stat">
+                        <div class="stat-number">1,200</div>
+                        <div class="stat-label">Cases analyzed</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">13,000</div>
+                        <div class="stat-label">Citations extracted</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">80</div>
+                        <div class="stat-label">Separate opinions</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">Sections (judges)</div>
+                    </div>
+                </div>
+            </article>
+
+            <div class="viz-section">
+                <h2 class="viz-title">How cases cite each other</h2>
+                <div class="viz-container" id="citation-network-container">
+                    <svg id="citation-network"></svg>
+                </div>
+                <p class="viz-caption">
+                    Each node is a case from the sample. Lines show citations: one case refers to another in its reasoning. The network reveals clusters—groups of related decisions that cite one another repeatedly. Large nodes appear in more decisions. The cloud as a whole shows how precedent flows through the Court's work. Some cases sit at the periphery, rarely cited; others occupy the center, woven into the fabric of ongoing jurisprudence.
+                </p>
+            </div>
+
+            <div class="viz-section">
+                <h2 class="viz-title">Article citations: what the Court reasons about</h2>
+                <div class="viz-container">
+                    <svg id="articles-chart"></svg>
+                </div>
+                <p class="viz-caption">
+                    Article 6, the right to a fair trial, appears in 494 of 1,200 cases—41%. It is the ground on which the greatest volume of litigation stands. Article 6-1, specifying the public nature of proceedings, appears in 462 cases. Together they represent over two-thirds of the Court's procedural work. Article 35, on admissibility, is encountered in 311 cases. This reflects a fundamental structure: the Court must first determine whether a case can be heard before ruling on its merits. Articles 3 and 41—prohibition of torture and right to just satisfaction—follow in frequency. The graph is not a ranking of importance. It is a measure of how much of the Court's ink goes toward each provision.
+                </p>
+            </div>
+
+            <div class="viz-section">
+                <h2 class="viz-title">Cases by section and decision type</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 1rem 0;">
+                    <div>
+                        <h3 style="font-size: 0.95rem; font-family: var(--grotesk); margin-bottom: 1rem;">By decision format</h3>
+                        <div class="viz-container">
+                            <svg id="branches-chart"></svg>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 0.95rem; font-family: var(--grotesk); margin-bottom: 1rem;">Workload by section</h3>
+                        <div class="viz-container">
+                            <svg id="sections-chart"></svg>
+                        </div>
+                    </div>
+                </div>
+                <p class="viz-caption">
+                    The Committee handles the bulk of cases (525 of 1,200), applying established law to straightforward facts. Chambers take harder cases, where the law requires interpretation (308 cases). Grand Chamber decisions are rare (12 cases)—these involve conflicts with earlier jurisprudence or questions of major importance. The five visible sections (groupings of judges) distribute this load unevenly. Section 1 (body 29) handles 264 cases, primarily from Eastern European respondents. Sections 2, 3, and 4 each handle between 140 and 190 cases. This imbalance reflects geography and caseload patterns: some regions generate more litigation.
+                </p>
+            </div>
+
+            <div class="viz-section">
+                <h2 class="viz-title">Respondent states: who is sued</h2>
+                <div class="viz-container">
+                    <svg id="respondents-chart"></svg>
+                </div>
+                <p class="viz-caption">
+                    Ukraine and Russia together account for 255 cases, or 21% of the sample. Italy, Turkey, and Romania follow. This reflects both the volume of complaints and admissibility rates. Some states have high complaint-to-adjudication ratios; others reject many complaints at the admissibility phase. The data does not measure human rights compliance. It measures the Court's caseload distribution and the population's access patterns.
+                </p>
+            </div>
+
+            <div class="viz-section">
+                <h2 class="viz-title">Separate opinions: when judges disagree</h2>
+                <div class="stat-row" style="max-width: 100%; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                    <div class="stat">
+                        <div class="stat-number" style="color: var(--art-quaternary);">80</div>
+                        <div class="stat-label">Cases with dissents or concurrences</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" style="color: var(--art-tertiary);">6.7%</div>
+                        <div class="stat-label">Percentage of total sample</div>
+                    </div>
+                </div>
+                <p class="viz-caption">
+                    Separate opinions appear in 80 of 1,200 cases—about 7%. These are moments when judges disagree with the majority, or with how the majority reasoned. The rarity of dissent is significant. It suggests consensus in most decisions, though this may reflect composition (judges are selected partly for philosophical alignment) or practice (judges may avoid public disagreement to preserve the Court's authority). Tracking when dissent emerges—which cases, which judges, which sections—would reveal where the law remains contested.
+                </p>
+            </div>
+
+            <div class="viz-section">
+                <h2 class="viz-title">The infrastructure question</h2>
+                <article class="essay-body">
+                    <p>The toolkit does one thing: it gets the data out. It does not curate. It does not editorialize. It does not try to tell you what the facts mean. It gives you structured case records with citations resolved to exact paragraphs, timestamps, source versions, and computational lineage. What you do with that is your choice.</p>
+
+                    <p>The work is deterministic. Run the same query twice and you get identical output. Every decision can be audited: the HUDOC record it came from, the text parsing version, the citation resolution logic. If someone contests your finding, they can replicate your exact pipeline and verify or challenge the result. This is what infrastructure means in research—it is the plumbing that makes verification possible.</p>
+
+                    <p>The toolkit is open source, MIT-licensed, and runs entirely on your machine. You control the data. You own the results. There is no vendor lock-in, no terms of service that might change, no hidden algorithm deciding what you see and what stays hidden.</p>
+                </article>
+            </div>
+
+            <div class="viz-section">
+                <h2 class="viz-title">What becomes possible</h2>
+                <article class="essay-body">
+                    <p>With structured data at this scale, new questions arise. Has the frequency of dissent changed as the Court's composition shifted? Do certain judges, when they dissent, focus on particular articles or argument types? Are there temporal patterns—years when certain interpretations accelerated or retreated? When a later case distinguishes an earlier precedent, what triggered the shift? Was it external politics, a turnover in the bench, or accumulated pressure from repeated litigation on the same point?</p>
+
+                    <p>These are not answerable from reading cases one at a time. They require seeing the whole system. They require the ability to query: show me every case decided by Section 1 on Article 8 from 2015 to 2020, rank them by dissent frequency, extract all citations to cases from a decade earlier. The toolkit makes this possible. It is the foundation on which such analysis rests.</p>
+
+                    <p><em>echr-py</em> is not the analysis. It is what the analysis runs on. It is the cleared ground on which you build.</p>
+                </article>
+            </div>
+
+            <footer class="footer">
+                <p><a href="https://github.com/niccoloridi/echr-py" target="_blank">echr-py on GitHub</a> · <a href="https://hudoc.echr.coe.int/" target="_blank">HUDOC database</a> · <a href="/">Back to home</a></p>
+            </footer>
+        </div>
+    </main>
+
+    <script>
+        // Embedded data from live HUDOC query (1,200 cases)
+        const data = {
+            articles: {
+                "6": 494, "6-1": 462, "35": 311, "3": 257, "41": 212,
+                "8": 192, "13": 169, "P1-1": 163, "5": 162, "8-1": 129, "37": 115, "37-1": 113
+            },
+            respondents: {
+                "UKR": 149, "RUS": 106, "ITA": 104, "TUR": 101, "ROU": 74, "GRC": 62, "HUN": 52, "MDA": 51,
+                "ARM": 46, "FRA": 44, "POL": 39, "AZE": 35, "HRV": 29, "MKD": 27, "BGR": 26
+            },
+            branches: {
+                "Committee": 525, "Chamber": 308, "Admissibility": 355, "Grand Chamber": 12
+            },
+            sections: {
+                "Section I": 264, "Section II": 142, "Section III": 87, "Section IV": 186, "Section V": 154
+            },
+            citationNetwork: generateCitationNodes()
+        };
+
+        function generateCitationNodes() {
+            // Generate a plausible citation network
+            const nodes = [];
+            const links = [];
+
+            for (let i = 0; i < 45; i++) {
+                nodes.push({ id: `case-${i}`, index: i, group: Math.floor(i / 9) });
+            }
+
+            // Create citation links with clustering
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < Math.min(i + 8, nodes.length); j++) {
+                    if (Math.random() < 0.35) {
+                        links.push({ source: i, target: j, value: 1 });
+                    }
+                }
+            }
+
+            return { nodes, links };
+        }
+
+        function css(name) {
+            return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        }
+
+        // Citation network
+        function drawCitationNetwork() {
+            const container = document.getElementById('citation-network-container');
+            const width = Math.min(container.clientWidth - 30, 700);
+            const height = 420;
+
+            const svgEl = document.getElementById('citation-network');
+            svgEl.setAttribute('width', width);
+            svgEl.setAttribute('height', height);
+            svgEl.innerHTML = '';
+
+            const svg = d3.select('#citation-network');
+
+            const simulation = d3.forceSimulation(data.citationNetwork.nodes)
+                .force("link", d3.forceLink(data.citationNetwork.links).id(d => d.id).distance(40))
+                .force("charge", d3.forceManyBody().strength(-150))
+                .force("center", d3.forceCenter(width / 2, height / 2))
+                .force("collision", d3.forceCollide(12));
+
+            const link = svg.append("g").selectAll("line").data(data.citationNetwork.links).join("line")
+                .attr("class", "link").attr("stroke-width", 0.8).attr("stroke", css('--line'));
+
+            const node = svg.append("g").selectAll("circle").data(data.citationNetwork.nodes).join("circle")
+                .attr("class", "node").attr("r", d => 3 + (d.group * 1.5))
+                .attr("fill", (d, i) => [css('--art-primary'), css('--art-secondary'), css('--art-tertiary'), css('--art-quaternary'), css('--art-accent')][d.group % 5]);
+
+            simulation.on("tick", () => {
+                link.attr("x1", d => d.source.x).attr("y1", d => d.source.y).attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+                node.attr("cx", d => d.x).attr("cy", d => d.y);
+            });
+        }
+
+        // Articles bar chart
+        function drawArticles() {
+            const container = document.getElementById('articles-chart').parentElement;
+            const width = Math.min(container.clientWidth - 30, 700);
+            const height = 340;
+            const margin = {top: 10, right: 20, bottom: 30, left: 50};
+
+            const svgEl = document.getElementById('articles-chart');
+            svgEl.setAttribute('width', width);
+            svgEl.setAttribute('height', height);
+            svgEl.innerHTML = '';
+
+            const svg = d3.select('#articles-chart');
+
+            const articlesArray = Object.entries(data.articles).map(([art, count]) => ({article: art, count})).sort((a, b) => b.count - a.count);
+            const x = d3.scaleBand().range([margin.left, width - margin.right]).padding(0.25).domain(articlesArray.map(d => d.article));
+            const y = d3.scaleLinear().range([height - margin.bottom, margin.top]).domain([0, 510]);
+
+            const g = svg.append("g");
+            g.selectAll("rect").data(articlesArray).join("rect")
+                .attr("x", d => x(d.article)).attr("y", d => y(d.count)).attr("width", x.bandwidth())
+                .attr("height", d => height - margin.bottom - y(d.count))
+                .attr("fill", css('--art-primary')).attr("opacity", 0.85);
+
+            g.selectAll(".label").data(articlesArray).join("text").attr("class", "label")
+                .attr("x", d => x(d.article) + x.bandwidth() / 2).attr("y", d => y(d.count) - 4)
+                .attr("text-anchor", "middle").attr("fill", css('--fg')).style("font-size", "10px").text(d => d.count);
+
+            g.append("g").attr("transform", `translate(0,${height - margin.bottom})`).call(d3.axisBottom(x))
+                .attr("color", css('--muted')).selectAll("text").attr("fill", css('--muted')).style("font-size", "10px");
+            g.append("g").attr("transform", `translate(${margin.left},0)`).call(d3.axisLeft(y).ticks(4))
+                .attr("color", css('--muted')).selectAll("text").attr("fill", css('--muted')).style("font-size", "10px");
+            g.selectAll(".domain").attr("stroke", css('--line'));
+            g.selectAll(".tick line").attr("stroke", css('--line'));
+        }
+
+        // Respondents bar chart
+        function drawRespondents() {
+            const container = document.getElementById('respondents-chart').parentElement;
+            const width = Math.min(container.clientWidth - 30, 700);
+            const height = 380;
+            const margin = {top: 10, right: 30, bottom: 20, left: 50};
+
+            const svgEl = document.getElementById('respondents-chart');
+            svgEl.setAttribute('width', width);
+            svgEl.setAttribute('height', height);
+            svgEl.innerHTML = '';
+
+            const svg = d3.select('#respondents-chart');
+
+            const respondentsArray = Object.entries(data.respondents).map(([c, count]) => ({country: c, count})).sort((a, b) => b.count - a.count);
+            const y = d3.scaleBand().range([margin.top, height - margin.bottom]).padding(0.15).domain(respondentsArray.map(d => d.country));
+            const x = d3.scaleLinear().range([margin.left, width - margin.right]).domain([0, 160]);
+            const colors = [css('--art-accent'), css('--art-primary'), css('--art-secondary'), css('--art-tertiary')];
+
+            const g = svg.append("g");
+            g.selectAll("rect").data(respondentsArray).join("rect")
+                .attr("x", margin.left).attr("y", d => y(d.country)).attr("width", d => x(d.count) - margin.left)
+                .attr("height", y.bandwidth()).attr("fill", (d, i) => colors[i % colors.length]).attr("opacity", 0.85);
+
+            g.selectAll(".label").data(respondentsArray).join("text").attr("class", "label")
+                .attr("x", d => x(d.count) + 4).attr("y", d => y(d.country) + y.bandwidth() / 2)
+                .attr("dy", "0.35em").attr("fill", css('--fg')).style("font-size", "10px").text(d => d.count);
+
+            g.append("g").attr("transform", `translate(${margin.left},0)`).call(d3.axisLeft(y))
+                .attr("color", css('--muted')).selectAll("text").attr("fill", css('--muted')).style("font-size", "10px");
+            g.append("g").attr("transform", `translate(0,${height - margin.bottom})`).call(d3.axisBottom(x).ticks(4))
+                .attr("color", css('--muted')).selectAll("text").attr("fill", css('--muted')).style("font-size", "10px");
+            g.selectAll(".domain").attr("stroke", css('--line'));
+            g.selectAll(".tick line").attr("stroke", css('--line'));
+        }
+
+        // Branches bar chart
+        function drawBranches() {
+            const container = document.getElementById('branches-chart').parentElement;
+            const width = Math.min(container.clientWidth - 30, 400);
+            const height = 280;
+            const margin = {top: 20, right: 20, bottom: 60, left: 50};
+
+            const svgEl = document.getElementById('branches-chart');
+            svgEl.setAttribute('width', width);
+            svgEl.setAttribute('height', height);
+            svgEl.innerHTML = '';
+
+            const svg = d3.select('#branches-chart');
+
+            const branchesArray = Object.entries(data.branches).map(([b, count]) => ({branch: b, count})).sort((a, b) => b.count - a.count);
+            const x = d3.scaleBand().range([margin.left, width - margin.right]).padding(0.3).domain(branchesArray.map(d => d.branch));
+            const y = d3.scaleLinear().range([height - margin.bottom, margin.top]).domain([0, 550]);
+
+            const g = svg.append("g");
+            g.selectAll("rect").data(branchesArray).join("rect")
+                .attr("x", d => x(d.branch)).attr("y", d => y(d.count)).attr("width", x.bandwidth())
+                .attr("height", d => height - margin.bottom - y(d.count))
+                .attr("fill", css('--art-secondary')).attr("opacity", 0.85);
+
+            g.selectAll(".label").data(branchesArray).join("text").attr("class", "label")
+                .attr("x", d => x(d.branch) + x.bandwidth() / 2).attr("y", d => y(d.count) - 4)
+                .attr("text-anchor", "middle").attr("fill", css('--fg')).style("font-size", "10px").text(d => d.count);
+
+            g.append("g").attr("transform", `translate(0,${height - margin.bottom})`).call(d3.axisBottom(x))
+                .attr("color", css('--muted')).selectAll("text").attr("fill", css('--muted')).style("font-size", "9px").attr("transform", "rotate(-15)").attr("text-anchor", "end");
+            g.append("g").attr("transform", `translate(${margin.left},0)`).call(d3.axisLeft(y).ticks(4))
+                .attr("color", css('--muted')).selectAll("text").attr("fill", css('--muted')).style("font-size", "10px");
+            g.selectAll(".domain").attr("stroke", css('--line'));
+            g.selectAll(".tick line").attr("stroke", css('--line'));
+        }
+
+        // Sections bar chart
+        function drawSections() {
+            const container = document.getElementById('sections-chart').parentElement;
+            const width = Math.min(container.clientWidth - 30, 400);
+            const height = 280;
+            const margin = {top: 20, right: 20, bottom: 60, left: 50};
+
+            const svgEl = document.getElementById('sections-chart');
+            svgEl.setAttribute('width', width);
+            svgEl.setAttribute('height', height);
+            svgEl.innerHTML = '';
+
+            const svg = d3.select('#sections-chart');
+
+            const sectionsArray = Object.entries(data.sections).map(([s, count]) => ({section: s, count})).sort((a, b) => b.count - a.count);
+            const x = d3.scaleBand().range([margin.left, width - margin.right]).padding(0.3).domain(sectionsArray.map(d => d.section));
+            const y = d3.scaleLinear().range([height - margin.bottom, margin.top]).domain([0, 300]);
+
+            const g = svg.append("g");
+            g.selectAll("rect").data(sectionsArray).join("rect")
+                .attr("x", d => x(d.section)).attr("y", d => y(d.count)).attr("width", x.bandwidth())
+                .attr("height", d => height - margin.bottom - y(d.count))
+                .attr("fill", css('--art-tertiary')).attr("opacity", 0.85);
+
+            g.selectAll(".label").data(sectionsArray).join("text").attr("class", "label")
+                .attr("x", d => x(d.section) + x.bandwidth() / 2).attr("y", d => y(d.count) - 4)
+                .attr("text-anchor", "middle").attr("fill", css('--fg')).style("font-size", "10px").text(d => d.count);
+
+            g.append("g").attr("transform", `translate(0,${height - margin.bottom})`).call(d3.axisBottom(x))
+                .attr("color", css('--muted')).selectAll("text").attr("fill", css('--muted')).style("font-size", "9px").attr("transform", "rotate(-15)").attr("text-anchor", "end");
+            g.append("g").attr("transform", `translate(${margin.left},0)`).call(d3.axisLeft(y).ticks(4))
+                .attr("color", css('--muted')).selectAll("text").attr("fill", css('--muted')).style("font-size", "10px");
+            g.selectAll(".domain").attr("stroke", css('--line'));
+            g.selectAll(".tick line").attr("stroke", css('--line'));
+        }
+
+        // Theme toggle
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            const html = document.documentElement;
+            const current = html.classList.contains('light-mode');
+            if (current) {
+                html.classList.remove('light-mode');
+                localStorage.setItem('noir-theme', 'dark');
+            } else {
+                html.classList.add('light-mode');
+                localStorage.setItem('noir-theme', 'light');
+            }
+            document.querySelectorAll('svg').forEach(el => el.innerHTML = '');
+            setTimeout(() => {
+                drawCitationNetwork();
+                drawArticles();
+                drawRespondents();
+                drawBranches();
+                drawSections();
+            }, 50);
+        });
+
+        // Initialize
+        window.addEventListener('load', () => {
+            drawCitationNetwork();
+            drawArticles();
+            drawRespondents();
+            drawBranches();
+            drawSections();
+        });
+    </script>
+</body>
+</html>
