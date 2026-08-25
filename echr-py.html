@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>echr-py | Niccolò Ridi</title>
-    <meta name="description" content="An open-source ECHR case-law toolkit and interactive analysis of 1,247 decisions and 892 citations, replicating Voeten &amp; Lupu's precedent network study.">
+    <meta name="description" content="An open-source ECHR case-law toolkit and a citation-network analysis of all 524 Grand Chamber judgments, 1994&ndash;2026, replicating Voeten &amp; Lupu's precedent study.">
     <link rel="canonical" href="https://niccoloridi.com/echr-py.html">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="niccoloridi.com">
     <meta property="og:title" content="echr-py — ECHR Case-Law Toolkit">
-    <meta property="og:description" content="An open-source toolkit and interactive analysis of 1,247 ECHR decisions and 892 citations.">
+    <meta property="og:description" content="An open-source toolkit and a citation-network analysis of all 524 ECHR Grand Chamber judgments.">
     <meta property="og:url" content="https://niccoloridi.com/echr-py.html">
     <meta property="og:image" content="https://niccoloridi.com/images/niccolo-ridi-social.png?v=20260817">
     <meta property="og:image:width" content="1200">
@@ -165,6 +165,24 @@
             line-height: 1.85;
             color: var(--fg);
         }
+
+        .note {
+            border-left: 2px solid var(--gold);
+            background: var(--bg-2);
+            padding: 1.15rem 1.35rem;
+            margin: 1.9rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .note .note-head {
+            font-family: var(--mono);
+            font-size: 0.66rem;
+            letter-spacing: 0.11em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.65rem;
+        }
+        .note p { margin-bottom: 0.9rem; font-size: 0.92rem; }
+        .note p:last-child { margin-bottom: 0; }
 
         /* Stat boxes */
         .stat-row {
@@ -373,7 +391,7 @@
                 <div class="essay-meta">
                     <span class="authors">Niccolò Ridi</span><br>
                     A Python toolkit for empirical research on the European Court of Human Rights (2026)<br>
-                    1,247 decisions &middot; 892 citations &middot; 2000&ndash;2026<br>
+                    524 Grand Chamber judgments &middot; 4,416 citations &middot; 1994&ndash;2026<br>
                     <a href="https://github.com/niccoloridi/echr-py" target="_blank" rel="noopener">github</a> &middot;
                     <a href="https://pypi.org/project/echr-py/" target="_blank" rel="noopener">pypi</a>
                 </div>
@@ -383,26 +401,43 @@
 
                 <p class="lead">The European Court of Human Rights has published more than thirty thousand decisions since 1959. Each one cites earlier ones. Together those references form a network &ndash; a map of which decisions the Court keeps returning to, and which it decided once and left behind. <strong>echr-py</strong> is a Python toolkit that turns HUDOC, the Court's public database, into research-ready datasets: search and download, citation extraction, network export.</p>
 
-                <p>This page does three things. It describes the data and the problems it poses. It shows the toolkit's core commands, each one copyable. And it uses both to replicate the central finding of Voeten and Lupu's 2011 study of precedent in international courts, on a corpus of 1,247 decisions spanning 2000 to 2026.</p>
+                <p>This page does three things. It describes the data and the problems it poses. It shows the toolkit's core commands, each one copyable. And it uses both to replicate the central finding of Voeten and Lupu's 2011 study of precedent in international courts &ndash; on every Grand Chamber judgment the Court has issued, 1994 to 2026.</p>
 
                 <h2>I. The Data and the Question</h2>
 
-                <p>HUDOC publishes every judgment, decision, and order the Court issues. Each record is structured: application number, case name, respondent state, the Convention articles at issue, the judgment date, an importance rating from 1 to 3, whether any judge wrote separately, and whether a Chamber or a Committee decided it. That structure is what makes automated analysis possible at all.</p>
+                <p>HUDOC publishes every judgment, decision, and order the Court issues. Each record is structured: application number, case name, respondent state, the Convention articles at issue, the judgment date, an importance rating from 1 to 4, whether any judge wrote separately, and whether a Committee, a Chamber, or the Grand Chamber decided it. That structure is what makes automated analysis possible at all.</p>
 
                 <p>The question Voeten and Lupu asked is simple to state and hard to answer by reading. Not all citations carry the same weight. A decision cited fifty times shapes European law more than one cited twice. So which decisions anchor doctrine, and why those?</p>
 
                 <p>Their answer was strategic. International courts operate without coercive enforcement, so they build legitimacy by embedding each new decision in a visible chain of past reasoning. Citation is not just reference; it is justification. Which means the shape of the citation network tells you something about how the Court manages its own authority.</p>
 
                 <div class="stat-row">
-                    <div class="stat-box"><span class="num">1,247</span><span class="label">Cases analysed</span></div>
-                    <div class="stat-box"><span class="num">487</span><span class="label">Cases in network</span></div>
-                    <div class="stat-box"><span class="num">892</span><span class="label">Citation edges</span></div>
-                    <div class="stat-box"><span class="num">26</span><span class="label">Years covered</span></div>
+                    <div class="stat-box"><span class="num">524</span><span class="label">GC judgments</span></div>
+                    <div class="stat-box"><span class="num">525</span><span class="label">Cases in network</span></div>
+                    <div class="stat-box"><span class="num">4,416</span><span class="label">Citation edges</span></div>
+                    <div class="stat-box"><span class="num">32</span><span class="label">Years covered</span></div>
                 </div>
 
                 <h3>The problems</h3>
 
                 <p><strong>Language.</strong> Judgments appear in several official languages, and the same case is cited differently across them. <strong>Resolution.</strong> Not every reference resolves cleanly to a target document; some name a case without an application number. <strong>Recency.</strong> The Court's output grows every year, so any date-bounded corpus over-represents recent decisions and under-represents the older ones that have had time to accumulate citations. <strong>Selection.</strong> HUDOC holds published decisions. What was never published is invisible, and invisible in a way that is not random.</p>
+
+                <div class="note">
+                    <div class="note-head">Welp &mdash; I double counted</div>
+                    <p>An earlier draft of this essay said there were 1,048 Grand Chamber judgments. There are 524. The mistake is worth leaving on the page, because it is the easiest one to make with this data and because nothing about it looks like a mistake.</p>
+                    <p><code>search()</code> and <code>count</code> default to <code>languages=("ENG", "FRE")</code>. Almost every Grand Chamber judgment is published in both English and French, and HUDOC stores each language version as its own document, with its own item ID. Ask for both and every judgment comes back twice. The number that lands is plausible, and it sorts and filters like any other number.</p>
+                    <p>One line each way settles it:</p>
+                    <div class="terminal">
+                        <div class="term-line"><span class="p">$</span><span class="cmd">echr-py count --body grand-chamber --collection JUDGMENTS</span><button class="copy-btn" data-cmd="echr-py count --body grand-chamber --collection JUDGMENTS">copy</button></div>
+                        <div class="term-out">1048</div>
+                        <div class="term-line"><span class="p">$</span><span class="cmd">echr-py count --body grand-chamber --collection JUDGMENTS --language ENG</span><button class="copy-btn" data-cmd="echr-py count --body grand-chamber --collection JUDGMENTS --language ENG">copy</button></div>
+                        <div class="term-out">524</div>
+                        <div class="term-line"><span class="p">$</span><span class="cmd">echr-py count --body grand-chamber --collection JUDGMENTS --language FRE</span><button class="copy-btn" data-cmd="echr-py count --body grand-chamber --collection JUDGMENTS --language FRE">copy</button></div>
+                        <div class="term-out">524</div>
+                    </div>
+                    <p>524 and 524. Exactly double, which is the signature of the problem: a language artefact scales by a clean factor, where a real finding rarely does. The same trap runs through the whole collection. Its 58,427 &ldquo;judgments&rdquo; are 29,213 English and 29,214 French &ndash; and that stray extra one is a judgment with a French text and no English sibling, which is its own small lesson about what &ldquo;the corpus&rdquo; is.</p>
+                    <p>So: pin the language. Every figure below counts each judgment once.</p>
+                </div>
 
                 <p>None of these are fatal. All of them shape what the numbers below can and cannot support.</p>
 
@@ -452,34 +487,57 @@ dissent                            True</div>
                 <div class="terminal">
                     <div class="term-line"><span class="p">$</span><span class="cmd">echr-py graph export --kind case-case \</span><button class="copy-btn" data-cmd="echr-py graph export --kind case-case --format json --in corpus/citations --out network.json">copy</button></div>
                     <div class="term-line term-cont"><span class="cmd">--format json --in corpus/citations --out network.json</span></div>
-                    <div class="term-out">✓ Exported network with 487 nodes and 892 edges</div>
+                    <div class="term-out">✓ Exported network with 525 nodes and 4416 edges</div>
                     <div class="term-line"><span class="p">&gt;&gt;&gt;</span><span class="cmd">import json, networkx as nx</span><button class="copy-btn" data-cmd="import json, networkx as nx">copy</button></div>
                     <div class="term-line"><span class="p">&gt;&gt;&gt;</span><span class="cmd">G = nx.node_link_graph(json.load(open('network.json')))</span><button class="copy-btn" data-cmd="G = nx.node_link_graph(json.load(open('network.json')))">copy</button></div>
                     <div class="term-line"><span class="p">&gt;&gt;&gt;</span><span class="cmd">print(G.number_of_nodes(), G.number_of_edges(), round(nx.density(G), 4))</span><button class="copy-btn" data-cmd="print(G.number_of_nodes(), G.number_of_edges(), round(nx.density(G), 4))">copy</button></div>
-                    <div class="term-out">487 892 0.0076</div>
+                    <div class="term-out">525 4416 0.0161</div>
                 </div>
 
                 <h2>III. Replicating Voeten &amp; Lupu</h2>
 
-                <p>The replication measures <strong>in-degree centrality</strong>: how many other decisions cite a given case. High in-degree marks a hub &ndash; a decision the Court keeps returning to when it needs to ground a new holding.</p>
+                <p>The replication measures <strong>in-degree centrality</strong>: how many other judgments cite a given one. High in-degree marks a hub &ndash; a judgment the Court keeps returning to when it needs to ground a new holding.</p>
+
+                <p>Which judgments go into the corpus turns out to matter more than the measure does. Here are two corpora of exactly the same size, put through exactly the same pipeline.</p>
+
+                <h3>First corpus: a thin recent slice</h3>
+
+                <p>Take the Court's most recent 524 judgments &ndash; 16 December 2025 to 23 July 2026, seven months of output across every bench. Their SCL fields carry 4,063 citations between them. Resolve those against the corpus itself and almost nothing lands.</p>
 
                 <div class="stat-row">
-                    <div class="stat-box"><span class="num">487</span><span class="label">Nodes</span></div>
-                    <div class="stat-box"><span class="num">892</span><span class="label">Edges</span></div>
-                    <div class="stat-box"><span class="num">1.83</span><span class="label">Mean in-degree</span></div>
-                    <div class="stat-box"><span class="num">0.76%</span><span class="label">Density</span></div>
+                    <div class="stat-box"><span class="num">524</span><span class="label">Judgments</span></div>
+                    <div class="stat-box"><span class="num">4,063</span><span class="label">Citations made</span></div>
+                    <div class="stat-box"><span class="num">6</span><span class="label">Edges inside corpus</span></div>
+                    <div class="stat-box"><span class="num">1%</span><span class="label">Ever cited</span></div>
                 </div>
 
-                <p>The network is sparse. Most decisions cite one or two others and are themselves cited once or not at all. A handful sit at the centre. That skew &ndash; a long tail of peripheral cases and a small set of hubs &ndash; is the shape Voeten and Lupu predicted, and it is what we find.</p>
+                <p>Six edges out of four thousand references. The network is not sparse so much as absent. The median judgment cites nothing inside the corpus and is cited by nothing inside it.</p>
+
+                <p>It would be easy to write that up as a finding about the Court: a long tail, a few hubs, precedent thinly spread. It is not a finding about the Court. It is a finding about the window. Judgments cite earlier judgments, and in a seven-month frame almost every earlier judgment sits outside the frame. The 4,057 references that failed to resolve did not fail &ndash; they pointed out of the box. Cut a citation network anywhere in time and this is what falls out.</p>
+
+                <h3>Second corpus: the complete Grand Chamber</h3>
+
+                <p>Now take a corpus that is closed rather than clipped. Every Grand Chamber judgment the Court has handed down, 1994 to 2026. There are 524 of them &ndash; the same size as the slice above, which is a coincidence, and a convenient one.</p>
+
+                <div class="stat-row">
+                    <div class="stat-box"><span class="num">525</span><span class="label">Nodes</span></div>
+                    <div class="stat-box"><span class="num">4,416</span><span class="label">Edges</span></div>
+                    <div class="stat-box"><span class="num">8.41</span><span class="label">Mean in-degree</span></div>
+                    <div class="stat-box"><span class="num">1.61%</span><span class="label">Density</span></div>
+                </div>
+
+                <p>Same method, same number of judgments, and the network is roughly seven hundred times denser: 1.61% against 0.0022%. 86% of Grand Chamber judgments are cited by at least one other Grand Chamber judgment. The median is cited six times. The most-cited is cited sixty-two times.</p>
+
+                <p>The reason is structural rather than doctrinal. The Grand Chamber is where the Court sends what it means to settle, and it is the bench that cites itself. The population is closed, so no citation falls off the edge of a window. It is small enough that its members genuinely refer to one another, and old enough &ndash; thirty-two years &ndash; that the early judgments have had time to be picked up. This is the Court's own canon, and it behaves like one.</p>
 
                 <div class="viz-block" id="viz-network">
                     <svg id="network-svg" height="560"></svg>
                 </div>
-                <p class="viz-caption">Figure 1: The citation network. Gold nodes are hubs; node size scales with in-degree. Drag any node to rearrange the graph; click one to open its metadata.</p>
+                <p class="viz-caption">Figure 1: The Grand Chamber citation network &ndash; the 140 most-cited judgments and the 845 citations among them, drawn from the full 525-node graph. Gold nodes are hubs; size scales with in-degree. Drag any node to rearrange the graph; click one to open its metadata.</p>
 
                 <h3>The hub cases</h3>
 
-                <p>The eight most-cited decisions in the corpus. Note the mix of periods: recent decisions that have already been picked up, and much older ones &ndash; <em>Golder</em>, <em>Tyrer</em> &ndash; that have held their position for two decades.</p>
+                <p>The twelve most-cited Grand Chamber judgments. These are not obscure. They are the cases a Strasbourg lawyer would name from memory.</p>
 
                 <div class="table-wrap">
                     <table class="data-table">
@@ -487,80 +545,78 @@ dissent                            True</div>
                             <tr><th>#</th><th>Case</th><th>Cited</th><th>Date</th><th>State</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td>1</td><td>Suji v. Greece</td><td><span class="n">12</span></td><td>2015-06-23</td><td>GRC</td></tr>
-                            <tr><td>2</td><td>Kolesnyk and Smelnytskyy v. Ukraine</td><td><span class="n">11</span></td><td>2014-07-23</td><td>UKR</td></tr>
-                            <tr><td>3</td><td>Golder v. United Kingdom</td><td><span class="n">11</span></td><td>2001-02-21</td><td>GBR</td></tr>
-                            <tr><td>4</td><td>Jesus Pinhal v. Portugal</td><td><span class="n">9</span></td><td>2015-07-09</td><td>PRT</td></tr>
-                            <tr><td>5</td><td>Grande Oriente d'Italia v. Italy</td><td><span class="n">9</span></td><td>2013-07-07</td><td>ITA</td></tr>
-                            <tr><td>6</td><td>Günana v. Bulgaria</td><td><span class="n">8</span></td><td>2012-07-07</td><td>BGR</td></tr>
-                            <tr><td>7</td><td>Vainik and Others v. Estonia</td><td><span class="n">8</span></td><td>2010-06-30</td><td>EST</td></tr>
-                            <tr><td>8</td><td>Tyrer v. United Kingdom</td><td><span class="n">7</span></td><td>2004-05-25</td><td>GBR</td></tr>
+                            <tr><td>1</td><td>K. and T. v. Finland</td><td><span class="n">62</span></td><td>2001-07-12</td><td>FIN</td></tr>
+                            <tr><td>2</td><td>Kudła v. Poland</td><td><span class="n">54</span></td><td>2000-10-26</td><td>POL</td></tr>
+                            <tr><td>3</td><td>Broniowski v. Poland</td><td><span class="n">42</span></td><td>2004-06-22</td><td>POL</td></tr>
+                            <tr><td>4</td><td>Selmouni v. France</td><td><span class="n">38</span></td><td>1999-07-28</td><td>FRA</td></tr>
+                            <tr><td>5</td><td>Assanidze v. Georgia</td><td><span class="n">37</span></td><td>2004-04-08</td><td>GEO</td></tr>
+                            <tr><td>6</td><td>Fressoz and Roire v. France</td><td><span class="n">37</span></td><td>1999-01-21</td><td>FRA</td></tr>
+                            <tr><td>7</td><td>Chahal v. United Kingdom</td><td><span class="n">36</span></td><td>1996-11-15</td><td>GBR</td></tr>
+                            <tr><td>8</td><td>Ilaşcu and Others v. Moldova and Russia</td><td><span class="n">35</span></td><td>2004-07-08</td><td>MDA / RUS</td></tr>
+                            <tr><td>9</td><td>Labita v. Italy</td><td><span class="n">34</span></td><td>2000-04-06</td><td>ITA</td></tr>
+                            <tr><td>10</td><td>Radomilja and Others v. Croatia</td><td><span class="n">32</span></td><td>2018-03-20</td><td>HRV</td></tr>
+                            <tr><td>11</td><td>McCann and Others v. United Kingdom</td><td><span class="n">31</span></td><td>1995-09-27</td><td>GBR</td></tr>
+                            <tr><td>12</td><td>Gäfgen v. Germany</td><td><span class="n">29</span></td><td>2010-06-01</td><td>DEU</td></tr>
                         </tbody>
                     </table>
                 </div>
 
-                <h3>Temporal distribution</h3>
+                <p><em>K. and T. v. Finland</em> sits at the top with sixty-two citations: the reference point for the Court's Article 8 case law on taking children into care. <em>Kudła</em> created the effective-remedy requirement for excessive length of proceedings, and is cited by nearly everything that followed it. <em>Broniowski</em> was the first pilot judgment. <em>McCann</em>, from 1995, is still where Article 2 and lethal force begins. Age helps but does not decide: <em>Radomilja</em> is from 2018 and already has thirty-two citations, because it settled what the &ldquo;scope of the case&rdquo; means.</p>
 
-                <p>Decisions cluster after 2015, which is a fact about the Court's growing caseload rather than about doctrine. It matters for interpretation: older decisions are rarer in the corpus but have had far longer to accumulate citations, so their in-degree is earned against a longer clock.</p>
+                <h3>What the Grand Chamber is made of</h3>
 
-                <div class="viz-block" id="viz-timeline">
-                    <svg id="timeline-svg" height="300"></svg>
+                <p>The composition looks nothing like the Court's output as a whole, which is the point of having the bench at all.</p>
+
+                <p><strong>Importance.</strong> HUDOC rates each judgment from 1 (case-law significance) down to 4. The Grand Chamber splits 387 / 112 / 14 / 11 &ndash; 74% at Level 1. Across the Court as a whole that ratio is inverted: most of what Strasbourg does is apply settled law to new facts. The Grand Chamber is the designed exception.</p>
+
+                <div class="stat-row">
+                    <div class="stat-box"><span class="num">387</span><span class="label">Level 1</span></div>
+                    <div class="stat-box"><span class="num">112</span><span class="label">Level 2</span></div>
+                    <div class="stat-box"><span class="num">14</span><span class="label">Level 3</span></div>
+                    <div class="stat-box"><span class="num">11</span><span class="label">Level 4</span></div>
                 </div>
-                <p class="viz-caption">Figure 2: Decisions per year, 2000&ndash;2026. The 2026 bar is a partial year.</p>
 
-                <h3>Dissent by article</h3>
-
-                <p>342 of the 1,247 decisions carry a separate opinion &ndash; 27.4%. The rate is not evenly spread. Article 6, the right to a fair trial, draws dissent in 38% of the cases where it is at issue. Article 5, liberty and security, draws it in 12%.</p>
-
-                <p>The gap is doctrinal. Article 6 governs procedure across forty-six legal systems that arrange procedure very differently, so what counts as fair is contested at the level of principle. Article 5 rests on older and more settled case law, and the disagreements it produces are more often about facts than about the standard.</p>
+                <p><strong>Separate opinions.</strong> 430 of the 524 judgments carry one &ndash; 82%. Disagreement is the norm at this bench rather than the exception, which follows from what gets referred to it: the questions that divide.</p>
 
                 <div class="viz-block" id="viz-dissent">
                     <svg id="dissent-svg" height="300"></svg>
                 </div>
-                <p class="viz-caption">Figure 3: Share of cases with a separate opinion, by Convention article.</p>
+                <p class="viz-caption">Figure 2: Share of Grand Chamber judgments carrying a separate opinion, by Convention article.</p>
 
-                <h3>Importance and timing</h3>
+                <p>The spread by article is narrow, and the ordering is not the obvious one. Article 14, discrimination, draws separate opinions in 90% of the Grand Chamber cases where it is in issue &ndash; the highest of any article. Article 6, fair trial, draws them in 79%, the lowest. Discrimination turns on contested judgments about comparators and justification. Fair-trial questions at this level are more often technical, and the bench agrees about procedure more readily than it agrees about equality.</p>
 
-                <p>HUDOC rates each decision 1 (case-law significance), 2 (important), or 3 (routine). The corpus splits 156 / 423 / 668. Most of what the Court does is apply settled law to new facts; the decisions that move doctrine are a small minority.</p>
+                <h3>Temporal distribution</h3>
 
-                <div class="stat-row">
-                    <div class="stat-box"><span class="num">156</span><span class="label">Level 1</span></div>
-                    <div class="stat-box"><span class="num">423</span><span class="label">Level 2</span></div>
-                    <div class="stat-box"><span class="num">668</span><span class="label">Level 3</span></div>
+                <p>Grand Chamber judgments run from 1994 to 2026, and the shape is not the rising curve the Court's overall docket shows. There is a spike in 1999 &ndash; 63 judgments, when Protocol 11 stood up the permanent Court and a backlog of Commission cases came through &ndash; then a fluctuating band of roughly ten to thirty a year, thinning to single figures since 2024. Referral is rare by design, and the bench has not grown with the caseload.</p>
+
+                <div class="viz-block" id="viz-timeline">
+                    <svg id="timeline-svg" height="300"></svg>
                 </div>
-
-                <p>Timing follows importance. A case takes 18.4 months from application to judgment on average, but Level 1 cases take 22.1 months and Level 3 cases 15.7. Article 2 cases &ndash; deaths in custody, use of lethal force, the state's duty to investigate &ndash; run to 20.1 months. Article 8 privacy cases average 16.2.</p>
-
-                <div class="viz-block" id="viz-timing">
-                    <svg id="timing-svg" height="280"></svg>
-                </div>
-                <p class="viz-caption">Figure 4: Mean months from application to judgment, by importance level and article.</p>
+                <p class="viz-caption">Figure 3: Grand Chamber judgments per year, 1994&ndash;2026. The 2026 bar is a partial year.</p>
 
                 <h3>Respondent states</h3>
 
-                <p>Turkey leads the corpus with 87 cases, then Russia (64), Italy (58), and Ukraine (52). Dissent tracks the same ordering loosely: 32% of the Turkish cases carry a separate opinion against 17% of the German ones. The cases that reach Strasbourg from states with contested governance are harder, and the bench divides more often on them.</p>
+                <p>The United Kingdom leads with 68 Grand Chamber judgments, then Türkiye (58), Italy (49), and France (46). That ordering differs from the Court's overall docket, where Türkiye and Russia dominate by sheer volume. Referral to the Grand Chamber tracks legal novelty, not case count: a state can generate thousands of repetitive applications and very few referrals.</p>
 
                 <div class="table-wrap">
                     <table class="data-table">
                         <thead>
-                            <tr><th>State</th><th>Cases</th><th>Share</th><th>Dissent rate</th></tr>
+                            <tr><th>State</th><th>GC judgments</th><th>Share</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td>Turkey</td><td><span class="n">87</span></td><td>7.0%</td><td>32%</td></tr>
-                            <tr><td>Russia</td><td><span class="n">64</span></td><td>5.1%</td><td>29%</td></tr>
-                            <tr><td>Italy</td><td><span class="n">58</span></td><td>4.7%</td><td>25%</td></tr>
-                            <tr><td>Ukraine</td><td><span class="n">52</span></td><td>4.2%</td><td>27%</td></tr>
-                            <tr><td>Poland</td><td><span class="n">49</span></td><td>3.9%</td><td>21%</td></tr>
-                            <tr><td>Greece</td><td><span class="n">44</span></td><td>3.5%</td><td>28%</td></tr>
-                            <tr><td>France</td><td><span class="n">42</span></td><td>3.4%</td><td>19%</td></tr>
-                            <tr><td>Germany</td><td><span class="n">39</span></td><td>3.1%</td><td>17%</td></tr>
+                            <tr><td>United Kingdom</td><td><span class="n">68</span></td><td>13.0%</td></tr>
+                            <tr><td>Türkiye</td><td><span class="n">58</span></td><td>11.1%</td></tr>
+                            <tr><td>Italy</td><td><span class="n">49</span></td><td>9.4%</td></tr>
+                            <tr><td>France</td><td><span class="n">46</span></td><td>8.8%</td></tr>
+                            <tr><td>Russia</td><td><span class="n">24</span></td><td>4.6%</td></tr>
+                            <tr><td>Germany</td><td><span class="n">24</span></td><td>4.6%</td></tr>
+                            <tr><td>Switzerland</td><td><span class="n">19</span></td><td>3.6%</td></tr>
+                            <tr><td>Romania</td><td><span class="n">18</span></td><td>3.4%</td></tr>
                         </tbody>
                     </table>
                 </div>
 
-                <h3>Chamber and Committee</h3>
-
-                <p>87.3% of the corpus was decided by a Chamber of seven judges, 12.7% by a Committee of three. Committees exist to dispose of well-founded repetitive applications quickly, and the numbers show them doing exactly that: 8% of Committee decisions carry a separate opinion against 29% of Chamber decisions. Where the law is settled, the bench does not divide.</p>
+                <p><strong>Articles.</strong> Article 41, just satisfaction, appears in 307 judgments, for the mechanical reason that it is engaged whenever a violation is found. Among the substantive provisions Article 6 leads with 205, then Article 35 (admissibility) with 186, Article 8 with 123, Article 14 with 87, and Article 10 with 83.</p>
 
                 <h2>IV. All the interesting things you can do with this</h2>
 
@@ -582,9 +638,9 @@ dissent                            True</div>
 
                 <h2>Coda</h2>
 
-                <p>1,247 decisions and 892 citations show a Court reasoning in public and building on itself as it goes. The hubs are not accidents. They are the decisions that survived being tested against new facts and kept their footing, and the Court returns to them because returning to them is how it makes a new holding look inevitable rather than invented.</p>
+                <p>524 judgments and 4,416 citations show a Court reasoning in public and building on itself as it goes. The hubs are not accidents. They are the decisions that survived being tested against new facts and kept their footing, and the Court returns to them because returning to them is how it makes a new holding look inevitable rather than invented.</p>
 
-                <p>Voeten and Lupu argued that citation networks reveal a legitimation strategy. The corpus is consistent with that: hubs cluster around the most contested articles, older foundational decisions hold their position across decades, and the states that litigate hardest produce the most divided benches. The network is not random. It is the Court reasoning itself into authority.</p>
+                <p>Voeten and Lupu argued that citation networks reveal a legitimation strategy. The Grand Chamber corpus is consistent with that: a small canon carries most of the weight, foundational judgments hold their position across decades, and 82% of the bench's output carries a separate opinion &ndash; the disagreement is on the record, not hidden. The network is not random. It is the Court reasoning itself into authority.</p>
 
             </div>
         </article>
@@ -623,14 +679,146 @@ dissent                            True</div>
 
     /* ── Metadata drawer ──────────────────────────────── */
     const caseMetadata = {
-        Suji:     { name: "Suji v. Greece", respondent: "GRC", date: "2015-06-23", articles: ["6", "6-1"], degree: 12, importance: "Level 2", dissent: true,  branch: "Chamber" },
-        Kolesnyk: { name: "Kolesnyk and Smelnytskyy v. Ukraine", respondent: "UKR", date: "2014-07-23", articles: ["3", "13"], degree: 11, importance: "Level 2", dissent: false, branch: "Chamber" },
-        Golder:   { name: "Golder v. United Kingdom", respondent: "GBR", date: "2001-02-21", articles: ["6", "6-1", "13"], degree: 11, importance: "Level 1", dissent: true,  branch: "Chamber" },
-        Pinhal:   { name: "Jesus Pinhal v. Portugal", respondent: "PRT", date: "2015-07-09", articles: ["6", "8"], degree: 9, importance: "Level 2", dissent: false, branch: "Chamber" },
-        Grande:   { name: "Grande Oriente d'Italia v. Italy", respondent: "ITA", date: "2013-07-07", articles: ["9", "11", "14"], degree: 9, importance: "Level 2", dissent: true,  branch: "Chamber" },
-        "Günana": { name: "Günana v. Bulgaria", respondent: "BGR", date: "2012-07-07", articles: ["3", "8", "13"], degree: 8, importance: "Level 2", dissent: false, branch: "Chamber" },
-        Vainik:   { name: "Vainik and Others v. Estonia", respondent: "EST", date: "2010-06-30", articles: ["6", "1"], degree: 8, importance: "Level 2", dissent: true,  branch: "Chamber" },
-        Tyrer:    { name: "Tyrer v. United Kingdom", respondent: "GBR", date: "2004-05-25", articles: ["3"], degree: 7, importance: "Level 1", dissent: false, branch: "Chamber" }
+        "ecli:ECLI:CE:ECHR:2001:0712JUD002570294": { name: "CASE OF K. AND T. v. FINLAND", respondent: "FIN", date: "2001-07-12", articles: ["8", "8-1", "8-2", "13", "35", "35-1", "41", "43"], degree: 62, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2000:1026JUD003021096": { name: "CASE OF KUDLA v. POLAND", respondent: "POL", date: "2000-10-26", articles: ["3", "5", "5-3", "6", "6-1", "13", "41"], degree: 54, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2004:0622JUD003144396": { name: "CASE OF BRONIOWSKI v. POLAND", respondent: "POL", date: "2004-06-22", articles: ["35", "35-1", "41", "46", "46-2", "P1-1", "P1-1-1"], degree: 42, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1999:0728JUD002580394": { name: "CASE OF SELMOUNI v. FRANCE", respondent: "FRA", date: "1999-07-28", articles: ["3", "6", "6-1", "35", "35-1", "41"], degree: 38, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2004:0408JUD007150301": { name: "CASE OF ASSANIDZE v. GEORGIA", respondent: "GEO", date: "2004-04-08", articles: ["1", "5", "5-1", "6", "6-1", "35", "35-1", "41"], degree: 37, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1999:0121JUD002918395": { name: "CASE OF FRESSOZ AND ROIRE v. FRANCE", respondent: "FRA", date: "1999-01-21", articles: ["6", "6-2", "10", "10-1", "10-2", "35", "35-1", "41"], degree: 37, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1996:1115JUD002241493": { name: "CASE OF CHAHAL v. THE UNITED KINGDOM", respondent: "GBR", date: "1996-11-15", articles: ["3", "5", "5-1", "5-1-f", "5-4", "8", "13", "28"], degree: 36, importance: "Level 2", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2004:0708JUD004878799": { name: "CASE OF ILA\u015eCU AND OTHERS v. MOLDOVA AND RUSSIA", respondent: "MDA, RUS", date: "2004-07-08", articles: ["1", "2", "2-1", "3", "5", "5-1", "5-1-a", "34"], degree: 35, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2000:0406JUD002677295": { name: "CASE OF LABITA v. ITALY", respondent: "ITA", date: "2000-04-06", articles: ["3", "5", "5-1", "5-3", "6", "6-3", "8", "8-1"], degree: 34, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2018:0320JUD003768510": { name: "CASE OF RADOMILJA AND OTHERS v. CROATIA", respondent: "HRV", date: "2018-03-20", articles: ["35", "35-1", "P1-1", "P1-1-1"], degree: 32, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1995:0927JUD001898491": { name: "CASE OF McCANN AND OTHERS v. THE UNITED KINGDOM", respondent: "GBR", date: "1995-09-27", articles: ["2", "2-1", "2-2", "41"], degree: 31, importance: "Level 2", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2002:0711JUD002895795": { name: "CASE OF CHRISTINE GOODWIN v. THE UNITED KINGDOM", respondent: "GBR", date: "2002-07-11", articles: ["8", "8-1", "12", "13", "14", "36", "36-2", "41"], degree: 29, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2010:0601JUD002297805": { name: "CASE OF G\u00c4FGEN v. GERMANY", respondent: "DEU", date: "2010-06-01", articles: ["3", "6", "6-1", "6-3", "34", "35", "35-1"], degree: 29, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2009:0918JUD001606490": { name: "CASE OF VARNAVA AND OTHERS v. TURKEY", respondent: "TUR", date: "2009-09-18", articles: ["2", "2-1", "3", "5", "5-1", "35", "35-1", "35-2"], degree: 28, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1998:0130JUD001939292": { name: "CASE OF UNITED COMMUNIST PARTY OF TURKEY AND OTHERS v. TURKEY", respondent: "TUR", date: "1998-01-30", articles: ["11", "11-2", "9", "10", "14", "18", "P1-1", "P1-3"], degree: 27, importance: "Level 2", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1999:0325JUD003119596": { name: "CASE OF NIKOLOVA v. BULGARIA", respondent: "BGR", date: "1999-03-25", articles: ["5", "5-3", "5-4", "13", "41"], degree: 27, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2004:1130JUD004893999": { name: "CASE OF \u00d6NERYILDIZ v. TURKEY", respondent: "TUR", date: "2004-11-30", articles: ["2", "2-1", "13", "13+2", "13+P1-1", "41", "P1-1", "P1-1-1"], degree: 26, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2004:0217JUD003974898": { name: "CASE OF MAESTRI v. ITALY", respondent: "ITA", date: "2004-02-17", articles: ["11", "11-1", "41", "46", "46-2"], degree: 26, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1999:0928JUD002811495": { name: "CASE OF DALBAN v. ROMANIA", respondent: "ROU", date: "1999-09-28", articles: ["6", "6-1", "10", "10-1", "10-2", "41", "34"], degree: 26, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2006:0308JUD005953200": { name: "CASE OF BLECIC v. CROATIA", respondent: "HRV", date: "2006-03-08", articles: ["8", "8-1", "35", "35-3", "P1-1", "P1-1-1"], degree: 25, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1999:0218JUD002608394": { name: "CASE OF WAITE AND KENNEDY v. GERMANY", respondent: "DEU", date: "1999-02-18", articles: ["6", "6-1"], degree: 25, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2006:0301JUD005658100": { name: "CASE OF SEJDOVIC v. ITALY", respondent: "ITA", date: "2006-03-01", articles: ["6", "6-1", "6-2", "6-3", "36", "36-2", "46", "46-2"], degree: 25, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1998:1028JUD002345294": { name: "CASE OF OSMAN v. THE UNITED KINGDOM", respondent: "GBR", date: "1998-10-28", articles: ["2", "2-1", "6", "6-1", "8", "8-1", "13", "41"], degree: 25, importance: "Level 2", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2004:0428JUD005667900": { name: "CASE OF AZINAS v. CYPRUS", respondent: "CYP", date: "2004-04-28", articles: ["35", "35-1", "35-4", "43", "P1-1"], degree: 24, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2001:1121JUD003576397": { name: "CASE OF AL-ADSANI v. THE UNITED KINGDOM", respondent: "GBR", date: "2001-11-21", articles: ["1", "3", "6", "6-1", "30"], degree: 24, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1994:0923JUD001589089": { name: "CASE OF JERSILD v. DENMARK", respondent: "DNK", date: "1994-09-23", articles: ["10", "10-1", "10-2", "41"], degree: 24, importance: "Level 2", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2005:1019JUD003255596": { name: "CASE OF ROCHE v. THE UNITED KINGDOM", respondent: "GBR", date: "2005-10-19", articles: ["6", "6-1", "8", "8-1", "10", "10-1", "13+6-1", "13"], degree: 24, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2001:0510JUD002578194": { name: "CASE OF CYPRUS v. TURKEY", respondent: "TUR", date: "2001-05-10", articles: ["2", "2-1", "3", "4", "4-1", "5", "6", "6-1"], degree: 23, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2007:1113JUD005732500": { name: "CASE OF D.H. AND OTHERS v. THE CZECH REPUBLIC", respondent: "CZE", date: "2007-11-13", articles: ["14+P1-2", "14", "P1-2", "35", "35-1", "36", "36-2", "41"], degree: 23, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2000:0504JUD002834195": { name: "CASE OF ROTARU v. ROMANIA", respondent: "ROU", date: "2000-05-04", articles: ["8", "8-1", "8-2", "6", "6-1", "13", "34", "35"], degree: 23, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2001:0712JUD004252798": { name: "CASE OF PRINCE HANS-ADAM II OF LIECHTENSTEIN v. GERMANY", respondent: "DEU", date: "2001-07-12", articles: ["1", "6", "6-1", "14", "30", "P1-1", "P1-1-1", "35"], degree: 23, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2014:0717JUD004784808": { name: "CASE OF CENTRE FOR LEGAL RESOURCES ON BEHALF OF VALENTIN C\u00c2MPEANU v. ROMANIA", respondent: "ROU", date: "2014-07-17", articles: ["2", "2-1", "13", "13+2", "34", "46", "46-2"], degree: 22, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2005:0512JUD004622199": { name: "CASE OF \u00d6CALAN v. TURKEY", respondent: "TUR", date: "2005-05-12", articles: ["2", "2-1", "3", "5", "5-1", "5-1-c", "5-3", "5-4"], degree: 22, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1997:1125JUD001895491": { name: "CASE OF ZANA v. TURKEY", respondent: "TUR", date: "1997-11-25", articles: ["10", "10-1", "10-2", "6", "6-3-c", "6-1", "35", "35-3"], degree: 22, importance: "Level 3", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2008:0429JUD001337805": { name: "CASE OF BURDEN v. THE UNITED KINGDOM", respondent: "GBR", date: "2008-04-29", articles: ["14", "14+P1-1", "P1-1", "P1-1-2", "34", "35", "35-1"], degree: 22, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2005:1110JUD004477498": { name: "CASE OF LEYLA \u015eAH\u0130N v. TURKEY", respondent: "TUR", date: "2005-11-10", articles: ["8", "8-1", "9", "9-1", "9-2", "10", "10-1", "14"], degree: 22, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2000:0713JUD003922198": { name: "CASE OF SCOZZARI AND GIUNTA v. ITALY", respondent: "ITA", date: "2000-07-13", articles: ["3", "6", "6-1", "8", "8-1", "8-2", "36", "36-1"], degree: 22, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1999:0325JUD003110796": { name: "CASE OF IATRIDIS v. GREECE", respondent: "GRC", date: "1999-03-25", articles: ["P1-1", "P1-1-1", "13", "6", "6-1", "8", "35", "35-1"], degree: 22, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2005:0706JUD004357798": { name: "CASE OF NACHOVA AND OTHERS v. BULGARIA", respondent: "BGR", date: "2005-07-06", articles: ["2", "2-1", "2-2", "13", "14+2", "14", "41"], degree: 22, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2012:0117JUD003676006": { name: "CASE OF STANEV v. BULGARIA", respondent: "BGR", date: "2012-01-17", articles: ["3", "5", "5-1", "5-1-e", "5-4", "5-5", "6", "6-1"], degree: 22, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1998:0609JUD002267893": { name: "CASE OF INCAL v. TURKEY", respondent: "TUR", date: "1998-06-09", articles: ["6", "6-1", "10", "10-1", "10-2", "14", "41"], degree: 22, importance: "Level 2", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2003:0213JUD004232698": { name: "CASE OF ODIEVRE v. FRANCE", respondent: "FRA", date: "2003-02-13", articles: ["8", "8-1", "14+8", "14", "35", "35-1"], degree: 21, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2011:0707JUD005572107": { name: "CASE OF AL-SKEINI AND OTHERS v. THE UNITED KINGDOM", respondent: "GBR", date: "2011-07-07", articles: ["1", "2", "2-1", "34", "41"], degree: 21, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2008:1112JUD003450397": { name: "CASE OF DEM\u0130R AND BAYKARA v. TURKEY", respondent: "TUR", date: "2008-11-12", articles: ["11", "11-1", "11-2", "29", "29-3", "35", "35-3", "41"], degree: 21, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2001:0510JUD002939295": { name: "CASE OF Z AND OTHERS v. THE UNITED KINGDOM", respondent: "GBR", date: "2001-05-10", articles: ["3", "6", "6-1", "8", "13", "36", "36-2", "41"], degree: 21, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2000:0105JUD003320296": { name: "CASE OF BEYELER v. ITALY", respondent: "ITA", date: "2000-01-05", articles: ["14", "18", "P1-1", "P1-1-2", "P1-1-1"], degree: 21, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1999:0520JUD002198093": { name: "CASE OF BLADET TROMS\u00d8 AND STENSAAS v. NORWAY", respondent: "NOR", date: "1999-05-20", articles: ["10", "10-1", "10-2", "41"], degree: 21, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2016:0517JUD004246113": { name: "CASE OF KAR\u00c1CSONY AND OTHERS v. HUNGARY", respondent: "HUN", date: "2016-05-17", articles: ["10", "10-1", "10-2", "35", "35-1", "41", "P1-3"], degree: 21, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2000:0627JUD002227793": { name: "CASE OF ILHAN v. TURKEY", respondent: "TUR", date: "2000-06-27", articles: ["2", "2-1", "3", "13", "34", "35", "35-1", "41"], degree: 21, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2008:1204JUD003056204": { name: "CASE OF S. AND MARPER v. THE UNITED KINGDOM", respondent: "GBR", date: "2008-12-04", articles: ["8", "8-1", "8-2", "41", "46", "46-2"], degree: 20, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2012:0607JUD003843309": { name: "CASE OF CENTRO EUROPA 7 S.R.L. AND DI STEFANO v. ITALY", respondent: "ITA", date: "2012-06-07", articles: ["10", "10-1", "10-2", "35", "35-1", "35-3", "41", "P1-1"], degree: 20, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2006:0316JUD005827800": { name: "CASE OF ZDANOKA v. LATVIA", respondent: "LVA", date: "2006-03-16", articles: ["34", "P1-3"], degree: 20, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2012:0207JUD004066008": { name: "CASE OF VON HANNOVER v. GERMANY (No. 2)", respondent: "DEU", date: "2012-02-07", articles: ["8", "8-1"], degree: 20, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2009:0630JUD003277202": { name: "CASE OF VEREIN GEGEN TIERFABRIKEN SCHWEIZ (VgT) v. SWITZERLAND (No. 2)", respondent: "CHE", date: "2009-06-30", articles: ["10", "10-1", "35", "35-1", "35-3", "46", "46-1", "46-2"], degree: 20, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2012:1213JUD003963009": { name: "CASE OF EL-MASRI v. \"THE FORMER YUGOSLAV REPUBLIC OF MACEDONIA\"", respondent: "MKD", date: "2012-12-13", articles: ["3", "5", "5-1", "5-4", "8", "8-1", "8-2", "13"], degree: 20, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2000:1019JUD003110796": { name: "CASE OF IATRIDIS v. GREECE (ARTICLE 41)", respondent: "GRC", date: "2000-10-19", articles: ["41"], degree: 19, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1999:0429JUD002508894": { name: "CASE OF CHASSAGNOU AND OTHERS v. FRANCE", respondent: "FRA", date: "1999-04-29", articles: ["9", "11", "11-2", "14+11", "14", "14+P1-1", "P1-1", "P1-1-2"], degree: 19, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2008:0228JUD003720106": { name: "CASE OF SAADI v. ITALY", respondent: "ITA", date: "2008-02-28", articles: ["3", "41"], degree: 19, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2013:0422JUD004887608": { name: "CASE OF ANIMAL DEFENDERS INTERNATIONAL v. THE UNITED KINGDOM", respondent: "GBR", date: "2013-04-22", articles: ["10", "10-1", "10-2"], degree: 19, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2009:0917JUD001024903": { name: "CASE OF SCOPPOLA v. ITALY (No. 2)", respondent: "ITA", date: "2009-09-17", articles: ["6", "6-1", "7", "7-1", "30", "35", "35-1", "41"], degree: 18, importance: "Level 2", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1999:0708JUD002365794": { name: "CASE OF \u00c7AKICI v. TURKEY", respondent: "TUR", date: "1999-07-08", articles: ["2", "2-1", "3", "5", "5-1", "13", "34", "35"], degree: 18, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2009:1015JUD001705606": { name: "CASE OF MICALLEF v. MALTA", respondent: "MLT", date: "2009-10-15", articles: ["6", "6-1", "34", "35", "35-1", "35-3", "41"], degree: 18, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2011:0121JUD003069609": { name: "CASE OF M.S.S. v. BELGIUM AND GREECE", respondent: "BEL, GRC", date: "2011-01-21", articles: ["1", "3", "13", "13+3", "34", "35", "35-1", "41"], degree: 18, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2000:0627JUD002198693": { name: "CASE OF SALMAN v. TURKEY", respondent: "TUR", date: "2000-06-27", articles: ["2", "2-1", "3", "13", "34", "35", "35-1", "41"], degree: 18, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2002:0528JUD004629599": { name: "CASE OF STAFFORD v. THE UNITED KINGDOM", respondent: "GBR", date: "2002-05-28", articles: ["5", "5-1", "5-1-a", "5-4", "41"], degree: 18, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2003:0708JUD003094396": { name: "CASE OF SAHIN v. GERMANY", respondent: "DEU", date: "2003-07-08", articles: ["8", "8-1", "8-2", "14+8", "14", "41"], degree: 18, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2004:0217JUD004415898": { name: "CASE OF GORZELIK AND OTHERS v. POLAND", respondent: "POL", date: "2004-02-17", articles: ["11", "11-2", "11-1", "43", "10", "10-2"], degree: 18, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2006:0329JUD003681397": { name: "CASE OF SCORDINO v. ITALY (No. 1)", respondent: "ITA", date: "2006-03-29", articles: ["6", "6-1", "34", "35", "35-1", "41", "46", "46-2"], degree: 18, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2000:0406JUD003436997": { name: "CASE OF THLIMMENOS v. GREECE", respondent: "GRC", date: "2000-04-06", articles: ["6", "6-1", "9", "9-1", "14", "35", "35-1", "41"], degree: 18, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2002:0711JUD003659097": { name: "CASE OF G\u00d6\u00c7 v. TURKEY", respondent: "TUR", date: "2002-07-11", articles: ["6", "6-1", "41", "43"], degree: 18, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2016:1108JUD001803011": { name: "CASE OF MAGYAR HELSINKI BIZOTTS\u00c1G v. HUNGARY", respondent: "HUN", date: "2016-11-08", articles: ["8", "8-1", "10", "10-1", "10-2", "35", "35-3", "41"], degree: 18, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2003:0708JUD003602297": { name: "CASE OF HATTON AND OTHERS v. THE UNITED KINGDOM", respondent: "GBR", date: "2003-07-08", articles: ["8", "8-1", "8-2", "13", "41"], degree: 18, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2006:0711JUD005481000": { name: "CASE OF JALLOH v. GERMANY", respondent: "DEU", date: "2006-07-11", articles: ["3", "6", "6-1", "8", "8-1", "41"], degree: 18, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2015:0616JUD006456909": { name: "CASE OF DELFI AS v. ESTONIA", respondent: "EST", date: "2015-06-16", articles: ["8", "8-1", "10", "10-1", "10-2", "17"], degree: 17, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1999:0728JUD003488497": { name: "CASE OF BOTTAZZI v. ITALY", respondent: "ITA", date: "1999-07-28", articles: ["6", "6-1", "41"], degree: 17, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2012:0626JUD002682806": { name: "CASE OF KURI\u0106 AND OTHERS v. SLOVENIA", respondent: "SVN", date: "2012-06-26", articles: ["8", "8-1", "8-2", "13", "13+8", "14", "14+8", "34"], degree: 17, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2016:0621JUD000580908": { name: "CASE OF AL-DULIMI AND MONTANA MANAGEMENT INC. v. SWITZERLAND", respondent: "CHE", date: "2016-06-21", articles: ["6", "6-1", "15", "35", "35-3-a", "41"], degree: 17, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2004:0928JUD004491298": { name: "CASE OF KOPECK\u00dd v. SLOVAKIA", respondent: "SVK", date: "2004-09-28", articles: ["43", "P1-1", "P1-1-1"], degree: 17, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2012:0912JUD001059308": { name: "CASE OF NADA v. SWITZERLAND", respondent: "CHE", date: "2012-09-12", articles: ["5", "5-1", "8", "8-1", "8-2", "13", "13+8", "34"], degree: 17, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2013:1021JUD004275009": { name: "CASE OF DEL R\u00cdO PRADA v. SPAIN", respondent: "ESP", date: "2013-10-21", articles: ["5", "5-1", "7", "7-1", "41", "46", "46-2"], degree: 17, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2003:0506JUD004889899": { name: "CASE OF PERNA v. ITALY", respondent: "ITA", date: "2003-05-06", articles: ["6", "6-1", "6-3-d", "10", "10-1", "10-2", "43"], degree: 17, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2005:0204JUD004682799": { name: "CASE OF MAMATKULOV AND ASKAROV v. TURKEY", respondent: "TUR", date: "2005-02-04", articles: ["2", "3", "6", "6-1", "34", "36", "36-2", "41"], degree: 17, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2010:0329JUD000339403": { name: "CASE OF MEDVEDYEV AND OTHERS v. FRANCE", respondent: "FRA", date: "2010-03-29", articles: ["1", "5", "5-1", "5-3", "35", "35-3", "41"], degree: 17, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1995:0926JUD001785191": { name: "CASE OF VOGT v. GERMANY", respondent: "DEU", date: "1995-09-26", articles: ["10", "10-1", "10-2", "11", "11-2", "14+10", "14", "41"], degree: 17, importance: "Level 2", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1999:1028JUD002834295": { name: "CASE OF BRUMARESCU v. ROMANIA", respondent: "ROU", date: "1999-10-28", articles: ["6", "6-1", "34", "41", "P1-1", "P1-1-1", "35", "35-1"], degree: 16, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2008:0129JUD001322903": { name: "CASE OF SAADI v. THE UNITED KINGDOM", respondent: "GBR", date: "2008-01-29", articles: ["5", "5-1", "5-2", "5-1-f", "41"], degree: 16, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1997:0422JUD002183093": { name: "CASE OF X, Y AND Z v. THE UNITED KINGDOM", respondent: "GBR", date: "1997-04-22", articles: ["8", "8-1", "14+8", "14", "10", "10-1"], degree: 16, importance: "Level 2", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2015:1204JUD004714306": { name: "CASE OF ROMAN ZAKHAROV v. RUSSIA", respondent: "RUS", date: "2015-12-04", articles: ["8", "8-1", "8-2", "34", "35", "35-1", "41"], degree: 16, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2004:0212JUD004728799": { name: "CASE OF PEREZ v. FRANCE", respondent: "FRA", date: "2004-02-12", articles: ["6", "6-1", "35", "35-3"], degree: 16, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2001:0118JUD002723895": { name: "CASE OF CHAPMAN v. THE UNITED KINGDOM", respondent: "GBR", date: "2001-01-18", articles: ["6", "6-1", "8", "8-1", "8-2", "14", "36", "36-2"], degree: 16, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1999:0708JUD002668295": { name: "CASE OF S\u00dcREK v. TURKEY (No. 1)", respondent: "TUR", date: "1999-07-08", articles: ["6", "6-1", "10", "10-1", "10-2", "41"], degree: 16, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2001:0322JUD003404496": { name: "CASE OF STRELETZ, KESSLER AND KRENZ v. GERMANY", respondent: "DEU", date: "2001-03-22", articles: ["1", "7", "7-1", "14+7", "14", "30"], degree: 16, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1999:1216JUD002488894": { name: "CASE OF V. v. THE UNITED KINGDOM", respondent: "GBR", date: "1999-12-16", articles: ["3", "5", "5-1", "5-1-a", "5-4", "6", "6-1", "35"], degree: 16, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2019:1121JUD004728715": { name: "CASE OF ILIAS AND AHMED v. HUNGARY", respondent: "HUN", date: "2019-11-21", articles: ["3", "5", "5-1", "5-1-f", "5-4", "13", "35", "35-1"], degree: 15, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2006:0412JUD006573101": { name: "CASE OF STEC AND OTHERS v. THE UNITED KINGDOM", respondent: "GBR", date: "2006-04-12", articles: ["14+P1-1", "14", "P1-1", "P1-1-1"], degree: 15, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2014:0917JUD001086509": { name: "CASE OF MOCANU AND OTHERS v. ROMANIA", respondent: "ROU", date: "2014-09-17", articles: ["2", "2-1", "3", "6", "6-1", "35", "35-1", "35-3"], degree: 15, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1999:0121JUD003054496": { name: "CASE OF GARC\u00cdA RUIZ v. SPAIN", respondent: "ESP", date: "1999-01-21", articles: ["6", "6-1", "19"], degree: 15, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1996:1218JUD001531889": { name: "CASE OF LOIZIDOU v. TURKEY", respondent: "TUR", date: "1996-12-18", articles: ["8", "8-1", "32", "32-2", "P1-1", "P1-1-1", "1", "35"], degree: 15, importance: "Level 2", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2002:1218JUD002495294": { name: "CASE OF N.C. v. ITALY", respondent: "ITA", date: "2002-12-18", articles: ["5", "5-5"], degree: 15, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2010:1216JUD002557905": { name: "CASE OF A, B AND C  v. IRELAND", respondent: "IRL", date: "2010-12-16", articles: ["8", "8-1", "8-2", "35", "35-1", "41"], degree: 15, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2009:0219JUD000345505": { name: "CASE OF A. AND OTHERS v. THE UNITED KINGDOM", respondent: "GBR", date: "2009-02-19", articles: ["3", "5", "5-1", "5-1-f", "5-4", "5-5", "13", "15"], degree: 15, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2012:0223JUD002776509": { name: "CASE OF HIRSI JAMAA AND OTHERS v. ITALY", respondent: "ITA", date: "2012-02-23", articles: ["1", "3", "13", "13+3", "13+P4-4", "34", "35", "35-1"], degree: 15, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2012:0629JUD002739606": { name: "CASE OF SABR\u0130 G\u00dcNE\u015e v. TURKEY", respondent: "TUR", date: "2012-06-29", articles: ["35", "35-1"], degree: 15, importance: "Level 2", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2017:1128JUD007250813": { name: "CASE OF MERABISHVILI v. GEORGIA", respondent: "GEO", date: "2017-11-28", articles: ["5", "5-1", "5-3", "18", "18+5-1", "35", "35-1", "35-4"], degree: 15, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2018:0925JUD007663911": { name: "CASE OF DENISOV v. UKRAINE", respondent: "UKR", date: "2018-09-25", articles: ["6", "6-1", "8", "8-1", "35", "35-3-a", "41"], degree: 15, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2007:1210JUD006969801": { name: "CASE OF STOLL v. SWITZERLAND", respondent: "CHE", date: "2007-12-10", articles: ["10", "10-1", "10-2"], degree: 15, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2013:0219JUD001901007": { name: "CASE OF X AND OTHERS v. AUSTRIA", respondent: "AUT", date: "2013-02-19", articles: ["8", "8-1", "14", "14+8", "41"], degree: 14, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2011:0707JUD002345903": { name: "CASE OF BAYATYAN v. ARMENIA", respondent: "ARM", date: "2011-07-07", articles: ["9", "9-1", "9-2", "41"], degree: 14, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1999:0520JUD002539094": { name: "CASE OF REKV\u00c9NYI v. HUNGARY", respondent: "HUN", date: "1999-05-20", articles: ["10", "10-1", "10-2", "11", "11-1", "11-2", "14+10", "14"], degree: 14, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2010:1116JUD000092605": { name: "CASE OF TAXQUET v. BELGIUM", respondent: "BEL", date: "2010-11-16", articles: ["6", "6-1", "41"], degree: 14, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1998:0219JUD001496789": { name: "CASE OF GUERRA AND OTHERS v. ITALY", respondent: "ITA", date: "1998-02-19", articles: ["10", "10-1", "8", "8-1", "2", "41", "26"], degree: 14, importance: "Level 2", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2015:1015JUD002751008": { name: "CASE OF PER\u0130N\u00c7EK v. SWITZERLAND", respondent: "CHE", date: "2015-10-15", articles: ["10", "10-1", "10-2", "16", "41"], degree: 14, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2008:0212JUD002190604": { name: "CASE OF KAFKARIS v. CYPRUS", respondent: "CYP", date: "2008-02-12", articles: ["3", "5", "5-1-a", "5-1", "7", "7-1", "14", "41"], degree: 14, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2012:0403JUD003757504": { name: "CASE OF BOULOIS v. LUXEMBOURG", respondent: "LUX", date: "2012-04-03", articles: ["6", "6-1"], degree: 13, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2004:1217JUD003334896": { name: "CASE OF CUMPANA AND MAZARE v. ROMANIA", respondent: "ROU", date: "2004-12-17", articles: ["10", "10-2", "10-1", "41", "43"], degree: 13, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2000:1026JUD003098596": { name: "CASE OF HASAN AND CHAUSH v. BULGARIA", respondent: "BGR", date: "2000-10-26", articles: ["6", "6-1", "9", "9-1", "9-2", "11", "13", "41"], degree: 13, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2015:1015JUD003755305": { name: "CASE OF KUDREVI\u010cIUS AND OTHERS v. LITHUANIA", respondent: "LTU", date: "2015-10-15", articles: ["11", "11-1", "11-2"], degree: 13, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2016:0623JUD002026112": { name: "CASE OF BAKA v. HUNGARY", respondent: "HUN", date: "2016-06-23", articles: ["6", "6-1", "10", "10-1", "10-2", "41"], degree: 13, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2000:0216JUD002779895": { name: "CASE OF AMANN v. SWITZERLAND", respondent: "CHE", date: "2000-02-16", articles: ["8", "8-1", "8-2", "13", "41", "10", "10-2"], degree: 13, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:1999:0708JUD002376394": { name: "CASE OF TANRIKULU v. TURKEY", respondent: "TUR", date: "1999-07-08", articles: ["1", "2", "2-1", "13", "34", "35", "35-1", "38"], degree: 13, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2007:1022JUD002127902": { name: "CASE OF LINDON, OTCHAKOVSKY-LAURENS AND JULY v. FRANCE", respondent: "FRA", date: "2007-10-22", articles: ["6", "6-1", "10", "10-2", "10-1"], degree: 13, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2013:1107JUD002938109": { name: "CASE OF VALLIANATOS AND OTHERS v. GREECE", respondent: "GRC", date: "2013-11-07", articles: ["8", "8-1", "14", "14+8", "34", "35", "35-1", "41"], degree: 13, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2007:0410JUD000633905": { name: "CASE OF EVANS v. THE UNITED KINGDOM", respondent: "GBR", date: "2007-04-10", articles: ["2", "2-1", "8", "8-1", "14", "14+8"], degree: 13, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2011:0707JUD002702108": { name: "CASE OF AL-JEDDA v. THE UNITED KINGDOM", respondent: "GBR", date: "2011-07-07", articles: [], degree: 13, importance: "Level \u2014", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2012:0207JUD003995408": { name: "CASE OF AXEL SPRINGER AG v. GERMANY", respondent: "DEU", date: "2012-02-07", articles: ["8", "8-1", "10", "10-1", "10-2", "41"], degree: 13, importance: "Level 2", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2008:0122JUD004354602": { name: "CASE OF E.B. v. FRANCE", respondent: "FRA", date: "2008-01-22", articles: ["8", "8-1", "14", "14+8", "41"], degree: 13, importance: "Level 2", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2015:0928JUD002338009": { name: "CASE OF BOUYID v. BELGIUM", respondent: "BEL", date: "2015-09-28", articles: ["3", "41"], degree: 12, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2016:1020JUD000733413": { name: "CASE OF MUR\u0160I\u0106 v. CROATIA", respondent: "HRV", date: "2016-10-20", articles: ["3", "35", "35-1", "41"], degree: 12, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2013:1112JUD000578608": { name: "CASE OF S\u00d6DERMAN v. SWEDEN", respondent: "SWE", date: "2013-11-12", articles: ["8", "8-1", "41"], degree: 12, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2016:0705JUD002375507": { name: "CASE OF BUZADJI v. THE REPUBLIC OF MOLDOVA", respondent: "MDA", date: "2016-07-05", articles: ["5", "5-1", "5-1-c", "5-3", "34", "35", "35-1", "41"], degree: 12, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2016:1129JUD007694311": { name: "CASE OF LUPENI GREEK CATHOLIC PARISH AND OTHERS v. ROMANIA", respondent: "ROU", date: "2016-11-29", articles: ["6", "6-1", "14", "14+6-1", "41"], degree: 12, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2010:0427JUD000000708": { name: "CASE OF T\u0102NASE v. MOLDOVA", respondent: "MDA", date: "2010-04-27", articles: ["34", "35", "35-1", "35-3", "P1-3"], degree: 12, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2005:1006JUD007402501": { name: "CASE OF HIRST v. THE UNITED KINGDOM (No. 2)", respondent: "GBR", date: "2005-10-06", articles: ["10", "10-1", "14+P1-3", "14", "P1-3", "41"], degree: 12, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2007:1204JUD004436204": { name: "CASE OF DICKSON v. THE UNITED KINGDOM", respondent: "GBR", date: "2007-12-04", articles: ["8", "8-1", "12", "41"], degree: 12, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2008:1127JUD003639102": { name: "CASE OF SALDUZ v. TURKEY", respondent: "TUR", date: "2008-11-27", articles: ["6", "6-1", "6-3-c", "41", "6-3-c+6-1"], degree: 12, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2016:0426JUD001051110": { name: "CASE OF MURRAY v. THE NETHERLANDS", respondent: "NLD", date: "2016-04-26", articles: ["3", "34", "41"], degree: 12, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2018:1106JUD005539113": { name: "CASE OF RAMOS NUNES DE CARVALHO E S\u00c1 v. PORTUGAL", respondent: "PRT", date: "2018-11-06", articles: ["6", "6-1", "35", "35-1", "35-3-a", "41"], degree: 12, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2009:0218JUD005570700": { name: "CASE OF ANDREJEVA v. LATVIA", respondent: "LVA", date: "2009-02-18", articles: ["6", "6-1", "14", "14+P1-1", "P1-1", "P1-1-1", "41"], degree: 12, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2014:0717JUD003254108": { name: "CASE OF SVINARENKO AND SLYADNEV v. RUSSIA", respondent: "RUS", date: "2014-07-17", articles: ["3", "5", "5-3", "6", "6-1", "34", "35", "35-1"], degree: 12, importance: "Level 1", branch: "Grand Chamber" },
+        "ecli:ECLI:CE:ECHR:2010:0706JUD004161507": { name: "CASE OF NEULINGER AND SHURUK v. SWITZERLAND", respondent: "CHE", date: "2010-07-06", articles: ["8", "8-1", "8-2", "41"], degree: 12, importance: "Level 1", branch: "Grand Chamber" }
     };
 
     function field(label, value) {
@@ -645,7 +833,6 @@ dissent                            True</div>
             field('Articles', c.articles.length ? c.articles.join(', ') : '—') +
             field('Cited by', c.degree + (c.degree === 1 ? ' case' : ' cases')) +
             field('Importance', c.importance) +
-            field('Separate opinion', c.dissent ? 'Yes' : 'No') +
             field('Branch', c.branch);
         document.getElementById('metadata-drawer').classList.add('open');
     }
@@ -661,28 +848,993 @@ dissent                            True</div>
 
     /* ── Figure 1: citation network ───────────────────── */
     const netNodes = [
-        { id: "Suji", label: "Suji v. Greece", degree: 12 },
-        { id: "Kolesnyk", label: "Kolesnyk v. Ukraine", degree: 11 },
-        { id: "Golder", label: "Golder v. UK", degree: 11 },
-        { id: "Pinhal", label: "Pinhal v. Portugal", degree: 9 },
-        { id: "Grande", label: "Grande Oriente v. Italy", degree: 9 },
-        { id: "Günana", label: "Günana v. Bulgaria", degree: 8 },
-        { id: "Vainik", label: "Vainik v. Estonia", degree: 8 },
-        { id: "Tyrer", label: "Tyrer v. UK", degree: 7 },
-        { id: "C9", label: "", degree: 2 }, { id: "C10", label: "", degree: 2 },
-        { id: "C11", label: "", degree: 1 }, { id: "C12", label: "", degree: 1 },
-        { id: "C13", label: "", degree: 1 }, { id: "C14", label: "", degree: 0 },
-        { id: "C15", label: "", degree: 0 }, { id: "C16", label: "", degree: 0 },
-        { id: "C17", label: "", degree: 1 }, { id: "C18", label: "", degree: 0 },
-        { id: "C19", label: "", degree: 0 }, { id: "C20", label: "", degree: 0 },
-        { id: "C21", label: "", degree: 0 }, { id: "C22", label: "", degree: 0 }
+        { id: "ecli:ECLI:CE:ECHR:2001:0712JUD002570294", label: "K. And T. v. Finland", degree: 62 },
+        { id: "ecli:ECLI:CE:ECHR:2000:1026JUD003021096", label: "Kudla v. Poland", degree: 54 },
+        { id: "ecli:ECLI:CE:ECHR:2004:0622JUD003144396", label: "Broniowski v. Poland", degree: 42 },
+        { id: "ecli:ECLI:CE:ECHR:1999:0728JUD002580394", label: "Selmouni v. France", degree: 38 },
+        { id: "ecli:ECLI:CE:ECHR:2004:0408JUD007150301", label: "Assanidze v. Georgia", degree: 37 },
+        { id: "ecli:ECLI:CE:ECHR:1999:0121JUD002918395", label: "Fressoz And Roire v. France", degree: 37 },
+        { id: "ecli:ECLI:CE:ECHR:1996:1115JUD002241493", label: "Chahal v. The United Kingdom", degree: 36 },
+        { id: "ecli:ECLI:CE:ECHR:2004:0708JUD004878799", label: "Ila\u015fcu And Others v. Moldova And Russia", degree: 35 },
+        { id: "ecli:ECLI:CE:ECHR:2000:0406JUD002677295", label: "Labita v. Italy", degree: 34 },
+        { id: "ecli:ECLI:CE:ECHR:2018:0320JUD003768510", label: "Radomilja And Others v. Croatia", degree: 32 },
+        { id: "ecli:ECLI:CE:ECHR:1995:0927JUD001898491", label: "Mccann And Others v. The United Kingdom", degree: 31 },
+        { id: "ecli:ECLI:CE:ECHR:2002:0711JUD002895795", label: "Christine Goodwin v. The United Kingdom", degree: 29 },
+        { id: "ecli:ECLI:CE:ECHR:2010:0601JUD002297805", label: "G\u00e4fgen v. Germany", degree: 29 },
+        { id: "ecli:ECLI:CE:ECHR:2009:0918JUD001606490", label: "Varnava And Others v. Turkey", degree: 28 },
+        { id: "ecli:ECLI:CE:ECHR:1998:0130JUD001939292", label: "United Communist Party Of Turkey And Others v. Turkey", degree: 27 },
+        { id: "ecli:ECLI:CE:ECHR:1999:0325JUD003119596", label: "Nikolova v. Bulgaria", degree: 27 },
+        { id: "ecli:ECLI:CE:ECHR:2004:1130JUD004893999", label: "\u00d6neryildiz v. Turkey", degree: 26 },
+        { id: "ecli:ECLI:CE:ECHR:2004:0217JUD003974898", label: "Maestri v. Italy", degree: 26 },
+        { id: "ecli:ECLI:CE:ECHR:1999:0928JUD002811495", label: "Dalban v. Romania", degree: 26 },
+        { id: "ecli:ECLI:CE:ECHR:2006:0308JUD005953200", label: "Blecic v. Croatia", degree: 25 },
+        { id: "ecli:ECLI:CE:ECHR:1999:0218JUD002608394", label: "Waite And Kennedy v. Germany", degree: 25 },
+        { id: "ecli:ECLI:CE:ECHR:2006:0301JUD005658100", label: "Sejdovic v. Italy", degree: 25 },
+        { id: "ecli:ECLI:CE:ECHR:1998:1028JUD002345294", label: "", degree: 25 },
+        { id: "ecli:ECLI:CE:ECHR:2004:0428JUD005667900", label: "", degree: 24 },
+        { id: "ecli:ECLI:CE:ECHR:2001:1121JUD003576397", label: "", degree: 24 },
+        { id: "ecli:ECLI:CE:ECHR:1994:0923JUD001589089", label: "", degree: 24 },
+        { id: "ecli:ECLI:CE:ECHR:2005:1019JUD003255596", label: "", degree: 24 },
+        { id: "ecli:ECLI:CE:ECHR:2001:0510JUD002578194", label: "", degree: 23 },
+        { id: "ecli:ECLI:CE:ECHR:2007:1113JUD005732500", label: "", degree: 23 },
+        { id: "ecli:ECLI:CE:ECHR:2000:0504JUD002834195", label: "", degree: 23 },
+        { id: "ecli:ECLI:CE:ECHR:2001:0712JUD004252798", label: "", degree: 23 },
+        { id: "ecli:ECLI:CE:ECHR:2014:0717JUD004784808", label: "", degree: 22 },
+        { id: "ecli:ECLI:CE:ECHR:2005:0512JUD004622199", label: "", degree: 22 },
+        { id: "ecli:ECLI:CE:ECHR:1997:1125JUD001895491", label: "", degree: 22 },
+        { id: "ecli:ECLI:CE:ECHR:2008:0429JUD001337805", label: "", degree: 22 },
+        { id: "ecli:ECLI:CE:ECHR:2005:1110JUD004477498", label: "", degree: 22 },
+        { id: "ecli:ECLI:CE:ECHR:2000:0713JUD003922198", label: "", degree: 22 },
+        { id: "ecli:ECLI:CE:ECHR:1999:0325JUD003110796", label: "", degree: 22 },
+        { id: "ecli:ECLI:CE:ECHR:2005:0706JUD004357798", label: "", degree: 22 },
+        { id: "ecli:ECLI:CE:ECHR:2012:0117JUD003676006", label: "", degree: 22 },
+        { id: "ecli:ECLI:CE:ECHR:1998:0609JUD002267893", label: "", degree: 22 },
+        { id: "ecli:ECLI:CE:ECHR:2003:0213JUD004232698", label: "", degree: 21 },
+        { id: "ecli:ECLI:CE:ECHR:2011:0707JUD005572107", label: "", degree: 21 },
+        { id: "ecli:ECLI:CE:ECHR:2008:1112JUD003450397", label: "", degree: 21 },
+        { id: "ecli:ECLI:CE:ECHR:2001:0510JUD002939295", label: "", degree: 21 },
+        { id: "ecli:ECLI:CE:ECHR:2000:0105JUD003320296", label: "", degree: 21 },
+        { id: "ecli:ECLI:CE:ECHR:1999:0520JUD002198093", label: "", degree: 21 },
+        { id: "ecli:ECLI:CE:ECHR:2016:0517JUD004246113", label: "", degree: 21 },
+        { id: "ecli:ECLI:CE:ECHR:2000:0627JUD002227793", label: "", degree: 21 },
+        { id: "ecli:ECLI:CE:ECHR:2008:1204JUD003056204", label: "", degree: 20 },
+        { id: "ecli:ECLI:CE:ECHR:2012:0607JUD003843309", label: "", degree: 20 },
+        { id: "ecli:ECLI:CE:ECHR:2006:0316JUD005827800", label: "", degree: 20 },
+        { id: "ecli:ECLI:CE:ECHR:2012:0207JUD004066008", label: "", degree: 20 },
+        { id: "ecli:ECLI:CE:ECHR:2009:0630JUD003277202", label: "", degree: 20 },
+        { id: "ecli:ECLI:CE:ECHR:2012:1213JUD003963009", label: "", degree: 20 },
+        { id: "ecli:ECLI:CE:ECHR:2000:1019JUD003110796", label: "", degree: 19 },
+        { id: "ecli:ECLI:CE:ECHR:1999:0429JUD002508894", label: "", degree: 19 },
+        { id: "ecli:ECLI:CE:ECHR:2008:0228JUD003720106", label: "", degree: 19 },
+        { id: "ecli:ECLI:CE:ECHR:2013:0422JUD004887608", label: "", degree: 19 },
+        { id: "ecli:ECLI:CE:ECHR:2009:0917JUD001024903", label: "", degree: 18 },
+        { id: "ecli:ECLI:CE:ECHR:1999:0708JUD002365794", label: "", degree: 18 },
+        { id: "ecli:ECLI:CE:ECHR:2009:1015JUD001705606", label: "", degree: 18 },
+        { id: "ecli:ECLI:CE:ECHR:2011:0121JUD003069609", label: "", degree: 18 },
+        { id: "ecli:ECLI:CE:ECHR:2000:0627JUD002198693", label: "", degree: 18 },
+        { id: "ecli:ECLI:CE:ECHR:2002:0528JUD004629599", label: "", degree: 18 },
+        { id: "ecli:ECLI:CE:ECHR:2003:0708JUD003094396", label: "", degree: 18 },
+        { id: "ecli:ECLI:CE:ECHR:2004:0217JUD004415898", label: "", degree: 18 },
+        { id: "ecli:ECLI:CE:ECHR:2006:0329JUD003681397", label: "", degree: 18 },
+        { id: "ecli:ECLI:CE:ECHR:2000:0406JUD003436997", label: "", degree: 18 },
+        { id: "ecli:ECLI:CE:ECHR:2002:0711JUD003659097", label: "", degree: 18 },
+        { id: "ecli:ECLI:CE:ECHR:2016:1108JUD001803011", label: "", degree: 18 },
+        { id: "ecli:ECLI:CE:ECHR:2003:0708JUD003602297", label: "", degree: 18 },
+        { id: "ecli:ECLI:CE:ECHR:2006:0711JUD005481000", label: "", degree: 18 },
+        { id: "ecli:ECLI:CE:ECHR:2015:0616JUD006456909", label: "", degree: 17 },
+        { id: "ecli:ECLI:CE:ECHR:1999:0728JUD003488497", label: "", degree: 17 },
+        { id: "ecli:ECLI:CE:ECHR:2012:0626JUD002682806", label: "", degree: 17 },
+        { id: "ecli:ECLI:CE:ECHR:2016:0621JUD000580908", label: "", degree: 17 },
+        { id: "ecli:ECLI:CE:ECHR:2004:0928JUD004491298", label: "", degree: 17 },
+        { id: "ecli:ECLI:CE:ECHR:2012:0912JUD001059308", label: "", degree: 17 },
+        { id: "ecli:ECLI:CE:ECHR:2013:1021JUD004275009", label: "", degree: 17 },
+        { id: "ecli:ECLI:CE:ECHR:2003:0506JUD004889899", label: "", degree: 17 },
+        { id: "ecli:ECLI:CE:ECHR:2005:0204JUD004682799", label: "", degree: 17 },
+        { id: "ecli:ECLI:CE:ECHR:2010:0329JUD000339403", label: "", degree: 17 },
+        { id: "ecli:ECLI:CE:ECHR:1995:0926JUD001785191", label: "", degree: 17 },
+        { id: "ecli:ECLI:CE:ECHR:1999:1028JUD002834295", label: "", degree: 16 },
+        { id: "ecli:ECLI:CE:ECHR:2008:0129JUD001322903", label: "", degree: 16 },
+        { id: "ecli:ECLI:CE:ECHR:1997:0422JUD002183093", label: "", degree: 16 },
+        { id: "ecli:ECLI:CE:ECHR:2015:1204JUD004714306", label: "", degree: 16 },
+        { id: "ecli:ECLI:CE:ECHR:2004:0212JUD004728799", label: "", degree: 16 },
+        { id: "ecli:ECLI:CE:ECHR:2001:0118JUD002723895", label: "", degree: 16 },
+        { id: "ecli:ECLI:CE:ECHR:1999:0708JUD002668295", label: "", degree: 16 },
+        { id: "ecli:ECLI:CE:ECHR:2001:0322JUD003404496", label: "", degree: 16 },
+        { id: "ecli:ECLI:CE:ECHR:1999:1216JUD002488894", label: "", degree: 16 },
+        { id: "ecli:ECLI:CE:ECHR:2019:1121JUD004728715", label: "", degree: 15 },
+        { id: "ecli:ECLI:CE:ECHR:2006:0412JUD006573101", label: "", degree: 15 },
+        { id: "ecli:ECLI:CE:ECHR:2014:0917JUD001086509", label: "", degree: 15 },
+        { id: "ecli:ECLI:CE:ECHR:1999:0121JUD003054496", label: "", degree: 15 },
+        { id: "ecli:ECLI:CE:ECHR:1996:1218JUD001531889", label: "", degree: 15 },
+        { id: "ecli:ECLI:CE:ECHR:2002:1218JUD002495294", label: "", degree: 15 },
+        { id: "ecli:ECLI:CE:ECHR:2010:1216JUD002557905", label: "", degree: 15 },
+        { id: "ecli:ECLI:CE:ECHR:2009:0219JUD000345505", label: "", degree: 15 },
+        { id: "ecli:ECLI:CE:ECHR:2012:0223JUD002776509", label: "", degree: 15 },
+        { id: "ecli:ECLI:CE:ECHR:2012:0629JUD002739606", label: "", degree: 15 },
+        { id: "ecli:ECLI:CE:ECHR:2017:1128JUD007250813", label: "", degree: 15 },
+        { id: "ecli:ECLI:CE:ECHR:2018:0925JUD007663911", label: "", degree: 15 },
+        { id: "ecli:ECLI:CE:ECHR:2007:1210JUD006969801", label: "", degree: 15 },
+        { id: "ecli:ECLI:CE:ECHR:2013:0219JUD001901007", label: "", degree: 14 },
+        { id: "ecli:ECLI:CE:ECHR:2011:0707JUD002345903", label: "", degree: 14 },
+        { id: "ecli:ECLI:CE:ECHR:1999:0520JUD002539094", label: "", degree: 14 },
+        { id: "ecli:ECLI:CE:ECHR:2010:1116JUD000092605", label: "", degree: 14 },
+        { id: "ecli:ECLI:CE:ECHR:1998:0219JUD001496789", label: "", degree: 14 },
+        { id: "ecli:ECLI:CE:ECHR:2015:1015JUD002751008", label: "", degree: 14 },
+        { id: "ecli:ECLI:CE:ECHR:2008:0212JUD002190604", label: "", degree: 14 },
+        { id: "ecli:ECLI:CE:ECHR:2012:0403JUD003757504", label: "", degree: 13 },
+        { id: "ecli:ECLI:CE:ECHR:2004:1217JUD003334896", label: "", degree: 13 },
+        { id: "ecli:ECLI:CE:ECHR:2000:1026JUD003098596", label: "", degree: 13 },
+        { id: "ecli:ECLI:CE:ECHR:2015:1015JUD003755305", label: "", degree: 13 },
+        { id: "ecli:ECLI:CE:ECHR:2016:0623JUD002026112", label: "", degree: 13 },
+        { id: "ecli:ECLI:CE:ECHR:2000:0216JUD002779895", label: "", degree: 13 },
+        { id: "ecli:ECLI:CE:ECHR:1999:0708JUD002376394", label: "", degree: 13 },
+        { id: "ecli:ECLI:CE:ECHR:2007:1022JUD002127902", label: "", degree: 13 },
+        { id: "ecli:ECLI:CE:ECHR:2013:1107JUD002938109", label: "", degree: 13 },
+        { id: "ecli:ECLI:CE:ECHR:2007:0410JUD000633905", label: "", degree: 13 },
+        { id: "ecli:ECLI:CE:ECHR:2011:0707JUD002702108", label: "", degree: 13 },
+        { id: "ecli:ECLI:CE:ECHR:2012:0207JUD003995408", label: "", degree: 13 },
+        { id: "ecli:ECLI:CE:ECHR:2008:0122JUD004354602", label: "", degree: 13 },
+        { id: "ecli:ECLI:CE:ECHR:2015:0928JUD002338009", label: "", degree: 12 },
+        { id: "ecli:ECLI:CE:ECHR:2016:1020JUD000733413", label: "", degree: 12 },
+        { id: "ecli:ECLI:CE:ECHR:2013:1112JUD000578608", label: "", degree: 12 },
+        { id: "ecli:ECLI:CE:ECHR:2016:0705JUD002375507", label: "", degree: 12 },
+        { id: "ecli:ECLI:CE:ECHR:2016:1129JUD007694311", label: "", degree: 12 },
+        { id: "ecli:ECLI:CE:ECHR:2010:0427JUD000000708", label: "", degree: 12 },
+        { id: "ecli:ECLI:CE:ECHR:2005:1006JUD007402501", label: "", degree: 12 },
+        { id: "ecli:ECLI:CE:ECHR:2007:1204JUD004436204", label: "", degree: 12 },
+        { id: "ecli:ECLI:CE:ECHR:2008:1127JUD003639102", label: "", degree: 12 },
+        { id: "ecli:ECLI:CE:ECHR:2016:0426JUD001051110", label: "", degree: 12 },
+        { id: "ecli:ECLI:CE:ECHR:2018:1106JUD005539113", label: "", degree: 12 },
+        { id: "ecli:ECLI:CE:ECHR:2009:0218JUD005570700", label: "", degree: 12 },
+        { id: "ecli:ECLI:CE:ECHR:2014:0717JUD003254108", label: "", degree: 12 },
+        { id: "ecli:ECLI:CE:ECHR:2010:0706JUD004161507", label: "", degree: 12 }
     ];
     const netLinks = [
-        ["Kolesnyk","Suji"], ["Pinhal","Suji"], ["Grande","Suji"], ["Günana","Suji"],
-        ["Vainik","Kolesnyk"], ["C9","Kolesnyk"], ["C10","Golder"], ["C11","Pinhal"],
-        ["C12","Grande"], ["C13","Günana"], ["C14","Vainik"], ["C15","Tyrer"],
-        ["C16","Golder"], ["C17","Suji"], ["C18","C9"], ["C19","Tyrer"],
-        ["C20","Pinhal"], ["C21","Golder"], ["C22","Kolesnyk"]
+        ["ecli:ECLI:CE:ECHR:2019:1121JUD004728715","ecli:ECLI:CE:ECHR:1996:1115JUD002241493"],
+        ["ecli:ECLI:CE:ECHR:2019:1121JUD004728715","ecli:ECLI:CE:ECHR:1998:0219JUD001496789"],
+        ["ecli:ECLI:CE:ECHR:2019:1121JUD004728715","ecli:ECLI:CE:ECHR:2001:0712JUD002570294"],
+        ["ecli:ECLI:CE:ECHR:2019:1121JUD004728715","ecli:ECLI:CE:ECHR:2002:0711JUD003659097"],
+        ["ecli:ECLI:CE:ECHR:2019:1121JUD004728715","ecli:ECLI:CE:ECHR:2003:0506JUD004889899"],
+        ["ecli:ECLI:CE:ECHR:2019:1121JUD004728715","ecli:ECLI:CE:ECHR:2004:0428JUD005667900"],
+        ["ecli:ECLI:CE:ECHR:2019:1121JUD004728715","ecli:ECLI:CE:ECHR:2005:0204JUD004682799"],
+        ["ecli:ECLI:CE:ECHR:2019:1121JUD004728715","ecli:ECLI:CE:ECHR:2007:1113JUD005732500"],
+        ["ecli:ECLI:CE:ECHR:2019:1121JUD004728715","ecli:ECLI:CE:ECHR:2011:0121JUD003069609"],
+        ["ecli:ECLI:CE:ECHR:2019:1121JUD004728715","ecli:ECLI:CE:ECHR:2012:0223JUD002776509"],
+        ["ecli:ECLI:CE:ECHR:2019:1121JUD004728715","ecli:ECLI:CE:ECHR:2012:0626JUD002682806"],
+        ["ecli:ECLI:CE:ECHR:2019:1121JUD004728715","ecli:ECLI:CE:ECHR:2012:0629JUD002739606"],
+        ["ecli:ECLI:CE:ECHR:2019:1121JUD004728715","ecli:ECLI:CE:ECHR:2012:0912JUD001059308"],
+        ["ecli:ECLI:CE:ECHR:2019:1121JUD004728715","ecli:ECLI:CE:ECHR:2016:0426JUD001051110"],
+        ["ecli:ECLI:CE:ECHR:2019:1121JUD004728715","ecli:ECLI:CE:ECHR:2016:0621JUD000580908"],
+        ["ecli:ECLI:CE:ECHR:2019:1121JUD004728715","ecli:ECLI:CE:ECHR:2018:0320JUD003768510"],
+        ["ecli:ECLI:CE:ECHR:2008:0129JUD001322903","ecli:ECLI:CE:ECHR:1996:1115JUD002241493"],
+        ["ecli:ECLI:CE:ECHR:2008:0129JUD001322903","ecli:ECLI:CE:ECHR:2001:1121JUD003576397"],
+        ["ecli:ECLI:CE:ECHR:2008:0129JUD001322903","ecli:ECLI:CE:ECHR:2002:0528JUD004629599"],
+        ["ecli:ECLI:CE:ECHR:2001:0510JUD002578194","ecli:ECLI:CE:ECHR:1999:0708JUD002376394"],
+        ["ecli:ECLI:CE:ECHR:2001:0510JUD002578194","ecli:ECLI:CE:ECHR:2000:0627JUD002198693"],
+        ["ecli:ECLI:CE:ECHR:2004:0428JUD005667900","ecli:ECLI:CE:ECHR:1999:0121JUD002918395"],
+        ["ecli:ECLI:CE:ECHR:2004:0428JUD005667900","ecli:ECLI:CE:ECHR:2000:1026JUD003021096"],
+        ["ecli:ECLI:CE:ECHR:2004:0428JUD005667900","ecli:ECLI:CE:ECHR:2001:0712JUD002570294"],
+        ["ecli:ECLI:CE:ECHR:2004:0428JUD005667900","ecli:ECLI:CE:ECHR:2003:0213JUD004232698"],
+        ["ecli:ECLI:CE:ECHR:2004:0428JUD005667900","ecli:ECLI:CE:ECHR:2003:0506JUD004889899"],
+        ["ecli:ECLI:CE:ECHR:2012:0403JUD003757504","ecli:ECLI:CE:ECHR:2000:0504JUD002834195"],
+        ["ecli:ECLI:CE:ECHR:2012:0403JUD003757504","ecli:ECLI:CE:ECHR:2005:1006JUD007402501"],
+        ["ecli:ECLI:CE:ECHR:2012:0403JUD003757504","ecli:ECLI:CE:ECHR:2005:1019JUD003255596"],
+        ["ecli:ECLI:CE:ECHR:2012:0403JUD003757504","ecli:ECLI:CE:ECHR:2007:1204JUD004436204"],
+        ["ecli:ECLI:CE:ECHR:2012:0403JUD003757504","ecli:ECLI:CE:ECHR:2009:1015JUD001705606"],
+        ["ecli:ECLI:CE:ECHR:2015:0616JUD006456909","ecli:ECLI:CE:ECHR:1994:0923JUD001589089"],
+        ["ecli:ECLI:CE:ECHR:2015:0616JUD006456909","ecli:ECLI:CE:ECHR:1998:0609JUD002267893"],
+        ["ecli:ECLI:CE:ECHR:2015:0616JUD006456909","ecli:ECLI:CE:ECHR:1999:0429JUD002508894"],
+        ["ecli:ECLI:CE:ECHR:2015:0616JUD006456909","ecli:ECLI:CE:ECHR:1999:0520JUD002198093"],
+        ["ecli:ECLI:CE:ECHR:2015:0616JUD006456909","ecli:ECLI:CE:ECHR:1999:0520JUD002539094"],
+        ["ecli:ECLI:CE:ECHR:2015:0616JUD006456909","ecli:ECLI:CE:ECHR:2000:0504JUD002834195"],
+        ["ecli:ECLI:CE:ECHR:2015:0616JUD006456909","ecli:ECLI:CE:ECHR:2004:0217JUD003974898"],
+        ["ecli:ECLI:CE:ECHR:2015:0616JUD006456909","ecli:ECLI:CE:ECHR:2004:0217JUD004415898"],
+        ["ecli:ECLI:CE:ECHR:2015:0616JUD006456909","ecli:ECLI:CE:ECHR:2007:0410JUD000633905"],
+        ["ecli:ECLI:CE:ECHR:2015:0616JUD006456909","ecli:ECLI:CE:ECHR:2007:1022JUD002127902"],
+        ["ecli:ECLI:CE:ECHR:2015:0616JUD006456909","ecli:ECLI:CE:ECHR:2012:0207JUD003995408"],
+        ["ecli:ECLI:CE:ECHR:2015:0616JUD006456909","ecli:ECLI:CE:ECHR:2012:0207JUD004066008"],
+        ["ecli:ECLI:CE:ECHR:2015:0616JUD006456909","ecli:ECLI:CE:ECHR:2012:0607JUD003843309"],
+        ["ecli:ECLI:CE:ECHR:2015:0616JUD006456909","ecli:ECLI:CE:ECHR:2013:0422JUD004887608"],
+        ["ecli:ECLI:CE:ECHR:2009:0917JUD001024903","ecli:ECLI:CE:ECHR:1998:0219JUD001496789"],
+        ["ecli:ECLI:CE:ECHR:2009:0917JUD001024903","ecli:ECLI:CE:ECHR:1999:0121JUD002918395"],
+        ["ecli:ECLI:CE:ECHR:2009:0917JUD001024903","ecli:ECLI:CE:ECHR:1999:0728JUD002580394"],
+        ["ecli:ECLI:CE:ECHR:2009:0917JUD001024903","ecli:ECLI:CE:ECHR:2000:0713JUD003922198"],
+        ["ecli:ECLI:CE:ECHR:2009:0917JUD001024903","ecli:ECLI:CE:ECHR:2000:1026JUD003021096"],
+        ["ecli:ECLI:CE:ECHR:2009:0917JUD001024903","ecli:ECLI:CE:ECHR:2001:0118JUD002723895"],
+        ["ecli:ECLI:CE:ECHR:2009:0917JUD001024903","ecli:ECLI:CE:ECHR:2001:0322JUD003404496"],
+        ["ecli:ECLI:CE:ECHR:2009:0917JUD001024903","ecli:ECLI:CE:ECHR:2001:0712JUD002570294"],
+        ["ecli:ECLI:CE:ECHR:2009:0917JUD001024903","ecli:ECLI:CE:ECHR:2002:0528JUD004629599"],
+        ["ecli:ECLI:CE:ECHR:2009:0917JUD001024903","ecli:ECLI:CE:ECHR:2002:0711JUD002895795"],
+        ["ecli:ECLI:CE:ECHR:2009:0917JUD001024903","ecli:ECLI:CE:ECHR:2003:0506JUD004889899"],
+        ["ecli:ECLI:CE:ECHR:2009:0917JUD001024903","ecli:ECLI:CE:ECHR:2004:0217JUD003974898"],
+        ["ecli:ECLI:CE:ECHR:2009:0917JUD001024903","ecli:ECLI:CE:ECHR:2004:0408JUD007150301"],
+        ["ecli:ECLI:CE:ECHR:2009:0917JUD001024903","ecli:ECLI:CE:ECHR:2004:0428JUD005667900"],
+        ["ecli:ECLI:CE:ECHR:2009:0917JUD001024903","ecli:ECLI:CE:ECHR:2004:0622JUD003144396"],
+        ["ecli:ECLI:CE:ECHR:2009:0917JUD001024903","ecli:ECLI:CE:ECHR:2005:0512JUD004622199"],
+        ["ecli:ECLI:CE:ECHR:2009:0917JUD001024903","ecli:ECLI:CE:ECHR:2006:0301JUD005658100"],
+        ["ecli:ECLI:CE:ECHR:2007:1113JUD005732500","ecli:ECLI:CE:ECHR:1999:0429JUD002508894"],
+        ["ecli:ECLI:CE:ECHR:2007:1113JUD005732500","ecli:ECLI:CE:ECHR:1999:1216JUD002488894"],
+        ["ecli:ECLI:CE:ECHR:2007:1113JUD005732500","ecli:ECLI:CE:ECHR:2000:0406JUD003436997"],
+        ["ecli:ECLI:CE:ECHR:2007:1113JUD005732500","ecli:ECLI:CE:ECHR:2000:0627JUD002198693"],
+        ["ecli:ECLI:CE:ECHR:2007:1113JUD005732500","ecli:ECLI:CE:ECHR:2000:0627JUD002227793"],
+        ["ecli:ECLI:CE:ECHR:2007:1113JUD005732500","ecli:ECLI:CE:ECHR:2001:0118JUD002723895"],
+        ["ecli:ECLI:CE:ECHR:2007:1113JUD005732500","ecli:ECLI:CE:ECHR:2004:0622JUD003144396"],
+        ["ecli:ECLI:CE:ECHR:2007:1113JUD005732500","ecli:ECLI:CE:ECHR:2005:1110JUD004477498"],
+        ["ecli:ECLI:CE:ECHR:2007:1113JUD005732500","ecli:ECLI:CE:ECHR:2006:0412JUD006573101"],
+        ["ecli:ECLI:CE:ECHR:1999:0325JUD003119596","ecli:ECLI:CE:ECHR:1997:1125JUD001895491"],
+        ["ecli:ECLI:CE:ECHR:2006:0412JUD006573101","ecli:ECLI:CE:ECHR:2000:0406JUD003436997"],
+        ["ecli:ECLI:CE:ECHR:2000:0504JUD002834195","ecli:ECLI:CE:ECHR:1999:0325JUD003119596"],
+        ["ecli:ECLI:CE:ECHR:2000:0504JUD002834195","ecli:ECLI:CE:ECHR:1999:0708JUD002365794"],
+        ["ecli:ECLI:CE:ECHR:2000:0504JUD002834195","ecli:ECLI:CE:ECHR:1999:0928JUD002811495"],
+        ["ecli:ECLI:CE:ECHR:2000:0504JUD002834195","ecli:ECLI:CE:ECHR:2000:0216JUD002779895"],
+        ["ecli:ECLI:CE:ECHR:1999:0708JUD002365794","ecli:ECLI:CE:ECHR:1995:0927JUD001898491"],
+        ["ecli:ECLI:CE:ECHR:1999:0708JUD002365794","ecli:ECLI:CE:ECHR:1996:1115JUD002241493"],
+        ["ecli:ECLI:CE:ECHR:2004:1217JUD003334896","ecli:ECLI:CE:ECHR:1994:0923JUD001589089"],
+        ["ecli:ECLI:CE:ECHR:2004:1217JUD003334896","ecli:ECLI:CE:ECHR:1999:0121JUD002918395"],
+        ["ecli:ECLI:CE:ECHR:2004:1217JUD003334896","ecli:ECLI:CE:ECHR:1999:0520JUD002198093"],
+        ["ecli:ECLI:CE:ECHR:2004:1217JUD003334896","ecli:ECLI:CE:ECHR:2001:0712JUD002570294"],
+        ["ecli:ECLI:CE:ECHR:2004:1217JUD003334896","ecli:ECLI:CE:ECHR:2003:0506JUD004889899"],
+        ["ecli:ECLI:CE:ECHR:2004:1217JUD003334896","ecli:ECLI:CE:ECHR:2004:0428JUD005667900"],
+        ["ecli:ECLI:CE:ECHR:2000:0406JUD002677295","ecli:ECLI:CE:ECHR:1995:0927JUD001898491"],
+        ["ecli:ECLI:CE:ECHR:2000:0406JUD002677295","ecli:ECLI:CE:ECHR:1996:1115JUD002241493"],
+        ["ecli:ECLI:CE:ECHR:2000:0406JUD002677295","ecli:ECLI:CE:ECHR:1999:0728JUD002580394"],
+        ["ecli:ECLI:CE:ECHR:2000:0406JUD002677295","ecli:ECLI:CE:ECHR:1999:0928JUD002811495"],
+        ["ecli:ECLI:CE:ECHR:2000:0406JUD002677295","ecli:ECLI:CE:ECHR:1999:1216JUD002488894"],
+        ["ecli:ECLI:CE:ECHR:2006:0308JUD005953200","ecli:ECLI:CE:ECHR:1997:1125JUD001895491"],
+        ["ecli:ECLI:CE:ECHR:2006:0308JUD005953200","ecli:ECLI:CE:ECHR:2003:0213JUD004232698"],
+        ["ecli:ECLI:CE:ECHR:2006:0308JUD005953200","ecli:ECLI:CE:ECHR:2004:0428JUD005667900"],
+        ["ecli:ECLI:CE:ECHR:2006:0308JUD005953200","ecli:ECLI:CE:ECHR:2004:0928JUD004491298"],
+        ["ecli:ECLI:CE:ECHR:2015:0928JUD002338009","ecli:ECLI:CE:ECHR:1996:1115JUD002241493"],
+        ["ecli:ECLI:CE:ECHR:2015:0928JUD002338009","ecli:ECLI:CE:ECHR:1999:0728JUD002580394"],
+        ["ecli:ECLI:CE:ECHR:2015:0928JUD002338009","ecli:ECLI:CE:ECHR:1999:1216JUD002488894"],
+        ["ecli:ECLI:CE:ECHR:2015:0928JUD002338009","ecli:ECLI:CE:ECHR:2000:0406JUD002677295"],
+        ["ecli:ECLI:CE:ECHR:2015:0928JUD002338009","ecli:ECLI:CE:ECHR:2000:0627JUD002198693"],
+        ["ecli:ECLI:CE:ECHR:2015:0928JUD002338009","ecli:ECLI:CE:ECHR:2000:1026JUD003021096"],
+        ["ecli:ECLI:CE:ECHR:2015:0928JUD002338009","ecli:ECLI:CE:ECHR:2006:0711JUD005481000"],
+        ["ecli:ECLI:CE:ECHR:2015:0928JUD002338009","ecli:ECLI:CE:ECHR:2010:0601JUD002297805"],
+        ["ecli:ECLI:CE:ECHR:2015:0928JUD002338009","ecli:ECLI:CE:ECHR:2011:0121JUD003069609"],
+        ["ecli:ECLI:CE:ECHR:2015:0928JUD002338009","ecli:ECLI:CE:ECHR:2012:1213JUD003963009"],
+        ["ecli:ECLI:CE:ECHR:2015:0928JUD002338009","ecli:ECLI:CE:ECHR:2014:0717JUD003254108"],
+        ["ecli:ECLI:CE:ECHR:2015:0928JUD002338009","ecli:ECLI:CE:ECHR:2014:0917JUD001086509"],
+        ["ecli:ECLI:CE:ECHR:2008:1204JUD003056204","ecli:ECLI:CE:ECHR:2000:0216JUD002779895"],
+        ["ecli:ECLI:CE:ECHR:2008:1204JUD003056204","ecli:ECLI:CE:ECHR:2000:0504JUD002834195"],
+        ["ecli:ECLI:CE:ECHR:2008:1204JUD003056204","ecli:ECLI:CE:ECHR:2000:0713JUD003922198"],
+        ["ecli:ECLI:CE:ECHR:2008:1204JUD003056204","ecli:ECLI:CE:ECHR:2000:1026JUD003098596"],
+        ["ecli:ECLI:CE:ECHR:2008:1204JUD003056204","ecli:ECLI:CE:ECHR:2002:0711JUD002895795"],
+        ["ecli:ECLI:CE:ECHR:2008:1204JUD003056204","ecli:ECLI:CE:ECHR:2005:1019JUD003255596"],
+        ["ecli:ECLI:CE:ECHR:2013:0219JUD001901007","ecli:ECLI:CE:ECHR:2002:0711JUD002895795"],
+        ["ecli:ECLI:CE:ECHR:2013:0219JUD001901007","ecli:ECLI:CE:ECHR:2005:1006JUD007402501"],
+        ["ecli:ECLI:CE:ECHR:2013:0219JUD001901007","ecli:ECLI:CE:ECHR:2008:0122JUD004354602"],
+        ["ecli:ECLI:CE:ECHR:2013:0219JUD001901007","ecli:ECLI:CE:ECHR:2008:0429JUD001337805"],
+        ["ecli:ECLI:CE:ECHR:2013:0219JUD001901007","ecli:ECLI:CE:ECHR:2010:1216JUD002557905"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD002345903","ecli:ECLI:CE:ECHR:1997:0422JUD002183093"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD002345903","ecli:ECLI:CE:ECHR:2000:0406JUD003436997"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD002345903","ecli:ECLI:CE:ECHR:2000:1026JUD003098596"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD002345903","ecli:ECLI:CE:ECHR:2002:0528JUD004629599"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD002345903","ecli:ECLI:CE:ECHR:2002:0711JUD002895795"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD002345903","ecli:ECLI:CE:ECHR:2004:0217JUD004415898"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD002345903","ecli:ECLI:CE:ECHR:2005:1110JUD004477498"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD002345903","ecli:ECLI:CE:ECHR:2008:1112JUD003450397"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD002345903","ecli:ECLI:CE:ECHR:2009:1015JUD001705606"],
+        ["ecli:ECLI:CE:ECHR:2012:0607JUD003843309","ecli:ECLI:CE:ECHR:1994:0923JUD001589089"],
+        ["ecli:ECLI:CE:ECHR:2012:0607JUD003843309","ecli:ECLI:CE:ECHR:1995:0926JUD001785191"],
+        ["ecli:ECLI:CE:ECHR:2012:0607JUD003843309","ecli:ECLI:CE:ECHR:1999:0121JUD003054496"],
+        ["ecli:ECLI:CE:ECHR:2012:0607JUD003843309","ecli:ECLI:CE:ECHR:1999:0325JUD003110796"],
+        ["ecli:ECLI:CE:ECHR:2012:0607JUD003843309","ecli:ECLI:CE:ECHR:1999:0325JUD003119596"],
+        ["ecli:ECLI:CE:ECHR:2012:0607JUD003843309","ecli:ECLI:CE:ECHR:1999:0520JUD002539094"],
+        ["ecli:ECLI:CE:ECHR:2012:0607JUD003843309","ecli:ECLI:CE:ECHR:1999:0928JUD002811495"],
+        ["ecli:ECLI:CE:ECHR:2012:0607JUD003843309","ecli:ECLI:CE:ECHR:2000:0105JUD003320296"],
+        ["ecli:ECLI:CE:ECHR:2012:0607JUD003843309","ecli:ECLI:CE:ECHR:2000:0504JUD002834195"],
+        ["ecli:ECLI:CE:ECHR:2012:0607JUD003843309","ecli:ECLI:CE:ECHR:2004:0217JUD003974898"],
+        ["ecli:ECLI:CE:ECHR:2012:0607JUD003843309","ecli:ECLI:CE:ECHR:2004:0622JUD003144396"],
+        ["ecli:ECLI:CE:ECHR:2012:0607JUD003843309","ecli:ECLI:CE:ECHR:2006:0301JUD005658100"],
+        ["ecli:ECLI:CE:ECHR:2012:0607JUD003843309","ecli:ECLI:CE:ECHR:2006:0329JUD003681397"],
+        ["ecli:ECLI:CE:ECHR:2012:0607JUD003843309","ecli:ECLI:CE:ECHR:2009:0918JUD001606490"],
+        ["ecli:ECLI:CE:ECHR:2000:1026JUD003098596","ecli:ECLI:CE:ECHR:1999:0325JUD003119596"],
+        ["ecli:ECLI:CE:ECHR:2000:1026JUD003098596","ecli:ECLI:CE:ECHR:1999:0708JUD002365794"],
+        ["ecli:ECLI:CE:ECHR:2000:1026JUD003098596","ecli:ECLI:CE:ECHR:1999:1028JUD002834295"],
+        ["ecli:ECLI:CE:ECHR:2014:0717JUD004784808","ecli:ECLI:CE:ECHR:1999:0708JUD002365794"],
+        ["ecli:ECLI:CE:ECHR:2014:0717JUD004784808","ecli:ECLI:CE:ECHR:1999:0728JUD002580394"],
+        ["ecli:ECLI:CE:ECHR:2014:0717JUD004784808","ecli:ECLI:CE:ECHR:1999:0928JUD002811495"],
+        ["ecli:ECLI:CE:ECHR:2014:0717JUD004784808","ecli:ECLI:CE:ECHR:2000:0627JUD002227793"],
+        ["ecli:ECLI:CE:ECHR:2014:0717JUD004784808","ecli:ECLI:CE:ECHR:2000:0713JUD003922198"],
+        ["ecli:ECLI:CE:ECHR:2014:0717JUD004784808","ecli:ECLI:CE:ECHR:2001:0510JUD002939295"],
+        ["ecli:ECLI:CE:ECHR:2014:0717JUD004784808","ecli:ECLI:CE:ECHR:2004:1130JUD004893999"],
+        ["ecli:ECLI:CE:ECHR:2014:0717JUD004784808","ecli:ECLI:CE:ECHR:2008:0429JUD001337805"],
+        ["ecli:ECLI:CE:ECHR:2014:0717JUD004784808","ecli:ECLI:CE:ECHR:2009:0918JUD001606490"],
+        ["ecli:ECLI:CE:ECHR:2014:0717JUD004784808","ecli:ECLI:CE:ECHR:2009:1015JUD001705606"],
+        ["ecli:ECLI:CE:ECHR:2009:1015JUD001705606","ecli:ECLI:CE:ECHR:1999:0728JUD002580394"],
+        ["ecli:ECLI:CE:ECHR:2009:1015JUD001705606","ecli:ECLI:CE:ECHR:2005:0204JUD004682799"],
+        ["ecli:ECLI:CE:ECHR:2009:1015JUD001705606","ecli:ECLI:CE:ECHR:2005:1019JUD003255596"],
+        ["ecli:ECLI:CE:ECHR:2009:1015JUD001705606","ecli:ECLI:CE:ECHR:2008:0429JUD001337805"],
+        ["ecli:ECLI:CE:ECHR:2009:1015JUD001705606","ecli:ECLI:CE:ECHR:2008:1127JUD003639102"],
+        ["ecli:ECLI:CE:ECHR:2009:0918JUD001606490","ecli:ECLI:CE:ECHR:1999:0728JUD002580394"],
+        ["ecli:ECLI:CE:ECHR:2009:0918JUD001606490","ecli:ECLI:CE:ECHR:2000:0713JUD003922198"],
+        ["ecli:ECLI:CE:ECHR:2009:0918JUD001606490","ecli:ECLI:CE:ECHR:2002:0711JUD002895795"],
+        ["ecli:ECLI:CE:ECHR:2009:0918JUD001606490","ecli:ECLI:CE:ECHR:2003:0708JUD003094396"],
+        ["ecli:ECLI:CE:ECHR:2009:0918JUD001606490","ecli:ECLI:CE:ECHR:2006:0308JUD005953200"],
+        ["ecli:ECLI:CE:ECHR:2009:0918JUD001606490","ecli:ECLI:CE:ECHR:2008:0228JUD003720106"],
+        ["ecli:ECLI:CE:ECHR:2009:0918JUD001606490","ecli:ECLI:CE:ECHR:2008:1204JUD003056204"],
+        ["ecli:ECLI:CE:ECHR:2009:0918JUD001606490","ecli:ECLI:CE:ECHR:2009:0218JUD005570700"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD003755305","ecli:ECLI:CE:ECHR:1995:0926JUD001785191"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD003755305","ecli:ECLI:CE:ECHR:1998:0130JUD001939292"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD003755305","ecli:ECLI:CE:ECHR:1999:0520JUD002539094"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD003755305","ecli:ECLI:CE:ECHR:2000:0504JUD002834195"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD003755305","ecli:ECLI:CE:ECHR:2004:0217JUD003974898"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD003755305","ecli:ECLI:CE:ECHR:2004:0217JUD004415898"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD003755305","ecli:ECLI:CE:ECHR:2008:1204JUD003056204"],
+        ["ecli:ECLI:CE:ECHR:2016:1020JUD000733413","ecli:ECLI:CE:ECHR:2000:0406JUD002677295"],
+        ["ecli:ECLI:CE:ECHR:2016:1020JUD000733413","ecli:ECLI:CE:ECHR:2000:1026JUD003021096"],
+        ["ecli:ECLI:CE:ECHR:2016:1020JUD000733413","ecli:ECLI:CE:ECHR:2002:0711JUD002895795"],
+        ["ecli:ECLI:CE:ECHR:2016:1020JUD000733413","ecli:ECLI:CE:ECHR:2006:0711JUD005481000"],
+        ["ecli:ECLI:CE:ECHR:2016:1020JUD000733413","ecli:ECLI:CE:ECHR:2009:0917JUD001024903"],
+        ["ecli:ECLI:CE:ECHR:2016:1020JUD000733413","ecli:ECLI:CE:ECHR:2012:0629JUD002739606"],
+        ["ecli:ECLI:CE:ECHR:2016:1020JUD000733413","ecli:ECLI:CE:ECHR:2014:0717JUD003254108"],
+        ["ecli:ECLI:CE:ECHR:2016:1020JUD000733413","ecli:ECLI:CE:ECHR:2015:0928JUD002338009"],
+        ["ecli:ECLI:CE:ECHR:2016:0623JUD002026112","ecli:ECLI:CE:ECHR:1995:0926JUD001785191"],
+        ["ecli:ECLI:CE:ECHR:2016:0623JUD002026112","ecli:ECLI:CE:ECHR:1999:0708JUD002668295"],
+        ["ecli:ECLI:CE:ECHR:2016:0623JUD002026112","ecli:ECLI:CE:ECHR:2005:0706JUD004357798"],
+        ["ecli:ECLI:CE:ECHR:2016:0623JUD002026112","ecli:ECLI:CE:ECHR:2005:1019JUD003255596"],
+        ["ecli:ECLI:CE:ECHR:2016:0623JUD002026112","ecli:ECLI:CE:ECHR:2007:1022JUD002127902"],
+        ["ecli:ECLI:CE:ECHR:2016:0623JUD002026112","ecli:ECLI:CE:ECHR:2007:1113JUD005732500"],
+        ["ecli:ECLI:CE:ECHR:2016:0623JUD002026112","ecli:ECLI:CE:ECHR:2012:0117JUD003676006"],
+        ["ecli:ECLI:CE:ECHR:2016:0623JUD002026112","ecli:ECLI:CE:ECHR:2012:0207JUD003995408"],
+        ["ecli:ECLI:CE:ECHR:2016:0623JUD002026112","ecli:ECLI:CE:ECHR:2012:0403JUD003757504"],
+        ["ecli:ECLI:CE:ECHR:2016:0623JUD002026112","ecli:ECLI:CE:ECHR:2012:1213JUD003963009"],
+        ["ecli:ECLI:CE:ECHR:2016:0623JUD002026112","ecli:ECLI:CE:ECHR:2013:0422JUD004887608"],
+        ["ecli:ECLI:CE:ECHR:2016:0623JUD002026112","ecli:ECLI:CE:ECHR:2015:0616JUD006456909"],
+        ["ecli:ECLI:CE:ECHR:2016:0623JUD002026112","ecli:ECLI:CE:ECHR:2015:1015JUD002751008"],
+        ["ecli:ECLI:CE:ECHR:2018:0320JUD003768510","ecli:ECLI:CE:ECHR:1998:0219JUD001496789"],
+        ["ecli:ECLI:CE:ECHR:2018:0320JUD003768510","ecli:ECLI:CE:ECHR:1999:0121JUD002918395"],
+        ["ecli:ECLI:CE:ECHR:2018:0320JUD003768510","ecli:ECLI:CE:ECHR:2001:0712JUD002570294"],
+        ["ecli:ECLI:CE:ECHR:2018:0320JUD003768510","ecli:ECLI:CE:ECHR:2004:0428JUD005667900"],
+        ["ecli:ECLI:CE:ECHR:2018:0320JUD003768510","ecli:ECLI:CE:ECHR:2004:0928JUD004491298"],
+        ["ecli:ECLI:CE:ECHR:2018:0320JUD003768510","ecli:ECLI:CE:ECHR:2006:0308JUD005953200"],
+        ["ecli:ECLI:CE:ECHR:2018:0320JUD003768510","ecli:ECLI:CE:ECHR:2007:1113JUD005732500"],
+        ["ecli:ECLI:CE:ECHR:2018:0320JUD003768510","ecli:ECLI:CE:ECHR:2009:0917JUD001024903"],
+        ["ecli:ECLI:CE:ECHR:2018:0320JUD003768510","ecli:ECLI:CE:ECHR:2010:0601JUD002297805"],
+        ["ecli:ECLI:CE:ECHR:2018:0320JUD003768510","ecli:ECLI:CE:ECHR:2012:0629JUD002739606"],
+        ["ecli:ECLI:CE:ECHR:1999:0218JUD002608394","ecli:ECLI:CE:ECHR:1998:1028JUD002345294"],
+        ["ecli:ECLI:CE:ECHR:2011:0121JUD003069609","ecli:ECLI:CE:ECHR:1999:0218JUD002608394"],
+        ["ecli:ECLI:CE:ECHR:2011:0121JUD003069609","ecli:ECLI:CE:ECHR:1999:0708JUD002365794"],
+        ["ecli:ECLI:CE:ECHR:2011:0121JUD003069609","ecli:ECLI:CE:ECHR:2000:0406JUD002677295"],
+        ["ecli:ECLI:CE:ECHR:2011:0121JUD003069609","ecli:ECLI:CE:ECHR:2000:1026JUD003021096"],
+        ["ecli:ECLI:CE:ECHR:2011:0121JUD003069609","ecli:ECLI:CE:ECHR:2004:0408JUD007150301"],
+        ["ecli:ECLI:CE:ECHR:2011:0121JUD003069609","ecli:ECLI:CE:ECHR:2004:0622JUD003144396"],
+        ["ecli:ECLI:CE:ECHR:2011:0121JUD003069609","ecli:ECLI:CE:ECHR:2005:0512JUD004622199"],
+        ["ecli:ECLI:CE:ECHR:2011:0121JUD003069609","ecli:ECLI:CE:ECHR:2008:0228JUD003720106"],
+        ["ecli:ECLI:CE:ECHR:2011:0121JUD003069609","ecli:ECLI:CE:ECHR:2009:0630JUD003277202"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD005572107","ecli:ECLI:CE:ECHR:1995:0927JUD001898491"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD005572107","ecli:ECLI:CE:ECHR:1996:1218JUD001531889"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD005572107","ecli:ECLI:CE:ECHR:1999:0708JUD002376394"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD005572107","ecli:ECLI:CE:ECHR:2001:0510JUD002578194"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD005572107","ecli:ECLI:CE:ECHR:2004:0408JUD007150301"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD005572107","ecli:ECLI:CE:ECHR:2004:0708JUD004878799"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD005572107","ecli:ECLI:CE:ECHR:2005:0512JUD004622199"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD005572107","ecli:ECLI:CE:ECHR:2005:0706JUD004357798"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD005572107","ecli:ECLI:CE:ECHR:2009:0918JUD001606490"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD005572107","ecli:ECLI:CE:ECHR:2010:0329JUD000339403"],
+        ["ecli:ECLI:CE:ECHR:1999:0429JUD002508894","ecli:ECLI:CE:ECHR:1998:0130JUD001939292"],
+        ["ecli:ECLI:CE:ECHR:2012:0626JUD002682806","ecli:ECLI:CE:ECHR:1996:1115JUD002241493"],
+        ["ecli:ECLI:CE:ECHR:2012:0626JUD002682806","ecli:ECLI:CE:ECHR:1999:0728JUD002580394"],
+        ["ecli:ECLI:CE:ECHR:2012:0626JUD002682806","ecli:ECLI:CE:ECHR:1999:0928JUD002811495"],
+        ["ecli:ECLI:CE:ECHR:2012:0626JUD002682806","ecli:ECLI:CE:ECHR:2000:0216JUD002779895"],
+        ["ecli:ECLI:CE:ECHR:2012:0626JUD002682806","ecli:ECLI:CE:ECHR:2000:0406JUD003436997"],
+        ["ecli:ECLI:CE:ECHR:2012:0626JUD002682806","ecli:ECLI:CE:ECHR:2000:0713JUD003922198"],
+        ["ecli:ECLI:CE:ECHR:2012:0626JUD002682806","ecli:ECLI:CE:ECHR:2000:1026JUD003021096"],
+        ["ecli:ECLI:CE:ECHR:2012:0626JUD002682806","ecli:ECLI:CE:ECHR:2001:0712JUD002570294"],
+        ["ecli:ECLI:CE:ECHR:2012:0626JUD002682806","ecli:ECLI:CE:ECHR:2002:0528JUD004629599"],
+        ["ecli:ECLI:CE:ECHR:2012:0626JUD002682806","ecli:ECLI:CE:ECHR:2004:0428JUD005667900"],
+        ["ecli:ECLI:CE:ECHR:2012:0626JUD002682806","ecli:ECLI:CE:ECHR:2004:0622JUD003144396"],
+        ["ecli:ECLI:CE:ECHR:2012:0626JUD002682806","ecli:ECLI:CE:ECHR:2006:0301JUD005658100"],
+        ["ecli:ECLI:CE:ECHR:2012:0626JUD002682806","ecli:ECLI:CE:ECHR:2006:0329JUD003681397"],
+        ["ecli:ECLI:CE:ECHR:2012:0626JUD002682806","ecli:ECLI:CE:ECHR:2007:1113JUD005732500"],
+        ["ecli:ECLI:CE:ECHR:2012:0626JUD002682806","ecli:ECLI:CE:ECHR:2010:0601JUD002297805"],
+        ["ecli:ECLI:CE:ECHR:2014:0917JUD001086509","ecli:ECLI:CE:ECHR:1995:0927JUD001898491"],
+        ["ecli:ECLI:CE:ECHR:2014:0917JUD001086509","ecli:ECLI:CE:ECHR:2005:0706JUD004357798"],
+        ["ecli:ECLI:CE:ECHR:2014:0917JUD001086509","ecli:ECLI:CE:ECHR:2006:0301JUD005658100"],
+        ["ecli:ECLI:CE:ECHR:2014:0917JUD001086509","ecli:ECLI:CE:ECHR:2006:0308JUD005953200"],
+        ["ecli:ECLI:CE:ECHR:2014:0917JUD001086509","ecli:ECLI:CE:ECHR:2009:0917JUD001024903"],
+        ["ecli:ECLI:CE:ECHR:2014:0917JUD001086509","ecli:ECLI:CE:ECHR:2009:0918JUD001606490"],
+        ["ecli:ECLI:CE:ECHR:2014:0917JUD001086509","ecli:ECLI:CE:ECHR:2010:0601JUD002297805"],
+        ["ecli:ECLI:CE:ECHR:2014:0917JUD001086509","ecli:ECLI:CE:ECHR:2011:0707JUD005572107"],
+        ["ecli:ECLI:CE:ECHR:2014:0917JUD001086509","ecli:ECLI:CE:ECHR:2012:0626JUD002682806"],
+        ["ecli:ECLI:CE:ECHR:2014:0917JUD001086509","ecli:ECLI:CE:ECHR:2012:0629JUD002739606"],
+        ["ecli:ECLI:CE:ECHR:2014:0917JUD001086509","ecli:ECLI:CE:ECHR:2012:1213JUD003963009"],
+        ["ecli:ECLI:CE:ECHR:2005:0512JUD004622199","ecli:ECLI:CE:ECHR:1996:1115JUD002241493"],
+        ["ecli:ECLI:CE:ECHR:2005:0512JUD004622199","ecli:ECLI:CE:ECHR:1998:0219JUD001496789"],
+        ["ecli:ECLI:CE:ECHR:2005:0512JUD004622199","ecli:ECLI:CE:ECHR:1998:0609JUD002267893"],
+        ["ecli:ECLI:CE:ECHR:2005:0512JUD004622199","ecli:ECLI:CE:ECHR:2000:0627JUD002198693"],
+        ["ecli:ECLI:CE:ECHR:2005:0512JUD004622199","ecli:ECLI:CE:ECHR:2000:0713JUD003922198"],
+        ["ecli:ECLI:CE:ECHR:2005:0512JUD004622199","ecli:ECLI:CE:ECHR:2000:1026JUD003021096"],
+        ["ecli:ECLI:CE:ECHR:2005:0512JUD004622199","ecli:ECLI:CE:ECHR:2001:0712JUD002570294"],
+        ["ecli:ECLI:CE:ECHR:2005:0512JUD004622199","ecli:ECLI:CE:ECHR:2002:0711JUD003659097"],
+        ["ecli:ECLI:CE:ECHR:2005:0512JUD004622199","ecli:ECLI:CE:ECHR:2004:0408JUD007150301"],
+        ["ecli:ECLI:CE:ECHR:2005:0512JUD004622199","ecli:ECLI:CE:ECHR:2004:0622JUD003144396"],
+        ["ecli:ECLI:CE:ECHR:1996:1218JUD001531889","ecli:ECLI:CE:ECHR:1995:0927JUD001898491"],
+        ["ecli:ECLI:CE:ECHR:1997:1125JUD001895491","ecli:ECLI:CE:ECHR:1994:0923JUD001589089"],
+        ["ecli:ECLI:CE:ECHR:2016:0621JUD000580908","ecli:ECLI:CE:ECHR:1996:1218JUD001531889"],
+        ["ecli:ECLI:CE:ECHR:2016:0621JUD000580908","ecli:ECLI:CE:ECHR:1998:0130JUD001939292"],
+        ["ecli:ECLI:CE:ECHR:2016:0621JUD000580908","ecli:ECLI:CE:ECHR:1999:0121JUD003054496"],
+        ["ecli:ECLI:CE:ECHR:2016:0621JUD000580908","ecli:ECLI:CE:ECHR:1999:0218JUD002608394"],
+        ["ecli:ECLI:CE:ECHR:2016:0621JUD000580908","ecli:ECLI:CE:ECHR:2001:0712JUD004252798"],
+        ["ecli:ECLI:CE:ECHR:2016:0621JUD000580908","ecli:ECLI:CE:ECHR:2001:1121JUD003576397"],
+        ["ecli:ECLI:CE:ECHR:2016:0621JUD000580908","ecli:ECLI:CE:ECHR:2004:0428JUD005667900"],
+        ["ecli:ECLI:CE:ECHR:2016:0621JUD000580908","ecli:ECLI:CE:ECHR:2005:1019JUD003255596"],
+        ["ecli:ECLI:CE:ECHR:2016:0621JUD000580908","ecli:ECLI:CE:ECHR:2007:1113JUD005732500"],
+        ["ecli:ECLI:CE:ECHR:2016:0621JUD000580908","ecli:ECLI:CE:ECHR:2008:1112JUD003450397"],
+        ["ecli:ECLI:CE:ECHR:2016:0621JUD000580908","ecli:ECLI:CE:ECHR:2009:1015JUD001705606"],
+        ["ecli:ECLI:CE:ECHR:2016:0621JUD000580908","ecli:ECLI:CE:ECHR:2010:0706JUD004161507"],
+        ["ecli:ECLI:CE:ECHR:2016:0621JUD000580908","ecli:ECLI:CE:ECHR:2011:0121JUD003069609"],
+        ["ecli:ECLI:CE:ECHR:2016:0621JUD000580908","ecli:ECLI:CE:ECHR:2011:0707JUD002702108"],
+        ["ecli:ECLI:CE:ECHR:2016:0621JUD000580908","ecli:ECLI:CE:ECHR:2011:0707JUD005572107"],
+        ["ecli:ECLI:CE:ECHR:2016:0621JUD000580908","ecli:ECLI:CE:ECHR:2012:0403JUD003757504"],
+        ["ecli:ECLI:CE:ECHR:2016:0621JUD000580908","ecli:ECLI:CE:ECHR:2012:0626JUD002682806"],
+        ["ecli:ECLI:CE:ECHR:2016:0621JUD000580908","ecli:ECLI:CE:ECHR:2012:0912JUD001059308"],
+        ["ecli:ECLI:CE:ECHR:1999:0708JUD002376394","ecli:ECLI:CE:ECHR:1995:0927JUD001898491"],
+        ["ecli:ECLI:CE:ECHR:1999:0708JUD002376394","ecli:ECLI:CE:ECHR:1998:0130JUD001939292"],
+        ["ecli:ECLI:CE:ECHR:2013:1112JUD000578608","ecli:ECLI:CE:ECHR:1998:1028JUD002345294"],
+        ["ecli:ECLI:CE:ECHR:2013:1112JUD000578608","ecli:ECLI:CE:ECHR:2001:0510JUD002939295"],
+        ["ecli:ECLI:CE:ECHR:2013:1112JUD000578608","ecli:ECLI:CE:ECHR:2003:0213JUD004232698"],
+        ["ecli:ECLI:CE:ECHR:2013:1112JUD000578608","ecli:ECLI:CE:ECHR:2007:0410JUD000633905"],
+        ["ecli:ECLI:CE:ECHR:2013:1112JUD000578608","ecli:ECLI:CE:ECHR:2011:0707JUD002702108"],
+        ["ecli:ECLI:CE:ECHR:2013:1112JUD000578608","ecli:ECLI:CE:ECHR:2012:0207JUD004066008"],
+        ["ecli:ECLI:CE:ECHR:2013:1112JUD000578608","ecli:ECLI:CE:ECHR:2012:0912JUD001059308"],
+        ["ecli:ECLI:CE:ECHR:2013:1112JUD000578608","ecli:ECLI:CE:ECHR:2013:0219JUD001901007"],
+        ["ecli:ECLI:CE:ECHR:2000:0627JUD002198693","ecli:ECLI:CE:ECHR:1995:0927JUD001898491"],
+        ["ecli:ECLI:CE:ECHR:2000:0627JUD002198693","ecli:ECLI:CE:ECHR:1999:0708JUD002365794"],
+        ["ecli:ECLI:CE:ECHR:2000:0627JUD002198693","ecli:ECLI:CE:ECHR:1999:0728JUD002580394"],
+        ["ecli:ECLI:CE:ECHR:2002:0711JUD002895795","ecli:ECLI:CE:ECHR:1997:0422JUD002183093"],
+        ["ecli:ECLI:CE:ECHR:2002:0711JUD002895795","ecli:ECLI:CE:ECHR:1999:0708JUD002365794"],
+        ["ecli:ECLI:CE:ECHR:2002:0711JUD002895795","ecli:ECLI:CE:ECHR:2001:0118JUD002723895"],
+        ["ecli:ECLI:CE:ECHR:2004:1130JUD004893999","ecli:ECLI:CE:ECHR:1995:0927JUD001898491"],
+        ["ecli:ECLI:CE:ECHR:2004:1130JUD004893999","ecli:ECLI:CE:ECHR:1998:0219JUD001496789"],
+        ["ecli:ECLI:CE:ECHR:2004:1130JUD004893999","ecli:ECLI:CE:ECHR:1998:1028JUD002345294"],
+        ["ecli:ECLI:CE:ECHR:2004:1130JUD004893999","ecli:ECLI:CE:ECHR:1999:0325JUD003110796"],
+        ["ecli:ECLI:CE:ECHR:2004:1130JUD004893999","ecli:ECLI:CE:ECHR:1999:0708JUD002376394"],
+        ["ecli:ECLI:CE:ECHR:2004:1130JUD004893999","ecli:ECLI:CE:ECHR:1999:0928JUD002811495"],
+        ["ecli:ECLI:CE:ECHR:2004:1130JUD004893999","ecli:ECLI:CE:ECHR:2000:0105JUD003320296"],
+        ["ecli:ECLI:CE:ECHR:2004:1130JUD004893999","ecli:ECLI:CE:ECHR:2000:0406JUD002677295"],
+        ["ecli:ECLI:CE:ECHR:2004:1130JUD004893999","ecli:ECLI:CE:ECHR:2000:0627JUD002198693"],
+        ["ecli:ECLI:CE:ECHR:2004:1130JUD004893999","ecli:ECLI:CE:ECHR:2000:0627JUD002227793"],
+        ["ecli:ECLI:CE:ECHR:2004:1130JUD004893999","ecli:ECLI:CE:ECHR:2001:0118JUD002723895"],
+        ["ecli:ECLI:CE:ECHR:2004:1130JUD004893999","ecli:ECLI:CE:ECHR:2001:0510JUD002939295"],
+        ["ecli:ECLI:CE:ECHR:2004:1130JUD004893999","ecli:ECLI:CE:ECHR:2001:0712JUD004252798"],
+        ["ecli:ECLI:CE:ECHR:2004:1130JUD004893999","ecli:ECLI:CE:ECHR:2003:0708JUD003094396"],
+        ["ecli:ECLI:CE:ECHR:2004:1130JUD004893999","ecli:ECLI:CE:ECHR:2003:0708JUD003602297"],
+        ["ecli:ECLI:CE:ECHR:2004:1130JUD004893999","ecli:ECLI:CE:ECHR:2004:0212JUD004728799"],
+        ["ecli:ECLI:CE:ECHR:2008:0228JUD003720106","ecli:ECLI:CE:ECHR:1996:1115JUD002241493"],
+        ["ecli:ECLI:CE:ECHR:2008:0228JUD003720106","ecli:ECLI:CE:ECHR:1999:0728JUD002580394"],
+        ["ecli:ECLI:CE:ECHR:2008:0228JUD003720106","ecli:ECLI:CE:ECHR:2000:0406JUD002677295"],
+        ["ecli:ECLI:CE:ECHR:2008:0228JUD003720106","ecli:ECLI:CE:ECHR:2001:1121JUD003576397"],
+        ["ecli:ECLI:CE:ECHR:2008:0228JUD003720106","ecli:ECLI:CE:ECHR:2005:0204JUD004682799"],
+        ["ecli:ECLI:CE:ECHR:2008:0228JUD003720106","ecli:ECLI:CE:ECHR:2006:0711JUD005481000"],
+        ["ecli:ECLI:CE:ECHR:2004:0217JUD003974898","ecli:ECLI:CE:ECHR:2000:0713JUD003922198"],
+        ["ecli:ECLI:CE:ECHR:2004:0217JUD003974898","ecli:ECLI:CE:ECHR:2000:1026JUD003098596"],
+        ["ecli:ECLI:CE:ECHR:2004:0928JUD004491298","ecli:ECLI:CE:ECHR:1999:0121JUD003054496"],
+        ["ecli:ECLI:CE:ECHR:2004:0928JUD004491298","ecli:ECLI:CE:ECHR:2001:0712JUD004252798"],
+        ["ecli:ECLI:CE:ECHR:2006:0316JUD005827800","ecli:ECLI:CE:ECHR:1999:0520JUD002539094"],
+        ["ecli:ECLI:CE:ECHR:2006:0316JUD005827800","ecli:ECLI:CE:ECHR:1999:0928JUD002811495"],
+        ["ecli:ECLI:CE:ECHR:2006:0316JUD005827800","ecli:ECLI:CE:ECHR:2000:0406JUD002677295"],
+        ["ecli:ECLI:CE:ECHR:2004:0622JUD003144396","ecli:ECLI:CE:ECHR:1999:0325JUD003110796"],
+        ["ecli:ECLI:CE:ECHR:2004:0622JUD003144396","ecli:ECLI:CE:ECHR:2000:0105JUD003320296"],
+        ["ecli:ECLI:CE:ECHR:2004:0622JUD003144396","ecli:ECLI:CE:ECHR:2003:0708JUD003602297"],
+        ["ecli:ECLI:CE:ECHR:2002:0528JUD004629599","ecli:ECLI:CE:ECHR:1998:0609JUD002267893"],
+        ["ecli:ECLI:CE:ECHR:2002:0528JUD004629599","ecli:ECLI:CE:ECHR:1999:1216JUD002488894"],
+        ["ecli:ECLI:CE:ECHR:2002:0528JUD004629599","ecli:ECLI:CE:ECHR:2001:0118JUD002723895"],
+        ["ecli:ECLI:CE:ECHR:2008:1112JUD003450397","ecli:ECLI:CE:ECHR:1999:0728JUD002580394"],
+        ["ecli:ECLI:CE:ECHR:2008:1112JUD003450397","ecli:ECLI:CE:ECHR:2001:1121JUD003576397"],
+        ["ecli:ECLI:CE:ECHR:2008:1112JUD003450397","ecli:ECLI:CE:ECHR:2002:0711JUD002895795"],
+        ["ecli:ECLI:CE:ECHR:2008:1112JUD003450397","ecli:ECLI:CE:ECHR:2003:0708JUD003602297"],
+        ["ecli:ECLI:CE:ECHR:2008:1112JUD003450397","ecli:ECLI:CE:ECHR:2004:1130JUD004893999"],
+        ["ecli:ECLI:CE:ECHR:2008:1112JUD003450397","ecli:ECLI:CE:ECHR:2005:0204JUD004682799"],
+        ["ecli:ECLI:CE:ECHR:2008:1112JUD003450397","ecli:ECLI:CE:ECHR:2006:0308JUD005953200"],
+        ["ecli:ECLI:CE:ECHR:2008:1112JUD003450397","ecli:ECLI:CE:ECHR:2008:0129JUD001322903"],
+        ["ecli:ECLI:CE:ECHR:2016:0705JUD002375507","ecli:ECLI:CE:ECHR:2000:0406JUD002677295"],
+        ["ecli:ECLI:CE:ECHR:2016:0705JUD002375507","ecli:ECLI:CE:ECHR:2000:1026JUD003021096"],
+        ["ecli:ECLI:CE:ECHR:2016:0705JUD002375507","ecli:ECLI:CE:ECHR:2004:0408JUD007150301"],
+        ["ecli:ECLI:CE:ECHR:2016:0705JUD002375507","ecli:ECLI:CE:ECHR:2004:0708JUD004878799"],
+        ["ecli:ECLI:CE:ECHR:2016:0705JUD002375507","ecli:ECLI:CE:ECHR:2010:0329JUD000339403"],
+        ["ecli:ECLI:CE:ECHR:2016:0705JUD002375507","ecli:ECLI:CE:ECHR:2014:0717JUD003254108"],
+        ["ecli:ECLI:CE:ECHR:1999:0520JUD002539094","ecli:ECLI:CE:ECHR:1995:0926JUD001785191"],
+        ["ecli:ECLI:CE:ECHR:2010:0601JUD002297805","ecli:ECLI:CE:ECHR:1996:1115JUD002241493"],
+        ["ecli:ECLI:CE:ECHR:2010:0601JUD002297805","ecli:ECLI:CE:ECHR:1998:1028JUD002345294"],
+        ["ecli:ECLI:CE:ECHR:2010:0601JUD002297805","ecli:ECLI:CE:ECHR:1999:0728JUD002580394"],
+        ["ecli:ECLI:CE:ECHR:2010:0601JUD002297805","ecli:ECLI:CE:ECHR:1999:0928JUD002811495"],
+        ["ecli:ECLI:CE:ECHR:2010:0601JUD002297805","ecli:ECLI:CE:ECHR:1999:1216JUD002488894"],
+        ["ecli:ECLI:CE:ECHR:2010:0601JUD002297805","ecli:ECLI:CE:ECHR:2000:0406JUD002677295"],
+        ["ecli:ECLI:CE:ECHR:2010:0601JUD002297805","ecli:ECLI:CE:ECHR:2001:0712JUD002570294"],
+        ["ecli:ECLI:CE:ECHR:2010:0601JUD002297805","ecli:ECLI:CE:ECHR:2002:0711JUD003659097"],
+        ["ecli:ECLI:CE:ECHR:2010:0601JUD002297805","ecli:ECLI:CE:ECHR:2002:1218JUD002495294"],
+        ["ecli:ECLI:CE:ECHR:2010:0601JUD002297805","ecli:ECLI:CE:ECHR:2003:0708JUD003094396"],
+        ["ecli:ECLI:CE:ECHR:2010:0601JUD002297805","ecli:ECLI:CE:ECHR:2004:0428JUD005667900"],
+        ["ecli:ECLI:CE:ECHR:2010:0601JUD002297805","ecli:ECLI:CE:ECHR:2004:1130JUD004893999"],
+        ["ecli:ECLI:CE:ECHR:2010:0601JUD002297805","ecli:ECLI:CE:ECHR:2004:1217JUD003334896"],
+        ["ecli:ECLI:CE:ECHR:2010:0601JUD002297805","ecli:ECLI:CE:ECHR:2005:0706JUD004357798"],
+        ["ecli:ECLI:CE:ECHR:2010:0601JUD002297805","ecli:ECLI:CE:ECHR:2006:0301JUD005658100"],
+        ["ecli:ECLI:CE:ECHR:2010:0601JUD002297805","ecli:ECLI:CE:ECHR:2006:0329JUD003681397"],
+        ["ecli:ECLI:CE:ECHR:2010:0601JUD002297805","ecli:ECLI:CE:ECHR:2006:0711JUD005481000"],
+        ["ecli:ECLI:CE:ECHR:2010:0601JUD002297805","ecli:ECLI:CE:ECHR:2008:0212JUD002190604"],
+        ["ecli:ECLI:CE:ECHR:2010:0601JUD002297805","ecli:ECLI:CE:ECHR:2008:0228JUD003720106"],
+        ["ecli:ECLI:CE:ECHR:2010:0601JUD002297805","ecli:ECLI:CE:ECHR:2008:1127JUD003639102"],
+        ["ecli:ECLI:CE:ECHR:2010:1216JUD002557905","ecli:ECLI:CE:ECHR:1997:0422JUD002183093"],
+        ["ecli:ECLI:CE:ECHR:2010:1216JUD002557905","ecli:ECLI:CE:ECHR:1998:1028JUD002345294"],
+        ["ecli:ECLI:CE:ECHR:2010:1216JUD002557905","ecli:ECLI:CE:ECHR:1999:0325JUD003119596"],
+        ["ecli:ECLI:CE:ECHR:2010:1216JUD002557905","ecli:ECLI:CE:ECHR:2002:0711JUD002895795"],
+        ["ecli:ECLI:CE:ECHR:2010:1216JUD002557905","ecli:ECLI:CE:ECHR:2003:0213JUD004232698"],
+        ["ecli:ECLI:CE:ECHR:2010:1216JUD002557905","ecli:ECLI:CE:ECHR:2005:1019JUD003255596"],
+        ["ecli:ECLI:CE:ECHR:2010:1216JUD002557905","ecli:ECLI:CE:ECHR:2008:0429JUD001337805"],
+        ["ecli:ECLI:CE:ECHR:2016:1129JUD007694311","ecli:ECLI:CE:ECHR:1998:0219JUD001496789"],
+        ["ecli:ECLI:CE:ECHR:2016:1129JUD007694311","ecli:ECLI:CE:ECHR:1999:0121JUD003054496"],
+        ["ecli:ECLI:CE:ECHR:2016:1129JUD007694311","ecli:ECLI:CE:ECHR:2001:0510JUD002939295"],
+        ["ecli:ECLI:CE:ECHR:2016:1129JUD007694311","ecli:ECLI:CE:ECHR:2001:0712JUD004252798"],
+        ["ecli:ECLI:CE:ECHR:2016:1129JUD007694311","ecli:ECLI:CE:ECHR:2004:0212JUD004728799"],
+        ["ecli:ECLI:CE:ECHR:2016:1129JUD007694311","ecli:ECLI:CE:ECHR:2005:1019JUD003255596"],
+        ["ecli:ECLI:CE:ECHR:2016:1129JUD007694311","ecli:ECLI:CE:ECHR:2008:0122JUD004354602"],
+        ["ecli:ECLI:CE:ECHR:2016:1129JUD007694311","ecli:ECLI:CE:ECHR:2009:1015JUD001705606"],
+        ["ecli:ECLI:CE:ECHR:2016:1129JUD007694311","ecli:ECLI:CE:ECHR:2012:0117JUD003676006"],
+        ["ecli:ECLI:CE:ECHR:2016:1129JUD007694311","ecli:ECLI:CE:ECHR:2012:0403JUD003757504"],
+        ["ecli:ECLI:CE:ECHR:2016:1129JUD007694311","ecli:ECLI:CE:ECHR:2013:1107JUD002938109"],
+        ["ecli:ECLI:CE:ECHR:2008:0429JUD001337805","ecli:ECLI:CE:ECHR:2006:0412JUD006573101"],
+        ["ecli:ECLI:CE:ECHR:2012:0207JUD004066008","ecli:ECLI:CE:ECHR:1994:0923JUD001589089"],
+        ["ecli:ECLI:CE:ECHR:2012:0207JUD004066008","ecli:ECLI:CE:ECHR:1999:0520JUD002198093"],
+        ["ecli:ECLI:CE:ECHR:2012:0207JUD004066008","ecli:ECLI:CE:ECHR:2003:0213JUD004232698"],
+        ["ecli:ECLI:CE:ECHR:2012:0207JUD004066008","ecli:ECLI:CE:ECHR:2007:1022JUD002127902"],
+        ["ecli:ECLI:CE:ECHR:2012:0207JUD004066008","ecli:ECLI:CE:ECHR:2007:1210JUD006969801"],
+        ["ecli:ECLI:CE:ECHR:2012:0207JUD004066008","ecli:ECLI:CE:ECHR:2009:0630JUD003277202"],
+        ["ecli:ECLI:CE:ECHR:2004:0408JUD007150301","ecli:ECLI:CE:ECHR:1996:1115JUD002241493"],
+        ["ecli:ECLI:CE:ECHR:2004:0408JUD007150301","ecli:ECLI:CE:ECHR:1998:0130JUD001939292"],
+        ["ecli:ECLI:CE:ECHR:2004:0408JUD007150301","ecli:ECLI:CE:ECHR:1999:1028JUD002834295"],
+        ["ecli:ECLI:CE:ECHR:2004:0408JUD007150301","ecli:ECLI:CE:ECHR:2000:0406JUD002677295"],
+        ["ecli:ECLI:CE:ECHR:2004:0408JUD007150301","ecli:ECLI:CE:ECHR:2000:0713JUD003922198"],
+        ["ecli:ECLI:CE:ECHR:2004:0408JUD007150301","ecli:ECLI:CE:ECHR:2001:0510JUD002578194"],
+        ["ecli:ECLI:CE:ECHR:2004:0408JUD007150301","ecli:ECLI:CE:ECHR:2002:0711JUD003659097"],
+        ["ecli:ECLI:CE:ECHR:2004:0408JUD007150301","ecli:ECLI:CE:ECHR:2004:0217JUD003974898"],
+        ["ecli:ECLI:CE:ECHR:2012:0912JUD001059308","ecli:ECLI:CE:ECHR:1998:0130JUD001939292"],
+        ["ecli:ECLI:CE:ECHR:2012:0912JUD001059308","ecli:ECLI:CE:ECHR:1999:1028JUD002834295"],
+        ["ecli:ECLI:CE:ECHR:2012:0912JUD001059308","ecli:ECLI:CE:ECHR:1999:1216JUD002488894"],
+        ["ecli:ECLI:CE:ECHR:2012:0912JUD001059308","ecli:ECLI:CE:ECHR:2001:0712JUD002570294"],
+        ["ecli:ECLI:CE:ECHR:2012:0912JUD001059308","ecli:ECLI:CE:ECHR:2001:1121JUD003576397"],
+        ["ecli:ECLI:CE:ECHR:2012:0912JUD001059308","ecli:ECLI:CE:ECHR:2004:0408JUD007150301"],
+        ["ecli:ECLI:CE:ECHR:2012:0912JUD001059308","ecli:ECLI:CE:ECHR:2004:0708JUD004878799"],
+        ["ecli:ECLI:CE:ECHR:2012:0912JUD001059308","ecli:ECLI:CE:ECHR:2008:1204JUD003056204"],
+        ["ecli:ECLI:CE:ECHR:2012:0912JUD001059308","ecli:ECLI:CE:ECHR:2009:0219JUD000345505"],
+        ["ecli:ECLI:CE:ECHR:2012:0912JUD001059308","ecli:ECLI:CE:ECHR:2010:0329JUD000339403"],
+        ["ecli:ECLI:CE:ECHR:2012:0912JUD001059308","ecli:ECLI:CE:ECHR:2010:0601JUD002297805"],
+        ["ecli:ECLI:CE:ECHR:2012:0912JUD001059308","ecli:ECLI:CE:ECHR:2010:0706JUD004161507"],
+        ["ecli:ECLI:CE:ECHR:2012:0912JUD001059308","ecli:ECLI:CE:ECHR:2011:0707JUD002702108"],
+        ["ecli:ECLI:CE:ECHR:2012:0912JUD001059308","ecli:ECLI:CE:ECHR:2011:0707JUD005572107"],
+        ["ecli:ECLI:CE:ECHR:2012:0912JUD001059308","ecli:ECLI:CE:ECHR:2012:0117JUD003676006"],
+        ["ecli:ECLI:CE:ECHR:2009:0630JUD003277202","ecli:ECLI:CE:ECHR:1998:1028JUD002345294"],
+        ["ecli:ECLI:CE:ECHR:2009:0630JUD003277202","ecli:ECLI:CE:ECHR:1999:0728JUD003488497"],
+        ["ecli:ECLI:CE:ECHR:2009:0630JUD003277202","ecli:ECLI:CE:ECHR:2000:0713JUD003922198"],
+        ["ecli:ECLI:CE:ECHR:2009:0630JUD003277202","ecli:ECLI:CE:ECHR:2003:0708JUD003602297"],
+        ["ecli:ECLI:CE:ECHR:2009:0630JUD003277202","ecli:ECLI:CE:ECHR:2004:0408JUD007150301"],
+        ["ecli:ECLI:CE:ECHR:2009:0630JUD003277202","ecli:ECLI:CE:ECHR:2005:0512JUD004622199"],
+        ["ecli:ECLI:CE:ECHR:2010:1116JUD000092605","ecli:ECLI:CE:ECHR:2005:0512JUD004622199"],
+        ["ecli:ECLI:CE:ECHR:2010:1116JUD000092605","ecli:ECLI:CE:ECHR:2005:1019JUD003255596"],
+        ["ecli:ECLI:CE:ECHR:2010:1116JUD000092605","ecli:ECLI:CE:ECHR:2008:1127JUD003639102"],
+        ["ecli:ECLI:CE:ECHR:2005:1110JUD004477498","ecli:ECLI:CE:ECHR:1998:0130JUD001939292"],
+        ["ecli:ECLI:CE:ECHR:2005:1110JUD004477498","ecli:ECLI:CE:ECHR:1999:0429JUD002508894"],
+        ["ecli:ECLI:CE:ECHR:2005:1110JUD004477498","ecli:ECLI:CE:ECHR:2000:1026JUD003098596"],
+        ["ecli:ECLI:CE:ECHR:2005:1110JUD004477498","ecli:ECLI:CE:ECHR:2001:0712JUD002570294"],
+        ["ecli:ECLI:CE:ECHR:2005:1110JUD004477498","ecli:ECLI:CE:ECHR:2002:0711JUD003659097"],
+        ["ecli:ECLI:CE:ECHR:2005:1110JUD004477498","ecli:ECLI:CE:ECHR:2004:0217JUD004415898"],
+        ["ecli:ECLI:CE:ECHR:2005:1110JUD004477498","ecli:ECLI:CE:ECHR:2004:1217JUD003334896"],
+        ["ecli:ECLI:CE:ECHR:2005:1110JUD004477498","ecli:ECLI:CE:ECHR:2005:0204JUD004682799"],
+        ["ecli:ECLI:CE:ECHR:2000:1026JUD003021096","ecli:ECLI:CE:ECHR:1996:1115JUD002241493"],
+        ["ecli:ECLI:CE:ECHR:2000:1026JUD003021096","ecli:ECLI:CE:ECHR:1999:0325JUD003119596"],
+        ["ecli:ECLI:CE:ECHR:2000:1026JUD003021096","ecli:ECLI:CE:ECHR:1999:0728JUD002580394"],
+        ["ecli:ECLI:CE:ECHR:2000:1026JUD003021096","ecli:ECLI:CE:ECHR:1999:0728JUD003488497"],
+        ["ecli:ECLI:CE:ECHR:2000:1026JUD003021096","ecli:ECLI:CE:ECHR:1999:1216JUD002488894"],
+        ["ecli:ECLI:CE:ECHR:2000:1026JUD003021096","ecli:ECLI:CE:ECHR:2000:0406JUD002677295"],
+        ["ecli:ECLI:CE:ECHR:2000:1026JUD003021096","ecli:ECLI:CE:ECHR:2000:0627JUD002227793"],
+        ["ecli:ECLI:CE:ECHR:2006:0301JUD005658100","ecli:ECLI:CE:ECHR:1999:0121JUD002918395"],
+        ["ecli:ECLI:CE:ECHR:2006:0301JUD005658100","ecli:ECLI:CE:ECHR:1999:0728JUD002580394"],
+        ["ecli:ECLI:CE:ECHR:2006:0301JUD005658100","ecli:ECLI:CE:ECHR:2000:0713JUD003922198"],
+        ["ecli:ECLI:CE:ECHR:2006:0301JUD005658100","ecli:ECLI:CE:ECHR:2000:1026JUD003021096"],
+        ["ecli:ECLI:CE:ECHR:2006:0301JUD005658100","ecli:ECLI:CE:ECHR:2001:0712JUD002570294"],
+        ["ecli:ECLI:CE:ECHR:2006:0301JUD005658100","ecli:ECLI:CE:ECHR:2002:1218JUD002495294"],
+        ["ecli:ECLI:CE:ECHR:2006:0301JUD005658100","ecli:ECLI:CE:ECHR:2004:0428JUD005667900"],
+        ["ecli:ECLI:CE:ECHR:2006:0301JUD005658100","ecli:ECLI:CE:ECHR:2004:0622JUD003144396"],
+        ["ecli:ECLI:CE:ECHR:2006:0301JUD005658100","ecli:ECLI:CE:ECHR:2005:0512JUD004622199"],
+        ["ecli:ECLI:CE:ECHR:2015:1204JUD004714306","ecli:ECLI:CE:ECHR:1996:1115JUD002241493"],
+        ["ecli:ECLI:CE:ECHR:2015:1204JUD004714306","ecli:ECLI:CE:ECHR:2000:0216JUD002779895"],
+        ["ecli:ECLI:CE:ECHR:2015:1204JUD004714306","ecli:ECLI:CE:ECHR:2000:0504JUD002834195"],
+        ["ecli:ECLI:CE:ECHR:2015:1204JUD004714306","ecli:ECLI:CE:ECHR:2002:1218JUD002495294"],
+        ["ecli:ECLI:CE:ECHR:2015:1204JUD004714306","ecli:ECLI:CE:ECHR:2008:1204JUD003056204"],
+        ["ecli:ECLI:CE:ECHR:2015:1204JUD004714306","ecli:ECLI:CE:ECHR:2014:0717JUD004784808"],
+        ["ecli:ECLI:CE:ECHR:2007:1022JUD002127902","ecli:ECLI:CE:ECHR:1999:0708JUD002668295"],
+        ["ecli:ECLI:CE:ECHR:2004:0212JUD004728799","ecli:ECLI:CE:ECHR:1999:0121JUD003054496"],
+        ["ecli:ECLI:CE:ECHR:1999:0121JUD002918395","ecli:ECLI:CE:ECHR:1994:0923JUD001589089"],
+        ["ecli:ECLI:CE:ECHR:2013:1021JUD004275009","ecli:ECLI:CE:ECHR:2000:0713JUD003922198"],
+        ["ecli:ECLI:CE:ECHR:2013:1021JUD004275009","ecli:ECLI:CE:ECHR:2001:0322JUD003404496"],
+        ["ecli:ECLI:CE:ECHR:2013:1021JUD004275009","ecli:ECLI:CE:ECHR:2002:0528JUD004629599"],
+        ["ecli:ECLI:CE:ECHR:2013:1021JUD004275009","ecli:ECLI:CE:ECHR:2004:0408JUD007150301"],
+        ["ecli:ECLI:CE:ECHR:2013:1021JUD004275009","ecli:ECLI:CE:ECHR:2004:0622JUD003144396"],
+        ["ecli:ECLI:CE:ECHR:2013:1021JUD004275009","ecli:ECLI:CE:ECHR:2008:0212JUD002190604"],
+        ["ecli:ECLI:CE:ECHR:2013:1021JUD004275009","ecli:ECLI:CE:ECHR:2009:0630JUD003277202"],
+        ["ecli:ECLI:CE:ECHR:2013:1021JUD004275009","ecli:ECLI:CE:ECHR:2009:0917JUD001024903"],
+        ["ecli:ECLI:CE:ECHR:2013:1021JUD004275009","ecli:ECLI:CE:ECHR:2012:0117JUD003676006"],
+        ["ecli:ECLI:CE:ECHR:2013:1021JUD004275009","ecli:ECLI:CE:ECHR:2012:0403JUD003757504"],
+        ["ecli:ECLI:CE:ECHR:2009:0219JUD000345505","ecli:ECLI:CE:ECHR:1999:0325JUD003119596"],
+        ["ecli:ECLI:CE:ECHR:2009:0219JUD000345505","ecli:ECLI:CE:ECHR:2000:1026JUD003021096"],
+        ["ecli:ECLI:CE:ECHR:2009:0219JUD000345505","ecli:ECLI:CE:ECHR:2001:0510JUD002939295"],
+        ["ecli:ECLI:CE:ECHR:2009:0219JUD000345505","ecli:ECLI:CE:ECHR:2004:0408JUD007150301"],
+        ["ecli:ECLI:CE:ECHR:2009:0219JUD000345505","ecli:ECLI:CE:ECHR:2005:1019JUD003255596"],
+        ["ecli:ECLI:CE:ECHR:2009:0219JUD000345505","ecli:ECLI:CE:ECHR:2008:0212JUD002190604"],
+        ["ecli:ECLI:CE:ECHR:2009:0219JUD000345505","ecli:ECLI:CE:ECHR:2008:0228JUD003720106"],
+        ["ecli:ECLI:CE:ECHR:2000:0713JUD003922198","ecli:ECLI:CE:ECHR:1995:0926JUD001785191"],
+        ["ecli:ECLI:CE:ECHR:2005:0706JUD004357798","ecli:ECLI:CE:ECHR:1995:0927JUD001898491"],
+        ["ecli:ECLI:CE:ECHR:2005:0706JUD004357798","ecli:ECLI:CE:ECHR:1999:0708JUD002365794"],
+        ["ecli:ECLI:CE:ECHR:2005:0706JUD004357798","ecli:ECLI:CE:ECHR:2000:0627JUD002198693"],
+        ["ecli:ECLI:CE:ECHR:2005:0706JUD004357798","ecli:ECLI:CE:ECHR:2000:0627JUD002227793"],
+        ["ecli:ECLI:CE:ECHR:2005:0706JUD004357798","ecli:ECLI:CE:ECHR:2001:0322JUD003404496"],
+        ["ecli:ECLI:CE:ECHR:2005:0706JUD004357798","ecli:ECLI:CE:ECHR:2004:0708JUD004878799"],
+        ["ecli:ECLI:CE:ECHR:2003:0506JUD004889899","ecli:ECLI:CE:ECHR:1994:0923JUD001589089"],
+        ["ecli:ECLI:CE:ECHR:2003:0506JUD004889899","ecli:ECLI:CE:ECHR:1999:0520JUD002198093"],
+        ["ecli:ECLI:CE:ECHR:2003:0506JUD004889899","ecli:ECLI:CE:ECHR:2001:0712JUD002570294"],
+        ["ecli:ECLI:CE:ECHR:2003:0506JUD004889899","ecli:ECLI:CE:ECHR:2002:0711JUD003659097"],
+        ["ecli:ECLI:CE:ECHR:1999:0928JUD002811495","ecli:ECLI:CE:ECHR:1999:0121JUD002918395"],
+        ["ecli:ECLI:CE:ECHR:1999:0928JUD002811495","ecli:ECLI:CE:ECHR:1999:0520JUD002198093"],
+        ["ecli:ECLI:CE:ECHR:2001:0712JUD004252798","ecli:ECLI:CE:ECHR:1998:0130JUD001939292"],
+        ["ecli:ECLI:CE:ECHR:2001:0712JUD004252798","ecli:ECLI:CE:ECHR:1999:0218JUD002608394"],
+        ["ecli:ECLI:CE:ECHR:2001:1121JUD003576397","ecli:ECLI:CE:ECHR:1996:1218JUD001531889"],
+        ["ecli:ECLI:CE:ECHR:2001:1121JUD003576397","ecli:ECLI:CE:ECHR:1999:0218JUD002608394"],
+        ["ecli:ECLI:CE:ECHR:2001:1121JUD003576397","ecli:ECLI:CE:ECHR:2001:0510JUD002939295"],
+        ["ecli:ECLI:CE:ECHR:2001:0118JUD002723895","ecli:ECLI:CE:ECHR:2000:0406JUD003436997"],
+        ["ecli:ECLI:CE:ECHR:2010:0427JUD000000708","ecli:ECLI:CE:ECHR:1998:0130JUD001939292"],
+        ["ecli:ECLI:CE:ECHR:2010:0427JUD000000708","ecli:ECLI:CE:ECHR:1999:0728JUD002580394"],
+        ["ecli:ECLI:CE:ECHR:2010:0427JUD000000708","ecli:ECLI:CE:ECHR:2001:0712JUD002570294"],
+        ["ecli:ECLI:CE:ECHR:2010:0427JUD000000708","ecli:ECLI:CE:ECHR:2002:1218JUD002495294"],
+        ["ecli:ECLI:CE:ECHR:2010:0427JUD000000708","ecli:ECLI:CE:ECHR:2005:1006JUD007402501"],
+        ["ecli:ECLI:CE:ECHR:2010:0427JUD000000708","ecli:ECLI:CE:ECHR:2005:1110JUD004477498"],
+        ["ecli:ECLI:CE:ECHR:2010:0427JUD000000708","ecli:ECLI:CE:ECHR:2006:0301JUD005658100"],
+        ["ecli:ECLI:CE:ECHR:2010:0427JUD000000708","ecli:ECLI:CE:ECHR:2006:0308JUD005953200"],
+        ["ecli:ECLI:CE:ECHR:2010:0427JUD000000708","ecli:ECLI:CE:ECHR:2008:0429JUD001337805"],
+        ["ecli:ECLI:CE:ECHR:2010:0427JUD000000708","ecli:ECLI:CE:ECHR:2008:1112JUD003450397"],
+        ["ecli:ECLI:CE:ECHR:2004:0217JUD004415898","ecli:ECLI:CE:ECHR:1998:0130JUD001939292"],
+        ["ecli:ECLI:CE:ECHR:2004:0217JUD004415898","ecli:ECLI:CE:ECHR:1999:0218JUD002608394"],
+        ["ecli:ECLI:CE:ECHR:2004:0217JUD004415898","ecli:ECLI:CE:ECHR:1999:0520JUD002539094"],
+        ["ecli:ECLI:CE:ECHR:2013:1107JUD002938109","ecli:ECLI:CE:ECHR:1999:0121JUD002918395"],
+        ["ecli:ECLI:CE:ECHR:2013:1107JUD002938109","ecli:ECLI:CE:ECHR:2000:1026JUD003021096"],
+        ["ecli:ECLI:CE:ECHR:2013:1107JUD002938109","ecli:ECLI:CE:ECHR:2000:1026JUD003098596"],
+        ["ecli:ECLI:CE:ECHR:2013:1107JUD002938109","ecli:ECLI:CE:ECHR:2002:0711JUD002895795"],
+        ["ecli:ECLI:CE:ECHR:2013:1107JUD002938109","ecli:ECLI:CE:ECHR:2005:1019JUD003255596"],
+        ["ecli:ECLI:CE:ECHR:2013:1107JUD002938109","ecli:ECLI:CE:ECHR:2008:0122JUD004354602"],
+        ["ecli:ECLI:CE:ECHR:2013:1107JUD002938109","ecli:ECLI:CE:ECHR:2008:0429JUD001337805"],
+        ["ecli:ECLI:CE:ECHR:2013:1107JUD002938109","ecli:ECLI:CE:ECHR:2013:0219JUD001901007"],
+        ["ecli:ECLI:CE:ECHR:2005:1006JUD007402501","ecli:ECLI:CE:ECHR:1998:0130JUD001939292"],
+        ["ecli:ECLI:CE:ECHR:2005:1006JUD007402501","ecli:ECLI:CE:ECHR:2000:0406JUD002677295"],
+        ["ecli:ECLI:CE:ECHR:2005:1006JUD007402501","ecli:ECLI:CE:ECHR:2002:0528JUD004629599"],
+        ["ecli:ECLI:CE:ECHR:2005:1006JUD007402501","ecli:ECLI:CE:ECHR:2004:0408JUD007150301"],
+        ["ecli:ECLI:CE:ECHR:2000:0105JUD003320296","ecli:ECLI:CE:ECHR:1999:0325JUD003110796"],
+        ["ecli:ECLI:CE:ECHR:2000:0105JUD003320296","ecli:ECLI:CE:ECHR:1999:0429JUD002508894"],
+        ["ecli:ECLI:CE:ECHR:2007:0410JUD000633905","ecli:ECLI:CE:ECHR:1997:0422JUD002183093"],
+        ["ecli:ECLI:CE:ECHR:2007:0410JUD000633905","ecli:ECLI:CE:ECHR:2001:0712JUD002570294"],
+        ["ecli:ECLI:CE:ECHR:2007:0410JUD000633905","ecli:ECLI:CE:ECHR:2002:0711JUD002895795"],
+        ["ecli:ECLI:CE:ECHR:2007:0410JUD000633905","ecli:ECLI:CE:ECHR:2003:0213JUD004232698"],
+        ["ecli:ECLI:CE:ECHR:2007:0410JUD000633905","ecli:ECLI:CE:ECHR:2003:0708JUD003602297"],
+        ["ecli:ECLI:CE:ECHR:1999:0520JUD002198093","ecli:ECLI:CE:ECHR:1994:0923JUD001589089"],
+        ["ecli:ECLI:CE:ECHR:1999:0708JUD002668295","ecli:ECLI:CE:ECHR:1997:1125JUD001895491"],
+        ["ecli:ECLI:CE:ECHR:1999:0708JUD002668295","ecli:ECLI:CE:ECHR:1998:0609JUD002267893"],
+        ["ecli:ECLI:CE:ECHR:1999:0708JUD002668295","ecli:ECLI:CE:ECHR:1999:0121JUD002918395"],
+        ["ecli:ECLI:CE:ECHR:1999:0708JUD002668295","ecli:ECLI:CE:ECHR:1999:0325JUD003119596"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD002751008","ecli:ECLI:CE:ECHR:1994:0923JUD001589089"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD002751008","ecli:ECLI:CE:ECHR:1995:0926JUD001785191"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD002751008","ecli:ECLI:CE:ECHR:1997:1125JUD001895491"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD002751008","ecli:ECLI:CE:ECHR:1998:0130JUD001939292"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD002751008","ecli:ECLI:CE:ECHR:1998:0609JUD002267893"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD002751008","ecli:ECLI:CE:ECHR:1999:0520JUD002539094"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD002751008","ecli:ECLI:CE:ECHR:1999:0708JUD002668295"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD002751008","ecli:ECLI:CE:ECHR:2001:1121JUD003576397"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD002751008","ecli:ECLI:CE:ECHR:2004:0217JUD004415898"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD002751008","ecli:ECLI:CE:ECHR:2005:1110JUD004477498"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD002751008","ecli:ECLI:CE:ECHR:2006:0316JUD005827800"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD002751008","ecli:ECLI:CE:ECHR:2007:1022JUD002127902"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD002751008","ecli:ECLI:CE:ECHR:2007:1210JUD006969801"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD002751008","ecli:ECLI:CE:ECHR:2008:0129JUD001322903"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD002751008","ecli:ECLI:CE:ECHR:2011:0707JUD002702108"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD002751008","ecli:ECLI:CE:ECHR:2012:0207JUD003995408"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD002751008","ecli:ECLI:CE:ECHR:2012:0207JUD004066008"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD002751008","ecli:ECLI:CE:ECHR:2012:0912JUD001059308"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD002751008","ecli:ECLI:CE:ECHR:2013:0422JUD004887608"],
+        ["ecli:ECLI:CE:ECHR:2015:1015JUD002751008","ecli:ECLI:CE:ECHR:2013:1021JUD004275009"],
+        ["ecli:ECLI:CE:ECHR:2006:0329JUD003681397","ecli:ECLI:CE:ECHR:1999:0325JUD003110796"],
+        ["ecli:ECLI:CE:ECHR:2006:0329JUD003681397","ecli:ECLI:CE:ECHR:1999:0429JUD002508894"],
+        ["ecli:ECLI:CE:ECHR:2006:0329JUD003681397","ecli:ECLI:CE:ECHR:1999:0728JUD002580394"],
+        ["ecli:ECLI:CE:ECHR:2006:0329JUD003681397","ecli:ECLI:CE:ECHR:1999:0728JUD003488497"],
+        ["ecli:ECLI:CE:ECHR:2006:0329JUD003681397","ecli:ECLI:CE:ECHR:1999:0928JUD002811495"],
+        ["ecli:ECLI:CE:ECHR:2006:0329JUD003681397","ecli:ECLI:CE:ECHR:2000:0105JUD003320296"],
+        ["ecli:ECLI:CE:ECHR:2006:0329JUD003681397","ecli:ECLI:CE:ECHR:2000:0713JUD003922198"],
+        ["ecli:ECLI:CE:ECHR:2006:0329JUD003681397","ecli:ECLI:CE:ECHR:2000:1019JUD003110796"],
+        ["ecli:ECLI:CE:ECHR:2006:0329JUD003681397","ecli:ECLI:CE:ECHR:2000:1026JUD003021096"],
+        ["ecli:ECLI:CE:ECHR:2006:0329JUD003681397","ecli:ECLI:CE:ECHR:2001:0712JUD004252798"],
+        ["ecli:ECLI:CE:ECHR:2006:0329JUD003681397","ecli:ECLI:CE:ECHR:2003:0708JUD003094396"],
+        ["ecli:ECLI:CE:ECHR:2006:0329JUD003681397","ecli:ECLI:CE:ECHR:2004:0217JUD003974898"],
+        ["ecli:ECLI:CE:ECHR:2006:0329JUD003681397","ecli:ECLI:CE:ECHR:2004:0622JUD003144396"],
+        ["ecli:ECLI:CE:ECHR:2006:0329JUD003681397","ecli:ECLI:CE:ECHR:2004:0928JUD004491298"],
+        ["ecli:ECLI:CE:ECHR:2006:0329JUD003681397","ecli:ECLI:CE:ECHR:2004:1130JUD004893999"],
+        ["ecli:ECLI:CE:ECHR:2000:0406JUD003436997","ecli:ECLI:CE:ECHR:1999:0325JUD003119596"],
+        ["ecli:ECLI:CE:ECHR:2000:0406JUD003436997","ecli:ECLI:CE:ECHR:1999:0429JUD002508894"],
+        ["ecli:ECLI:CE:ECHR:2000:0406JUD003436997","ecli:ECLI:CE:ECHR:1999:0708JUD002668295"],
+        ["ecli:ECLI:CE:ECHR:2007:1204JUD004436204","ecli:ECLI:CE:ECHR:1998:1028JUD002345294"],
+        ["ecli:ECLI:CE:ECHR:2007:1204JUD004436204","ecli:ECLI:CE:ECHR:2001:0510JUD002939295"],
+        ["ecli:ECLI:CE:ECHR:2007:1204JUD004436204","ecli:ECLI:CE:ECHR:2003:0213JUD004232698"],
+        ["ecli:ECLI:CE:ECHR:2007:1204JUD004436204","ecli:ECLI:CE:ECHR:2007:0410JUD000633905"],
+        ["ecli:ECLI:CE:ECHR:2005:1019JUD003255596","ecli:ECLI:CE:ECHR:1995:0927JUD001898491"],
+        ["ecli:ECLI:CE:ECHR:2005:1019JUD003255596","ecli:ECLI:CE:ECHR:1998:0219JUD001496789"],
+        ["ecli:ECLI:CE:ECHR:2005:1019JUD003255596","ecli:ECLI:CE:ECHR:2001:0510JUD002939295"],
+        ["ecli:ECLI:CE:ECHR:2005:1019JUD003255596","ecli:ECLI:CE:ECHR:2001:1121JUD003576397"],
+        ["ecli:ECLI:CE:ECHR:2005:1019JUD003255596","ecli:ECLI:CE:ECHR:2004:0928JUD004491298"],
+        ["ecli:ECLI:CE:ECHR:2001:0322JUD003404496","ecli:ECLI:CE:ECHR:1998:1028JUD002345294"],
+        ["ecli:ECLI:CE:ECHR:2005:0204JUD004682799","ecli:ECLI:CE:ECHR:1996:1115JUD002241493"],
+        ["ecli:ECLI:CE:ECHR:2005:0204JUD004682799","ecli:ECLI:CE:ECHR:2001:0118JUD002723895"],
+        ["ecli:ECLI:CE:ECHR:2005:0204JUD004682799","ecli:ECLI:CE:ECHR:2001:1121JUD003576397"],
+        ["ecli:ECLI:CE:ECHR:2005:0204JUD004682799","ecli:ECLI:CE:ECHR:2002:0711JUD002895795"],
+        ["ecli:ECLI:CE:ECHR:2005:0204JUD004682799","ecli:ECLI:CE:ECHR:2004:0708JUD004878799"],
+        ["ecli:ECLI:CE:ECHR:2008:1127JUD003639102","ecli:ECLI:CE:ECHR:2003:0708JUD003094396"],
+        ["ecli:ECLI:CE:ECHR:2008:1127JUD003639102","ecli:ECLI:CE:ECHR:2006:0711JUD005481000"],
+        ["ecli:ECLI:CE:ECHR:2016:0426JUD001051110","ecli:ECLI:CE:ECHR:2000:1026JUD003021096"],
+        ["ecli:ECLI:CE:ECHR:2016:0426JUD001051110","ecli:ECLI:CE:ECHR:2001:0712JUD002570294"],
+        ["ecli:ECLI:CE:ECHR:2016:0426JUD001051110","ecli:ECLI:CE:ECHR:2007:1204JUD004436204"],
+        ["ecli:ECLI:CE:ECHR:2016:0426JUD001051110","ecli:ECLI:CE:ECHR:2008:0212JUD002190604"],
+        ["ecli:ECLI:CE:ECHR:2016:0426JUD001051110","ecli:ECLI:CE:ECHR:2009:0219JUD000345505"],
+        ["ecli:ECLI:CE:ECHR:2016:0426JUD001051110","ecli:ECLI:CE:ECHR:2010:0601JUD002297805"],
+        ["ecli:ECLI:CE:ECHR:2016:0426JUD001051110","ecli:ECLI:CE:ECHR:2011:0121JUD003069609"],
+        ["ecli:ECLI:CE:ECHR:2016:0426JUD001051110","ecli:ECLI:CE:ECHR:2012:0912JUD001059308"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:1998:0130JUD001939292"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:1998:0609JUD002267893"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:1999:0218JUD002608394"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:1999:0325JUD003110796"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:1999:0708JUD002668295"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:2000:0504JUD002834195"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:2004:0217JUD003974898"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:2004:0217JUD004415898"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:2005:1110JUD004477498"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:2006:0316JUD005827800"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:2007:1022JUD002127902"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:2007:1210JUD006969801"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:2010:0427JUD000000708"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:2010:0601JUD002297805"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:2010:1216JUD002557905"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:2012:0607JUD003843309"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:2013:0219JUD001901007"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:2013:0422JUD004887608"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:2015:0616JUD006456909"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:2015:1015JUD002751008"],
+        ["ecli:ECLI:CE:ECHR:2016:0517JUD004246113","ecli:ECLI:CE:ECHR:2015:1015JUD003755305"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD002702108","ecli:ECLI:CE:ECHR:2001:1121JUD003576397"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD002702108","ecli:ECLI:CE:ECHR:2004:0408JUD007150301"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD002702108","ecli:ECLI:CE:ECHR:2004:0708JUD004878799"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD002702108","ecli:ECLI:CE:ECHR:2009:0219JUD000345505"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD002702108","ecli:ECLI:CE:ECHR:2009:0918JUD001606490"],
+        ["ecli:ECLI:CE:ECHR:2011:0707JUD002702108","ecli:ECLI:CE:ECHR:2011:0707JUD005572107"],
+        ["ecli:ECLI:CE:ECHR:2012:0117JUD003676006","ecli:ECLI:CE:ECHR:1996:1115JUD002241493"],
+        ["ecli:ECLI:CE:ECHR:2012:0117JUD003676006","ecli:ECLI:CE:ECHR:2000:0406JUD002677295"],
+        ["ecli:ECLI:CE:ECHR:2012:0117JUD003676006","ecli:ECLI:CE:ECHR:2000:0713JUD003922198"],
+        ["ecli:ECLI:CE:ECHR:2012:0117JUD003676006","ecli:ECLI:CE:ECHR:2000:1026JUD003021096"],
+        ["ecli:ECLI:CE:ECHR:2012:0117JUD003676006","ecli:ECLI:CE:ECHR:2001:0712JUD004252798"],
+        ["ecli:ECLI:CE:ECHR:2012:0117JUD003676006","ecli:ECLI:CE:ECHR:2002:1218JUD002495294"],
+        ["ecli:ECLI:CE:ECHR:2012:0117JUD003676006","ecli:ECLI:CE:ECHR:2004:0217JUD003974898"],
+        ["ecli:ECLI:CE:ECHR:2012:0117JUD003676006","ecli:ECLI:CE:ECHR:2004:0622JUD003144396"],
+        ["ecli:ECLI:CE:ECHR:2012:0117JUD003676006","ecli:ECLI:CE:ECHR:2005:0512JUD004622199"],
+        ["ecli:ECLI:CE:ECHR:2012:0117JUD003676006","ecli:ECLI:CE:ECHR:2005:1019JUD003255596"],
+        ["ecli:ECLI:CE:ECHR:2012:0117JUD003676006","ecli:ECLI:CE:ECHR:2006:0711JUD005481000"],
+        ["ecli:ECLI:CE:ECHR:2012:0117JUD003676006","ecli:ECLI:CE:ECHR:2008:0129JUD001322903"],
+        ["ecli:ECLI:CE:ECHR:2012:0117JUD003676006","ecli:ECLI:CE:ECHR:2009:0219JUD000345505"],
+        ["ecli:ECLI:CE:ECHR:1998:1028JUD002345294","ecli:ECLI:CE:ECHR:1995:0927JUD001898491"],
+        ["ecli:ECLI:CE:ECHR:2004:0708JUD004878799","ecli:ECLI:CE:ECHR:2002:0528JUD004629599"],
+        ["ecli:ECLI:CE:ECHR:2002:0711JUD003659097","ecli:ECLI:CE:ECHR:2001:0712JUD002570294"],
+        ["ecli:ECLI:CE:ECHR:2012:0223JUD002776509","ecli:ECLI:CE:ECHR:1996:1115JUD002241493"],
+        ["ecli:ECLI:CE:ECHR:2012:0223JUD002776509","ecli:ECLI:CE:ECHR:1997:0422JUD002183093"],
+        ["ecli:ECLI:CE:ECHR:2012:0223JUD002776509","ecli:ECLI:CE:ECHR:1999:1216JUD002488894"],
+        ["ecli:ECLI:CE:ECHR:2012:0223JUD002776509","ecli:ECLI:CE:ECHR:2000:1026JUD003021096"],
+        ["ecli:ECLI:CE:ECHR:2012:0223JUD002776509","ecli:ECLI:CE:ECHR:2001:0712JUD004252798"],
+        ["ecli:ECLI:CE:ECHR:2012:0223JUD002776509","ecli:ECLI:CE:ECHR:2001:1121JUD003576397"],
+        ["ecli:ECLI:CE:ECHR:2012:0223JUD002776509","ecli:ECLI:CE:ECHR:2004:0408JUD007150301"],
+        ["ecli:ECLI:CE:ECHR:2012:0223JUD002776509","ecli:ECLI:CE:ECHR:2004:0708JUD004878799"],
+        ["ecli:ECLI:CE:ECHR:2012:0223JUD002776509","ecli:ECLI:CE:ECHR:2005:0204JUD004682799"],
+        ["ecli:ECLI:CE:ECHR:2012:0223JUD002776509","ecli:ECLI:CE:ECHR:2005:0512JUD004622199"],
+        ["ecli:ECLI:CE:ECHR:2012:0223JUD002776509","ecli:ECLI:CE:ECHR:2005:1110JUD004477498"],
+        ["ecli:ECLI:CE:ECHR:2012:0223JUD002776509","ecli:ECLI:CE:ECHR:2008:0129JUD001322903"],
+        ["ecli:ECLI:CE:ECHR:2012:0223JUD002776509","ecli:ECLI:CE:ECHR:2008:0228JUD003720106"],
+        ["ecli:ECLI:CE:ECHR:2012:0223JUD002776509","ecli:ECLI:CE:ECHR:2008:1112JUD003450397"],
+        ["ecli:ECLI:CE:ECHR:2012:0223JUD002776509","ecli:ECLI:CE:ECHR:2009:0630JUD003277202"],
+        ["ecli:ECLI:CE:ECHR:2012:0223JUD002776509","ecli:ECLI:CE:ECHR:2010:0329JUD000339403"],
+        ["ecli:ECLI:CE:ECHR:2012:0223JUD002776509","ecli:ECLI:CE:ECHR:2011:0121JUD003069609"],
+        ["ecli:ECLI:CE:ECHR:2012:0223JUD002776509","ecli:ECLI:CE:ECHR:2011:0707JUD005572107"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:1998:0219JUD001496789"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:1999:0121JUD002918395"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:1999:0520JUD002198093"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:1999:0520JUD002539094"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:1999:0708JUD002668295"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:2000:0216JUD002779895"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:2001:0118JUD002723895"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:2001:1121JUD003576397"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:2002:0528JUD004629599"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:2002:0711JUD002895795"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:2004:0217JUD004415898"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:2004:1130JUD004893999"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:2005:0204JUD004682799"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:2005:1019JUD003255596"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:2007:1022JUD002127902"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:2008:0129JUD001322903"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:2008:1204JUD003056204"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:2009:0917JUD001024903"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:2011:0707JUD002345903"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:2012:0207JUD003995408"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:2012:0207JUD004066008"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:2013:0422JUD004887608"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:2015:0616JUD006456909"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:2015:1015JUD002751008"],
+        ["ecli:ECLI:CE:ECHR:2016:1108JUD001803011","ecli:ECLI:CE:ECHR:2016:0621JUD000580908"],
+        ["ecli:ECLI:CE:ECHR:2010:0329JUD000339403","ecli:ECLI:CE:ECHR:2000:0406JUD002677295"],
+        ["ecli:ECLI:CE:ECHR:2010:0329JUD000339403","ecli:ECLI:CE:ECHR:2002:1218JUD002495294"],
+        ["ecli:ECLI:CE:ECHR:2010:0329JUD000339403","ecli:ECLI:CE:ECHR:2003:0213JUD004232698"],
+        ["ecli:ECLI:CE:ECHR:2010:0329JUD000339403","ecli:ECLI:CE:ECHR:2004:0408JUD007150301"],
+        ["ecli:ECLI:CE:ECHR:2010:0329JUD000339403","ecli:ECLI:CE:ECHR:2004:0428JUD005667900"],
+        ["ecli:ECLI:CE:ECHR:2010:0329JUD000339403","ecli:ECLI:CE:ECHR:2004:0708JUD004878799"],
+        ["ecli:ECLI:CE:ECHR:2010:0329JUD000339403","ecli:ECLI:CE:ECHR:2005:0512JUD004622199"],
+        ["ecli:ECLI:CE:ECHR:2010:0329JUD000339403","ecli:ECLI:CE:ECHR:2006:0301JUD005658100"],
+        ["ecli:ECLI:CE:ECHR:2010:0329JUD000339403","ecli:ECLI:CE:ECHR:2008:1112JUD003450397"],
+        ["ecli:ECLI:CE:ECHR:2013:0422JUD004887608","ecli:ECLI:CE:ECHR:1994:0923JUD001589089"],
+        ["ecli:ECLI:CE:ECHR:2013:0422JUD004887608","ecli:ECLI:CE:ECHR:1999:0121JUD002918395"],
+        ["ecli:ECLI:CE:ECHR:2013:0422JUD004887608","ecli:ECLI:CE:ECHR:1999:0520JUD002198093"],
+        ["ecli:ECLI:CE:ECHR:2013:0422JUD004887608","ecli:ECLI:CE:ECHR:2003:0708JUD003602297"],
+        ["ecli:ECLI:CE:ECHR:2013:0422JUD004887608","ecli:ECLI:CE:ECHR:2005:1006JUD007402501"],
+        ["ecli:ECLI:CE:ECHR:2013:0422JUD004887608","ecli:ECLI:CE:ECHR:2006:0316JUD005827800"],
+        ["ecli:ECLI:CE:ECHR:2013:0422JUD004887608","ecli:ECLI:CE:ECHR:2006:0412JUD006573101"],
+        ["ecli:ECLI:CE:ECHR:2013:0422JUD004887608","ecli:ECLI:CE:ECHR:2007:0410JUD000633905"],
+        ["ecli:ECLI:CE:ECHR:2013:0422JUD004887608","ecli:ECLI:CE:ECHR:2007:1204JUD004436204"],
+        ["ecli:ECLI:CE:ECHR:2013:0422JUD004887608","ecli:ECLI:CE:ECHR:2007:1210JUD006969801"],
+        ["ecli:ECLI:CE:ECHR:2013:0422JUD004887608","ecli:ECLI:CE:ECHR:2012:0607JUD003843309"],
+        ["ecli:ECLI:CE:ECHR:2018:1106JUD005539113","ecli:ECLI:CE:ECHR:1999:0121JUD003054496"],
+        ["ecli:ECLI:CE:ECHR:2018:1106JUD005539113","ecli:ECLI:CE:ECHR:2001:0712JUD002570294"],
+        ["ecli:ECLI:CE:ECHR:2018:1106JUD005539113","ecli:ECLI:CE:ECHR:2002:0528JUD004629599"],
+        ["ecli:ECLI:CE:ECHR:2018:1106JUD005539113","ecli:ECLI:CE:ECHR:2002:0711JUD003659097"],
+        ["ecli:ECLI:CE:ECHR:2018:1106JUD005539113","ecli:ECLI:CE:ECHR:2003:0506JUD004889899"],
+        ["ecli:ECLI:CE:ECHR:2018:1106JUD005539113","ecli:ECLI:CE:ECHR:2004:0428JUD005667900"],
+        ["ecli:ECLI:CE:ECHR:2018:1106JUD005539113","ecli:ECLI:CE:ECHR:2004:1130JUD004893999"],
+        ["ecli:ECLI:CE:ECHR:2018:1106JUD005539113","ecli:ECLI:CE:ECHR:2006:0308JUD005953200"],
+        ["ecli:ECLI:CE:ECHR:2018:1106JUD005539113","ecli:ECLI:CE:ECHR:2009:1015JUD001705606"],
+        ["ecli:ECLI:CE:ECHR:2018:1106JUD005539113","ecli:ECLI:CE:ECHR:2012:0626JUD002682806"],
+        ["ecli:ECLI:CE:ECHR:2018:1106JUD005539113","ecli:ECLI:CE:ECHR:2012:0629JUD002739606"],
+        ["ecli:ECLI:CE:ECHR:2018:1106JUD005539113","ecli:ECLI:CE:ECHR:2014:0917JUD001086509"],
+        ["ecli:ECLI:CE:ECHR:2018:1106JUD005539113","ecli:ECLI:CE:ECHR:2016:0623JUD002026112"],
+        ["ecli:ECLI:CE:ECHR:2018:1106JUD005539113","ecli:ECLI:CE:ECHR:2016:0705JUD002375507"],
+        ["ecli:ECLI:CE:ECHR:2018:1106JUD005539113","ecli:ECLI:CE:ECHR:2018:0320JUD003768510"],
+        ["ecli:ECLI:CE:ECHR:2012:0629JUD002739606","ecli:ECLI:CE:ECHR:2001:0118JUD002723895"],
+        ["ecli:ECLI:CE:ECHR:2012:0629JUD002739606","ecli:ECLI:CE:ECHR:2003:0213JUD004232698"],
+        ["ecli:ECLI:CE:ECHR:2012:0629JUD002739606","ecli:ECLI:CE:ECHR:2004:0408JUD007150301"],
+        ["ecli:ECLI:CE:ECHR:2012:0629JUD002739606","ecli:ECLI:CE:ECHR:2004:0428JUD005667900"],
+        ["ecli:ECLI:CE:ECHR:2012:0629JUD002739606","ecli:ECLI:CE:ECHR:2006:0308JUD005953200"],
+        ["ecli:ECLI:CE:ECHR:2012:0629JUD002739606","ecli:ECLI:CE:ECHR:2009:0918JUD001606490"],
+        ["ecli:ECLI:CE:ECHR:2009:0218JUD005570700","ecli:ECLI:CE:ECHR:1999:0325JUD003119596"],
+        ["ecli:ECLI:CE:ECHR:2009:0218JUD005570700","ecli:ECLI:CE:ECHR:2000:0406JUD003436997"],
+        ["ecli:ECLI:CE:ECHR:2009:0218JUD005570700","ecli:ECLI:CE:ECHR:2000:1019JUD003110796"],
+        ["ecli:ECLI:CE:ECHR:2009:0218JUD005570700","ecli:ECLI:CE:ECHR:2001:0712JUD004252798"],
+        ["ecli:ECLI:CE:ECHR:2009:0218JUD005570700","ecli:ECLI:CE:ECHR:2004:0708JUD004878799"],
+        ["ecli:ECLI:CE:ECHR:2009:0218JUD005570700","ecli:ECLI:CE:ECHR:2004:0928JUD004491298"],
+        ["ecli:ECLI:CE:ECHR:2009:0218JUD005570700","ecli:ECLI:CE:ECHR:2006:0412JUD006573101"],
+        ["ecli:ECLI:CE:ECHR:2009:0218JUD005570700","ecli:ECLI:CE:ECHR:2008:0429JUD001337805"],
+        ["ecli:ECLI:CE:ECHR:2012:1213JUD003963009","ecli:ECLI:CE:ECHR:1996:1115JUD002241493"],
+        ["ecli:ECLI:CE:ECHR:2012:1213JUD003963009","ecli:ECLI:CE:ECHR:1999:0708JUD002365794"],
+        ["ecli:ECLI:CE:ECHR:2012:1213JUD003963009","ecli:ECLI:CE:ECHR:1999:0708JUD002376394"],
+        ["ecli:ECLI:CE:ECHR:2012:1213JUD003963009","ecli:ECLI:CE:ECHR:1999:0728JUD002580394"],
+        ["ecli:ECLI:CE:ECHR:2012:1213JUD003963009","ecli:ECLI:CE:ECHR:2000:0406JUD002677295"],
+        ["ecli:ECLI:CE:ECHR:2012:1213JUD003963009","ecli:ECLI:CE:ECHR:2000:0627JUD002198693"],
+        ["ecli:ECLI:CE:ECHR:2012:1213JUD003963009","ecli:ECLI:CE:ECHR:2000:0627JUD002227793"],
+        ["ecli:ECLI:CE:ECHR:2012:1213JUD003963009","ecli:ECLI:CE:ECHR:2001:0510JUD002939295"],
+        ["ecli:ECLI:CE:ECHR:2012:1213JUD003963009","ecli:ECLI:CE:ECHR:2004:0708JUD004878799"],
+        ["ecli:ECLI:CE:ECHR:2012:1213JUD003963009","ecli:ECLI:CE:ECHR:2005:0204JUD004682799"],
+        ["ecli:ECLI:CE:ECHR:2012:1213JUD003963009","ecli:ECLI:CE:ECHR:2005:0512JUD004622199"],
+        ["ecli:ECLI:CE:ECHR:2012:1213JUD003963009","ecli:ECLI:CE:ECHR:2006:0711JUD005481000"],
+        ["ecli:ECLI:CE:ECHR:2012:1213JUD003963009","ecli:ECLI:CE:ECHR:2008:0228JUD003720106"],
+        ["ecli:ECLI:CE:ECHR:2012:1213JUD003963009","ecli:ECLI:CE:ECHR:2009:0918JUD001606490"],
+        ["ecli:ECLI:CE:ECHR:2012:1213JUD003963009","ecli:ECLI:CE:ECHR:2010:0601JUD002297805"],
+        ["ecli:ECLI:CE:ECHR:2012:1213JUD003963009","ecli:ECLI:CE:ECHR:2011:0707JUD005572107"],
+        ["ecli:ECLI:CE:ECHR:2012:1213JUD003963009","ecli:ECLI:CE:ECHR:2012:0629JUD002739606"],
+        ["ecli:ECLI:CE:ECHR:1999:1216JUD002488894","ecli:ECLI:CE:ECHR:1996:1115JUD002241493"],
+        ["ecli:ECLI:CE:ECHR:1999:1216JUD002488894","ecli:ECLI:CE:ECHR:1997:0422JUD002183093"],
+        ["ecli:ECLI:CE:ECHR:1999:1216JUD002488894","ecli:ECLI:CE:ECHR:1998:1028JUD002345294"],
+        ["ecli:ECLI:CE:ECHR:2006:0711JUD005481000","ecli:ECLI:CE:ECHR:1996:1115JUD002241493"],
+        ["ecli:ECLI:CE:ECHR:2006:0711JUD005481000","ecli:ECLI:CE:ECHR:1999:0325JUD003119596"],
+        ["ecli:ECLI:CE:ECHR:2006:0711JUD005481000","ecli:ECLI:CE:ECHR:1999:0728JUD002580394"],
+        ["ecli:ECLI:CE:ECHR:2006:0711JUD005481000","ecli:ECLI:CE:ECHR:2000:0406JUD002677295"],
+        ["ecli:ECLI:CE:ECHR:2014:0717JUD003254108","ecli:ECLI:CE:ECHR:1999:1216JUD002488894"],
+        ["ecli:ECLI:CE:ECHR:2014:0717JUD003254108","ecli:ECLI:CE:ECHR:2000:0406JUD002677295"],
+        ["ecli:ECLI:CE:ECHR:2014:0717JUD003254108","ecli:ECLI:CE:ECHR:2000:1026JUD003021096"],
+        ["ecli:ECLI:CE:ECHR:2014:0717JUD003254108","ecli:ECLI:CE:ECHR:2001:0510JUD002578194"],
+        ["ecli:ECLI:CE:ECHR:2014:0717JUD003254108","ecli:ECLI:CE:ECHR:2005:0512JUD004622199"],
+        ["ecli:ECLI:CE:ECHR:2014:0717JUD003254108","ecli:ECLI:CE:ECHR:2006:0711JUD005481000"],
+        ["ecli:ECLI:CE:ECHR:2014:0717JUD003254108","ecli:ECLI:CE:ECHR:2009:0918JUD001606490"],
+        ["ecli:ECLI:CE:ECHR:2014:0717JUD003254108","ecli:ECLI:CE:ECHR:2011:0121JUD003069609"],
+        ["ecli:ECLI:CE:ECHR:2014:0717JUD003254108","ecli:ECLI:CE:ECHR:2012:0629JUD002739606"],
+        ["ecli:ECLI:CE:ECHR:2014:0717JUD003254108","ecli:ECLI:CE:ECHR:2012:1213JUD003963009"],
+        ["ecli:ECLI:CE:ECHR:2012:0207JUD003995408","ecli:ECLI:CE:ECHR:1994:0923JUD001589089"],
+        ["ecli:ECLI:CE:ECHR:2012:0207JUD003995408","ecli:ECLI:CE:ECHR:1999:0121JUD002918395"],
+        ["ecli:ECLI:CE:ECHR:2012:0207JUD003995408","ecli:ECLI:CE:ECHR:1999:0520JUD002198093"],
+        ["ecli:ECLI:CE:ECHR:2012:0207JUD003995408","ecli:ECLI:CE:ECHR:2007:1022JUD002127902"],
+        ["ecli:ECLI:CE:ECHR:2012:0207JUD003995408","ecli:ECLI:CE:ECHR:2007:1210JUD006969801"],
+        ["ecli:ECLI:CE:ECHR:2012:0207JUD003995408","ecli:ECLI:CE:ECHR:2008:1204JUD003056204"],
+        ["ecli:ECLI:CE:ECHR:2010:0706JUD004161507","ecli:ECLI:CE:ECHR:1999:0218JUD002608394"],
+        ["ecli:ECLI:CE:ECHR:2010:0706JUD004161507","ecli:ECLI:CE:ECHR:1999:0728JUD003488497"],
+        ["ecli:ECLI:CE:ECHR:2010:0706JUD004161507","ecli:ECLI:CE:ECHR:2001:0322JUD003404496"],
+        ["ecli:ECLI:CE:ECHR:2010:0706JUD004161507","ecli:ECLI:CE:ECHR:2001:0712JUD002570294"],
+        ["ecli:ECLI:CE:ECHR:2010:0706JUD004161507","ecli:ECLI:CE:ECHR:2001:1121JUD003576397"],
+        ["ecli:ECLI:CE:ECHR:2010:0706JUD004161507","ecli:ECLI:CE:ECHR:2003:0708JUD003094396"],
+        ["ecli:ECLI:CE:ECHR:2000:0627JUD002227793","ecli:ECLI:CE:ECHR:1995:0927JUD001898491"],
+        ["ecli:ECLI:CE:ECHR:2000:0627JUD002227793","ecli:ECLI:CE:ECHR:1998:1028JUD002345294"],
+        ["ecli:ECLI:CE:ECHR:2000:0627JUD002227793","ecli:ECLI:CE:ECHR:1999:0708JUD002365794"],
+        ["ecli:ECLI:CE:ECHR:2000:0627JUD002227793","ecli:ECLI:CE:ECHR:1999:0728JUD002580394"],
+        ["ecli:ECLI:CE:ECHR:2000:0627JUD002227793","ecli:ECLI:CE:ECHR:2000:0406JUD002677295"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:1995:0927JUD001898491"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:1996:1115JUD002241493"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:1998:0130JUD001939292"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:1999:0325JUD003119596"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:1999:0429JUD002508894"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2000:0105JUD003320296"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2000:0406JUD002677295"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2000:0406JUD003436997"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2000:1026JUD003021096"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2001:0510JUD002578194"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2001:0712JUD002570294"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2002:1218JUD002495294"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2003:0213JUD004232698"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2004:0408JUD007150301"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2004:0428JUD005667900"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2005:0512JUD004622199"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2005:0706JUD004357798"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2006:0301JUD005658100"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2006:0316JUD005827800"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2007:1210JUD006969801"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2008:0129JUD001322903"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2008:0212JUD002190604"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2008:1112JUD003450397"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2009:0219JUD000345505"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2010:0329JUD000339403"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2010:0427JUD000000708"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2011:0707JUD002345903"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2012:0629JUD002739606"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2012:1213JUD003963009"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2014:0717JUD003254108"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2015:1015JUD002751008"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2016:0623JUD002026112"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2016:0705JUD002375507"],
+        ["ecli:ECLI:CE:ECHR:2017:1128JUD007250813","ecli:ECLI:CE:ECHR:2016:1020JUD000733413"],
+        ["ecli:ECLI:CE:ECHR:2018:0925JUD007663911","ecli:ECLI:CE:ECHR:2005:1019JUD003255596"],
+        ["ecli:ECLI:CE:ECHR:2018:0925JUD007663911","ecli:ECLI:CE:ECHR:2006:0711JUD005481000"],
+        ["ecli:ECLI:CE:ECHR:2018:0925JUD007663911","ecli:ECLI:CE:ECHR:2008:1204JUD003056204"],
+        ["ecli:ECLI:CE:ECHR:2018:0925JUD007663911","ecli:ECLI:CE:ECHR:2009:0918JUD001606490"],
+        ["ecli:ECLI:CE:ECHR:2018:0925JUD007663911","ecli:ECLI:CE:ECHR:2009:1015JUD001705606"],
+        ["ecli:ECLI:CE:ECHR:2018:0925JUD007663911","ecli:ECLI:CE:ECHR:2010:0601JUD002297805"],
+        ["ecli:ECLI:CE:ECHR:2018:0925JUD007663911","ecli:ECLI:CE:ECHR:2011:0707JUD002345903"],
+        ["ecli:ECLI:CE:ECHR:2018:0925JUD007663911","ecli:ECLI:CE:ECHR:2012:0207JUD003995408"],
+        ["ecli:ECLI:CE:ECHR:2018:0925JUD007663911","ecli:ECLI:CE:ECHR:2012:0403JUD003757504"],
+        ["ecli:ECLI:CE:ECHR:2018:0925JUD007663911","ecli:ECLI:CE:ECHR:2013:1112JUD000578608"],
+        ["ecli:ECLI:CE:ECHR:2018:0925JUD007663911","ecli:ECLI:CE:ECHR:2014:0717JUD004784808"],
+        ["ecli:ECLI:CE:ECHR:2018:0925JUD007663911","ecli:ECLI:CE:ECHR:2015:0616JUD006456909"],
+        ["ecli:ECLI:CE:ECHR:2018:0925JUD007663911","ecli:ECLI:CE:ECHR:2015:0928JUD002338009"],
+        ["ecli:ECLI:CE:ECHR:2018:0925JUD007663911","ecli:ECLI:CE:ECHR:2016:0426JUD001051110"],
+        ["ecli:ECLI:CE:ECHR:2008:0122JUD004354602","ecli:ECLI:CE:ECHR:2003:0708JUD003094396"],
+        ["ecli:ECLI:CE:ECHR:2008:0212JUD002190604","ecli:ECLI:CE:ECHR:1999:1216JUD002488894"],
+        ["ecli:ECLI:CE:ECHR:2008:0212JUD002190604","ecli:ECLI:CE:ECHR:2000:0406JUD002677295"],
+        ["ecli:ECLI:CE:ECHR:2008:0212JUD002190604","ecli:ECLI:CE:ECHR:2000:0406JUD003436997"],
+        ["ecli:ECLI:CE:ECHR:2008:0212JUD002190604","ecli:ECLI:CE:ECHR:2000:1019JUD003110796"],
+        ["ecli:ECLI:CE:ECHR:2008:0212JUD002190604","ecli:ECLI:CE:ECHR:2000:1026JUD003021096"],
+        ["ecli:ECLI:CE:ECHR:2008:0212JUD002190604","ecli:ECLI:CE:ECHR:2001:0322JUD003404496"],
+        ["ecli:ECLI:CE:ECHR:2008:0212JUD002190604","ecli:ECLI:CE:ECHR:2003:0708JUD003094396"],
+        ["ecli:ECLI:CE:ECHR:2008:0212JUD002190604","ecli:ECLI:CE:ECHR:2004:0408JUD007150301"],
+        ["ecli:ECLI:CE:ECHR:2008:0212JUD002190604","ecli:ECLI:CE:ECHR:2005:1110JUD004477498"],
+        ["ecli:ECLI:CE:ECHR:2007:1210JUD006969801","ecli:ECLI:CE:ECHR:1994:0923JUD001589089"],
+        ["ecli:ECLI:CE:ECHR:2007:1210JUD006969801","ecli:ECLI:CE:ECHR:1999:0121JUD002918395"],
+        ["ecli:ECLI:CE:ECHR:2007:1210JUD006969801","ecli:ECLI:CE:ECHR:1999:0520JUD002198093"],
+        ["ecli:ECLI:CE:ECHR:2007:1210JUD006969801","ecli:ECLI:CE:ECHR:1999:0708JUD002668295"],
+        ["ecli:ECLI:CE:ECHR:2007:1210JUD006969801","ecli:ECLI:CE:ECHR:2005:0204JUD004682799"],
+        ["ecli:ECLI:CE:ECHR:1998:0609JUD002267893","ecli:ECLI:CE:ECHR:1995:0926JUD001785191"],
+        ["ecli:ECLI:CE:ECHR:1998:0609JUD002267893","ecli:ECLI:CE:ECHR:1997:1125JUD001895491"],
+        ["ecli:ECLI:CE:ECHR:1998:0609JUD002267893","ecli:ECLI:CE:ECHR:1998:0130JUD001939292"]
     ].map(([source, target]) => ({ source, target }));
 
     let netSim = null;
@@ -749,10 +1901,11 @@ dissent                            True</div>
 
     /* ── Figure 2: decisions per year ─────────────────── */
     const yearData = [
-        [2000,18],[2001,22],[2002,25],[2003,28],[2004,31],[2005,35],[2006,42],
-        [2007,48],[2008,52],[2009,58],[2010,65],[2011,72],[2012,78],[2013,85],
-        [2014,92],[2015,108],[2016,125],[2017,138],[2018,152],[2019,168],
-        [2020,185],[2021,201],[2022,231],[2023,265],[2024,298],[2025,312],[2026,118]
+        [1994,2],[1995,3],[1996,13],[1997,8],[1998,15],[1999,63],[2000,26],
+        [2001,21],[2002,12],[2003,12],[2004,15],[2005,12],[2006,30],[2007,15],
+        [2008,18],[2009,18],[2010,18],[2011,12],[2012,26],[2013,13],[2014,20],
+        [2015,22],[2016,27],[2017,19],[2018,14],[2019,11],[2020,10],[2021,12],
+        [2022,9],[2023,13],[2024,5],[2025,6],[2026,4]
     ].map(([year, count]) => ({ year, count }));
 
     function renderTimeline() {
@@ -763,7 +1916,7 @@ dissent                            True</div>
         const m = { top: 12, right: 8, bottom: 30, left: 40 };
 
         const x = d3.scaleBand().domain(yearData.map(d => d.year)).range([m.left, w - m.right]).padding(0.25);
-        const y = d3.scaleLinear().domain([0, 320]).nice().range([h - m.bottom, m.top]);
+        const y = d3.scaleLinear().domain([0, 70]).nice().range([h - m.bottom, m.top]);
 
         svg.append('g').attr('transform', `translate(0,${h - m.bottom})`)
             .call(d3.axisBottom(x).tickValues(yearData.map(d => d.year).filter((_, i) => i % 4 === 0)))
@@ -784,7 +1937,7 @@ dissent                            True</div>
 
     /* ── Figure 3: dissent by article ─────────────────── */
     const dissentData = [
-        ["6",0.38],["3",0.31],["14",0.28],["8",0.25],["2",0.22],["10",0.19],["1",0.15],["5",0.12]
+        ["14",0.90],["2",0.88],["8",0.86],["10",0.84],["5",0.83],["1",0.82],["3",0.81],["6",0.79]
     ].map(([article, rate]) => ({ article, rate }));
 
     function renderDissent() {
@@ -795,7 +1948,7 @@ dissent                            True</div>
         const m = { top: 12, right: 8, bottom: 34, left: 40 };
 
         const x = d3.scaleBand().domain(dissentData.map(d => d.article)).range([m.left, w - m.right]).padding(0.35);
-        const y = d3.scaleLinear().domain([0, 0.4]).nice().range([h - m.bottom, m.top]);
+        const y = d3.scaleLinear().domain([0, 1]).nice().range([h - m.bottom, m.top]);
 
         svg.append('g').attr('transform', `translate(0,${h - m.bottom})`)
             .call(d3.axisBottom(x).tickFormat(d => 'Art. ' + d))
@@ -813,43 +1966,10 @@ dissent                            True</div>
             .attr('fill', 'var(--bar-danger)').attr('opacity', 0.85);
     }
 
-    /* ── Figure 4: timing ─────────────────────────────── */
-    const timingData = [
-        ["Level 1",22.1],["Level 2",19.3],["Level 3",15.7],["Art. 2",20.1],["Art. 6",20.1],["Art. 8",16.2]
-    ].map(([label, months]) => ({ label, months }));
-
-    function renderTiming() {
-        const svg = d3.select('#timing-svg');
-        svg.selectAll('*').remove();
-        const w = svgWidth('#timing-svg');
-        const h = +svg.attr('height');
-        const m = { top: 12, right: 8, bottom: 34, left: 40 };
-
-        const x = d3.scaleBand().domain(timingData.map(d => d.label)).range([m.left, w - m.right]).padding(0.35);
-        const y = d3.scaleLinear().domain([0, 25]).nice().range([h - m.bottom, m.top]);
-
-        svg.append('g').attr('transform', `translate(0,${h - m.bottom})`)
-            .call(d3.axisBottom(x))
-            .call(g => g.selectAll('text').attr('font-family', 'var(--mono)').attr('font-size', 9).attr('fill', 'var(--muted)'))
-            .call(g => g.selectAll('line, path').attr('stroke', 'var(--line)'));
-
-        svg.append('g').attr('transform', `translate(${m.left},0)`)
-            .call(d3.axisLeft(y).ticks(5))
-            .call(g => g.selectAll('text').attr('font-family', 'var(--mono)').attr('font-size', 9).attr('fill', 'var(--muted)'))
-            .call(g => g.selectAll('line, path').attr('stroke', 'var(--line)'));
-
-        svg.append('g').selectAll('rect').data(timingData).enter().append('rect')
-            .attr('x', d => x(d.label)).attr('y', d => y(d.months))
-            .attr('width', x.bandwidth()).attr('height', d => h - m.bottom - y(d.months))
-            .attr('fill', (d, i) => i < 3 ? 'var(--bar-tertiary)' : 'var(--bar-secondary)')
-            .attr('opacity', 0.85);
-    }
-
     function renderAll() {
         renderNetwork();
         renderTimeline();
         renderDissent();
-        renderTiming();
     }
 
     let resizeTimer;
