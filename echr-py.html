@@ -519,7 +519,7 @@
 
             <div class="essay-body">
 
-                <p class="lead">The European Court of Human Rights has issued more than twenty-nine thousand judgments since 1959, and HUDOC publishes them alongside its decisions, orders and advisory opinions. Most judgments cite earlier ones, and those references form a network that maps which decisions the Court keeps returning to and which it decided once and left behind. <strong>echr-py</strong> is a Python toolkit that turns HUDOC into research-ready datasets, covering search and download, citation extraction, and network export.</p>
+                <p class="lead">The European Court of Human Rights has issued more than twenty-nine thousand judgments since 1959, and HUDOC publishes them alongside its decisions, orders and advisory opinions. Most judgments cite earlier ones, and those references form a network that maps which decisions the Court keeps returning to and which it decided once and left behind. <strong><a href="https://github.com/niccoloridi/echr-py" target="_blank" rel="noopener">echr-py</a></strong> is a Python toolkit that turns HUDOC into research-ready datasets, covering search and download, citation extraction, and network export.</p>
 
                 <p>This page describes the data and the problems it poses, shows the toolkit's core commands with each one copyable, and uses both to replicate the central finding of Voeten and Lupu's 2011 study of precedent in international courts. The replication covers every Grand Chamber judgment the Court has issued from 1994 to 2026.</p>
 
@@ -563,7 +563,7 @@
 
                 <h2>II. The Core Functions</h2>
 
-                <p>Three commands handle most of the workflow, and you can copy each line separately.</p>
+                <p>Three commands handle most of the workflow, and you can copy each line separately. The package is on <a href="https://pypi.org/project/echr-py/" target="_blank" rel="noopener">PyPI</a>, and the source, issue tracker and full README are on <a href="https://github.com/niccoloridi/echr-py" target="_blank" rel="noopener">GitHub</a>.</p>
 
                 <h3>1. Search and download</h3>
 
@@ -821,7 +821,7 @@ dissent                            True</div>
 
                 <p>Everything above came out of the package in a handful of commands: a search against HUDOC, a citation resolution against the Court's own reference concordance, and a graph export to NetworkX. The pipeline covers the parts that are tedious and easy to get wrong, including pinning the language so that nothing is counted twice, resolving a printed citation to an exact document with a paragraph pinpoint where the text supplies one, and keeping provenance attached to every row.</p>
 
-                <p>The resolution step is where a citation graph is usually won or lost, because a resolver that quietly guesses will produce a network that looks reasonable and measures very little. <code>echr-py</code> keeps the two halves apart: <code>parse_scl_mentions</code> records what the judgment actually printed, and <code>resolve_citations</code> matches those mentions against the Court's authority table and reports what it could not place. In this corpus it declined to resolve 10,602 of 15,020 references, nearly all of them pointing at judgments outside the Grand Chamber, and it says so rather than inventing an edge. The package is on PyPI and the source is on GitHub.</p>
+                <p>The resolution step is where a citation graph is usually won or lost, because a resolver that quietly guesses will produce a network that looks reasonable and measures very little. <code>echr-py</code> keeps the two halves apart: <code>parse_scl_mentions</code> records what the judgment actually printed, and <code>resolve_citations</code> matches those mentions against the Court's authority table and reports what it could not place. In this corpus it declined to resolve 10,602 of 15,020 references, nearly all of them pointing at judgments outside the Grand Chamber, and it says so rather than inventing an edge. The package is on <a href="https://pypi.org/project/echr-py/" target="_blank" rel="noopener">PyPI</a> and the source is on <a href="https://github.com/niccoloridi/echr-py" target="_blank" rel="noopener">GitHub</a>.</p>
 
             </div>
         </article>
