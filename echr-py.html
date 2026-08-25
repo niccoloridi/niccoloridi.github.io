@@ -519,17 +519,17 @@
 
             <div class="essay-body">
 
-                <p class="lead">The European Court of Human Rights has published more than thirty thousand decisions since 1959. Each cites earlier ones. Those references form a network. It maps which decisions the Court keeps returning to and which it decided once and left behind. <strong>echr-py</strong> is a Python toolkit. It turns HUDOC, the Court's public database, into research-ready datasets: search and download, citation extraction, network export.</p>
+                <p class="lead">The European Court of Human Rights has published more than thirty thousand decisions since 1959, and each one cites earlier ones. Those references form a network that maps which decisions the Court keeps returning to and which it decided once and left behind. <strong>echr-py</strong> is a Python toolkit that turns HUDOC, the Court's public database, into research-ready datasets, covering search and download, citation extraction, and network export.</p>
 
-                <p>This page does three things. It describes the data and the problems it poses. It shows the toolkit's core commands, each one copyable. It uses both to replicate the central finding of Voeten and Lupu's 2011 study of precedent in international courts. That finding covers every Grand Chamber judgment the Court has issued from 1994 to 2026.</p>
+                <p>This page describes the data and the problems it poses, shows the toolkit's core commands with each one copyable, and uses both to replicate the central finding of Voeten and Lupu's 2011 study of precedent in international courts. The replication covers every Grand Chamber judgment the Court has issued from 1994 to 2026.</p>
 
                 <h2>I. The Data and the Question</h2>
 
-                <p>HUDOC publishes every judgment, decision, and order the Court issues. Each record is structured. It includes application number, case name, respondent state, the Convention articles at issue, the judgment date, an importance rating from 1 to 4, whether any judge wrote separately, and whether a Committee, a Chamber, or the Grand Chamber decided it. That structure makes automated analysis possible.</p>
+                <p>HUDOC publishes every judgment, decision, and order the Court issues, and each record is structured. A record carries the application number, case name, respondent state, the Convention articles at issue, the judgment date, an importance rating from 1 to 4, whether any judge wrote separately, and whether a Committee, a Chamber, or the Grand Chamber decided it. That structure is what makes automated analysis possible.</p>
 
-                <p>Voeten and Lupu asked a question simple to state and hard to answer by reading. Not all citations carry the same weight. A decision cited fifty times shapes European law more than one cited twice. So which decisions anchor doctrine, and why those?</p>
+                <p>Voeten and Lupu asked a question that is simple to state and hard to answer by reading. Citations carry different weight, so a decision cited fifty times shapes European law more than one cited twice. Which decisions anchor doctrine, and why those?</p>
 
-                <p>Their answer was strategic. International courts operate without coercive enforcement. They build legitimacy by embedding each new decision in a visible chain of past reasoning. Citation is not just reference. It is justification. The shape of the citation network tells you something about how the Court manages its own authority.</p>
+                <p>Their answer was strategic. International courts operate without coercive enforcement, so they build legitimacy by embedding each new decision in a visible chain of past reasoning. Citation does the work of justification, which means the shape of the citation network tells you something about how the Court manages its own authority.</p>
 
                 <div class="stat-row">
                     <div class="stat-box"><span class="num">524</span><span class="label">GC judgments</span></div>
@@ -540,12 +540,12 @@
 
                 <h3>The problems</h3>
 
-                <p><strong>Language.</strong> Judgments appear in several official languages. The same case is cited differently across them. <strong>Resolution.</strong> Not every reference resolves cleanly to a target document. Some name a case without an application number. <strong>Recency.</strong> The Court's output grows every year. Any date-bounded corpus over-represents recent decisions and under-represents older ones that have had time to accumulate citations. <strong>Selection.</strong> HUDOC holds published decisions. What was never published is invisible, and invisible in a way that is not random.</p>
+                <p><strong>Language.</strong> Judgments appear in several official languages, and the same case is cited differently across them. <strong>Resolution.</strong> Some references resolve cleanly to a target document, and others name a case without an application number. <strong>Recency.</strong> The Court's output grows every year, so any date-bounded corpus over-represents recent decisions and under-represents older ones that have had time to accumulate citations. <strong>Selection.</strong> HUDOC holds published decisions, and what was never published is invisible in a way that has its own pattern.</p>
 
                 <div class="note">
                     <div class="note-head">Welp &mdash; I double counted</div>
-                    <p>An earlier draft of this essay reported 1,048 Grand Chamber judgments. There are 524. I left the mistake in because it is the easiest one to make with this data and nothing about it looks like a mistake.</p>
-                    <p>The <code>search()</code> and <code>count</code> functions default to <code>languages=("ENG", "FRE")</code>. Almost every Grand Chamber judgment appears in both English and French. HUDOC stores each language version as a separate document with its own item ID. Ask for both and every judgment comes back twice. The number that lands is plausible. It sorts and filters like any other number.</p>
+                    <p>An earlier draft of this essay reported 1,048 Grand Chamber judgments. There are 524. I have left the mistake in because it is the easiest one to make with this data, and because nothing about it looks like a mistake.</p>
+                    <p>The <code>search()</code> and <code>count</code> functions default to <code>languages=("ENG", "FRE")</code>. Almost every Grand Chamber judgment appears in both English and French, and HUDOC stores each language version as a separate document with its own item ID. Ask for both and every judgment comes back twice. The number that lands is plausible, and it sorts and filters like any other number.</p>
                     <p>One line each way resolves it:</p>
                     <div class="terminal">
                         <div class="term-line"><span class="p">$</span><span class="cmd">echr-py count --body grand-chamber --collection JUDGMENTS</span><button class="copy-btn" data-cmd="echr-py count --body grand-chamber --collection JUDGMENTS">copy</button></div>
@@ -555,19 +555,19 @@
                         <div class="term-line"><span class="p">$</span><span class="cmd">echr-py count --body grand-chamber --collection JUDGMENTS --language FRE</span><button class="copy-btn" data-cmd="echr-py count --body grand-chamber --collection JUDGMENTS --language FRE">copy</button></div>
                         <div class="term-out">524</div>
                     </div>
-                    <p>524 and 524. Exactly double. That is the signature of the problem: a language artefact scales by a clean factor, where a real finding rarely does. The same trap runs through the whole collection. Its 58,427 &ldquo;judgments&rdquo; are 29,213 English and 29,214 French &ndash; and that stray extra one is a judgment with a French text and no English sibling. That is its own small lesson about what &ldquo;the corpus&rdquo; is.</p>
-                    <p>So: pin the language. Every figure below counts each judgment once.</p>
+                    <p>524 and 524, exactly double. A language artefact scales by a clean factor where a real finding rarely does, and that is the signature to watch for. The same trap runs through the whole collection: its 58,427 &ldquo;judgments&rdquo; are 29,213 English and 29,214 French, and the stray extra one is a judgment with a French text and no English sibling. It is a small lesson in what &ldquo;the corpus&rdquo; means.</p>
+                    <p>So pin the language. Every figure below counts each judgment once.</p>
                 </div>
 
-                <p>None of these are fatal. All of them shape what the numbers below can and cannot support.</p>
+                <p>All of these are manageable, and all of them shape what the numbers below can support.</p>
 
                 <h2>II. The Core Functions</h2>
 
-                <p>Three commands handle most of the workflow. You can copy each line separately.</p>
+                <p>Three commands handle most of the workflow, and you can copy each line separately.</p>
 
                 <h3>1. Search and download</h3>
 
-                <p>The <code>search()</code> function queries HUDOC by article, respondent state, date range, and importance level. It returns a typed collection with the metadata attached.</p>
+                <p>The <code>search()</code> function queries HUDOC by article, respondent state, date range, and importance level, and returns a typed collection with the metadata attached.</p>
 
                 <div class="terminal">
                     <div class="term-line"><span class="p">$</span><span class="cmd">pip install "echr-py[citations,analysis]"</span><button class="copy-btn" data-cmd='pip install "echr-py[citations,analysis]"'>copy</button></div>
@@ -582,7 +582,7 @@ Downloaded 87 cases (72 with full text)</div>
 
                 <h3>2. Citation extraction</h3>
 
-                <p>The <code>corpus build</code> pipeline parses the judgment text. It finds citations in the body, footnotes, and separate opinions. Then it resolves each one to a target document, using a paragraph pinpoint where the text provides one.</p>
+                <p>The <code>corpus build</code> pipeline parses the judgment text and finds citations in the body, the footnotes, and any separate opinions. It then resolves each one to a target document, using a paragraph pinpoint where the text provides one.</p>
 
                 <div class="terminal">
                     <div class="term-line"><span class="p">$</span><span class="cmd">echr-py corpus build --appno 46221/99 \</span><button class="copy-btn" data-cmd="echr-py corpus build --appno 46221/99 --rich-sections --citations --out ocalan/">copy</button></div>
@@ -602,7 +602,7 @@ dissent                            True</div>
 
                 <h3>3. Network export</h3>
 
-                <p>You can export the citation graph as JSON, GraphML, or a NetworkX object. Each edge represents a citation: case A cites case B.</p>
+                <p>You can export the citation graph as JSON, GraphML, or a NetworkX object, where each edge represents a citation from case A to case B.</p>
 
                 <div class="terminal">
                     <div class="term-line"><span class="p">$</span><span class="cmd">echr-py graph export --kind case-case \</span><button class="copy-btn" data-cmd="echr-py graph export --kind case-case --format json --in corpus/citations --out network.json">copy</button></div>
@@ -616,13 +616,13 @@ dissent                            True</div>
 
                 <h2>III. Replicating Voeten &amp; Lupu</h2>
 
-                <p>The replication measures <strong>in-degree centrality</strong>: how many other judgments cite a given one. High in-degree marks a hub &ndash; a judgment the Court keeps returning to when grounding a new holding.</p>
+                <p>The replication measures <strong>in-degree centrality</strong>, meaning how many other judgments cite a given one. High in-degree marks a hub, a judgment the Court keeps returning to when it grounds a new holding.</p>
 
-                <p>Which judgments go into the corpus matters more than the measure itself. Here are two corpora of exactly the same size, run through exactly the same pipeline.</p>
+                <p>Which judgments go into the corpus matters more than the measure itself. What follows is two corpora of exactly the same size, run through exactly the same pipeline.</p>
 
                 <h3>First corpus: a thin recent slice</h3>
 
-                <p>Take the Court's most recent 524 judgments. They run from 16 December 2025 to 23 July 2026, seven months of output across every bench. Their SCL fields carry 4,063 citations between them. Resolve those against the corpus itself and almost nothing lands.</p>
+                <p>Take the Court's most recent 524 judgments, running from 16 December 2025 to 23 July 2026, seven months of output across every bench. Their SCL fields carry 4,063 citations between them. Resolve those against the corpus itself and almost nothing lands.</p>
 
                 <div class="stat-row">
                     <div class="stat-box"><span class="num">524</span><span class="label">Judgments</span></div>
@@ -631,13 +631,13 @@ dissent                            True</div>
                     <div class="stat-box"><span class="num">1%</span><span class="label">Ever cited</span></div>
                 </div>
 
-                <p>Six edges from four thousand references. The network is absent, not just sparse. The median judgment cites nothing inside the corpus and is cited by nothing inside it.</p>
+                <p>Six edges from four thousand references. The median judgment in this corpus cites nothing inside it and is cited by nothing inside it.</p>
 
-                <p>You could write that up as a finding about the Court. A long tail, a few hubs, precedent thinly spread. But it is not a finding about the Court. It is a finding about the window. Judgments cite earlier judgments. In a seven-month frame almost every earlier judgment sits outside the frame. The 4,057 references that failed to resolve did not fail. They pointed out of the box. Cut a citation network anywhere in time and this is what falls out.</p>
+                <p>You could write that up as a finding about the Court, with a long tail, a few hubs, and precedent thinly spread. What it actually measures is the window. Judgments cite earlier judgments, and in a seven-month frame almost every earlier judgment sits outside the frame. The 4,057 references that failed to resolve were pointing out of the box. Cut a citation network anywhere in time and this is what falls out.</p>
 
                 <h3>Second corpus: the complete Grand Chamber</h3>
 
-                <p>Now take a corpus that is closed rather than clipped. Every Grand Chamber judgment the Court has handed down, 1994 to 2026. There are 524 of them. The same size as the slice above. That is a coincidence, and a convenient one.</p>
+                <p>Now take a corpus that is closed rather than clipped: every Grand Chamber judgment the Court has handed down between 1994 and 2026. There are 524 of them, the same size as the slice above, which is a coincidence and a convenient one.</p>
 
                 <div class="stat-row">
                     <div class="stat-box"><span class="num">525</span><span class="label">Nodes</span></div>
@@ -646,9 +646,9 @@ dissent                            True</div>
                     <div class="stat-box"><span class="num">1.61%</span><span class="label">Density</span></div>
                 </div>
 
-                <p>Same method, same number of judgments. The network is roughly seven hundred times denser: 1.61% against 0.0022%. 86% of Grand Chamber judgments are cited by at least one other Grand Chamber judgment. The median is cited six times. The most-cited is cited sixty-two times.</p>
+                <p>Same method, same number of judgments, and the network is roughly seven hundred times denser at 1.61% against 0.0022%. 86% of Grand Chamber judgments are cited by at least one other Grand Chamber judgment, the median is cited six times, and the most-cited is cited sixty-two times.</p>
 
-                <p>The reason is structural, not doctrinal. The Grand Chamber is where the Court sends what it means to settle. It is the bench that cites itself. The population is closed, so no citation falls off the edge of a window. It is small enough that its members genuinely refer to one another. It is old enough, thirty-two years, that the early judgments have had time to be picked up. This is the Court's own canon, and it behaves like one.</p>
+                <p>The explanation is structural. The Grand Chamber is where the Court sends what it means to settle, and it is the bench that cites itself. The population is closed, so no citation falls off the edge of a window. It is small enough that its members genuinely refer to one another, and old enough, at thirty-two years, that the early judgments have had time to be picked up. This is the Court's own canon, and it behaves like one.</p>
 
                 <div class="viz-full-network" id="viz-network">
                     <div class="network-wrapper" id="network-wrapper">
@@ -690,11 +690,11 @@ dissent                            True</div>
                         </div>
                     </div>
                 </div>
-                <p class="viz-caption">Figure 1 shows the complete Grand Chamber citation network. It has 513 judgments and all 4,416 citations between them. The colours come from community detection, not from Convention articles. Louvain modularity on the citation graph produced the clusters. Node size scales with in-degree. You can scroll to zoom, drag to pan, hover over a node to see its neighbours, and click for the full record. Click a cluster in the legend to mute it. (Twelve judgments that neither cite nor are cited within the corpus are omitted.)</p>
+                <p class="viz-caption">Figure 1 shows the complete Grand Chamber citation network, with 513 judgments and all 4,416 citations between them. The colours come from community detection rather than from Convention articles, using Louvain modularity on the citation graph, and node size scales with in-degree. You can scroll to zoom, drag to pan, hover over a node to see its neighbours, and click for the full record. Clicking a cluster in the legend mutes it. (Twelve judgments that neither cite nor are cited within the corpus are omitted.)</p>
 
                 <h3>The clusters are doctrinal</h3>
 
-                <p>The colouring above is not assigned. Louvain community detection only sees the edges (which judgment cites which). It knows nothing about Convention articles, dates, or respondent states. The algorithm returned eight clusters, and they map almost cleanly onto doctrinal areas.</p>
+                <p>The colouring comes out of the link structure. Louvain community detection sees only the edges, meaning which judgment cites which, and it knows nothing about Convention articles, dates, or respondent states. It returned eight clusters, and they map almost cleanly onto doctrinal areas.</p>
 
                 <div class="table-wrap">
                     <table class="data-table">
@@ -714,11 +714,11 @@ dissent                            True</div>
                     </table>
                 </div>
 
-                <p>The most interesting split is one the articles alone would not give you. Article 6 does not form a single cluster. It breaks into a civil limb (Roche, Z and Others – access to court, immunities) and a criminal limb (Gäfgen, Sejdović – evidence, trial in absentia). Each limb cites internally and rarely crosses over. The Court's own citation practice treats them as two bodies of law that happen to share a provision number. Nothing in the metadata says that. The edges do.</p>
+                <p>The most interesting split is one the articles alone would not give you. Article 6 breaks into two clusters, a civil limb (Roche, Z and Others, on access to court and immunities) and a criminal limb (Gäfgen, Sejdović, on evidence and trial in absentia). Each limb cites internally and rarely crosses over. The Court's own citation practice treats them as two bodies of law that happen to share a provision number, and that shows up in the edges rather than in any of the metadata.</p>
 
                 <h3>The hub cases</h3>
 
-                <p>These are the twelve most-cited Grand Chamber judgments. They are not obscure. These are the cases a Strasbourg lawyer would name from memory.</p>
+                <p>These are the twelve most-cited Grand Chamber judgments, and they are the cases a Strasbourg lawyer would name from memory.</p>
 
                 <div class="table-wrap">
                     <table class="data-table">
@@ -742,13 +742,13 @@ dissent                            True</div>
                     </table>
                 </div>
 
-                <p><em>K. and T. v. Finland</em> sits at the top with sixty-two citations. It is the reference point for the Court's Article 8 case law on taking children into care. <em>Kudła</em> created the effective-remedy requirement for excessive length of proceedings, and nearly everything that followed cites it. <em>Broniowski</em> was the first pilot judgment. <em>McCann</em>, from 1995, is still where Article 2 and lethal force begins. Age helps but does not decide: <em>Radomilja</em> is from 2018 and already has thirty-two citations, because it settled what &ldquo;scope of the case&rdquo; means.</p>
+                <p><em>K. and T. v. Finland</em> sits at the top with sixty-two citations, and it is the reference point for the Court's Article 8 case law on taking children into care. <em>Kudła</em> created the effective-remedy requirement for excessive length of proceedings, and nearly everything that followed cites it. <em>Broniowski</em> was the first pilot judgment. <em>McCann</em>, from 1995, is still where Article 2 and lethal force begins. Age helps, though it settles less than you would expect: <em>Radomilja</em> is from 2018 and already has thirty-two citations, because it settled what &ldquo;scope of the case&rdquo; means.</p>
 
                 <h3>What the Grand Chamber is made of</h3>
 
-                <p>The composition looks nothing like the Court's output as a whole. That is the point of having the bench at all.</p>
+                <p>The composition looks very different from the Court's output as a whole, which is the point of having the bench.</p>
 
-                <p><strong>Importance.</strong> HUDOC rates each judgment from 1 (case-law significance) down to 4. The Grand Chamber splits 387 / 112 / 14 / 11 &ndash; 74% at Level 1. Across the Court as a whole that ratio is inverted. Most of what Strasbourg does is apply settled law to new facts. The Grand Chamber is the designed exception.</p>
+                <p><strong>Importance.</strong> HUDOC rates each judgment from 1 (case-law significance) down to 4. The Grand Chamber splits 387 / 112 / 14 / 11, which puts 74% at Level 1. Across the Court as a whole that ratio runs the other way, because most of what Strasbourg does is apply settled law to new facts. The Grand Chamber is the designed exception.</p>
 
                 <div class="stat-row">
                     <div class="stat-box"><span class="num">387</span><span class="label">Level 1</span></div>
@@ -757,18 +757,18 @@ dissent                            True</div>
                     <div class="stat-box"><span class="num">11</span><span class="label">Level 4</span></div>
                 </div>
 
-                <p><strong>Separate opinions.</strong> 430 of the 524 judgments carry a separate opinion &ndash; 82%. Disagreement is the norm at this bench, not the exception. That follows from what gets referred to it: the questions that divide.</p>
+                <p><strong>Separate opinions.</strong> 430 of the 524 judgments carry a separate opinion, which is 82%. Disagreement is the normal condition at this bench, and it follows from what gets referred there: the questions that divide.</p>
 
                 <div class="viz-block" id="viz-dissent">
                     <svg id="dissent-svg" height="300"></svg>
                 </div>
                 <p class="viz-caption">Figure 2: Share of Grand Chamber judgments carrying a separate opinion, by Convention article.</p>
 
-                <p>The spread by article is narrow. The ordering is not the obvious one. Article 14, discrimination, draws separate opinions in 90% of the Grand Chamber cases where it is in issue &ndash; the highest of any article. Article 6, fair trial, draws them in 79%, the lowest. Discrimination turns on contested judgments about comparators and justification. Fair-trial questions at this level are more often technical. The bench agrees about procedure more readily than about equality.</p>
+                <p>The spread by article is narrow. Article 14, discrimination, draws separate opinions in 90% of the Grand Chamber cases where it is in issue, the highest of any article. Article 6, fair trial, draws them in 79%, the lowest. Discrimination turns on contested judgments about comparators and justification, while fair-trial questions at this level are more often technical. The bench agrees about procedure more readily than it agrees about equality.</p>
 
                 <h3>Temporal distribution</h3>
 
-                <p>Grand Chamber judgments run from 1994 to 2026, and the shape is not the rising curve the Court's overall docket shows. There is a spike in 1999 &ndash; 63 judgments, when Protocol 11 stood up the permanent Court and a backlog of Commission cases came through &ndash; then a fluctuating band of roughly ten to thirty a year, thinning to single figures since 2024. Referral is rare by design, and the bench has not grown with the caseload.</p>
+                <p>Grand Chamber judgments run from 1994 to 2026, and the curve differs from the Court's overall docket. There is a spike in 1999, with 63 judgments, when Protocol 11 stood up the permanent Court and a backlog of Commission cases came through. After that the count settles into a fluctuating band of roughly ten to thirty a year, thinning to single figures since 2024. Referral is rare by design, and the bench has not grown with the caseload.</p>
 
                 <div class="viz-block" id="viz-timeline">
                     <svg id="timeline-svg" height="300"></svg>
@@ -777,7 +777,7 @@ dissent                            True</div>
 
                 <h3>Respondent states</h3>
 
-                <p>The United Kingdom leads with 68 Grand Chamber judgments, then Türkiye (58), Italy (49), and France (46). That ordering differs from the Court's overall docket, where Türkiye and Russia dominate by sheer volume. Referral to the Grand Chamber tracks legal novelty, not case count: a state can generate thousands of repetitive applications and very few referrals.</p>
+                <p>The United Kingdom leads with 68 Grand Chamber judgments, followed by Türkiye (58), Italy (49), and France (46). That ordering differs from the Court's overall docket, where Türkiye and Russia dominate by sheer volume. Referral to the Grand Chamber tracks legal novelty rather than case count, so a state can generate thousands of repetitive applications and very few referrals.</p>
 
                 <div class="table-wrap">
                     <table class="data-table">
@@ -797,31 +797,31 @@ dissent                            True</div>
                     </table>
                 </div>
 
-                <p><strong>Articles.</strong> Article 41, just satisfaction, appears in 307 judgments, for the mechanical reason that it is engaged whenever a violation is found. Among the substantive provisions Article 6 leads with 205, then Article 35 (admissibility) with 186, Article 8 with 123, Article 14 with 87, and Article 10 with 83.</p>
+                <p><strong>Articles.</strong> Article 41, just satisfaction, appears in 307 judgments, for the mechanical reason that it is engaged whenever a violation is found. Among the substantive provisions Article 6 leads with 205, followed by Article 35 (admissibility) with 186, Article 8 with 123, Article 14 with 87, and Article 10 with 83.</p>
 
                 <h2>IV. All the interesting things you can do with this</h2>
 
-                <p><strong>Temporal trajectories of doctrine.</strong> Does Article 6 jurisprudence follow a straight line, or does it reverse direction? When does a case move from obscure to central? Track a single decision's importance year by year and you get a curve, not a single number.</p>
+                <p><strong>Temporal trajectories of doctrine.</strong> Does Article 6 jurisprudence follow a straight line, or does it reverse direction? When does a case move from obscure to central? Track a single decision's in-degree year by year and you get a curve rather than a single number.</p>
 
-                <p><strong>Citation sentiment.</strong> A citation can build on a case, distinguish it into irrelevance, or overrule it outright. The bare edge does not tell you which. Parse the surrounding sentence and the network acquires a sign.</p>
+                <p><strong>Citation sentiment.</strong> A citation can build on a case, distinguish it into irrelevance, or overrule it outright, and the bare edge does not tell you which. Parse the surrounding sentence and the network acquires a sign.</p>
 
                 <p><strong>Judge influence.</strong> Which judges write the decisions that later get cited? Do particular drafting styles or reasoning structures propagate through the network?</p>
 
                 <p><strong>Network evolution.</strong> Does the graph get denser over time, or does it thin out? Are there structural breaks, moments where the citation pattern reorganises around a new anchor?</p>
 
-                <p><strong>Article co-occurrence.</strong> Which articles are pleaded together? Does Article 6 always travel with Article 13? The unexpected pairings show where the interesting tensions are.</p>
+                <p><strong>Article co-occurrence.</strong> Which articles are pleaded together, and does Article 6 always travel with Article 13? The unexpected pairings show where the interesting tensions are.</p>
 
                 <p><strong>Dissent as a leading indicator.</strong> Do dissents in hub cases become majority doctrine later? If they do, dissent patterns forecast where the law is about to move.</p>
 
                 <p><strong>State-level networks.</strong> Build a separate graph per respondent. Do Turkish and German cases cite different precedents for the same article?</p>
 
-                <p>The toolkit supplies the pipeline. HUDOC supplies the documents. The questions are yours.</p>
+                <p>The toolkit supplies the pipeline and HUDOC supplies the documents. The questions are yours.</p>
 
                 <h2>Coda</h2>
 
-                <p>524 judgments and 4,416 citations show a Court reasoning in public and building on itself as it goes. The hubs are not accidents. They are the decisions that survived being tested against new facts and kept their footing. The Court returns to them because returning to them is how it makes a new holding look inevitable rather than invented.</p>
+                <p>524 judgments and 4,416 citations show a Court reasoning in public and building on itself as it goes. The hubs are the decisions that survived being tested against new facts and kept their footing, and the Court returns to them because returning to them is how it makes a new holding look inevitable rather than invented.</p>
 
-                <p>Voeten and Lupu argued that citation networks reveal a legitimation strategy. The Grand Chamber corpus is consistent with that: a small canon carries most of the weight, foundational judgments hold their position across decades, and 82% of the bench's output carries a separate opinion &ndash; the disagreement is on the record, not hidden. The network is not random; it is the Court reasoning itself into authority.</p>
+                <p>Voeten and Lupu argued that citation networks reveal a legitimation strategy, and the Grand Chamber corpus is consistent with that. A small canon carries most of the weight, foundational judgments hold their position across decades, and 82% of the bench's output carries a separate opinion, so the disagreement sits on the record. What the network shows is the Court reasoning itself into authority.</p>
 
             </div>
         </article>
