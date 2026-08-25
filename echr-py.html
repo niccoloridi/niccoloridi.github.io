@@ -519,7 +519,7 @@
 
             <div class="essay-body">
 
-                <p class="lead">The European Court of Human Rights has published more than thirty thousand decisions since 1959, and each one cites earlier ones. Those references form a network that maps which decisions the Court keeps returning to and which it decided once and left behind. <strong>echr-py</strong> is a Python toolkit that turns HUDOC, the Court's public database, into research-ready datasets, covering search and download, citation extraction, and network export.</p>
+                <p class="lead">The European Court of Human Rights has issued more than twenty-nine thousand judgments since 1959, and HUDOC publishes them alongside its decisions, orders and advisory opinions. Most judgments cite earlier ones, and those references form a network that maps which decisions the Court keeps returning to and which it decided once and left behind. <strong>echr-py</strong> is a Python toolkit that turns HUDOC into research-ready datasets, covering search and download, citation extraction, and network export.</p>
 
                 <p>This page describes the data and the problems it poses, shows the toolkit's core commands with each one copyable, and uses both to replicate the central finding of Voeten and Lupu's 2011 study of precedent in international courts. The replication covers every Grand Chamber judgment the Court has issued from 1994 to 2026.</p>
 
@@ -529,7 +529,7 @@
 
                 <p>Voeten and Lupu asked a question that is simple to state and hard to answer by reading. Citations carry different weight, so a decision cited fifty times shapes European law more than one cited twice. Which decisions anchor doctrine, and why those?</p>
 
-                <p>Their answer was strategic. International courts operate without coercive enforcement, so they build legitimacy by embedding each new decision in a visible chain of past reasoning. Citation does the work of justification, which means the shape of the citation network tells you something about how the Court manages its own authority.</p>
+                <p>International courts operate without coercive enforcement, so they build legitimacy by embedding each new decision in a visible chain of past reasoning. On that account citation does the work of justification, and the shape of the citation network tells you something about how the Court manages its own authority.</p>
 
                 <div class="stat-row">
                     <div class="stat-box"><span class="num">524</span><span class="label">GC judgments</span></div>
@@ -631,7 +631,7 @@ dissent                            True</div>
                     <div class="stat-box"><span class="num">1%</span><span class="label">Ever cited</span></div>
                 </div>
 
-                <p>Six edges from four thousand references. The median judgment in this corpus cites nothing inside it and is cited by nothing inside it.</p>
+                <p>Six edges came out of four thousand references, and the median judgment in this corpus cites nothing inside it and is cited by nothing inside it.</p>
 
                 <p>You could write that up as a finding about the Court, with a long tail, a few hubs, and precedent thinly spread. What it actually measures is the window. Judgments cite earlier judgments, and in a seven-month frame almost every earlier judgment sits outside the frame. The 4,057 references that failed to resolve were pointing out of the box. Cut a citation network anywhere in time and this is what falls out.</p>
 
@@ -648,7 +648,7 @@ dissent                            True</div>
 
                 <p>Same method, same number of judgments, and the network is roughly seven hundred times denser at 1.61% against 0.0022%. 86% of Grand Chamber judgments are cited by at least one other Grand Chamber judgment, the median is cited six times, and the most-cited is cited sixty-two times.</p>
 
-                <p>The explanation is structural. The Grand Chamber is where the Court sends what it means to settle, and it is the bench that cites itself. The population is closed, so no citation falls off the edge of a window. It is small enough that its members genuinely refer to one another, and old enough, at thirty-two years, that the early judgments have had time to be picked up. This is the Court's own canon, and it behaves like one.</p>
+                <p>The Grand Chamber is where the Court sends what it means to settle, and it is the bench that cites itself. The population is closed, so no citation falls off the edge of a window. It is small enough that its members genuinely refer to one another, and old enough, at thirty-two years, that the early judgments have had time to be picked up. This is the Court's own canon, and it behaves like one.</p>
 
                 <div class="viz-full-network" id="viz-network">
                     <div class="network-wrapper" id="network-wrapper">
@@ -694,7 +694,7 @@ dissent                            True</div>
 
                 <h3>The clusters are doctrinal</h3>
 
-                <p>The colouring comes out of the link structure. Louvain community detection sees only the edges, meaning which judgment cites which, and it knows nothing about Convention articles, dates, or respondent states. It returned eight clusters, and they map almost cleanly onto doctrinal areas.</p>
+                <p>Louvain community detection sees only the edges, meaning which judgment cites which, and it knows nothing about Convention articles, dates, or respondent states. It returned eight clusters from the link structure alone, and they map almost cleanly onto doctrinal areas.</p>
 
                 <div class="table-wrap">
                     <table class="data-table">
@@ -764,7 +764,7 @@ dissent                            True</div>
                 </div>
                 <p class="viz-caption">Figure 2: Share of Grand Chamber judgments carrying a separate opinion, by Convention article.</p>
 
-                <p>The spread by article is narrow. Article 14, discrimination, draws separate opinions in 90% of the Grand Chamber cases where it is in issue, the highest of any article. Article 6, fair trial, draws them in 79%, the lowest. Discrimination turns on contested judgments about comparators and justification, while fair-trial questions at this level are more often technical. The bench agrees about procedure more readily than it agrees about equality.</p>
+                <p>Article 14, discrimination, draws separate opinions in 90% of the Grand Chamber cases where it is in issue, which is the highest of any article, and Article 6, fair trial, draws them in 79%, the lowest. Discrimination turns on contested judgments about comparators and justification, while fair-trial questions at this level are more often technical. The bench agrees about procedure more readily than it agrees about equality.</p>
 
                 <h3>Temporal distribution</h3>
 
@@ -819,9 +819,9 @@ dissent                            True</div>
 
                 <h2>Coda</h2>
 
-                <p>524 judgments and 4,416 citations show a Court reasoning in public and building on itself as it goes. The hubs are the decisions that survived being tested against new facts and kept their footing, and the Court returns to them because returning to them is how it makes a new holding look inevitable rather than invented.</p>
+                <p>Everything above came out of the package in a handful of commands: a search against HUDOC, a citation resolution against the Court's own reference concordance, and a graph export to NetworkX. The pipeline covers the parts that are tedious and easy to get wrong, including pinning the language so that nothing is counted twice, resolving a printed citation to an exact document with a paragraph pinpoint where the text supplies one, and keeping provenance attached to every row.</p>
 
-                <p>Voeten and Lupu argued that citation networks reveal a legitimation strategy, and the Grand Chamber corpus is consistent with that. A small canon carries most of the weight, foundational judgments hold their position across decades, and 82% of the bench's output carries a separate opinion, so the disagreement sits on the record. What the network shows is the Court reasoning itself into authority.</p>
+                <p>The resolution step is where a citation graph is usually won or lost, because a resolver that quietly guesses will produce a network that looks reasonable and measures very little. <code>echr-py</code> keeps the two halves apart: <code>parse_scl_mentions</code> records what the judgment actually printed, and <code>resolve_citations</code> matches those mentions against the Court's authority table and reports what it could not place. In this corpus it declined to resolve 10,602 of 15,020 references, nearly all of them pointing at judgments outside the Grand Chamber, and it says so rather than inventing an edge. The package is on PyPI and the source is on GitHub.</p>
 
             </div>
         </article>
