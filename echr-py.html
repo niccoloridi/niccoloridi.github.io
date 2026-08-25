@@ -529,13 +529,6 @@
 
                 <p>International courts operate without coercive enforcement, so they build legitimacy by embedding each new decision in a visible chain of past reasoning. On that account citation does the work of justification, and the shape of the citation network tells you something about how the Court manages its own authority.</p>
 
-                <div class="stat-row">
-                    <div class="stat-box"><span class="num">524</span><span class="label">GC judgments</span></div>
-                    <div class="stat-box"><span class="num">525</span><span class="label">Cases in network</span></div>
-                    <div class="stat-box"><span class="num">4,416</span><span class="label">Citation edges</span></div>
-                    <div class="stat-box"><span class="num">32</span><span class="label">Years covered</span></div>
-                </div>
-
                 <h3>The problems</h3>
 
                 <p><strong>Language.</strong> Judgments appear in several official languages, and the same case is cited differently across them. <strong>Resolution.</strong> Some references resolve cleanly to a target document, and others name a case without an application number. <strong>Recency.</strong> The Court's output grows every year, so any date-bounded corpus over-represents recent decisions and under-represents older ones that have had time to accumulate citations. <strong>Selection.</strong> HUDOC holds published decisions, and what was never published is invisible in a way that has its own pattern.</p>
@@ -622,13 +615,6 @@ dissent                            True</div>
 
                 <p>Take the Court's most recent 524 judgments, running from 16 December 2025 to 23 July 2026, seven months of output across every bench. Their SCL fields carry 4,063 citations between them. Resolve those against the corpus itself and almost nothing lands.</p>
 
-                <div class="stat-row">
-                    <div class="stat-box"><span class="num">524</span><span class="label">Judgments</span></div>
-                    <div class="stat-box"><span class="num">4,063</span><span class="label">Citations made</span></div>
-                    <div class="stat-box"><span class="num">6</span><span class="label">Edges inside corpus</span></div>
-                    <div class="stat-box"><span class="num">1%</span><span class="label">Ever cited</span></div>
-                </div>
-
                 <p>Six edges came out of four thousand references, and the median judgment in this corpus cites nothing inside it and is cited by nothing inside it.</p>
 
                 <p>You could write that up as a finding about the Court, with a long tail, a few hubs, and precedent thinly spread. What it actually measures is the window. Judgments cite earlier judgments, and in a seven-month frame almost every earlier judgment sits outside the frame. The 4,057 references that failed to resolve were pointing out of the box. Cut a citation network anywhere in time and this is what falls out.</p>
@@ -637,14 +623,7 @@ dissent                            True</div>
 
                 <p>Now take a corpus that is closed rather than clipped: every Grand Chamber judgment the Court has handed down between 1994 and 2026. There are 524 of them, the same size as the slice above, which is a coincidence and a convenient one.</p>
 
-                <div class="stat-row">
-                    <div class="stat-box"><span class="num">525</span><span class="label">Nodes</span></div>
-                    <div class="stat-box"><span class="num">4,416</span><span class="label">Edges</span></div>
-                    <div class="stat-box"><span class="num">8.41</span><span class="label">Mean in-degree</span></div>
-                    <div class="stat-box"><span class="num">1.61%</span><span class="label">Density</span></div>
-                </div>
-
-                <p>Same method, same number of judgments, and the network is roughly seven hundred times denser at 1.61% against 0.0022%. 86% of Grand Chamber judgments are cited by at least one other Grand Chamber judgment, the median is cited six times, and the most-cited is cited sixty-two times.</p>
+                <p>Same method, same number of judgments, and the network is roughly seven hundred times denser at 1.61% against 0.0022%, with a mean in-degree of 8.41. 86% of Grand Chamber judgments are cited by at least one other Grand Chamber judgment, the median is cited six times, and the most-cited is cited sixty-two times.</p>
 
                 <p>The Grand Chamber is where the Court sends what it means to settle, and it is the bench that cites itself. The population is closed, so no citation falls off the edge of a window. It is small enough that its members genuinely refer to one another, and old enough, at thirty-two years, that the early judgments have had time to be picked up. This is the Court's own canon, and it behaves like one.</p>
 
@@ -747,13 +726,6 @@ dissent                            True</div>
                 <p>The composition looks very different from the Court's output as a whole, which is the point of having the bench.</p>
 
                 <p><strong>Importance.</strong> HUDOC rates each judgment from 1 (case-law significance) down to 4. The Grand Chamber splits 387 / 112 / 14 / 11, which puts 74% at Level 1. Across the Court as a whole that ratio runs the other way, because most of what Strasbourg does is apply settled law to new facts. The Grand Chamber is the designed exception.</p>
-
-                <div class="stat-row">
-                    <div class="stat-box"><span class="num">387</span><span class="label">Level 1</span></div>
-                    <div class="stat-box"><span class="num">112</span><span class="label">Level 2</span></div>
-                    <div class="stat-box"><span class="num">14</span><span class="label">Level 3</span></div>
-                    <div class="stat-box"><span class="num">11</span><span class="label">Level 4</span></div>
-                </div>
 
                 <p><strong>Separate opinions.</strong> 430 of the 524 judgments carry a separate opinion, which is 82%. Disagreement is the normal condition at this bench, and it follows from what gets referred there: the questions that divide.</p>
 
