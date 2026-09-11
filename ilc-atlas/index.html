@@ -96,7 +96,7 @@
         <p id="topic-description">Official documents arranged by their own date across the institutions that produced or received them. Select a topic, then open a document to inspect its source routes and recorded connections.</p>
         <div class="controls">
           <label>Topic<select id="topic-filter"><option value="">Loading topics…</option></select></label>
-          <label>Institutional lane<select id="lane-filter"><option value="all">All lanes</option><option value="secretariat">Secretariat</option><option value="special_rapporteur">Special Rapporteur</option><option value="governments">Governments</option><option value="commission">ILC</option><option value="annual_report">ILC reports</option><option value="un">Sixth Committee / GA</option></select></label>
+          <label>Institutional lane<select id="lane-filter"><option value="all">All lanes</option><option value="secretariat">Secretariat</option><option value="special_rapporteur">Special Rapporteur</option><option value="governments">Governments</option><option value="commission">ILC</option><option value="annual_report">ILC reports</option><option value="un">Sixth Committee / GA</option><option value="unknown">Institution unverified</option></select></label>
           <label>Find a document<input id="search" type="search" placeholder="Symbol or title" autocomplete="off"></label>
           <span class="count" id="count" aria-live="polite">Loading…</span>
         </div>
@@ -119,12 +119,17 @@
   </div>
   <dialog id="help"><div class="help-body"><button id="help-close" aria-label="Close help">×</button><h2>How to read ILC Atlas</h2><p>Each compact card is a document, not a prose “event”. Its column records institutional origin or function; its vertical position follows the strongest available document-controlled date.</p><p>Two or more consecutive meeting records that share one evidenced range—or form a compact sequence of exact meeting dates—are shown as a shorter stack. Every record and exact date remains separately openable.</p><p>Open a card for official EN/FR routes and typed documentary connections. A connection records what the sources support—it does not, by itself, claim influence or causation.</p><p>This public alpha covers all 66 topics in the frozen Analytical Guide snapshot. Coverage and full text remain incomplete and are identified rather than inferred.</p></div></dialog>
   <noscript><p class="noscript">ILC Atlas requires JavaScript to arrange and filter the documentary lanes.</p></noscript>
+  <style>
+    /* Author grid/block rules must not override the HTML hidden attribute. */
+    [hidden] { display: none !important; }
+    .lane-unknown { --lane: #888; grid-column: 2 / -1; }
+  </style>
   <script>
   (()=>{
-    const lanes={secretariat:'Secretariat',special_rapporteur:'Special Rapporteur',governments:'Governments',commission:'ILC',annual_report:'ILC report',un:'Sixth Committee / GA'};
+    const lanes={secretariat:'Secretariat',special_rapporteur:'Special Rapporteur',governments:'Governments',commission:'ILC',annual_report:'ILC report',un:'Sixth Committee / GA',unknown:'Institution unverified'};
     const types={special_rapporteur_report:'SR report',special_rapporteur_working_paper:'SR paper',drafting_committee_text:'Drafting Committee',annual_report:'ILC report',topical_summary:'Topical summary',summary_record:'Meeting record',government_comments:'Government comments',secretariat_memorandum_or_study:'Secretariat study',secretariat_note:'Secretariat note',working_group_report:'Working Group',final_or_draft_outcome:'Draft / final text',agenda_or_programme:'Programme',general_assembly_resolution:'GA resolution',unclassified:'Document'};
     const relations={responds_to:['responds to','is responded to by'],comments_on:['comments on','receives comments in'],discusses:['discusses','is discussed in'],transmits:['transmits','is transmitted by'],incorporates:['incorporates','is incorporated in'],revises_draft_in:['revises text in','is revised by'],reported_in:['is reported in','reports'],adopted_as:['is adopted as','adopts'],general_assembly_action_on:['records GA action on','has GA action recorded in'],reprinted_as:['is reprinted as','reprints'],addendum_to:['is an addendum to','has addendum'],corrigendum_to:['is a corrigendum to','has corrigendum']};
-    const state={index:null,data:null,topic:'',lane:'all',query:'',selected:null,cache:new Map()};
+    const state={index:null,data:null,topic:'',lane:'all',query:'',selected:null,cache:new Map(),request:0,controller:null};
     const $=id=>document.getElementById(id);const escape=value=>String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
     function typeOf(work){return work.type&&work.type!=='unclassified'?work.type:'document'}
     function ordinal(value){const n=Number(value),mod100=n%100;if(mod100>=11&&mod100<=13)return`${n}th`;return`${n}${{1:'st',2:'nd',3:'rd'}[n%10]||'th'}`}
@@ -139,21 +144,22 @@
       return work.symbol;
     }
     function route(symbol,language){return `https://docs.un.org/${language}/${symbol.split('/').map(encodeURIComponent).join('/')}`}
-    function meetingNumber(work){const match=work.symbol.match(/\/SR\.(\d+)$/i);return match?Number(match[1]):null}
+    function connectionControl(other,content){return state.data.works.some(work=>work.id===other.work_id)?`<button data-open="${escape(other.work_id)}">${content}</button>`:`<a href="${route(other.symbol,'en')}" target="_blank" rel="noopener">${content}<small>Outside this topic · official document ↗</small></a>`}
+    function meetingNumber(work){const match=work.symbol.match(/^A\/CN\.4\/SR\.(\d+)$/i);return work.lane==='commission'&&match?Number(match[1]):null}
     function exactDateGap(left,right){const a=Date.parse(`${left}T00:00:00Z`),b=Date.parse(`${right}T00:00:00Z`);return Number.isFinite(a)&&Number.isFinite(b)?(b-a)/86400000:null}
     function stackDate(works){const first=works[0].date,last=works.at(-1).date;return first===last?first:`${first} to ${last}`}
     function groupedRows(works){
       const rows=[];
       for(let index=0;index<works.length;){
         const work=works[index];
-        if(typeOf(work)==='summary_record'&&work.date_precision==='range'){
+        if(meetingNumber(work)!==null&&typeOf(work)==='summary_record'&&work.date_precision==='range'){
           const matching=[];let cursor=index;
-          while(cursor<works.length){const candidate=works[cursor];if(typeOf(candidate)!=='summary_record'||candidate.date!==work.date)break;matching.push(candidate);cursor++}
+          while(cursor<works.length){const candidate=works[cursor];if(meetingNumber(candidate)===null||typeOf(candidate)!=='summary_record'||candidate.date_precision!=='range'||candidate.date!==work.date)break;matching.push(candidate);cursor++}
           matching.sort((a,b)=>(meetingNumber(a)??Infinity)-(meetingNumber(b)??Infinity));let run=[];
           const flush=()=>{if(run.length>=2)rows.push({kind:'meetings',works:run});else run.forEach(item=>rows.push({kind:'document',work:item}));run=[]};
           matching.forEach(candidate=>{const prior=run.at(-1);if(prior&&meetingNumber(candidate)!==meetingNumber(prior)+1)flush();run.push(candidate)});flush();index=cursor;continue;
         }
-        if(typeOf(work)==='summary_record'&&work.date_precision==='day'){
+        if(meetingNumber(work)!==null&&typeOf(work)==='summary_record'&&work.date_precision==='day'){
           const run=[work];let cursor=index+1;
           while(cursor<works.length){const candidate=works[cursor],prior=run.at(-1),gap=exactDateGap(prior.date,candidate.date);if(typeOf(candidate)!=='summary_record'||candidate.date_precision!=='day'||meetingNumber(candidate)!==meetingNumber(prior)+1||gap===null||gap<0||gap>4)break;run.push(candidate);cursor++}
           if(run.length>=2){rows.push({kind:'meetings',works:run});index=cursor;continue}
@@ -165,7 +171,7 @@
     function render(){
       if(!state.data)return;
       document.querySelectorAll('.row').forEach(node=>node.remove());$('loading')?.remove();$('no-results')?.remove();$('no-documents')?.remove();
-      if(!state.data.works.length){const p=document.createElement('p');p.className='empty';p.id='no-documents';p.textContent='No documents are recorded for this topic.';$('grid').appendChild(p);return}
+      if(!state.data.works.length){const p=document.createElement('p');p.className='empty';p.id='no-documents';p.textContent='No documents are recorded for this topic.';$('grid').appendChild(p);$('count').textContent='0 of 0 documents';return}
       groupedRows(state.data.works).forEach(item=>{const work=item.works?.[0]||item.work;const represented=item.works||[item.work];const row=document.createElement('div');row.className=`row${item.kind==='meetings'?' compact':''}`;
         row.dataset.lane=work.lane;row.dataset.count=String(represented.length);row.dataset.search=represented.map(candidate=>`${candidate.symbol} ${titleOf(candidate)}`).join(' ').toLowerCase();
         const displayDate=item.kind==='meetings'?stackDate(item.works):work.date;const displayKind=item.kind==='meetings'&&item.works.every(candidate=>candidate.date_precision==='day')?'meeting dates':work.date_kind;
@@ -185,7 +191,7 @@
     function openStack(works){state.selected=null;$('shell').classList.add('has-reader');$('reader-body').innerHTML=`<span class="eyebrow">MEETING RECORDS</span><h2>${works.length} consecutive ILC plenary records</h2><p class="reader-title">${escape(stackDate(works)||'Date range pending')}</p><ul class="connections">${works.map(work=>`<li><button data-open="${escape(work.id)}"><b><code>${escape(work.symbol)}</code></b><small>${escape(work.date||'Date pending')} · ${escape(titleOf(work))}</small></button></li>`).join('')}</ul>`;$('reader-body').querySelectorAll('[data-open]').forEach(button=>button.addEventListener('click',()=>open(button.dataset.open)));if(innerWidth<=760)scrollTo(0,0)}
     function open(id,push=true){const work=state.data.works.find(w=>w.id===id);if(!work)return;state.selected=id;$('shell').classList.add('has-reader');
       document.querySelectorAll('.card').forEach(c=>c.setAttribute('aria-selected',String(c.dataset.id===id)));const context=state.data.contexts[id]||{connections:[],association_ids:[]};
-      const held=new Set((work.manifestations||[]).map(m=>m.language));const connectionHTML=(context.connections||[]).map(c=>{const other=c.other_work;if(!other)return'';const pair=relations[c.edge_type]||[c.edge_type.replaceAll('_',' '),c.edge_type.replaceAll('_',' ')];const label=pair[c.direction==='incoming'?1:0];return `<li><button data-open="${escape(other.work_id)}"><b>${escape(label)} <code>${escape(other.symbol)}</code></b><small>${escape(titleOf({symbol:other.symbol,title:other.title,date:other.document_date}))} · ${escape(c.status)}</small></button></li>`}).join('');
+      const held=new Set((work.manifestations||[]).map(m=>m.language));const connectionHTML=(context.connections||[]).map(c=>{const other=c.other_work;if(!other)return'';const pair=relations[c.edge_type]||[c.edge_type.replaceAll('_',' '),c.edge_type.replaceAll('_',' ')];const label=pair[c.direction==='incoming'?1:0];return `<li>${connectionControl(other,`<b>${escape(label)} <code>${escape(other.symbol)}</code></b><small>${escape(titleOf({symbol:other.symbol,title:other.title,date:other.document_date}))} · ${escape(c.status)}</small>`)}</li>`}).join('');
       const associations=(context.association_ids||[]).map(id=>state.data.accounts[id]).filter(Boolean).map(a=>`<details class="context"><summary>${escape((a.document_role||'Official Guide evidence').replaceAll('_',' '))}${a.document_locator?` · ${escape(a.document_locator)}`:''}</summary><p>${escape(a.description)}</p></details>`).join('');
       $('reader-body').innerHTML=`<span class="eyebrow">${escape(types[typeOf(work)]||typeOf(work).replaceAll('_',' '))}</span><h2 class="mono">${escape(work.symbol)}</h2><p class="reader-title">${escape(titleOf(work))}</p><div class="meta"><span>${escape(work.date||'Date pending')}</span><span>${escape(work.date_kind||'unresolved date')}</span><span>${escape(lanes[work.lane]||work.lane)}</span><span>${escape(work.quality||'not extracted')}</span></div><h3>Official document</h3><div class="source-actions"><a href="${route(work.symbol,'en')}" target="_blank" rel="noopener">${held.has('en')?'Open English':'Look up English'} ↗</a><a href="${route(work.symbol,'fr')}" target="_blank" rel="noopener">${held.has('fr')?'Open French':'Look up French'} ↗</a></div><h3>Document connections</h3>${connectionHTML?`<ul class="connections">${connectionHTML}</ul>`:'<p>No reviewed directional document connection is recorded yet.</p>'}${associations?`<h3>Official Guide context</h3>${associations}`:''}`;
       $('reader-body').querySelectorAll('[data-open]').forEach(button=>button.addEventListener('click',()=>open(button.dataset.open)));
@@ -195,11 +201,13 @@
     function close(push=true){state.selected=null;$('shell').classList.remove('has-reader');document.querySelectorAll('.card').forEach(c=>c.setAttribute('aria-selected','false'));if(push){const url=new URL(location.href);url.searchParams.delete('doc');history.pushState({},'',url)}}
     async function loadTopic(topicId,push=true){
       const topic=state.index.topics.find(item=>item.id===topicId);if(!topic)return;
+      const request=++state.request;state.controller?.abort();state.controller=new AbortController();
       state.topic=topicId;state.data=null;state.selected=null;$('shell').classList.remove('has-reader');$('topic-filter').value=topicId;$('topic-title').textContent=topic.title;
       $('topic-description').textContent=`${topic.group} · ${topic.document_count} identified documents. Dates follow the strongest available document-controlled evidence.`;
       document.querySelectorAll('.row').forEach(node=>node.remove());$('loading')?.remove();$('no-results')?.remove();$('no-documents')?.remove();const loading=document.createElement('p');loading.className='empty';loading.id='loading';loading.textContent='Loading topic documents…';$('grid').appendChild(loading);
-      try{let data=state.cache.get(topicId);if(!data){const response=await fetch(`./data/${topic.data_file}`);if(!response.ok)throw Error(`topic ${response.status}`);data=await response.json();state.cache.set(topicId,data);if(state.cache.size>4)state.cache.delete(state.cache.keys().next().value)}state.data=data;render();
-        if(push){const url=new URL(location.href);url.searchParams.set('topic',topicId);url.searchParams.delete('doc');history.pushState({topic:topicId},'',url)}}catch(error){$('loading').textContent=`The topic snapshot could not be loaded (${error.message}).`}
+      $('count').textContent='Loading…';
+      try{let data=state.cache.get(topicId);if(!data){const response=await fetch(`./data/${topic.data_file}`,{signal:state.controller.signal});if(!response.ok)throw Error(`topic ${response.status}`);data=await response.json();if(request!==state.request)return;state.cache.set(topicId,data);if(state.cache.size>4)state.cache.delete(state.cache.keys().next().value)}if(request!==state.request)return;state.data=data;render();
+        if(push){const url=new URL(location.href);url.searchParams.set('topic',topicId);url.searchParams.delete('doc');history.pushState({topic:topicId},'',url)}}catch(error){if(request!==state.request)return;loading.textContent=`The topic snapshot could not be loaded (${error.message}).`;$('count').textContent='Unavailable'}
     }
     $('reader-close').addEventListener('click',()=>close());$('reader-back').addEventListener('click',()=>close());
     $('topic-filter').addEventListener('change',e=>loadTopic(e.target.value));$('lane-filter').addEventListener('change',e=>{state.lane=e.target.value;applyFilters()});$('search').addEventListener('input',e=>{state.query=e.target.value;applyFilters()});
