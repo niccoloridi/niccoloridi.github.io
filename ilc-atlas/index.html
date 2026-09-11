@@ -117,7 +117,7 @@
     </main>
     <aside class="reader" id="reader" aria-label="Document reader"><div class="reader-bar"><button id="reader-back">← Return to lanes</button><button id="reader-close">Close ×</button></div><div class="reader-body" id="reader-body"></div></aside>
   </div>
-  <dialog id="help"><div class="help-body"><button id="help-close" aria-label="Close help">×</button><h2>How to read ILC Atlas</h2><p>Each compact card is a document, not a prose “event”. Its column records institutional origin or function; its vertical position follows the strongest available document-controlled date.</p><p>Three or more meeting records that share one evidenced date range are shown as a compact stack. Every record remains separately openable; the range is not treated as an exact date for each document.</p><p>Open a card for official EN/FR routes and typed documentary connections. A connection records what the sources support—it does not, by itself, claim influence or causation.</p><p>This public alpha covers all 66 topics in the frozen Analytical Guide snapshot. Coverage and full text remain incomplete and are identified rather than inferred.</p></div></dialog>
+  <dialog id="help"><div class="help-body"><button id="help-close" aria-label="Close help">×</button><h2>How to read ILC Atlas</h2><p>Each compact card is a document, not a prose “event”. Its column records institutional origin or function; its vertical position follows the strongest available document-controlled date.</p><p>Two or more consecutive meeting records that share one evidenced range—or form a compact sequence of exact meeting dates—are shown as a shorter stack. Every record and exact date remains separately openable.</p><p>Open a card for official EN/FR routes and typed documentary connections. A connection records what the sources support—it does not, by itself, claim influence or causation.</p><p>This public alpha covers all 66 topics in the frozen Analytical Guide snapshot. Coverage and full text remain incomplete and are identified rather than inferred.</p></div></dialog>
   <noscript><p class="noscript">ILC Atlas requires JavaScript to arrange and filter the documentary lanes.</p></noscript>
   <script>
   (()=>{
@@ -150,24 +150,24 @@
           const matching=[];let cursor=index;
           while(cursor<works.length){const candidate=works[cursor];if(typeOf(candidate)!=='summary_record'||candidate.date!==work.date)break;matching.push(candidate);cursor++}
           matching.sort((a,b)=>(meetingNumber(a)??Infinity)-(meetingNumber(b)??Infinity));let run=[];
-          const flush=()=>{if(run.length>=3)rows.push({kind:'meetings',works:run});else run.forEach(item=>rows.push({kind:'document',work:item}));run=[]};
+          const flush=()=>{if(run.length>=2)rows.push({kind:'meetings',works:run});else run.forEach(item=>rows.push({kind:'document',work:item}));run=[]};
           matching.forEach(candidate=>{const prior=run.at(-1);if(prior&&meetingNumber(candidate)!==meetingNumber(prior)+1)flush();run.push(candidate)});flush();index=cursor;continue;
         }
         if(typeOf(work)==='summary_record'&&work.date_precision==='day'){
           const run=[work];let cursor=index+1;
           while(cursor<works.length){const candidate=works[cursor],prior=run.at(-1),gap=exactDateGap(prior.date,candidate.date);if(typeOf(candidate)!=='summary_record'||candidate.date_precision!=='day'||meetingNumber(candidate)!==meetingNumber(prior)+1||gap===null||gap<0||gap>4)break;run.push(candidate);cursor++}
-          if(run.length>=3){rows.push({kind:'meetings',works:run});index=cursor;continue}
+          if(run.length>=2){rows.push({kind:'meetings',works:run});index=cursor;continue}
         }
         rows.push({kind:'document',work});index++;
       }
       return rows;
     }
     function render(){
-      if(!state.data)return;const q=state.query.toLowerCase();const visible=state.data.works.filter(w=>(state.lane==='all'||w.lane===state.lane)&&(!q||`${w.symbol} ${titleOf(w)}`.toLowerCase().includes(q)));
-      $('count').textContent=`${visible.length} of ${state.data.works.length} documents`;
-      document.querySelectorAll('.row').forEach(node=>node.remove());$('loading')?.remove();
-      if(!visible.length){const p=document.createElement('p');p.className='empty row';p.textContent='No documents match these filters.';$('grid').appendChild(p);return}
-      groupedRows(visible).forEach(item=>{const work=item.works?.[0]||item.work;const row=document.createElement('div');row.className=`row${item.kind==='meetings'?' compact':''}`;
+      if(!state.data)return;
+      document.querySelectorAll('.row').forEach(node=>node.remove());$('loading')?.remove();$('no-results')?.remove();$('no-documents')?.remove();
+      if(!state.data.works.length){const p=document.createElement('p');p.className='empty';p.id='no-documents';p.textContent='No documents are recorded for this topic.';$('grid').appendChild(p);return}
+      groupedRows(state.data.works).forEach(item=>{const work=item.works?.[0]||item.work;const represented=item.works||[item.work];const row=document.createElement('div');row.className=`row${item.kind==='meetings'?' compact':''}`;
+        row.dataset.lane=work.lane;row.dataset.count=String(represented.length);row.dataset.search=represented.map(candidate=>`${candidate.symbol} ${titleOf(candidate)}`).join(' ').toLowerCase();
         const displayDate=item.kind==='meetings'?stackDate(item.works):work.date;const displayKind=item.kind==='meetings'&&item.works.every(candidate=>candidate.date_precision==='day')?'meeting dates':work.date_kind;
         const date=document.createElement('time');date.className='date';date.innerHTML=`${escape(displayDate||'Date pending')}<small>${escape(displayKind||'unresolved')}</small>`;row.appendChild(date);
         const card=document.createElement('button');card.className=`card lane-${escape(work.lane)}`;card.dataset.id=work.id;card.setAttribute('aria-selected',String(state.selected===work.id));
@@ -179,7 +179,9 @@
           card.addEventListener('click',()=>open(work.id));
         }
         row.appendChild(card);$('grid').appendChild(row)});
+      const none=document.createElement('p');none.className='empty';none.id='no-results';none.hidden=true;none.textContent='No documents match these filters.';$('grid').appendChild(none);applyFilters();
     }
+    function applyFilters(){if(!state.data)return;const query=state.query.toLowerCase();let count=0;document.querySelectorAll('#grid .row').forEach(row=>{const visible=(state.lane==='all'||row.dataset.lane===state.lane)&&(!query||row.dataset.search.includes(query));row.hidden=!visible;if(visible)count+=Number(row.dataset.count||1)});$('count').textContent=`${count} of ${state.data.works.length} documents`;$('no-results')?.toggleAttribute('hidden',count!==0)}
     function openStack(works){state.selected=null;$('shell').classList.add('has-reader');$('reader-body').innerHTML=`<span class="eyebrow">MEETING RECORDS</span><h2>${works.length} consecutive ILC plenary records</h2><p class="reader-title">${escape(stackDate(works)||'Date range pending')}</p><ul class="connections">${works.map(work=>`<li><button data-open="${escape(work.id)}"><b><code>${escape(work.symbol)}</code></b><small>${escape(work.date||'Date pending')} · ${escape(titleOf(work))}</small></button></li>`).join('')}</ul>`;$('reader-body').querySelectorAll('[data-open]').forEach(button=>button.addEventListener('click',()=>open(button.dataset.open)));if(innerWidth<=760)scrollTo(0,0)}
     function open(id,push=true){const work=state.data.works.find(w=>w.id===id);if(!work)return;state.selected=id;$('shell').classList.add('has-reader');
       document.querySelectorAll('.card').forEach(c=>c.setAttribute('aria-selected',String(c.dataset.id===id)));const context=state.data.contexts[id]||{connections:[],association_ids:[]};
@@ -195,12 +197,12 @@
       const topic=state.index.topics.find(item=>item.id===topicId);if(!topic)return;
       state.topic=topicId;state.data=null;state.selected=null;$('shell').classList.remove('has-reader');$('topic-filter').value=topicId;$('topic-title').textContent=topic.title;
       $('topic-description').textContent=`${topic.group} · ${topic.document_count} identified documents. Dates follow the strongest available document-controlled evidence.`;
-      document.querySelectorAll('.row').forEach(node=>node.remove());const loading=document.createElement('p');loading.className='empty';loading.id='loading';loading.textContent='Loading topic documents…';$('grid').appendChild(loading);
+      document.querySelectorAll('.row').forEach(node=>node.remove());$('no-results')?.remove();$('no-documents')?.remove();const loading=document.createElement('p');loading.className='empty';loading.id='loading';loading.textContent='Loading topic documents…';$('grid').appendChild(loading);
       try{let data=state.cache.get(topicId);if(!data){const response=await fetch(`./data/${topic.data_file}`);if(!response.ok)throw Error(`topic ${response.status}`);data=await response.json();state.cache.set(topicId,data);if(state.cache.size>4)state.cache.delete(state.cache.keys().next().value)}state.data=data;render();
         if(push){const url=new URL(location.href);url.searchParams.set('topic',topicId);url.searchParams.delete('doc');history.pushState({topic:topicId},'',url)}}catch(error){$('loading').textContent=`The topic snapshot could not be loaded (${error.message}).`}
     }
     $('reader-close').addEventListener('click',()=>close());$('reader-back').addEventListener('click',()=>close());
-    $('topic-filter').addEventListener('change',e=>loadTopic(e.target.value));$('lane-filter').addEventListener('change',e=>{state.lane=e.target.value;render()});$('search').addEventListener('input',e=>{state.query=e.target.value;render()});
+    $('topic-filter').addEventListener('change',e=>loadTopic(e.target.value));$('lane-filter').addEventListener('change',e=>{state.lane=e.target.value;applyFilters()});$('search').addEventListener('input',e=>{state.query=e.target.value;applyFilters()});
     const theme=localStorage.getItem('ilc-atlas-theme')||'light';document.documentElement.dataset.theme=theme;$('theme-button').textContent=theme==='light'?'Dark':'Light';$('theme-button').setAttribute('aria-label',`Use ${theme==='light'?'dark':'light'} mode`);
     $('theme-button').addEventListener('click',()=>{const next=document.documentElement.dataset.theme==='light'?'dark':'light';document.documentElement.dataset.theme=next;localStorage.setItem('ilc-atlas-theme',next);$('theme-button').textContent=next==='light'?'Dark':'Light';$('theme-button').setAttribute('aria-label',`Use ${next==='light'?'dark':'light'} mode`)});
     $('help-button').addEventListener('click',()=>$('help').showModal());$('help-close').addEventListener('click',()=>$('help').close());
