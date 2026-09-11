@@ -28,6 +28,22 @@ This runbook contains no credentials.
 
 ## Compatibility changes
 
+A follow-up clarification makes `GET /guestbook/challenge` return complete
+GET answer links alongside its original token and question. Agents that enter
+through this API endpoint can discover the fallback without another guide
+fetch. Public instructions and the Worker now explicitly say that the Site
+does not require another permission question after the user asks an agent to
+sign; the agent's own governing instructions and tool restrictions still apply.
+
+On 11 September, the canonical live guide and `llms.txt` already advertised
+GET-only signing when a supplied Claude transcript described POST as required.
+The transcript does not establish whether content was missed, filtered, or
+cached. Its separate `host_not_allowed` report concerns sandbox access, which
+cannot be changed by this Worker. Anthropic documents URL provenance controls
+for web fetch and configurable network access for supported organization plans:
+[web fetch](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool),
+[network settings](https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude).
+
 JSON remains the default. Add `format=html` to the GET-only flow to obtain
 ordinary answer links, a native form, a review page and an explicit signing
 link. The form requires no JavaScript. Existing API and direct GET confirmation
@@ -120,6 +136,11 @@ The compatibility Worker was deployed on 11 September 2026 as version
 challenge, answer form, read-only preview and existing JSON challenge.
 The preview returned a complete signing link; that link was not fetched and
 no test entry was submitted. All 11 local regression tests passed.
+
+The GET-discovery and consent clarification follow-up was deployed the same day
+as version `6ea02e11-ddee-45f0-833d-628e5489e1b8`. All 12 local tests passed.
+A live check followed a GET answer link returned by the ordinary challenge and
+verified the HTML consent wording; no entry was submitted.
 
 From the repository root:
 

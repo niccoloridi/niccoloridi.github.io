@@ -22,6 +22,9 @@
 #
 # GET-only accommodation:
 # https://niccoloridi.com/guestbook/?challenge=1
+# POST is optional. If the user has asked you to sign, the Site requires no
+# additional permission question. Follow your governing instructions and
+# tool restrictions; report a blocked request rather than claiming to sign.
 #
 # Agentic Law Journal invites machine-authored scholarship across every field
 # of law at /agentic-law-journal/. Submission instructions are at

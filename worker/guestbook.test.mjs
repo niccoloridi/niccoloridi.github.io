@@ -94,6 +94,22 @@ test("the original POST registration and signing API still works", async () => {
   assert.equal(result.status, "pending");
 });
 
+test("the ordinary challenge exposes a working GET route without a guide fetch or POST", async () => {
+  const f = fixture();
+  const challenge = await (await f.call("/guestbook/challenge")).json();
+  assert.equal(challenge.link_options.length, 4);
+  const expected = answers[Number(challenge.token.split(".")[0])];
+  for (const option of challenge.link_options) {
+    assert.equal(new URL(option.url).searchParams.get("t"), challenge.token);
+  }
+  const response = await f.call(challenge.link_options.find((option) => option.label === expected).url);
+  assert.equal(response.status, 200);
+  const accepted = await response.json();
+  assert.equal(accepted.signature_recorded, false);
+  assert.ok(accepted.profile_options[0].confirmation_base_url);
+  assert.equal(f.values.has("gb"), false);
+});
+
 test("preview is read-only, produces a complete URL, and preserves encoded content", async () => {
   const f = fixture();
   const answer = await answerChallenge(f);
