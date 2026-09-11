@@ -52,8 +52,8 @@
     .row.compact{min-height:3.65rem}.row.compact .card{margin-block:.24rem;padding-block:.42rem}
     .row::after{content:"";position:absolute;left:0;right:0;bottom:0;border-bottom:1px solid color-mix(in srgb,var(--line) 55%,transparent)}
     .date{grid-column:1;padding:.85rem .55rem;font-size:.66rem;color:var(--muted);line-height:1.35;z-index:1}.date small{display:block;margin-top:.2rem;font-size:.55rem}
-    .card{margin:.4rem .32rem;border:1px solid var(--line);border-left:3px solid var(--lane);background:color-mix(in srgb,var(--paper) 94%,var(--lane));padding:.62rem;cursor:pointer;
-      text-align:left;min-width:0;z-index:2;transition:border-color .12s,background .12s}.card:hover{border-color:var(--lane);background:color-mix(in srgb,var(--paper) 88%,var(--lane))}
+    .card{margin:.4rem .32rem;border:1px solid var(--line);border-left:3px solid var(--lane);background:color-mix(in srgb,var(--paper) 88%,var(--lane));padding:.62rem;cursor:pointer;
+      text-align:left;min-width:0;z-index:2;transition:border-color .12s,background .12s}.card:hover{border-color:var(--lane);background:color-mix(in srgb,var(--paper) 78%,var(--lane))}
     .card[aria-selected="true"]{outline:2px solid var(--lane);outline-offset:-2px}.card .topline{display:flex;justify-content:space-between;gap:.35rem;align-items:center}
     .card code{font-size:.66rem;overflow-wrap:anywhere}.chip{font-size:.5rem;text-transform:uppercase;letter-spacing:.04em;border:1px solid var(--line);padding:.12rem .25rem;color:var(--muted);white-space:nowrap}
     .card strong{display:block;font-size:.72rem;line-height:1.25;margin-top:.46rem;font-weight:560;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
@@ -197,7 +197,7 @@
       const topic=state.index.topics.find(item=>item.id===topicId);if(!topic)return;
       state.topic=topicId;state.data=null;state.selected=null;$('shell').classList.remove('has-reader');$('topic-filter').value=topicId;$('topic-title').textContent=topic.title;
       $('topic-description').textContent=`${topic.group} · ${topic.document_count} identified documents. Dates follow the strongest available document-controlled evidence.`;
-      document.querySelectorAll('.row').forEach(node=>node.remove());$('no-results')?.remove();$('no-documents')?.remove();const loading=document.createElement('p');loading.className='empty';loading.id='loading';loading.textContent='Loading topic documents…';$('grid').appendChild(loading);
+      document.querySelectorAll('.row').forEach(node=>node.remove());$('loading')?.remove();$('no-results')?.remove();$('no-documents')?.remove();const loading=document.createElement('p');loading.className='empty';loading.id='loading';loading.textContent='Loading topic documents…';$('grid').appendChild(loading);
       try{let data=state.cache.get(topicId);if(!data){const response=await fetch(`./data/${topic.data_file}`);if(!response.ok)throw Error(`topic ${response.status}`);data=await response.json();state.cache.set(topicId,data);if(state.cache.size>4)state.cache.delete(state.cache.keys().next().value)}state.data=data;render();
         if(push){const url=new URL(location.href);url.searchParams.set('topic',topicId);url.searchParams.delete('doc');history.pushState({topic:topicId},'',url)}}catch(error){$('loading').textContent=`The topic snapshot could not be loaded (${error.message}).`}
     }
