@@ -49,9 +49,10 @@
     .lane-head.report{border-top:3px solid var(--report)}.lane-head.un{border-top:3px solid var(--un)}
     .date-head{grid-column:1;padding:.8rem .5rem;color:var(--muted);font:.62rem monospace;border-block:1px solid var(--line);position:sticky;top:3.35rem;background:var(--bg);z-index:11}
     .row{display:grid;grid-template-columns:var(--date) repeat(6,minmax(8.6rem,1fr));grid-column:1/-1;min-height:5.1rem;position:relative}
+    .row.compact{min-height:3.65rem}.row.compact .card{margin-block:.24rem;padding-block:.42rem}
     .row::after{content:"";position:absolute;left:0;right:0;bottom:0;border-bottom:1px solid color-mix(in srgb,var(--line) 55%,transparent)}
     .date{grid-column:1;padding:.85rem .55rem;font-size:.66rem;color:var(--muted);line-height:1.35;z-index:1}.date small{display:block;margin-top:.2rem;font-size:.55rem}
-    .card{margin:.4rem .32rem;border:1px solid var(--line);border-left:3px solid var(--lane);background:var(--paper);padding:.62rem;cursor:pointer;
+    .card{margin:.4rem .32rem;border:1px solid var(--line);border-left:3px solid var(--lane);background:color-mix(in srgb,var(--paper) 94%,var(--lane));padding:.62rem;cursor:pointer;
       text-align:left;min-width:0;z-index:2;transition:border-color .12s,background .12s}.card:hover{border-color:var(--lane);background:color-mix(in srgb,var(--paper) 88%,var(--lane))}
     .card[aria-selected="true"]{outline:2px solid var(--lane);outline-offset:-2px}.card .topline{display:flex;justify-content:space-between;gap:.35rem;align-items:center}
     .card code{font-size:.66rem;overflow-wrap:anywhere}.chip{font-size:.5rem;text-transform:uppercase;letter-spacing:.04em;border:1px solid var(--line);padding:.12rem .25rem;color:var(--muted);white-space:nowrap}
@@ -139,6 +140,8 @@
     }
     function route(symbol,language){return `https://docs.un.org/${language}/${symbol.split('/').map(encodeURIComponent).join('/')}`}
     function meetingNumber(work){const match=work.symbol.match(/\/SR\.(\d+)$/i);return match?Number(match[1]):null}
+    function exactDateGap(left,right){const a=Date.parse(`${left}T00:00:00Z`),b=Date.parse(`${right}T00:00:00Z`);return Number.isFinite(a)&&Number.isFinite(b)?(b-a)/86400000:null}
+    function stackDate(works){const first=works[0].date,last=works.at(-1).date;return first===last?first:`${first} to ${last}`}
     function groupedRows(works){
       const rows=[];
       for(let index=0;index<works.length;){
@@ -150,6 +153,11 @@
           const flush=()=>{if(run.length>=3)rows.push({kind:'meetings',works:run});else run.forEach(item=>rows.push({kind:'document',work:item}));run=[]};
           matching.forEach(candidate=>{const prior=run.at(-1);if(prior&&meetingNumber(candidate)!==meetingNumber(prior)+1)flush();run.push(candidate)});flush();index=cursor;continue;
         }
+        if(typeOf(work)==='summary_record'&&work.date_precision==='day'){
+          const run=[work];let cursor=index+1;
+          while(cursor<works.length){const candidate=works[cursor],prior=run.at(-1),gap=exactDateGap(prior.date,candidate.date);if(typeOf(candidate)!=='summary_record'||candidate.date_precision!=='day'||meetingNumber(candidate)!==meetingNumber(prior)+1||gap===null||gap<0||gap>4)break;run.push(candidate);cursor++}
+          if(run.length>=3){rows.push({kind:'meetings',works:run});index=cursor;continue}
+        }
         rows.push({kind:'document',work});index++;
       }
       return rows;
@@ -157,10 +165,11 @@
     function render(){
       if(!state.data)return;const q=state.query.toLowerCase();const visible=state.data.works.filter(w=>(state.lane==='all'||w.lane===state.lane)&&(!q||`${w.symbol} ${titleOf(w)}`.toLowerCase().includes(q)));
       $('count').textContent=`${visible.length} of ${state.data.works.length} documents`;
-      document.querySelectorAll('.row').forEach(node=>node.remove());$('loading').remove();
+      document.querySelectorAll('.row').forEach(node=>node.remove());$('loading')?.remove();
       if(!visible.length){const p=document.createElement('p');p.className='empty row';p.textContent='No documents match these filters.';$('grid').appendChild(p);return}
-      groupedRows(visible).forEach(item=>{const work=item.works?.[0]||item.work;const row=document.createElement('div');row.className='row';
-        const date=document.createElement('time');date.className='date';date.innerHTML=`${escape(work.date||'Date pending')}<small>${escape(work.date_kind||'unresolved')}</small>`;row.appendChild(date);
+      groupedRows(visible).forEach(item=>{const work=item.works?.[0]||item.work;const row=document.createElement('div');row.className=`row${item.kind==='meetings'?' compact':''}`;
+        const displayDate=item.kind==='meetings'?stackDate(item.works):work.date;const displayKind=item.kind==='meetings'&&item.works.every(candidate=>candidate.date_precision==='day')?'meeting dates':work.date_kind;
+        const date=document.createElement('time');date.className='date';date.innerHTML=`${escape(displayDate||'Date pending')}<small>${escape(displayKind||'unresolved')}</small>`;row.appendChild(date);
         const card=document.createElement('button');card.className=`card lane-${escape(work.lane)}`;card.dataset.id=work.id;card.setAttribute('aria-selected',String(state.selected===work.id));
         if(item.kind==='meetings'){
           const last=item.works.at(-1);card.classList.add('meeting-stack');card.innerHTML=`<span class="topline"><code>${escape(work.symbol)}–${escape(last.symbol.split('.').at(-1))}</code><span class="chip">Meeting records</span></span><strong>${item.works.length} ILC plenary records</strong><small>Individually addressable · open stack</small>`;
@@ -171,7 +180,7 @@
         }
         row.appendChild(card);$('grid').appendChild(row)});
     }
-    function openStack(works){state.selected=null;$('shell').classList.add('has-reader');$('reader-body').innerHTML=`<span class="eyebrow">MEETING RECORDS</span><h2>${works.length} ILC plenary records</h2><p class="reader-title">${escape(works[0].date||'Date range pending')}</p><ul class="connections">${works.map(work=>`<li><button data-open="${escape(work.id)}"><b><code>${escape(work.symbol)}</code></b><small>${escape(titleOf(work))}</small></button></li>`).join('')}</ul>`;$('reader-body').querySelectorAll('[data-open]').forEach(button=>button.addEventListener('click',()=>open(button.dataset.open)));if(innerWidth<=760)scrollTo(0,0)}
+    function openStack(works){state.selected=null;$('shell').classList.add('has-reader');$('reader-body').innerHTML=`<span class="eyebrow">MEETING RECORDS</span><h2>${works.length} consecutive ILC plenary records</h2><p class="reader-title">${escape(stackDate(works)||'Date range pending')}</p><ul class="connections">${works.map(work=>`<li><button data-open="${escape(work.id)}"><b><code>${escape(work.symbol)}</code></b><small>${escape(work.date||'Date pending')} · ${escape(titleOf(work))}</small></button></li>`).join('')}</ul>`;$('reader-body').querySelectorAll('[data-open]').forEach(button=>button.addEventListener('click',()=>open(button.dataset.open)));if(innerWidth<=760)scrollTo(0,0)}
     function open(id,push=true){const work=state.data.works.find(w=>w.id===id);if(!work)return;state.selected=id;$('shell').classList.add('has-reader');
       document.querySelectorAll('.card').forEach(c=>c.setAttribute('aria-selected',String(c.dataset.id===id)));const context=state.data.contexts[id]||{connections:[],association_ids:[]};
       const held=new Set((work.manifestations||[]).map(m=>m.language));const connectionHTML=(context.connections||[]).map(c=>{const other=c.other_work;if(!other)return'';const pair=relations[c.edge_type]||[c.edge_type.replaceAll('_',' '),c.edge_type.replaceAll('_',' ')];const label=pair[c.direction==='incoming'?1:0];return `<li><button data-open="${escape(other.work_id)}"><b>${escape(label)} <code>${escape(other.symbol)}</code></b><small>${escape(titleOf({symbol:other.symbol,title:other.title,date:other.document_date}))} · ${escape(c.status)}</small></button></li>`}).join('');
