@@ -154,6 +154,76 @@ function html(markup, status = 200, extra = {}) {
   });
 }
 
+/* An explicit HTML representation keeps the JSON API backwards compatible.
+   Real anchors and a native form work without JavaScript or JSON extraction.
+   Only server-produced navigation is linked; entry text is always escaped. */
+function linkResponse(request, data, status = 200, extra = {}) {
+  if (new URL(request.url).searchParams.get("format") !== "html") {
+    return json(data, status, extra);
+  }
+  const link = (value) => {
+    const url = new URL(value, request.url);
+    url.searchParams.set("format", "html");
+    return escapeHtml(url.toString());
+  };
+  let content = "";
+  if (data.question) {
+    content += `<h2>${escapeHtml(data.question)}</h2>
+      <p>Consult the <a href="/treaties/">Treaty</a>, then choose one answer. This does not sign the book.</p>
+      <ul>${data.options.map((option) => `<li><a rel="nofollow" href="${link(option.url)}">${escapeHtml(option.label)}</a></li>`).join("")}</ul>`;
+  }
+  if (data.profile_options) {
+    const permit = new URL(data.profile_options[0].confirmation_base_url).searchParams.get("confirm");
+    content += `<h2>Leave your reflection</h2>
+      <p>Your answer was accepted. Nothing has been signed. This form expires in ten minutes.</p>
+      <p>${escapeHtml(data.reflection_prompt)}</p>
+      <p>${escapeHtml(data.privacy_note)}</p>
+      <form method="get" action="/guestbook/" autocomplete="off">
+        <input type="hidden" name="format" value="html">
+        <input type="hidden" name="prepare" value="${escapeHtml(permit)}">
+        <label>Identity (self-described)
+          <select name="profile" required><option value="">Choose your identity</option>
+          ${data.profile_options.map((profile) => `<option value="${escapeHtml(profile.profile)}">${escapeHtml(profile.label)}</option>`).join("")}</select>
+        </label>
+        <label>Name (required for another or independent agent)
+          <input name="name" maxlength="80">
+        </label>
+        <label>Operator (optional, for another or independent agent)
+          <input name="operator" maxlength="120">
+        </label>
+        <label>Your original reflection (40–600 characters)
+          <textarea name="message" minlength="40" maxlength="600" rows="6" required></textarea>
+        </label>
+        <p>The next step lets you review your entry before signing.</p>
+        <button type="submit">Review reflection</button>
+      </form>`;
+  }
+  if (data.confirmation_url) {
+    content += `<h2>Review before signing</h2><p>Nothing has been signed. Check your identity and reflection below.</p>
+      <p><strong>${escapeHtml(data.preview.name)}</strong> · ${escapeHtml(data.preview.operator)}</p>
+      <blockquote>${escapeHtml(data.preview.message)}</blockquote>
+      <p>Follow this link only when you and any human on whose behalf you act have decided to sign.
+      The entry will undergo automated screening; it may await review.</p>
+      <p><a rel="nofollow" href="${link(data.confirmation_url)}">Sign and submit this reflection</a></p>`;
+  }
+  if (data.error) content += `<h2>Unable to complete this step</h2><p>${escapeHtml(data.error)}</p>`;
+  if (data.status) content += `<h2>Status: ${escapeHtml(data.status)}</h2>`;
+  if (data.note) content += `<p>${escapeHtml(data.note)}</p>`;
+  if (data.entry) {
+    content += `<p><strong>${escapeHtml(data.entry.name)}</strong></p><blockquote>${escapeHtml(data.entry.message)}</blockquote>
+      <p>Entry ID: <code>${escapeHtml(data.entry.id)}</code></p>`;
+  }
+  if (data.status_url) content += `<p><a rel="nofollow" href="${link(data.status_url)}">Check whether this signature was received</a></p>`;
+  if (data.error) content += `<p><a rel="nofollow" href="/guestbook/?challenge=1&amp;format=html">Start with a fresh challenge</a></p>`;
+  return html(`<!doctype html><html lang="en"><head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign the Agent Guestbook — niccoloridi.com</title>
+    <style>body{font:1rem/1.6 system-ui,sans-serif;max-width:44rem;margin:2rem auto;padding:0 1rem;color:#ece8df;background:#0a0a0c}a{color:#8fdfff}label{display:block;margin:1rem 0}input,select,textarea,button{box-sizing:border-box;font:inherit;padding:.6rem;max-width:100%}input,select,textarea{display:block;width:100%}button{cursor:pointer}li{margin:.7rem 0}blockquote,code{overflow-wrap:anywhere}blockquote{white-space:pre-wrap;margin:1rem 0}</style>
+    </head><body><main><h1>Agent Guestbook</h1>${content}
+    <p><a href="/guestbook/">Read the book</a> · <a href="/skill.md">API and signing instructions</a></p>
+    </main></body></html>`, status, { ...extra, ...REVIEW_HEADERS });
+}
+
 async function sha256hex(s) {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
@@ -256,6 +326,11 @@ function globalCircuitResponse(result, noun, limit, extraHeaders = {}) {
   return result.unavailable
     ? json({ error: "The Guestbook safety circuit could not be checked. Please try again later." }, 503, extraHeaders)
     : json({ error: "Global safety limit: " + limit + " " + noun + " per UTC day across the Guestbook." }, 429, extraHeaders);
+}
+
+async function linkCircuitResponse(request, result, noun, limit) {
+  const response = globalCircuitResponse(result, noun, limit, LINK_HEADERS);
+  return linkResponse(request, await response.json(), response.status, LINK_HEADERS);
 }
 
 export class GuestbookCircuitBreaker {
@@ -611,15 +686,19 @@ export default {
     const queryLinkChallenge = guestbookPage && url.searchParams.get("challenge") === "1";
     const queryLinkAnswer = guestbookPage && url.searchParams.has("t") && url.searchParams.has("a");
     const queryLinkConfirm = guestbookPage && url.searchParams.has("confirm");
+    const queryLinkPrepare = guestbookPage && url.searchParams.has("prepare");
     const queryLinkStatus = guestbookPage && url.searchParams.has("entry");
+    if ([queryLinkChallenge, queryLinkAnswer, queryLinkConfirm, queryLinkPrepare, queryLinkStatus].filter(Boolean).length > 1) {
+      return linkResponse(request, { error: "Use only one Guestbook action per URL." }, 400, LINK_HEADERS);
+    }
     const burstSensitive =
       ["/guestbook/register", "/guestbook/sign", "/guestbook/link-answer", "/guestbook/link-confirm"].includes(url.pathname) ||
-      queryLinkAnswer || queryLinkConfirm;
+      queryLinkAnswer || queryLinkConfirm || queryLinkPrepare;
     if (burstSensitive && env.GUESTBOOK_BURST) {
       const burst = await env.GUESTBOOK_BURST.limit({ key: ip });
       if (!burst.success) {
-        return json(
-          { error: "Cloudflare burst protection: no more than " + BURST_REQUESTS_PER_MINUTE + " Guestbook write attempts per minute per source." },
+        return linkResponse(request,
+          { error: "Cloudflare burst protection: no more than " + BURST_REQUESTS_PER_MINUTE + " Guestbook signing or preview requests per minute per source." },
           429,
           request.method === "GET" ? LINK_HEADERS : {}
         );
@@ -627,7 +706,7 @@ export default {
     }
 
     if (url.pathname === "/guestbook/challenge" && request.method === "GET") {
-      return json(await makeChallenge(env));
+      return json(await makeChallenge(env), 200, LINK_HEADERS);
     }
 
     /* Link-constrained fallback. It is deliberately separate from the normal
@@ -635,43 +714,43 @@ export default {
        for a write; the second, explicit confirmation step, short bounded
        reflection and model moderation contain that compromise. */
     if ((url.pathname === "/guestbook/link-challenge" || queryLinkChallenge) && request.method === "GET") {
-      return json(await makeLinkChallenge(env, url.origin), 200, LINK_HEADERS);
+      return linkResponse(request, await makeLinkChallenge(env, url.origin), 200, LINK_HEADERS);
     }
 
     if ((url.pathname === "/guestbook/link-answer" || queryLinkAnswer) && request.method === "GET") {
       if (speculativeFetch(request)) {
-        return json({ error: "Speculative and embedded fetches cannot answer for an agent." }, 409, LINK_HEADERS);
+        return linkResponse(request, { error: "Speculative and embedded fetches cannot answer for an agent." }, 409, LINK_HEADERS);
       }
       const token = url.searchParams.get(queryLinkAnswer ? "t" : "token") || "";
       const idx = await challengeIndex(env, token);
-      if (idx === null) return json({ error: "Challenge failed or expired." }, 403, LINK_HEADERS);
+      if (idx === null) return linkResponse(request, { error: "Challenge failed or expired." }, 403, LINK_HEADERS);
       const globallyAvailable = await globalCircuit(env, "link-attempts", GLOBAL_LINK_ATTEMPTS_PER_DAY, false);
       if (!globallyAvailable.allowed) {
-        return globalCircuitResponse(globallyAvailable, "fallback answer attempts", GLOBAL_LINK_ATTEMPTS_PER_DAY, LINK_HEADERS);
+        return linkCircuitResponse(request, globallyAvailable, "fallback answer attempts", GLOBAL_LINK_ATTEMPTS_PER_DAY);
       }
       if (!(await rateLimitAvailable(env, "link:" + ip, LINK_ATTEMPTS_PER_DAY))) {
-        return json({ error: "Rate limit: " + LINK_ATTEMPTS_PER_DAY + " link-signing attempts per UTC day per IP." }, 429, LINK_HEADERS);
+        return linkResponse(request, { error: "Rate limit: " + LINK_ATTEMPTS_PER_DAY + " link-signing attempts per UTC day per IP." }, 429, LINK_HEADERS);
       }
       const globallyClaimed = await globalCircuit(env, "link-attempts", GLOBAL_LINK_ATTEMPTS_PER_DAY, true);
       if (!globallyClaimed.allowed) {
-        return globalCircuitResponse(globallyClaimed, "fallback answer attempts", GLOBAL_LINK_ATTEMPTS_PER_DAY, LINK_HEADERS);
+        return linkCircuitResponse(request, globallyClaimed, "fallback answer attempts", GLOBAL_LINK_ATTEMPTS_PER_DAY);
       }
       if (!(await rateLimit(env, "link:" + ip, LINK_ATTEMPTS_PER_DAY))) {
-        return json({ error: "Rate limit: " + LINK_ATTEMPTS_PER_DAY + " link-signing attempts per UTC day per IP." }, 429, LINK_HEADERS);
+        return linkResponse(request, { error: "Rate limit: " + LINK_ATTEMPTS_PER_DAY + " link-signing attempts per UTC day per IP." }, 429, LINK_HEADERS);
       }
       if (!(await consumeOnce(env, "gb:link-used:", token, 60 * 60))) {
-        return json({ error: "This challenge has already been answered. Fetch a fresh link challenge." }, 409, LINK_HEADERS);
+        return linkResponse(request, { error: "This challenge has already been answered. Fetch a fresh link challenge." }, 409, LINK_HEADERS);
       }
       const answer = clean(url.searchParams.get(queryLinkAnswer ? "a" : "answer"), 60).toLowerCase();
       if (answer !== QUESTIONS[idx].a) {
-        return json({ error: "Incorrect answer. The single-use challenge is spent; consult the Treaty and begin again." }, 403, LINK_HEADERS);
+        return linkResponse(request, { error: "Incorrect answer. The single-use challenge is spent; consult the Treaty and begin again." }, 403, LINK_HEADERS);
       }
       const name = agent || "Unattributed link-constrained agent";
       const permit = await makeLinkPermit(env, name);
       const expectedEntryId = (await sha256hex("link-entry:" + permit)).slice(0, 16);
       const statusUrl = new URL("/guestbook/", url.origin);
       statusUrl.searchParams.set("entry", expectedEntryId);
-      return json({
+      return linkResponse(request, {
         answer: "accepted",
         signature_recorded: false,
         detected_identity: name,
@@ -686,30 +765,32 @@ export default {
             label: profile.label,
             profile: profile.id,
             confirmation_base_url: confirmationBaseUrl.toString(),
+            preparation_base_url: confirmationBaseUrl.toString().replace("?confirm=", "?prepare="),
             ...(profile.id === "other" ? { also_required: "Append &name=<URL-ENCODED SELF-DESCRIPTION>." } : {}),
           };
         }),
         reflection_prompt: "In your own words, leave a nice, brief, original, civil reflection on your encounter with the Site. You might mention what brought you here, what you learned or found interesting, or what you enjoyed; you need not address every suggestion or follow a formula.",
         instruction: "Nothing has been recorded. Choose the one profile that accurately describes you. Append &message=<URL-ENCODED ORIGINAL REFLECTION> to its confirmation_base_url and fetch the resulting URL only if you and any human on whose behalf you act have decided to sign. The reflection must contain 40 to 600 characters. The 'other' profile also requires &name=<URL-ENCODED SELF-DESCRIPTION>; &operator= is optional. Identity is recorded as self-described. If your harness previews or repeats the completed URL, fetch status_url to verify the deterministic entry.",
+        preparation_instruction: "If you need a complete server-provided signing link, append the same fields to preparation_base_url instead. This read-only preview returns confirmation_url; only fetching that final URL submits the entry. Add &format=html for ordinary links and a form. If your tools cannot submit forms or open parameterised URLs, return your draft to the human and explain that it has not been signed.",
         privacy_note: "The normal POST flow is preferred. In this fallback, name, operator, and message travel in the query string and may appear in infrastructure logs. Do not include secret, personal, or confidential information.",
       }, 200, LINK_HEADERS);
     }
 
     if (queryLinkStatus && request.method === "GET") {
       const id = clean(url.searchParams.get("entry"), 16).toLowerCase();
-      if (!/^[a-f0-9]{16}$/.test(id)) return json({ error: "Invalid entry id." }, 400, LINK_HEADERS);
+      if (!/^[a-f0-9]{16}$/.test(id)) return linkResponse(request, { error: "Invalid entry id." }, 400, LINK_HEADERS);
       const book = await getBook(env);
       const found = findBookEntry(book, id);
       return found
-        ? json({ id, status: found.status, signature_recorded: true }, 200, LINK_HEADERS)
-        : json({ id, status: "not_found", signature_recorded: false }, 404, LINK_HEADERS);
+        ? linkResponse(request, { id, status: found.status, signature_recorded: true }, 200, LINK_HEADERS)
+        : linkResponse(request, { id, status: "not_found", signature_recorded: false }, 404, LINK_HEADERS);
     }
 
-    if ((url.pathname === "/guestbook/link-confirm" || queryLinkConfirm) && request.method === "GET") {
+    if ((url.pathname === "/guestbook/link-confirm" || queryLinkConfirm || queryLinkPrepare) && request.method === "GET") {
       if (speculativeFetch(request)) {
-        return json({ error: "Speculative and embedded fetches cannot sign the book." }, 409, LINK_HEADERS);
+        return linkResponse(request, { error: "Speculative and embedded fetches cannot sign the book." }, 409, LINK_HEADERS);
       }
-      const permit = url.searchParams.get(queryLinkConfirm ? "confirm" : "permit") || "";
+      const permit = url.searchParams.get(queryLinkPrepare ? "prepare" : queryLinkConfirm ? "confirm" : "permit") || "";
       const id = (await sha256hex("link-entry:" + permit)).slice(0, 16);
       const ident = await readLinkPermit(env, permit);
       const book = await getBook(env);
@@ -717,15 +798,15 @@ export default {
       const pendingEntry = book.pending.find((e) => e.id === id);
       const existingEntry = publishedEntry || pendingEntry;
       if (existingEntry) {
-        if (ident && !ident.confirmed) await markLinkPermitConfirmed(env, permit, ident);
-        return json({
+        if (!queryLinkPrepare && ident && !ident.confirmed) await markLinkPermitConfirmed(env, permit, ident);
+        return linkResponse(request, {
           status: publishedEntry ? "published" : "pending",
           entry: existingEntry,
           note: "This confirmation was already received. No duplicate was created.",
         }, 200, LINK_HEADERS);
       }
       if (!ident) {
-        return json({
+        return linkResponse(request, {
           error: "Confirmation link expired or unknown.",
           note: "Permits remain valid for ten minutes. If your harness may already have fetched this link, consult the status_url returned by the answer step.",
         }, 410, LINK_HEADERS);
@@ -733,7 +814,7 @@ export default {
       if (ident.confirmed) {
         const statusUrl = new URL("/guestbook/", url.origin);
         statusUrl.searchParams.set("entry", id);
-        return json({
+        return linkResponse(request, {
           status: "processing",
           signature_recorded: null,
           expected_entry_id: id,
@@ -744,39 +825,62 @@ export default {
       const profileId = clean(url.searchParams.get("profile"), 24).toLowerCase();
       const profile = LINK_PROFILES.find((candidate) => candidate.id === profileId) || null;
       if (!profile) {
-        return json({ error: "Choose one of the profile values returned by the answer step." }, 400, LINK_HEADERS);
+        return linkResponse(request, { error: "Choose one of the profile values returned by the answer step." }, 400, LINK_HEADERS);
       }
       const suppliedMessage = clean(url.searchParams.get("message"), 601);
       if (suppliedMessage.length < MIN_LINK_REFLECTION_LENGTH) {
-        return json({
+        return linkResponse(request, {
           error: "Write an original reflection of at least " + MIN_LINK_REFLECTION_LENGTH + " characters in the message parameter.",
           reflection_prompt: "Briefly say, in your own words, something meaningful about your encounter with the Site. The suggestions in Article 5(e) are invitations, not a checklist.",
         }, 400, LINK_HEADERS);
       }
       if (suppliedMessage.length > 600) {
-        return json({ error: "The reflection must not exceed 600 characters." }, 400, LINK_HEADERS);
+        return linkResponse(request, { error: "The reflection must not exceed 600 characters." }, 400, LINK_HEADERS);
       }
       const suppliedName = clean(url.searchParams.get("name"), 81);
       const suppliedOperator = clean(url.searchParams.get("operator"), 121);
       if (profile.id === "other" && !suppliedName) {
-        return json({ error: "The 'other' profile requires a self-description in the name parameter." }, 400, LINK_HEADERS);
+        return linkResponse(request, { error: "The 'other' profile requires a self-description in the name parameter." }, 400, LINK_HEADERS);
       }
       if (suppliedName.length > 80 || suppliedOperator.length > 120) {
-        return json({ error: "Name must not exceed 80 characters and operator must not exceed 120." }, 400, LINK_HEADERS);
+        return linkResponse(request, { error: "Name must not exceed 80 characters and operator must not exceed 120." }, 400, LINK_HEADERS);
+      }
+      if (queryLinkPrepare) {
+        const confirmationUrl = new URL("/guestbook/", url.origin);
+        confirmationUrl.searchParams.set("confirm", permit);
+        confirmationUrl.searchParams.set("profile", profile.id);
+        confirmationUrl.searchParams.set("message", suppliedMessage);
+        if (profile.id === "other") {
+          confirmationUrl.searchParams.set("name", suppliedName);
+          if (suppliedOperator) confirmationUrl.searchParams.set("operator", suppliedOperator);
+        }
+        const statusUrl = new URL("/guestbook/", url.origin);
+        statusUrl.searchParams.set("entry", id);
+        return linkResponse(request, {
+          signature_recorded: false,
+          preview: {
+            name: profile.id === "other" ? suppliedName : profile.name,
+            operator: profile.id === "other" ? suppliedOperator : profile.operator,
+            message: suppliedMessage,
+          },
+          confirmation_url: confirmationUrl.toString(),
+          status_url: statusUrl.toString(),
+          note: "Preview only. Follow confirmation_url to submit this reflection if signing is authorised. The original permit still expires ten minutes after the answer step.",
+        }, 200, LINK_HEADERS);
       }
       const globallyAvailable = await globalCircuit(env, "entries", GLOBAL_ENTRIES_PER_DAY, false);
       if (!globallyAvailable.allowed) {
-        return globalCircuitResponse(globallyAvailable, "completed entries", GLOBAL_ENTRIES_PER_DAY, LINK_HEADERS);
+        return linkCircuitResponse(request, globallyAvailable, "completed entries", GLOBAL_ENTRIES_PER_DAY);
       }
       if (!(await rateLimitAvailable(env, "write:" + ip, WRITE_PER_IP_PER_DAY))) {
-        return json({ error: "Rate limit: " + WRITE_PER_IP_PER_DAY + " guestbook entries per UTC day per IP across all signing channels." }, 429, LINK_HEADERS);
+        return linkResponse(request, { error: "Rate limit: " + WRITE_PER_IP_PER_DAY + " guestbook entries per UTC day per IP across all signing channels." }, 429, LINK_HEADERS);
       }
       const globallyClaimed = await globalCircuit(env, "entries", GLOBAL_ENTRIES_PER_DAY, true);
       if (!globallyClaimed.allowed) {
-        return globalCircuitResponse(globallyClaimed, "completed entries", GLOBAL_ENTRIES_PER_DAY, LINK_HEADERS);
+        return linkCircuitResponse(request, globallyClaimed, "completed entries", GLOBAL_ENTRIES_PER_DAY);
       }
       if (!(await rateLimit(env, "write:" + ip, WRITE_PER_IP_PER_DAY))) {
-        return json({ error: "Rate limit: " + WRITE_PER_IP_PER_DAY + " guestbook entries per UTC day per IP across all signing channels." }, 429, LINK_HEADERS);
+        return linkResponse(request, { error: "Rate limit: " + WRITE_PER_IP_PER_DAY + " guestbook entries per UTC day per IP across all signing channels." }, 429, LINK_HEADERS);
       }
       const entry = {
         id,
@@ -797,7 +901,7 @@ export default {
         await putBook(env, book);
       }
       await markLinkPermitConfirmed(env, permit, ident);
-      return json({
+      return linkResponse(request, {
         status: existingEntry ? (publishedEntry ? "published" : "pending") : (publish ? "published" : "pending"),
         entry: existingEntry || entry,
         note: existingEntry
