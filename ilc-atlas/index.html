@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="ILC Atlas — a documentary map of the International Law Commission.">
+  <meta name="description" content="ILC Atlas: an unofficial, work-in-progress guide to International Law Commission documents.">
   <meta name="theme-color" content="#f3f1eb">
-  <title>ILC Atlas — Niccolò Ridi</title>
+  <title>ILC Atlas | Niccolò Ridi</title>
   <style>
     :root {
       color-scheme: light;
@@ -28,6 +28,7 @@
       padding:0 1rem;position:sticky;top:0;background:color-mix(in srgb,var(--bg) 93%,transparent);backdrop-filter:blur(10px);z-index:20}
     .brand{display:flex;align-items:baseline;gap:.7rem;text-decoration:none}.brand strong{font-size:1rem;letter-spacing:.02em}
     .brand small{color:var(--muted);font-size:.72rem}.tools{display:flex;align-items:center;gap:.4rem}
+    .alpha-badge{border:1px solid var(--line);padding:.15rem .3rem;font:.58rem monospace;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
     .tool{border:1px solid var(--line);background:var(--paper);min-height:2rem;padding:.35rem .65rem;cursor:pointer;text-decoration:none}
     .tool:hover{border-color:var(--ink)}.tool.icon{width:2rem;padding:.2rem;text-align:center;font-family:monospace;font-weight:700}
     .notice{border-bottom:1px solid var(--line);padding:.55rem 1rem;color:var(--muted);font-size:.78rem;display:flex;gap:.65rem;align-items:center}
@@ -71,23 +72,25 @@
     .connections{list-style:none;padding:0;margin:0}.connections li{border-top:1px solid var(--line);padding:.58rem 0}.connections button{border:0;background:none;padding:0;text-align:left;cursor:pointer;width:100%}
     .connections b{font-size:.72rem}.connections code{font-size:.68rem;color:var(--focus)}.connections small{display:block;color:var(--muted);font-size:.64rem;margin-top:.18rem}
     details.context{border-top:1px solid var(--line);padding:.65rem 0}details.context summary{cursor:pointer;font-size:.75rem}.context p{font-size:.78rem;line-height:1.5;color:var(--muted)}
-    dialog{max-width:38rem;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:0;box-shadow:none}.help-body{padding:1rem 1.2rem;line-height:1.55;font-size:.86rem}.help-body h2{margin:.1rem 0}.help-body button{float:right;border:1px solid var(--line);background:none;padding:.3rem .5rem;cursor:pointer}
+    dialog{width:calc(100% - 2rem);max-width:34rem;max-height:calc(100dvh - 2rem);margin:auto;overflow:auto;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:0;box-shadow:none}
+    dialog::backdrop{background:rgb(0 0 0 / .45)}
+    .help-body{padding:1.1rem 1.2rem;line-height:1.55;font-size:.86rem}.help-body h2{margin:.1rem 0;font-size:1.15rem}.help-body h3{font-size:.86rem;margin:1.1rem 0 .2rem}.help-body p{margin:.3rem 0 .8rem}.help-body button{float:right;min-height:44px;min-width:44px;color:var(--ink);border:1px solid var(--line);background:none;padding:.3rem .5rem;cursor:pointer}
     .noscript{padding:2rem}.footer-note{margin-top:1.2rem;color:var(--muted);font:.64rem monospace}
     @media(max-width:1050px){:root{--date:6.2rem}.shell.has-reader{grid-template-columns:minmax(28rem,1fr) minmax(22rem,38vw)}.grid,.row{grid-template-columns:var(--date) repeat(6,minmax(7rem,1fr))}.card{padding:.5rem}.lane-head{padding-inline:.35rem}}
-    @media(max-width:760px){.top{position:relative}.notice{display:block}.shell.has-reader{display:block}.main{padding-inline:.65rem}.has-reader .main{display:none}.reader{position:relative;top:0;height:auto;border-left:0;min-height:calc(100vh - 3.35rem)}
+    @media(max-width:760px){.top{position:relative;padding-inline:.65rem;gap:.5rem}.brand{gap:.4rem}.tools{gap:.25rem}.tools .tool{font-size:.75rem;padding-inline:.4rem}.notice{display:block}.shell.has-reader{display:block}.main{padding-inline:.65rem}.has-reader .main{display:none}.reader{position:relative;top:0;height:auto;border-left:0;min-height:calc(100vh - 3.35rem)}
       .grid,.row{display:block}.date-head,.lane-head{display:none}.row{border-top:1px solid var(--line);padding:.5rem 0}.date{padding:.25rem .35rem}.card{width:calc(100% - .7rem);margin:.35rem}.controls{display:grid}.controls input{min-width:0;width:100%}.brand small{display:none}}
   </style>
 </head>
 <body>
   <header class="top">
-    <a class="brand" href="./"><strong>ILC Atlas</strong><small>institutional document lanes</small></a>
+    <a class="brand" href="./"><strong>ILC Atlas</strong><span class="alpha-badge">Alpha</span><small>institutional document lanes</small></a>
     <nav class="tools" aria-label="Page controls">
       <a class="tool" href="https://niccoloridi.com/" aria-label="Return to niccoloridi.com">← niccoloridi.com</a>
-      <button class="tool icon" id="help-button" aria-label="About this preview">?</button>
+      <button class="tool icon" id="help-button" aria-label="About ILC Atlas" aria-haspopup="dialog" aria-controls="help" aria-expanded="false">?</button>
       <button class="tool" id="theme-button" aria-label="Use dark mode">Dark</button>
     </nav>
   </header>
-  <aside class="notice"><b>ALPHA PREVIEW</b><span>Public documentary metadata only. Coverage, titles and relationships are being expanded and verified.</span></aside>
+  <aside class="notice"><b>UNOFFICIAL ALPHA</b><span>A work in progress. Explore documents and their connections; check the official sources before relying on the information.</span></aside>
   <div class="shell" id="shell">
     <main class="main">
       <section class="intro">
@@ -117,7 +120,18 @@
     </main>
     <aside class="reader" id="reader" aria-label="Document reader"><div class="reader-bar"><button id="reader-back">← Return to lanes</button><button id="reader-close">Close ×</button></div><div class="reader-body" id="reader-body"></div></aside>
   </div>
-  <dialog id="help"><div class="help-body"><button id="help-close" aria-label="Close help">×</button><h2>How to read ILC Atlas</h2><p>Each compact card is a document, not a prose “event”. Its column records institutional origin or function; its vertical position follows the strongest available document-controlled date.</p><p>Two or more consecutive meeting records that share one evidenced range—or form a compact sequence of exact meeting dates—are shown as a shorter stack. Every record and exact date remains separately openable.</p><p>Open a card for official EN/FR routes and typed documentary connections. A connection records what the sources support—it does not, by itself, claim influence or causation.</p><p>This public alpha covers all 66 topics in the frozen Analytical Guide snapshot. Coverage and full text remain incomplete and are identified rather than inferred.</p></div></dialog>
+  <dialog id="help" aria-labelledby="help-title"><div class="help-body">
+    <button id="help-close" type="button" autofocus>Close</button>
+    <h2 id="help-title">About ILC Atlas</h2>
+    <h3>Find documents and follow their history</h3>
+    <p>ILC Atlas is a guide to the documents of the International Law Commission. Choose a topic, filter by institution or search by symbol or title. Each card represents a document. Open it to follow official English and French source links and explore recorded connections.</p>
+    <p>Columns group documents by institutional origin or function. Dates organise the timeline, and compact meeting stacks keep individual records openable. Connections describe documentary relationships, not proof of influence or agreement.</p>
+    <h3>Entirely unofficial</h3>
+    <p>This is an independent project by Niccolò Ridi. It is not an official website of the United Nations or the International Law Commission, and is not affiliated with or endorsed by either. Links to official documents do not imply endorsement.</p>
+    <h3>Alpha: a work in progress</h3>
+    <p>This snapshot covers the 66 topics in the ILC Analytical Guide, not every historical document. Dates, titles, classifications and connections may be incomplete or contain errors. Some dates are approximate, and some links open a document lookup page rather than a PDF. Always verify information against the official document.</p>
+    <p>The Atlas currently supports document discovery. It does not analyse government positions, arguments or reactions.</p>
+  </div></dialog>
   <noscript><p class="noscript">ILC Atlas requires JavaScript to arrange and filter the documentary lanes.</p></noscript>
   <style>
     /* Author grid/block rules must not override the HTML hidden attribute. */
@@ -141,8 +155,10 @@
       if(/^A\/\d+\/10$/i.test(work.symbol))return `Report of the International Law Commission (${String(work.date||'').slice(0,4)||'year not established'})`;
       if(/\/CORR\.\d+$/i.test(work.symbol))return `Corrigendum to ${work.symbol.replace(/\/CORR\.\d+$/i,'')}`;
       if(/\/ADD\.\d+$/i.test(work.symbol))return `Addendum to ${work.symbol.replace(/\/ADD\.\d+$/i,'')}`;
+      if(work.descriptive_caption&&work.descriptive_caption.value)return work.descriptive_caption.value;
       return work.symbol;
     }
+    function describedNote(work){const caption=work.descriptive_caption;if(!caption||work.title_kind!=='described')return '';const link=caption.source_url?` · <a href="${escape(caption.source_url)}" target="_blank" rel="noopener">official topic page ↗</a>`:'';return `<div class="context"><p>Caption described in the Analytical Guide, not a printed title${link}</p></div>`}
     function route(symbol,language){return `https://docs.un.org/${language}/${symbol.split('/').map(encodeURIComponent).join('/')}`}
     function sourceRoute(work,language){const known=(work.official_routes||[]).find(r=>r.language===language&&r.status==='verified_file');return {url:known?.url||route(work.symbol,language),verified:!!known}}
     function dateDetails(work){const assertions=work.date_assertions||[];if(!assertions.length)return '';return `<details class="context"><summary>Dates and sources</summary>${assertions.map(a=>{const date=String(a.earliest||'').slice(0,a.precision==='year'?4:a.precision==='month'?7:10);const evidence=a.evidence?.[0]||{};return `<p>${a.kind==='consideration'?'Meeting':'Issue / publication'}: <b>${escape(date)}</b>${evidence.language?` · ${escape(evidence.language.toUpperCase())}`:''}${evidence.source_url?` · <a href="${escape(evidence.source_url)}" target="_blank" rel="noopener">Official source ↗</a>`:''}</p>`}).join('')}</details>`}
@@ -191,11 +207,12 @@
     }
     function applyFilters(){if(!state.data)return;const query=state.query.toLowerCase();let count=0;document.querySelectorAll('#grid .row').forEach(row=>{const visible=(state.lane==='all'||row.dataset.lane===state.lane)&&(!query||row.dataset.search.includes(query));row.hidden=!visible;if(visible)count+=Number(row.dataset.count||1)});$('count').textContent=`${count} of ${state.data.works.length} documents`;$('no-results')?.toggleAttribute('hidden',count!==0)}
     function openStack(works){state.selected=null;$('shell').classList.add('has-reader');$('reader-body').innerHTML=`<span class="eyebrow">MEETING RECORDS</span><h2>${works.length} consecutive ILC plenary records</h2><p class="reader-title">${escape(stackDate(works)||'Date range pending')}</p><ul class="connections">${works.map(work=>`<li><button data-open="${escape(work.id)}"><b><code>${escape(work.symbol)}</code></b><small>${escape(work.date||'Date pending')} · ${escape(titleOf(work))}</small></button></li>`).join('')}</ul>`;$('reader-body').querySelectorAll('[data-open]').forEach(button=>button.addEventListener('click',()=>open(button.dataset.open)));if(innerWidth<=760)scrollTo(0,0)}
-    function open(id,push=true){const work=state.data.works.find(w=>w.id===id);if(!work)return;state.selected=id;$('shell').classList.add('has-reader');
+    function resolveWorkId(id){return state.data.works.some(w=>w.id===id)?id:(state.data.aliases?.[id]||id)}
+    function open(id,push=true){id=resolveWorkId(id);const work=state.data.works.find(w=>w.id===id);if(!work)return;state.selected=id;$('shell').classList.add('has-reader');
       document.querySelectorAll('.card').forEach(c=>c.setAttribute('aria-selected',String(c.dataset.id===id)));const context=state.data.contexts[id]||{connections:[],association_ids:[]};
       const english=sourceRoute(work,'en'),french=sourceRoute(work,'fr');const connectionHTML=(context.connections||[]).map(c=>{const other=c.other_work;if(!other)return'';const pair=relations[c.edge_type]||[c.edge_type.replaceAll('_',' '),c.edge_type.replaceAll('_',' ')];const label=pair[c.direction==='incoming'?1:0];return `<li>${connectionControl(other,`<b>${escape(label)} <code>${escape(other.symbol)}</code></b><small>${escape(titleOf({symbol:other.symbol,title:other.title,date:other.document_date}))} · ${escape(c.status)}</small>`)}</li>`}).join('');
       const associations=(context.association_ids||[]).map(id=>state.data.accounts[id]).filter(Boolean).map(a=>`<details class="context"><summary>${escape((a.document_role||'Official Guide evidence').replaceAll('_',' '))}${a.document_locator?` · ${escape(a.document_locator)}`:''}</summary><p>${escape(a.description)}</p></details>`).join('');
-      $('reader-body').innerHTML=`<span class="eyebrow">${escape(types[typeOf(work)]||typeOf(work).replaceAll('_',' '))}</span><h2 class="mono">${escape(work.symbol)}</h2><p class="reader-title">${escape(titleOf(work))}</p><div class="meta"><span>${escape(work.date||'Date pending')}</span><span>${escape(work.date_kind||'unresolved date')}</span><span>${escape(lanes[work.lane]||work.lane)}</span><span>${escape(work.quality||'not extracted')}</span></div>${dateDetails(work)}<h3>Official document</h3><div class="source-actions"><a href="${escape(english.url)}" target="_blank" rel="noopener">${english.verified?'Open English':'Look up English'} ↗</a><a href="${escape(french.url)}" target="_blank" rel="noopener">${french.verified?'Open French':'Look up French'} ↗</a></div><h3>Document connections</h3>${connectionHTML?`<ul class="connections">${connectionHTML}</ul>`:'<p>No reviewed directional document connection is recorded yet.</p>'}${associations?`<h3>Official Guide context</h3>${associations}`:''}`;
+      $('reader-body').innerHTML=`<span class="eyebrow">${escape(types[typeOf(work)]||typeOf(work).replaceAll('_',' '))}</span><h2 class="mono">${escape(work.symbol)}</h2><p class="reader-title">${escape(titleOf(work))}</p>${describedNote(work)}<div class="meta"><span>${escape(work.date||'Date pending')}</span><span>${escape(work.date_kind||'unresolved date')}</span><span>${escape(lanes[work.lane]||work.lane)}</span><span>${escape(work.quality||'not extracted')}</span></div>${dateDetails(work)}<h3>Official document</h3><div class="source-actions"><a href="${escape(english.url)}" target="_blank" rel="noopener">${english.verified?'Open English':'Look up English'} ↗</a><a href="${escape(french.url)}" target="_blank" rel="noopener">${french.verified?'Open French':'Look up French'} ↗</a></div><h3>Document connections</h3>${connectionHTML?`<ul class="connections">${connectionHTML}</ul>`:'<p>No reviewed directional document connection is recorded yet.</p>'}${associations?`<h3>Official Guide context</h3>${associations}`:''}`;
       $('reader-body').querySelectorAll('[data-open]').forEach(button=>button.addEventListener('click',()=>open(button.dataset.open)));
       if(push){const url=new URL(location.href);url.searchParams.set('doc',id);url.searchParams.set('topic',state.topic);history.pushState({doc:id,topic:state.topic},'',url)}
       if(innerWidth<=760)scrollTo(0,0);
@@ -215,7 +232,9 @@
     $('topic-filter').addEventListener('change',e=>loadTopic(e.target.value));$('lane-filter').addEventListener('change',e=>{state.lane=e.target.value;applyFilters()});$('search').addEventListener('input',e=>{state.query=e.target.value;applyFilters()});
     const theme=localStorage.getItem('ilc-atlas-theme')||'light';document.documentElement.dataset.theme=theme;$('theme-button').textContent=theme==='light'?'Dark':'Light';$('theme-button').setAttribute('aria-label',`Use ${theme==='light'?'dark':'light'} mode`);
     $('theme-button').addEventListener('click',()=>{const next=document.documentElement.dataset.theme==='light'?'dark':'light';document.documentElement.dataset.theme=next;localStorage.setItem('ilc-atlas-theme',next);$('theme-button').textContent=next==='light'?'Dark':'Light';$('theme-button').setAttribute('aria-label',`Use ${next==='light'?'dark':'light'} mode`)});
-    $('help-button').addEventListener('click',()=>$('help').showModal());$('help-close').addEventListener('click',()=>$('help').close());
+    $('help-button').addEventListener('click',()=>{$('help').showModal();$('help-button').setAttribute('aria-expanded','true')});
+    $('help-close').addEventListener('click',()=>$('help').close());
+    $('help').addEventListener('close',()=>{$('help-button').setAttribute('aria-expanded','false');$('help-button').focus()});
     addEventListener('popstate',async()=>{const params=new URL(location.href).searchParams;const topic=params.get('topic')||state.topic;if(topic!==state.topic)await loadTopic(topic,false);const id=params.get('doc');id?open(id,false):close(false)});
     fetch('./data/index.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error(`index ${r.status}`);return r.json()}).then(async index=>{state.index=index;const select=$('topic-filter');select.innerHTML='';let group='';let optgroup=null;index.topics.forEach(topic=>{if(topic.group!==group){group=topic.group;optgroup=document.createElement('optgroup');optgroup.label=group;select.appendChild(optgroup)}const option=document.createElement('option');option.value=topic.id;option.textContent=`${topic.number?`${topic.number} · `:''}${topic.title}`;optgroup.appendChild(option)});const params=new URL(location.href).searchParams;const requested=params.get('topic');const first=index.topics.some(item=>item.id===requested)?requested:(index.topics.find(item=>item.id==='ilc-guide:1_15')?.id||index.topics[0].id);await loadTopic(first,false);const id=params.get('doc');if(id)open(id,false)}).catch(error=>{$('loading').textContent=`The public snapshot could not be loaded (${error.message}).`});
   })();
