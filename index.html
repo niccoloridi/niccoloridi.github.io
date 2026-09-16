@@ -103,7 +103,7 @@
             border-radius: 5px; overflow: hidden; min-width: 0; min-height: 0;
             transition: background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease; }
         .term-bar { display: flex; align-items: center; gap: 0.5rem; padding: 0.45rem 0.7rem; flex-shrink: 0;
-            padding-right: 2.75rem; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 0.6rem; color: var(--muted); letter-spacing: 0.06em; }
+            padding-right: 5.4rem; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 0.6rem; color: var(--muted); letter-spacing: 0.06em; }
         .term-bar .dot { width: 9px; height: 9px; flex: 0 0 9px; padding: 0; border: 0; border-radius: 50%; background: var(--line); }
         .term-bar .dot:nth-child(1){ background:#e06c5b } .term-bar .dot:nth-child(2){ background:#e0b65b } .term-bar .dot:nth-child(3){ background:#7bbf6a }
         .term-bar .terminal-close-dot { cursor: pointer; transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease; }
@@ -129,12 +129,15 @@
         .term-suggest .sug:hover { color: var(--fg); border-color: var(--muted); }
         .term-suggest .sug.top { color: var(--bg); background: var(--gold); border-color: var(--gold); }
         .term-suggest .sug .to { opacity: 0.6; }
-        .terminal-drawer-toggle { position: absolute; z-index: 6; top: 0.28rem; right: 0.38rem; width: 1.65rem; height: 1.45rem;
-            display: flex; align-items: center; justify-content: center; border: 1px solid transparent; border-radius: 2px;
-            background: transparent; color: var(--muted); cursor: pointer; font-family: var(--mono); transition: color 0.2s, border-color 0.2s, background-color 0.2s; }
+        .terminal-drawer-toggle { position: absolute; z-index: 6; top: 0.25rem; right: 0.38rem; width: auto; height: 1.55rem;
+            display: flex; align-items: center; justify-content: center; gap: 0.28rem; padding: 0 0.48rem;
+            border: 1px solid var(--line); border-radius: 2px; background: color-mix(in srgb, var(--bg-2) 92%, var(--gold) 8%);
+            color: var(--gold); cursor: pointer; font-family: var(--mono); transition: color 0.2s, border-color 0.2s, background-color 0.2s; }
         .terminal-drawer-toggle:hover, .terminal-drawer-toggle:focus-visible { color: var(--gold); border-color: var(--line); outline: none; }
         .terminal-drawer-toggle .drawer-arrow { display: block; font-size: 1rem; line-height: 1; animation: drawer-nudge-left 3.6s ease-in-out infinite; }
         .terminal-drawer-toggle .drawer-copy { display: none; }
+        .terminal-drawer-toggle .drawer-copy-close { display: inline; font-size: 0.62rem; line-height: 1; letter-spacing: 0.12em;
+            text-transform: uppercase; animation: drawer-copy-glow 2.4s ease-in-out infinite; }
         .term-bar, .term-body, .term-foot { transition: opacity 0.24s ease, transform 0.45s cubic-bezier(0.22,1,0.36,1), visibility 0.24s; }
         @keyframes drawer-nudge-left { 0%,68%,100% { transform: translateX(0); opacity: 0.72; } 77% { transform: translateX(-3px); opacity: 1; } 86% { transform: translateX(1px); opacity: 0.8; } }
         @keyframes drawer-nudge-right { 0%,68%,100% { transform: translateX(0); opacity: 0.72; } 77% { transform: translateX(3px); opacity: 1; } 86% { transform: translateX(-1px); opacity: 0.8; } }
@@ -260,6 +263,7 @@
             body.terminal-folded .terminal-drawer-toggle:hover,
             body.terminal-folded .terminal-drawer-toggle:focus-visible { background: color-mix(in srgb, var(--gold) 8%, transparent); }
             body.terminal-folded .terminal-drawer-toggle .drawer-arrow { font-size: 1.1rem; animation-name: drawer-nudge-right; }
+            body.terminal-folded .terminal-drawer-toggle .drawer-copy-close { display: none; }
             body.terminal-folded .terminal-drawer-toggle .drawer-copy-vertical { position: absolute; top: 50%; left: 50%; display: flex; gap: 0.65rem;
                 transform: translate(-50%,-50%) rotate(-90deg); color: var(--muted); white-space: nowrap;
                 font-size: calc(0.74rem + 1pt); line-height: 1; letter-spacing: 0.14em; text-transform: uppercase;
@@ -320,6 +324,7 @@
                 font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
                 padding: 0.38rem 0.7rem; border-radius: 3px; }
             .console-toggle:hover { color: var(--fg); border-color: var(--gold); }
+            body:not(.mcollapsed) .console-toggle { color: var(--gold); border-color: var(--gold); animation: drawer-copy-glow 2.4s ease-in-out infinite; }
             body.mode-section .console-toggle { display: none; }
             .terminal { height: 340px; }
             .term-body, #term-input, .term-input-row .p { font-size: 0.86rem; }
@@ -346,7 +351,7 @@
         }
         @media (prefers-reduced-motion: reduce) {
             .hero-cols, .terminal, .term-bar, .term-body, .term-foot { transition-duration: 0.01ms !important; }
-            .terminal-drawer-toggle .drawer-arrow, .terminal-drawer-toggle .drawer-copy { animation: none !important; }
+            .terminal-drawer-toggle .drawer-arrow, .terminal-drawer-toggle .drawer-copy, .console-toggle { animation: none !important; }
         }
         @media (max-width: 880px) {
             header nav { position: fixed; inset: 0; flex-direction: column; justify-content: center; background: var(--bg);
@@ -359,7 +364,7 @@
         }
     </style>
 </head>
-<body class="ts-mono">
+<body class="ts-mono terminal-folded">
     <div id="intro" aria-hidden="true">
         <div class="intro-center">
             <div class="intro-type"></div>
@@ -382,8 +387,9 @@
 
             <div class="hero-cols">
                 <div class="terminal" id="terminal">
-                    <button class="terminal-drawer-toggle" id="terminal-drawer-toggle" type="button" aria-controls="terminal" aria-expanded="true" aria-label="Close terminal" title="Close terminal">
-                        <span class="drawer-arrow" aria-hidden="true">&lt;</span>
+                    <button class="terminal-drawer-toggle" id="terminal-drawer-toggle" type="button" aria-controls="terminal" aria-expanded="false" aria-label="Open terminal" title="Open terminal">
+                        <span class="drawer-arrow" aria-hidden="true">&gt;</span>
+                        <span class="drawer-copy drawer-copy-close" aria-hidden="true">Close</span>
                         <span class="drawer-copy drawer-copy-vertical" aria-hidden="true"><span>Open</span><span>Terminal</span></span>
                     </button>
                     <div class="term-bar"><button class="dot terminal-close-dot" type="button" aria-label="Collapse terminal" title="Collapse terminal"></button><span class="dot"></span><span class="dot"></span><span class="ttl">niccolo@website — zsh</span></div>
@@ -534,6 +540,10 @@
             const sugBox = document.getElementById('term-suggest');
             const term = document.getElementById('terminal');
             const canFocus = window.matchMedia('(hover: hover)').matches;
+            const terminalIsVisible = () => window.matchMedia('(max-width: 880px)').matches
+                ? !document.body.classList.contains('mcollapsed')
+                : !document.body.classList.contains('terminal-folded');
+            const focusTerminal = () => { if (canFocus && terminalIsVisible()) input.focus(); };
             const go = (href) => { window.location.href = href; };
 
             function el(html){ const d=document.createElement('div'); d.className='ln'; d.innerHTML=html; return d; }
@@ -556,12 +566,14 @@
                 guestbook:'guestbook/',
                 journal:  'agentic-law-journal/',
                 'law-journal': 'agentic-law-journal/',
+                atlas:    'ilc-atlas/',
             };
             // alias -> canonical command (drives both `run` and suggestions)
             const ALIASES = {
                 publications:'research', papers:'research', pubs:'research', work:'practice',
                 counsel:'practice', cv:'profile', bio:'about', me:'whoami', home:'whoami',
                 datasets:'data', networks:'data', code:'data', email:'contact', mail:'contact', links:'contact',
+                ilc:'atlas', 'ilc-atlas':'atlas',
                 exit:'close', quit:'close', hide:'close',
             };
 
@@ -580,7 +592,8 @@
                         + row('data','datasets &amp; computational essays') + '\n'
                         + row('treaty','Treaty of Amity &amp; Machine-Readable Relations') + '\n'
                         + row('guestbook','Agent Guestbook') + '\n'
-                        + row('journal','Agentic Law Journal') + '\n\n'
+                        + row('journal','Agentic Law Journal') + '\n'
+                        + row('atlas','ILC Atlas — documentary explorer') + '\n\n'
                         + '<span class="muted">about</span>\n'
                         + row('whoami','one-line identity') + '\n'
                         + row('about','what I work on') + '\n'
@@ -675,7 +688,7 @@
                 if (window.matchMedia('(max-width: 880px)').matches) setTimeout(()=>{ const np=document.getElementById('net-panel'); if (np) np.scrollIntoView({behavior:'smooth', block:'start'}); }, 90);
                 if (v.srcId === 'research-src') initResearchFilters(stage);
                 const cb = stage.querySelector('.stage-close');
-                if (cb) cb.addEventListener('click', ()=>{ closeSection(); if (canFocus) input.focus(); });
+                if (cb) cb.addEventListener('click', ()=>{ closeSection(); focusTerminal(); });
                 // push a history entry so the browser back button closes the frame (desktop + mobile)
                 if (location.hash !== '#'+s) history.pushState({ sec:s }, '', '#'+s);
             }
@@ -848,16 +861,17 @@
                     else print('open: no such section: ' + (args[0]||''));
                     return;
                 }
-                if (LINKS[cmd]) { print('<span class="muted">opening </span>'+cmd+' <span class="muted">↗</span>'); window.open(LINKS[cmd], '_blank'); return; }
                 const resolved = ALIASES[cmd] || cmd;
+                const linkKey = LINKS[cmd] ? cmd : (LINKS[resolved] ? resolved : '');
+                if (linkKey) { print('<span class="muted">opening </span>'+linkKey+' <span class="muted">↗</span>'); window.open(LINKS[linkKey], '_blank'); return; }
                 if (COMMANDS[resolved]) { const out = COMMANDS[resolved](args); if (out !== null && out !== undefined) print(out); }
                 else print('<span class="muted">zsh: command not found: </span>'+cmd+' <span class="muted">— try </span><span class="chip" data-cmd="help">help</span>');
             }
 
             // clicks: run chips in output, and suggestion chips
-            body.addEventListener('click', e => { const c = e.target.closest('.chip[data-cmd]'); if (c) { run(c.getAttribute('data-cmd')); if(canFocus) input.focus(); } });
-            sugBox.addEventListener('click', e => { const s = e.target.closest('.sug[data-cmd]'); if (s) { run(s.getAttribute('data-cmd')); input.value=''; if(canFocus) input.focus(); } });
-            term.addEventListener('click', e => { if (canFocus && !e.target.closest('a, .chip, .sug')) input.focus(); });
+            body.addEventListener('click', e => { const c = e.target.closest('.chip[data-cmd]'); if (c) { run(c.getAttribute('data-cmd')); focusTerminal(); } });
+            sugBox.addEventListener('click', e => { const s = e.target.closest('.sug[data-cmd]'); if (s) { run(s.getAttribute('data-cmd')); input.value=''; focusTerminal(); } });
+            term.addEventListener('click', e => { if (!e.target.closest('a, .chip, .sug')) focusTerminal(); });
 
             input.addEventListener('input', renderSuggest);
             input.addEventListener('keydown', e => {
@@ -872,7 +886,7 @@
             // tiles open the section in-panel (terminal autotypes the command) instead of navigating away
             document.querySelectorAll('.tile').forEach(a => a.addEventListener('click', e => {
                 const key = (a.getAttribute('href')||'').replace('.html','');
-                if (VIEW[key]) { e.preventDefault(); if (canFocus) input.focus(); autorun(key); }
+                if (VIEW[key]) { e.preventDefault(); focusTerminal(); autorun(key); }
             }));
             // wordmark / id returns to the home view
             document.querySelectorAll('header .id, .wordmark-home').forEach(link => {
@@ -883,12 +897,12 @@
 
             // mobile: re-summon / dismiss the terminal+network after the intro collapse
             const ctog = document.getElementById('console-toggle');
-            function syncCtog(){ if (ctog) ctog.textContent = document.body.classList.contains('mcollapsed') ? '▸ console' : '▾ hide console'; }
+            function syncCtog(){ if (ctog) ctog.textContent = document.body.classList.contains('mcollapsed') ? '▸ console' : '▾ close terminal'; }
             if (ctog) ctog.addEventListener('click', () => {
                 const opening = document.body.classList.contains('mcollapsed');
                 document.body.classList.toggle('mcollapsed');
                 syncCtog();
-                if (opening) { const t=document.getElementById('terminal'); if (t) setTimeout(()=>t.scrollIntoView({behavior:'smooth', block:'center'}), 120); if (canFocus) input.focus(); }
+                if (opening) { const t=document.getElementById('terminal'); if (t) setTimeout(()=>t.scrollIntoView({behavior:'smooth', block:'center'}), 120); focusTerminal(); }
             });
             window.__syncCtog = syncCtog; syncCtog();
 
@@ -934,7 +948,7 @@
                     return;
                 }
                 if (window.matchMedia('(max-width: 880px)').matches) { document.body.classList.add('mcollapsed'); syncCtog(); }  // mobile: console hidden by default
-                const manStep = () => autorun('man', () => { if (canFocus) input.focus(); });
+                const manStep = () => autorun('man', focusTerminal);
                 if (skipWelcome) {          // the intro already played welcome-network → go straight to whoami
                     document.body.classList.add('networks-revealed');
                     setTimeout(() => autorun('whoami', () => setTimeout(manStep, 500)), 250);
