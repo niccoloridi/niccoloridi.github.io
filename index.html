@@ -252,6 +252,11 @@
         /* desktop terminal drawer: the active generative/content frame inherits the reclaimed width */
         @media (min-width: 881px) {
             .hero-cols { transition: grid-template-columns 0.68s cubic-bezier(0.22,1,0.36,1), gap 0.68s cubic-bezier(0.22,1,0.36,1); }
+            body.terminal-intro-folding .hero-cols { transition-duration: 1.15s; }
+            body.terminal-intro-folding .terminal,
+            body.terminal-intro-folding .term-bar,
+            body.terminal-intro-folding .term-body,
+            body.terminal-intro-folding .term-foot { transition-duration: 0.95s; }
             body.terminal-folded .hero-cols,
             body.mode-section.terminal-folded .hero-cols { grid-template-columns: 50px minmax(0,1fr); gap: clamp(0.65rem,1.2vw,1rem); }
             body.terminal-folded .terminal { background: color-mix(in srgb, var(--bg) 72%, var(--bg-2) 28%);
@@ -315,6 +320,7 @@
             .hero-cols, body.mode-section .hero-cols { grid-template-columns: 1fr; }
             /* intro then collapse: terminal+network play, then fold away so the tiles rise */
             .hero-cols { transition: max-height 0.6s ease, opacity 0.45s ease, margin-top 0.5s ease; max-height: 820px; overflow: hidden; }
+            body.terminal-intro-folding .hero-cols { transition-duration: 1.15s, 0.85s, 1.05s; }
             body.mcollapsed .hero-cols { max-height: 0; opacity: 0; margin-top: 0; }
             body.mode-section .hero-cols { max-height: 3000px; opacity: 1; }
             body.mode-section .terminal { display: none; }   /* section view = content only on mobile */
@@ -364,7 +370,7 @@
         }
     </style>
 </head>
-<body class="ts-mono terminal-folded">
+<body class="ts-mono">
     <div id="intro" aria-hidden="true">
         <div class="intro-center">
             <div class="intro-type"></div>
@@ -387,8 +393,8 @@
 
             <div class="hero-cols">
                 <div class="terminal" id="terminal">
-                    <button class="terminal-drawer-toggle" id="terminal-drawer-toggle" type="button" aria-controls="terminal" aria-expanded="false" aria-label="Open terminal" title="Open terminal">
-                        <span class="drawer-arrow" aria-hidden="true">&gt;</span>
+                    <button class="terminal-drawer-toggle" id="terminal-drawer-toggle" type="button" aria-controls="terminal" aria-expanded="true" aria-label="Close terminal" title="Close terminal">
+                        <span class="drawer-arrow" aria-hidden="true">&lt;</span>
                         <span class="drawer-copy drawer-copy-close" aria-hidden="true">Close</span>
                         <span class="drawer-copy drawer-copy-vertical" aria-hidden="true"><span>Open</span><span>Terminal</span></span>
                     </button>
@@ -540,6 +546,7 @@
             const sugBox = document.getElementById('term-suggest');
             const term = document.getElementById('terminal');
             const canFocus = window.matchMedia('(hover: hover)').matches;
+            let terminalTouched = false;
             const terminalIsVisible = () => window.matchMedia('(max-width: 880px)').matches
                 ? !document.body.classList.contains('mcollapsed')
                 : !document.body.classList.contains('terminal-folded');
@@ -624,6 +631,7 @@
                     + '<a class="chip" href="'+LINKS.journal+'">law journal</a>'; },
                 ls(){ return Object.keys(SECTIONS).map(s=>'<span class="chip" data-cmd="'+s+'">'+s+'/</span>').join('   '); },
                 close(){
+                    terminalTouched = true;
                     setTimeout(() => {
                         if (desktopMq.matches) setTerminalFolded(true);
                         else { document.body.classList.add('mcollapsed'); syncCtog(); }
@@ -899,6 +907,7 @@
             const ctog = document.getElementById('console-toggle');
             function syncCtog(){ if (ctog) ctog.textContent = document.body.classList.contains('mcollapsed') ? '▸ console' : '▾ close terminal'; }
             if (ctog) ctog.addEventListener('click', () => {
+                terminalTouched = true;
                 const opening = document.body.classList.contains('mcollapsed');
                 document.body.classList.toggle('mcollapsed');
                 syncCtog();
@@ -924,30 +933,51 @@
             function setTerminalFolded(folded){
                 document.body.classList.toggle('terminal-folded', folded);
                 syncDtog();
+                if (folded && document.activeElement === input) input.blur();
                 if (!folded && desktopMq.matches && canFocus) setTimeout(() => input.focus(), 720);
             }
             if (dtog) dtog.addEventListener('click', event => {
                 event.stopPropagation();
+                terminalTouched = true;
                 setTerminalFolded(!document.body.classList.contains('terminal-folded'));
             });
             const redDot = term.querySelector('.terminal-close-dot');
             if (redDot) redDot.addEventListener('click', event => {
                 if (!desktopMq.matches) return;
                 event.stopPropagation();
+                terminalTouched = true;
                 setTerminalFolded(true);
             });
             desktopMq.addEventListener('change', syncDtog);
             syncDtog();
+
+            // Let the welcome sequence remain visible, then close it with a slower one-time slide.
+            function autoFoldTerminal(delay){
+                setTimeout(() => {
+                    if (terminalTouched || document.body.classList.contains('mode-section')) return;
+                    document.body.classList.add('terminal-intro-folding');
+                    requestAnimationFrame(() => requestAnimationFrame(() => {
+                        if (desktopMq.matches) setTerminalFolded(true);
+                        else {
+                            if (document.activeElement === input) input.blur();
+                            document.body.classList.add('mcollapsed');
+                            syncCtog();
+                        }
+                        setTimeout(() => document.body.classList.remove('terminal-intro-folding'), 1300);
+                    }));
+                }, delay);
+            }
 
             const hsec = (location.hash || '').replace('#','').toLowerCase();
             window.__startBoot = function(skipWelcome){
                 if (window.__booted) return; window.__booted = true;
                 if (VIEW[hsec]) {            // deep link: open that section, no intro
                     document.body.classList.add('networks-revealed');
+                    if (desktopMq.matches) setTerminalFolded(true);
+                    else { document.body.classList.add('mcollapsed'); syncCtog(); }
                     setTimeout(() => openSection(hsec), 350);
                     return;
                 }
-                if (window.matchMedia('(max-width: 880px)').matches) { document.body.classList.add('mcollapsed'); syncCtog(); }  // mobile: console hidden by default
                 const manStep = () => autorun('man', focusTerminal);
                 if (skipWelcome) {          // the intro already played welcome-network → go straight to whoami
                     document.body.classList.add('networks-revealed');
@@ -955,6 +985,7 @@
                 } else {
                     setTimeout(() => autorun('welcome-network', () => setTimeout(() => autorun('whoami', () => setTimeout(manStep, 500)), 450)), 250);
                 }
+                autoFoldTerminal(skipWelcome ? 1800 : 3200);
                 setTimeout(() => document.body.classList.add('networks-revealed'), 6000);
             };
             if (document.getElementById('intro') && !VIEW[hsec]) {
