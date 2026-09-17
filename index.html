@@ -140,16 +140,40 @@
         .net-panel { position: relative; border: 1px solid var(--line); border-radius: 5px; overflow: hidden; min-height: 0;
             background: radial-gradient(80% 80% at 50% 45%, rgba(215,161,59,0.05), transparent 70%); }
         .net-panel canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-        .net-panel .cap { position: absolute; left: 0.7rem; bottom: 0.55rem; z-index: 2; font-family: var(--mono);
-            font-size: 0.58rem; color: var(--muted); letter-spacing: 0.06em; }
-        .net-panel .cap b { color: var(--gold); font-weight: 500; }
-        /* standby placeholder shown until the welcome-network command reveals the constellation */
-        .net-standby { position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; justify-content: center; gap: 0.55rem;
-            font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted);
-            opacity: 0.6; transition: opacity 0.6s ease; pointer-events: none; }
-        .net-standby .sb-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); animation: sb-pulse 1.3s ease-in-out infinite; }
-        @keyframes sb-pulse { 0%,100% { opacity: 0.25; transform: scale(0.65); } 50% { opacity: 1; transform: scale(1); } }
-        body.networks-revealed .net-standby { opacity: 0; }
+        .home-welcome { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; justify-content: center;
+            gap: clamp(1.8rem,4vh,3rem); padding: clamp(1.35rem,3.4vw,3.4rem); overflow-y: auto;
+            opacity: 0; transform: translateY(10px); transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1);
+            pointer-events: none; }
+        .welcome-intro, .site-changelog { width: min(100%,72ch); }
+        .welcome-copy { font-family: var(--grotesk); font-size: clamp(0.96rem,1.22vw,1.18rem);
+            line-height: 1.65; text-align: justify; text-justify: inter-word; hyphens: none; overflow-wrap: normal; word-break: normal; }
+        .welcome-copy strong { color: var(--gold); font-weight: 600; }
+        body.home-content-ready .home-welcome { opacity: 1; transform: none; pointer-events: auto; }
+        .site-changelog { padding: 0.65rem 0 0.15rem; border-top: 1px dashed var(--gold); border-bottom: 1px dashed var(--gold);
+            font-family: var(--mono); }
+        .changelog-head { display: flex; align-items: center; gap: 0.65rem; padding: 0 0 0.65rem;
+            border-bottom: 1px dotted var(--line); color: var(--gold); font-size: 0.64rem;
+            letter-spacing: 0.1em; text-transform: uppercase; }
+        .new-badge { display: inline-block; padding: 0.1rem 0.3rem; background: var(--gold); color: var(--bg);
+            font-weight: 700; letter-spacing: 0.04em; animation: geo-blink 1.25s steps(2,end) infinite; }
+        @keyframes geo-blink { 0%,54% { opacity: 1; } 55%,100% { opacity: 0.35; } }
+        .changelog-head .path::before, .changelog-head .path::after { color: var(--muted); }
+        .changelog-head .path::before { content: '★ '; }
+        .changelog-head .path::after { content: ' ★'; }
+        .changelog-head .count { margin-left: auto; color: var(--muted); letter-spacing: 0.05em; }
+        .changelog-list { list-style: none; }
+        .changelog-item { display: grid; grid-template-columns: 6.8rem 4.3rem minmax(0,1fr);
+            gap: 0.75rem; align-items: start; padding: 0.58rem 0; border-top: 1px dotted var(--line);
+            font-size: 0.69rem; line-height: 1.4; }
+        .changelog-item:first-child { border-top: 0; }
+        .changelog-date { color: var(--gold); font-size: 0.59rem; letter-spacing: 0.04em; white-space: nowrap; }
+        .changelog-tag { color: var(--muted); font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase; }
+        .changelog-tag::before { content: '['; } .changelog-tag::after { content: ']'; }
+        .changelog-entry { min-width: 0; }
+        .changelog-item a { display: inline-block; color: var(--fg); font-size: 0.72rem; margin-bottom: 0.12rem;
+            text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 0.2em; }
+        .changelog-item a:hover { color: var(--gold); }
+        .changelog-note { display: block; color: var(--muted); }
 
         /* ─── intro / boot cinematic (dev) — the network sits UNDER the title, not behind it ─── */
         #intro { position: fixed; inset: 0; z-index: 9000; background: var(--bg);
@@ -174,7 +198,7 @@
         #intro.done .intro-skip { opacity: 0; }
         /* when a section is open, the constellation recedes behind the content */
         body.mode-section .net-panel canvas { opacity: 0; transition: opacity 0.35s ease; }
-        body.mode-section .net-panel .cap { opacity: 0; }
+        body.mode-section .home-welcome { opacity: 0; visibility: hidden; }
 
         /* ─── In-panel content stage (the "viewport") — opaque over the network, scrolls ─── */
         .stage { position: absolute; inset: 0; z-index: 3; padding: clamp(1rem,2.4vw,1.8rem);
@@ -368,6 +392,11 @@
             .terminal { height: 340px; }
             .term-body, #term-input, .term-input-row .p { font-size: 0.86rem; }
             .net-panel { height: 260px; }
+            .home-welcome { justify-content: flex-start; padding: 1.15rem; }
+            .welcome-copy { font-size: 0.92rem; }
+            .changelog-item { grid-template-columns: 6.4rem minmax(0,1fr); gap: 0.45rem 0.6rem; }
+            .changelog-tag { grid-column: 1; }
+            .changelog-entry { grid-column: 2; grid-row: 1 / span 2; }
             .tiles { grid-template-columns: repeat(2, 1fr); }
             .tile { min-height: 190px; }
             .tile .label .name { font-size: 1.1rem; }
@@ -390,7 +419,7 @@
         }
         @media (prefers-reduced-motion: reduce) {
             .hero-cols, .terminal, .term-bar, .term-body, .term-foot { transition-duration: 0.01ms !important; }
-            .terminal-drawer-toggle .drawer-arrow, .terminal-drawer-toggle .drawer-copy, .console-toggle { animation: none !important; }
+            .terminal-drawer-toggle .drawer-arrow, .terminal-drawer-toggle .drawer-copy, .console-toggle, .new-badge { animation: none !important; }
         }
         @media (max-width: 880px) {
             header nav { position: fixed; inset: 0; flex-direction: column; justify-content: center; background: var(--bg);
@@ -443,8 +472,18 @@
                 </div>
 
                 <div class="net-panel" id="net-panel">
-                    <div class="net-standby" aria-hidden="true"><span class="sb-dot"></span> awaiting welcome-network</div>
-                    <div class="cap"><b>fig.</b> welcome network</div>
+                    <div class="home-welcome" id="home-welcome">
+                        <div class="welcome-intro"><p class="welcome-copy">Welcome to my website. Mostly research on <strong>public international law</strong>, computational methodologies, and random musings on applying data science to international law. You can also find information on my academic work, practice, and various data projects.</p></div>
+                        <section class="site-changelog" aria-labelledby="changelog-title">
+                            <div class="changelog-head"><span class="new-badge">NEW!</span><span class="path" id="changelog-title">what&rsquo;s new</span><span class="count">4 updates</span></div>
+                            <ul class="changelog-list">
+                                <li class="changelog-item"><time class="changelog-date" datetime="2026-09-11">11 SEP 2026</time><span class="changelog-tag">atlas</span><span class="changelog-entry"><a href="ilc-atlas/">ILC Atlas</a><span class="changelog-note">A documentary explorer for the work of the International Law Commission.</span></span></li>
+                                <li class="changelog-item"><time class="changelog-date" datetime="2026-08-24">24 AUG 2026</time><span class="changelog-tag">essay</span><span class="changelog-entry"><a href="echr-py.html">echr-py</a><span class="changelog-note">Software and data methods for working with ECHR case law.</span></span></li>
+                                <li class="changelog-item"><time class="changelog-date" datetime="2026-08-14">14 AUG 2026</time><span class="changelog-tag">journal</span><span class="changelog-entry"><a href="agentic-law-journal/">Agentic Law Journal</a><span class="changelog-note">Machine-authored scholarship and experiments in legal argument.</span></span></li>
+                                <li class="changelog-item"><time class="changelog-date" datetime="2026-02-28">28 FEB 2026</time><span class="changelog-tag">essay</span><span class="changelog-entry"><a href="cjeu-py.html">cjeu-py</a><span class="changelog-note">A computational toolkit for CJEU decisions and metadata.</span></span></li>
+                            </ul>
+                        </section>
+                    </div>
                     <div class="stage" id="stage" aria-live="polite"></div>
                 </div>
             </div>
@@ -637,7 +676,7 @@
                         + row('about','what I work on') + '\n'
                         + row('contact','email &amp; profiles') + '\n\n'
                         + '<span class="muted">system</span>\n'
-                        + row('welcome','replay the welcome network') + '\n'
+                        + row('welcome','about the opening network') + '\n'
                         + row('ls','list sections') + '\n'
                         + row('open &lt;section&gt;','open a section by name', false) + '\n'
                         + row('close','fold the terminal into its drawer') + '\n'
@@ -875,10 +914,7 @@
             COMMANDS.top = () => { const a = body.querySelectorAll('.man-anchor'); const el = a[a.length-1]; if (el) el.scrollIntoView({ behavior:'smooth', block:'start' }); return null; };
             COMMANDS['welcome-network'] = () => {
                 closeSection();
-                document.body.classList.add('networks-revealed');            // make sure the constellation is showing
-                if (window.__net && window.__net.bloom) window.__net.bloom();
-                else window.__bloomPending = true;                           // not built yet → bloom as soon as it is
-                return '<span class="gold">welcome network</span> <span class="muted">— rendered ✦</span>';
+                return '<span class="gold">welcome network</span> <span class="muted">— the constellation lives in the opening sequence ✦</span>';
             };
             ALIASES.welcome = 'welcome-network';
 
@@ -1071,28 +1107,41 @@
 
     <script src="generative-plates.js?v=20260811-3"></script>
     <script type="module">
-        // ─── Calm constellation in the right panel (canvas is absolute → no resize feedback) ───
-        const container = document.getElementById('net-panel');
+        // ─── Intro constellation; the homepage pane is reserved for content ───
         const introEl = document.getElementById('intro');
+        const introNetwork = document.getElementById('intro-net');
         const deepLink = /^#(profile|practice|research|data)$/.test(location.hash);
         function hasWebGL(){ try { const c=document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl2')||c.getContext('webgl'))); } catch(e){ return false; } }
         let THREE = null;
         if (hasWebGL()) { try { THREE = await import('three'); } catch(err){ console.warn('three.js failed', err); THREE = null; } }
-        if (THREE && container) requestAnimationFrame(() => { window.__net = createCalmNetwork(THREE, container); if (window.__bloomPending && window.__net.bloom) { window.__bloomPending = false; setTimeout(() => window.__net.bloom(), 500); } });
+        const initialNetworkHost = introEl && !deepLink ? introNetwork : null;
+        if (THREE && initialNetworkHost) {
+            window.__net = createCalmNetwork(THREE, initialNetworkHost);
+        }
 
-        // ─── intro: terminal types in the void → network blooms UNDER the title → name → resolves to the homepage ───
+        // ─── intro: terminal types in the void → network blooms → homepage content resolves ───
         let __introDone = false;
         function finishIntro(){
             if (__introDone) return; __introDone = true;
+            document.body.classList.add('networks-revealed');
+            if (window.__net && window.__net.bloom) window.__net.bloom();
             introEl.classList.add('done');
+            document.body.classList.add('home-content-ready');
             window.dispatchEvent(new Event('intro:done'));
-            setTimeout(() => { introEl.style.display = 'none'; }, 950);
+            setTimeout(() => {
+                introEl.style.display = 'none';
+                if (window.__net && window.__net.destroy) window.__net.destroy();
+                window.__net = null;
+            }, 950);
         }
         if (introEl && !deepLink) {
             const skip = introEl.querySelector('.intro-skip');
             if (skip) skip.addEventListener('click', finishIntro);
             runIntro();
-        } else if (introEl) introEl.style.display = 'none';
+        } else if (introEl) {
+            introEl.style.display = 'none';
+            document.body.classList.add('home-content-ready');
+        }
         async function runIntro(){
             const wait = ms => new Promise(r => setTimeout(r, ms));
             const typeEl = introEl.querySelector('.intro-type');
@@ -1102,7 +1151,7 @@
             await type(typeEl, 'niccolo@website:~$ welcome-network', 44);
             await wait(300);
             document.body.classList.add('networks-revealed');              // network blooms first, beneath the command
-            if (THREE) { try { const n = createCalmNetwork(THREE, document.getElementById('intro-net')); if (n && n.bloom) n.bloom(); } catch(e){} }
+            if (window.__net && window.__net.bloom) window.__net.bloom();
             introEl.classList.add('lit');
             await wait(950);
             if (nameEl) nameEl.classList.add('show');                      // then the name fades in above it
@@ -1214,18 +1263,19 @@
                 if(w===W&&h===H)return; W=w;H=h; renderer.setSize(W,H,false); camera.left=-W/2;camera.right=W/2;camera.top=H/2;camera.bottom=-H/2; camera.updateProjectionMatrix(); sim.alpha(0.3); });
             ro.observe(container);
 
-            let paused=false, pulseTimer=null; const period=850+Math.random()*750;
-            function pulse(){ const now=performance.now();
+            let paused=false, disposed=false, pulseTimer=null; const period=850+Math.random()*750;
+            function pulse(){ if(disposed) return; const now=performance.now();
                 const nf=1+Math.floor(Math.random()*2);
                 for(let f=0;f<nf;f++){ const ni=Math.floor(Math.random()*N); nodes[ni].flashStart=now; nodes[ni].flashDur=1500+Math.random()*900; }
                 if(edges.length){ const ne=1+Math.floor(Math.random()*2);
                     for(let f=0;f<ne;f++){ const ei=Math.floor(Math.random()*edges.length); edges[ei].boostStart=now; edges[ei].boostDur=1100+Math.random()*700; spawnShine(ei); } } }
             function startP(){ if(!pulseTimer) pulseTimer=setInterval(pulse, period); } function stopP(){ if(pulseTimer){clearInterval(pulseTimer);pulseTimer=null;} }
-            document.addEventListener('visibilitychange', ()=>{ paused=document.hidden; if(document.hidden) stopP(); else startP(); });
-            setTimeout(()=>{ if(!document.hidden) startP(); }, 1400);
+            document.addEventListener('visibilitychange', ()=>{ if(disposed) return; paused=document.hidden; if(document.hidden) stopP(); else startP(); });
+            setTimeout(()=>{ if(!disposed && !document.hidden) startP(); }, 1400);
 
             let startT=null; const easeOutCubic=t=>1-Math.pow(1-t,3);
             function tick(now){
+                if(disposed) return;
                 if(paused){ requestAnimationFrame(tick); return; }
                 // hold the constellation until the `welcome-network` command reveals it (so it appears after the line is typed)
                 if(!document.body.classList.contains('networks-revealed')){ requestAnimationFrame(tick); return; }
@@ -1252,7 +1302,11 @@
                 renderer.render(scene,camera); requestAnimationFrame(tick);
             }
             requestAnimationFrame(tick);
-            return { retheme, bloom: () => { for (let k = 0; k < 7; k++) setTimeout(pulse, k * 110); } };
+            return {
+                retheme,
+                bloom: () => { for (let k = 0; k < 7; k++) setTimeout(pulse, k * 110); },
+                destroy: () => { disposed = true; stopP(); ro.disconnect(); sim.stop(); renderer.dispose(); }
+            };
         }
     </script>
 </body>
