@@ -68,14 +68,17 @@
             font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
         }
         header .id { color: var(--fg); } header .id b { color: var(--gold); }
-        header nav { display: flex; gap: 1.3rem; align-items: center; }
+        .header-actions { display: flex; gap: 0.5rem; align-items: center; }
+        header nav { display: none; }
         header nav a:hover { color: var(--fg); }
         .tog { background: none; border: 1px solid var(--line); color: var(--muted); cursor: pointer;
             font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
             padding: 0.3rem 0.6rem; border-radius: 2px; transition: all 0.2s; }
         .tog:hover { color: var(--fg); border-color: var(--gold); }
-        .burger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
-        .burger span { display: block; width: 22px; height: 1.5px; background: var(--fg); margin: 5px 0; transition: 0.3s; }
+        .burger { display: none; width: 33px; height: 28px; background: none; border: 1px solid var(--line);
+            border-radius: 2px; cursor: pointer; padding: 4px 5px; }
+        .burger:hover { border-color: var(--gold); }
+        .burger span { display: block; width: 20px; height: 1.5px; background: var(--fg); margin: 4px 0; transition: 0.3s; }
 
         main { position: relative; z-index: 2; flex: 1; min-height: 0; display: flex; flex-direction: column; }
 
@@ -154,9 +157,6 @@
         .changelog-head { display: flex; align-items: center; gap: 0.65rem; padding: 0 0 0.65rem;
             border-bottom: 1px dotted var(--line); color: var(--gold); font-size: 0.64rem;
             letter-spacing: 0.1em; text-transform: uppercase; }
-        .new-badge { display: inline-block; padding: 0.1rem 0.3rem; background: var(--gold); color: var(--bg);
-            font-weight: 700; letter-spacing: 0.04em; animation: geo-blink 1.25s steps(2,end) infinite; }
-        @keyframes geo-blink { 0%,54% { opacity: 1; } 55%,100% { opacity: 0.35; } }
         .changelog-head .path::before, .changelog-head .path::after { color: var(--muted); }
         .changelog-head .path::before { content: '★ '; }
         .changelog-head .path::after { content: ' ★'; }
@@ -277,12 +277,6 @@
             .hero { grid-column: 1 / -1; grid-row: 1; min-width: 0; }
             .tiles { grid-column: 1 / -1; grid-row: 2; min-width: 0; min-height: 0; }
             .hero-cols { transition: grid-template-columns 0.68s cubic-bezier(0.22,1,0.36,1), gap 0.68s cubic-bezier(0.22,1,0.36,1); }
-            body.terminal-intro-folding main,
-            body.terminal-intro-folding .hero-cols { transition-duration: 1.8s; }
-            body.terminal-intro-folding .terminal,
-            body.terminal-intro-folding .term-bar,
-            body.terminal-intro-folding .term-body,
-            body.terminal-intro-folding .term-foot { transition-duration: 1.35s; }
             body.terminal-folded main { grid-template-columns: minmax(0,1fr) clamp(235px,20vw,320px); grid-template-rows: minmax(0,1fr) 0px; }
             body.terminal-folded.mode-section main { grid-template-columns: minmax(0,1fr) clamp(380px,32vw,520px); }
             body.terminal-folded .hero { grid-column: 1; grid-row: 1 / -1; }
@@ -380,9 +374,8 @@
             html { font-size: 17px; }
             .hero { padding-top: 1.4rem; }
             .hero-cols, body.mode-section .hero-cols { grid-template-columns: 1fr; }
-            /* intro then collapse: terminal+network play, then fold away so the tiles rise */
+            /* mobile console drawer */
             .hero-cols { transition: max-height 0.6s ease, opacity 0.45s ease, margin-top 0.5s ease; max-height: 820px; overflow: hidden; }
-            body.terminal-intro-folding .hero-cols { transition-duration: 1.15s, 0.85s, 1.05s; }
             body.mcollapsed .hero-cols { max-height: 0; opacity: 0; margin-top: 0; }
             body.mode-section .hero-cols { max-height: 3000px; opacity: 1; }
             body.mode-section .terminal { display: none; }   /* section view = content only on mobile */
@@ -424,20 +417,24 @@
         }
         @media (prefers-reduced-motion: reduce) {
             .hero-cols, .terminal, .term-bar, .term-body, .term-foot { transition-duration: 0.01ms !important; }
-            .terminal-drawer-toggle .drawer-arrow, .terminal-drawer-toggle .drawer-copy, .console-toggle, .new-badge { animation: none !important; }
+            .terminal-drawer-toggle .drawer-arrow, .terminal-drawer-toggle .drawer-copy, .console-toggle { animation: none !important; }
         }
         @media (max-width: 880px) {
             header nav { position: fixed; inset: 0; flex-direction: column; justify-content: center; background: var(--bg);
-                transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.77,0,0.175,1); font-size: 1.1rem; z-index: 40; gap: 1.6rem; }
+                display: flex; align-items: center; text-align: center; transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.77,0,0.175,1);
+                font-size: 1.1rem; z-index: 40; gap: 1.4rem; }
+            header nav a { display: block; width: min(15rem,80vw); padding: 0.25rem 0.7rem; color: var(--muted); }
+            header nav a:hover, header nav a:focus-visible { color: var(--gold); }
             body.nav-open header nav { transform: translateX(0); }
+            body.nav-open { overflow: hidden; }
             .burger { display: block; z-index: 50; }
-            body.nav-open .burger span:nth-child(1){ transform: translateY(6.5px) rotate(45deg); }
+            body.nav-open .burger span:nth-child(1){ transform: translateY(5.5px) rotate(45deg); }
             body.nav-open .burger span:nth-child(2){ opacity: 0; }
-            body.nav-open .burger span:nth-child(3){ transform: translateY(-6.5px) rotate(-45deg); }
+            body.nav-open .burger span:nth-child(3){ transform: translateY(-5.5px) rotate(-45deg); }
         }
     </style>
 </head>
-<body class="ts-mono">
+<body class="ts-mono terminal-folded">
     <div id="intro" aria-hidden="true">
         <div class="intro-center">
             <div class="intro-type"></div>
@@ -448,7 +445,21 @@
     </div>
     <header>
         <a class="id" href="index.html"><b>◆</b> NICCOLÒ&nbsp;RIDI</a>
-        <button class="tog" onclick="toggleTheme()"><span id="tlabel">light</span></button>
+        <div class="header-actions">
+            <button class="tog" onclick="toggleTheme()"><span id="tlabel">light</span></button>
+            <button class="burger" id="menu-toggle" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu">
+                <span></span><span></span><span></span>
+            </button>
+            <nav id="site-nav" aria-label="Primary navigation">
+                <a href="profile.html">Profile</a>
+                <a href="practice.html">Practice</a>
+                <a href="research.html">Research</a>
+                <a href="data.html">Data</a>
+                <a href="ilc-atlas/">ILC Atlas</a>
+                <a href="agentic-law-journal/">Law Journal</a>
+                <a href="guestbook/">Guestbook</a>
+            </nav>
+        </div>
     </header>
 
     <main>
@@ -458,8 +469,8 @@
 
             <div class="hero-cols">
                 <div class="terminal" id="terminal">
-                    <button class="terminal-drawer-toggle" id="terminal-drawer-toggle" type="button" aria-controls="terminal" aria-expanded="true" aria-label="Close terminal" title="Close terminal">
-                        <span class="drawer-arrow" aria-hidden="true">&lt;</span>
+                    <button class="terminal-drawer-toggle" id="terminal-drawer-toggle" type="button" aria-controls="terminal" aria-expanded="false" aria-label="Open terminal" title="Open terminal">
+                        <span class="drawer-arrow" aria-hidden="true">&gt;</span>
                         <span class="drawer-copy drawer-copy-close" aria-hidden="true">Close</span>
                         <span class="drawer-copy drawer-copy-vertical" aria-hidden="true"><span>Open</span><span>Terminal</span></span>
                     </button>
@@ -478,9 +489,11 @@
 
                 <div class="net-panel" id="net-panel">
                     <div class="home-welcome" id="home-welcome">
-                        <div class="welcome-intro"><p class="welcome-copy">Welcome to my website. Mostly research on <strong>public international law</strong>, computational methodologies, and random musings on applying data science to international law. You can also find information on my academic work, practice, and various data projects.</p></div>
+                        <div class="welcome-intro">
+                            <p class="welcome-copy">Welcome to my website. I am Senior Lecturer (Associate Professor) in Public International Law at The Dickson Poon School of Law, King&rsquo;s College London. Here you will mostly find research on <strong>public international law</strong>, computational methodologies, and random musings on applying data science to international law. You can also find information on my academic work, practice, and various data projects.</p>
+                        </div>
                         <section class="site-changelog" aria-labelledby="changelog-title">
-                            <div class="changelog-head"><span class="new-badge">NEW!</span><span class="path" id="changelog-title">what&rsquo;s new</span><span class="count">4 updates</span></div>
+                            <div class="changelog-head"><span class="path" id="changelog-title">what&rsquo;s new</span><span class="count">4 updates</span></div>
                             <ul class="changelog-list">
                                 <li class="changelog-item"><time class="changelog-date" datetime="2026-09-11">11 SEP 2026</time><span class="changelog-tag">atlas</span><span class="changelog-entry"><a href="ilc-atlas/">ILC Atlas</a><span class="changelog-note">A documentary explorer for the work of the International Law Commission.</span></span></li>
                                 <li class="changelog-item"><time class="changelog-date" datetime="2026-08-24">24 AUG 2026</time><span class="changelog-tag">essay</span><span class="changelog-entry"><a href="echr-py.html">echr-py</a><span class="changelog-note">Software and data methods for working with ECHR case law.</span></span></li>
@@ -614,6 +627,23 @@
         }
         function toggleTheme(){ applyTheme(theme === 'light' ? 'dark' : 'light', true); }
         applyTheme(theme, false);
+
+        const menuToggle = document.getElementById('menu-toggle');
+        const siteNav = document.getElementById('site-nav');
+        function setMenuOpen(open){
+            document.body.classList.toggle('nav-open', open);
+            if (menuToggle) {
+                menuToggle.setAttribute('aria-expanded', String(open));
+                menuToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+            }
+        }
+        if (menuToggle) menuToggle.addEventListener('click', event => {
+            event.stopPropagation();
+            setMenuOpen(!document.body.classList.contains('nav-open'));
+        });
+        if (siteNav) siteNav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => setMenuOpen(false)));
+        document.addEventListener('keydown', event => { if (event.key === 'Escape') setMenuOpen(false); });
+        window.matchMedia('(min-width: 881px)').addEventListener('change', event => { if (event.matches) setMenuOpen(false); });
 
         /* ─── Interactive shell with autocomplete/suggestions ─── */
         (function shell(){
@@ -778,7 +808,11 @@
                 requestAnimationFrame(syncReadingRail);
                 stage.querySelector('.stage-text').scrollTop = 0;
                 if (v.photo) initGenerativeReveal(stage.querySelector('.stage-generative'));
-                if (window.matchMedia('(max-width: 880px)').matches) setTimeout(()=>{ const np=document.getElementById('net-panel'); if (np) np.scrollIntoView({behavior:'smooth', block:'start'}); }, 90);
+                if (window.matchMedia('(max-width: 880px)').matches) {
+                    document.body.classList.add('mcollapsed');
+                    syncCtog();
+                    setTimeout(()=>{ const np=document.getElementById('net-panel'); if (np) np.scrollIntoView({behavior:'smooth', block:'start'}); }, 90);
+                }
                 if (v.srcId === 'research-src') initResearchFilters(stage);
                 const cb = stage.querySelector('.stage-close');
                 if (cb) cb.addEventListener('click', ()=>{ closeSection(); focusTerminal(); });
@@ -900,6 +934,10 @@
             }
             function clearSectionUI(){
                 document.body.classList.remove('mode-section');
+                if (window.matchMedia('(max-width: 880px)').matches) {
+                    document.body.classList.add('mcollapsed');
+                    syncCtog();
+                }
                 document.querySelectorAll('.tile').forEach(tile => {
                     tile.classList.remove('active');
                     tile.style.removeProperty('--rail-slot');
@@ -1061,25 +1099,14 @@
                 terminalTouched = true;
                 setTerminalFolded(true);
             });
-            desktopMq.addEventListener('change', syncDtog);
+            desktopMq.addEventListener('change', event => {
+                syncDtog();
+                if (!event.matches) {
+                    document.body.classList.add('mcollapsed');
+                    syncCtog();
+                }
+            });
             syncDtog();
-
-            // Let the welcome sequence remain visible, then close it with a slower one-time slide.
-            function autoFoldTerminal(delay){
-                setTimeout(() => {
-                    if (terminalTouched || document.body.classList.contains('mode-section')) return;
-                    document.body.classList.add('terminal-intro-folding');
-                    requestAnimationFrame(() => requestAnimationFrame(() => {
-                        if (desktopMq.matches) setTerminalFolded(true);
-                        else {
-                            if (document.activeElement === input) input.blur();
-                            document.body.classList.add('mcollapsed');
-                            syncCtog();
-                        }
-                        setTimeout(() => document.body.classList.remove('terminal-intro-folding'), desktopMq.matches ? 1950 : 1300);
-                    }));
-                }, delay);
-            }
 
             const hsec = (location.hash || '').replace('#','').toLowerCase();
             window.__startBoot = function(skipWelcome){
@@ -1091,6 +1118,10 @@
                     setTimeout(() => openSection(hsec), 350);
                     return;
                 }
+                if (!desktopMq.matches) {
+                    document.body.classList.add('mcollapsed');
+                    syncCtog();
+                }
                 const manStep = () => autorun('man', focusTerminal);
                 if (skipWelcome) {          // the intro already played welcome-network → go straight to whoami
                     document.body.classList.add('networks-revealed');
@@ -1098,7 +1129,6 @@
                 } else {
                     setTimeout(() => autorun('welcome-network', () => setTimeout(() => autorun('whoami', () => setTimeout(manStep, 500)), 450)), 250);
                 }
-                autoFoldTerminal(desktopMq.matches ? 0 : (skipWelcome ? 1800 : 3200));
                 setTimeout(() => document.body.classList.add('networks-revealed'), 6000);
             };
             if (document.getElementById('intro') && !VIEW[hsec]) {
