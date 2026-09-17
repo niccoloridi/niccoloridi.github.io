@@ -80,19 +80,12 @@
         main { position: relative; z-index: 2; flex: 1; min-height: 0; display: flex; flex-direction: column; }
 
         .hero { flex: 1; min-height: 0; display: flex; flex-direction: column;
-            padding: clamp(1rem,3vh,2rem) var(--gutter) clamp(0.8rem,2vh,1.4rem); }
-        .hero-kicker { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
-            color: var(--gold); margin-bottom: clamp(0.5rem,1.5vh,1rem); display: flex; gap: 0.6rem; align-items: center; }
-        .hero-kicker::before { content:''; width: 26px; height: 1px; background: var(--gold); display:inline-block; }
+            padding: clamp(0.75rem,1.7vh,1.25rem) var(--gutter) clamp(0.45rem,1vh,0.75rem); }
         .wordmark { font-family: var(--grotesk); font-weight: 700; font-size: clamp(2.2rem, 7vw, 5.2rem);
             line-height: 0.92; letter-spacing: -0.02em; text-transform: uppercase; }
         .wordmark-home { display: block; width: fit-content; }
         .wordmark-home:focus-visible { outline: 2px solid var(--gold); outline-offset: 0.35rem; }
         .wordmark .l2 { display: inline-block; color: transparent; -webkit-text-stroke: 1.2px var(--fg); }
-        .wordmark .dot { color: var(--gold); }
-        .lede { font-family: var(--mono); font-size: clamp(0.78rem,1.1vw,0.92rem); letter-spacing: 0.01em;
-            color: var(--muted); max-width: 60ch; margin-top: clamp(0.6rem,1.6vh,1rem); line-height: 1.5; }
-        .lede .b { color: var(--gold); }
         .console-toggle { display: none; }   /* mobile only (see media query) */
 
         .hero-cols { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0,1.08fr) minmax(0,0.92fr);
@@ -169,7 +162,6 @@
             line-height: 0.92; letter-spacing: -0.02em; margin-top: clamp(0.7rem, 2vh, 1.2rem);
             opacity: 0; transform: translateY(12px); transition: opacity 0.9s ease, transform 0.9s ease; }
         .intro-name.show { opacity: 1; transform: none; }
-        .intro-name .dot { color: var(--gold); }
         .intro-name .l2 { color: transparent; -webkit-text-stroke: 1.4px var(--fg); }
         #intro-net { position: relative; width: min(680px, 82vw); height: min(40vh, 360px); opacity: 0; transition: opacity 0.8s ease; }
         #intro.lit #intro-net { opacity: 1; }
@@ -251,12 +243,54 @@
 
         /* desktop terminal drawer: the active generative/content frame inherits the reclaimed width */
         @media (min-width: 881px) {
+            main { display: grid; grid-template-columns: minmax(0,1fr) 0px; grid-template-rows: minmax(0,1fr) auto;
+                transition: grid-template-columns 0.78s cubic-bezier(0.22,1,0.36,1), grid-template-rows 0.78s cubic-bezier(0.22,1,0.36,1); }
+            .hero { grid-column: 1 / -1; grid-row: 1; min-width: 0; }
+            .tiles { grid-column: 1 / -1; grid-row: 2; min-width: 0; min-height: 0; }
             .hero-cols { transition: grid-template-columns 0.68s cubic-bezier(0.22,1,0.36,1), gap 0.68s cubic-bezier(0.22,1,0.36,1); }
-            body.terminal-intro-folding .hero-cols { transition-duration: 1.15s; }
+            body.terminal-intro-folding main,
+            body.terminal-intro-folding .hero-cols { transition-duration: 1.8s; }
             body.terminal-intro-folding .terminal,
             body.terminal-intro-folding .term-bar,
             body.terminal-intro-folding .term-body,
-            body.terminal-intro-folding .term-foot { transition-duration: 0.95s; }
+            body.terminal-intro-folding .term-foot { transition-duration: 1.35s; }
+            body.terminal-folded main { grid-template-columns: minmax(0,1fr) clamp(235px,20vw,320px); grid-template-rows: minmax(0,1fr) 0px; }
+            body.terminal-folded.mode-section main { grid-template-columns: minmax(0,1fr) clamp(380px,32vw,520px); }
+            body.terminal-folded .hero { grid-column: 1; grid-row: 1 / -1; }
+            body.terminal-folded .tiles { grid-column: 2; grid-row: 1 / -1; display: flex; flex-direction: column;
+                border-top: 0; border-left: 1px solid var(--line); overflow: hidden; }
+            body.terminal-folded .tile { flex: 1 1 0; min-height: 0; overflow: hidden;
+                padding: clamp(0.6rem,1.2vh,0.85rem) clamp(0.8rem,1.2vw,1.1rem);
+                transition: flex-grow 0.78s cubic-bezier(0.22,1,0.36,1), background 0.3s ease; }
+            body.terminal-folded .tile .specimen { min-height: 0; }
+            body.terminal-folded .tile .specimen canvas { height: 100%; min-height: 34px; }
+            body.terminal-folded.mode-section .stage { gap: 0; }
+            body.terminal-folded.mode-section .stage-plate { display: none; }
+            body.terminal-folded.mode-section .tiles { position: absolute; z-index: 4; right: 0;
+                top: var(--reading-rail-top, clamp(10rem,24vh,14rem));
+                bottom: var(--reading-rail-bottom, clamp(0.8rem,2vh,1.4rem));
+                width: clamp(380px,32vw,520px); display: grid; grid-template-columns: repeat(3,minmax(0,1fr));
+                grid-template-rows: minmax(0,1fr); border: 1px solid var(--line); }
+            body.terminal-folded.mode-section .tile { min-width: 0; }
+            body.terminal-folded.mode-section .tile.active { grid-column: 1 / -1; grid-row: 1; z-index: 1;
+                background: var(--bg-2); padding: 0; }
+            body.terminal-folded.mode-section .tile.active .specimen { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; }
+            body.terminal-folded.mode-section .tile.active .num { position: absolute; z-index: 2; left: 0.9rem; bottom: 3.3rem;
+                padding: 0.14rem 0.3rem; background: color-mix(in srgb, var(--bg) 78%, transparent); }
+            body.terminal-folded.mode-section .tile.active .label { position: absolute; z-index: 2; left: 0.9rem; right: 0.9rem; bottom: 0.85rem;
+                background: color-mix(in srgb, var(--bg) 78%, transparent); }
+            body.terminal-folded.mode-section .tile.active .label .name { color: var(--gold); }
+            body.terminal-folded.mode-section .tile:not(.active) { grid-column: var(--rail-slot); grid-row: 1; align-self: start;
+                z-index: 2; height: clamp(102px,14vh,138px); display: flex; flex-direction: column;
+                padding: 0.42rem 0.55rem; background: color-mix(in srgb, var(--bg) 92%, transparent);
+                border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+            body.terminal-folded.mode-section .tile:not(.active):last-child { border-right: 0; }
+            body.terminal-folded.mode-section .tile:not(.active) .num { display: none; }
+            body.terminal-folded.mode-section .tile:not(.active) .specimen { min-width: 0; min-height: 30px; height: auto; margin: 0 0 0.25rem; opacity: 0.78; }
+            body.terminal-folded.mode-section .tile:not(.active) .label { border-top: 0; padding-top: 0; }
+            body.terminal-folded.mode-section .tile:not(.active) .label .name { overflow: hidden; font-size: 0.84rem;
+                letter-spacing: 0.03em; text-overflow: ellipsis; white-space: nowrap; }
+            body.terminal-folded.mode-section .tile:not(.active) .label .arrow { display: none; }
             body.terminal-folded .hero-cols,
             body.mode-section.terminal-folded .hero-cols { grid-template-columns: 50px minmax(0,1fr); gap: clamp(0.65rem,1.2vw,1rem); }
             body.terminal-folded .terminal { background: color-mix(in srgb, var(--bg) 72%, var(--bg-2) 28%);
@@ -316,7 +350,6 @@
             body { height: auto; overflow-y: auto; }
             html { font-size: 17px; }
             .hero { padding-top: 1.4rem; }
-            .lede { font-size: 0.95rem; }
             .hero-cols, body.mode-section .hero-cols { grid-template-columns: 1fr; }
             /* intro then collapse: terminal+network play, then fold away so the tiles rise */
             .hero-cols { transition: max-height 0.6s ease, opacity 0.45s ease, margin-top 0.5s ease; max-height: 820px; overflow: hidden; }
@@ -374,7 +407,7 @@
     <div id="intro" aria-hidden="true">
         <div class="intro-center">
             <div class="intro-type"></div>
-            <h1 class="intro-name"><span class="l1">Niccolò<span class="dot">.</span></span> <span class="l2">Ridi</span></h1>
+            <h1 class="intro-name"><span class="l1">Niccolò</span> <span class="l2">Ridi</span></h1>
         </div>
         <div id="intro-net"></div>
         <button class="intro-skip" type="button">skip intro ↓</button>
@@ -386,9 +419,7 @@
 
     <main>
         <section class="hero">
-            <div class="hero-kicker">public international law // computational analysis</div>
-            <a class="wordmark-home" href="index.html" aria-label="Niccolò Ridi — return to homepage"><h1 class="wordmark"><span class="l1">Niccolò<span class="dot">.</span></span> <span class="l2">Ridi</span></h1></a>
-            <p class="lede">Welcome to my website. Mostly research on <span class="b">public international law, at scale.</span></p>
+            <a class="wordmark-home" href="index.html" aria-label="Niccolò Ridi — return to homepage"><h1 class="wordmark"><span class="l1">Niccolò</span> <span class="l2">Ridi</span></h1></a>
             <button class="console-toggle" id="console-toggle" type="button" aria-label="toggle console">▸ console</button>
 
             <div class="hero-cols">
@@ -691,6 +722,15 @@
                   + bodyHTML
                   + '<div class="stage-actions"><button class="stage-close" type="button">cd ..</button></div></div>';
                 document.body.classList.add('mode-section');
+                let railSlot = 1;
+                document.querySelectorAll('.tile').forEach(tile => {
+                    const key = (tile.getAttribute('href') || '').replace('.html','');
+                    const active = key === s;
+                    tile.classList.toggle('active', active);
+                    if (active) tile.style.removeProperty('--rail-slot');
+                    else tile.style.setProperty('--rail-slot', railSlot++);
+                });
+                requestAnimationFrame(syncReadingRail);
                 stage.querySelector('.stage-text').scrollTop = 0;
                 if (v.photo) initGenerativeReveal(stage.querySelector('.stage-generative'));
                 if (window.matchMedia('(max-width: 880px)').matches) setTimeout(()=>{ const np=document.getElementById('net-panel'); if (np) np.scrollIntoView({behavior:'smooth', block:'start'}); }, 90);
@@ -813,7 +853,14 @@
                     toggle();
                 });
             }
-            function clearSectionUI(){ document.body.classList.remove('mode-section'); }
+            function clearSectionUI(){
+                document.body.classList.remove('mode-section');
+                document.querySelectorAll('.tile').forEach(tile => {
+                    tile.classList.remove('active');
+                    tile.style.removeProperty('--rail-slot');
+                });
+                requestAnimationFrame(syncReadingRail);
+            }
             function closeSection(){ clearSectionUI(); if (location.hash) history.replaceState({}, '', location.pathname + location.search); }
             // browser back/forward: sync the open frame to the URL hash (closes it instead of leaving the site)
             window.addEventListener('popstate', () => {
@@ -918,6 +965,29 @@
             // desktop: fold the terminal into a narrow drawer so the active visual frame can expand
             const dtog = document.getElementById('terminal-drawer-toggle');
             const desktopMq = window.matchMedia('(min-width: 881px)');
+            const mainFrame = document.querySelector('main');
+            const readingPanel = document.getElementById('net-panel');
+            function syncReadingRail(){
+                if (!mainFrame || !readingPanel || !desktopMq.matches ||
+                    !document.body.classList.contains('terminal-folded') ||
+                    !document.body.classList.contains('mode-section')) {
+                    if (mainFrame) {
+                        mainFrame.style.removeProperty('--reading-rail-top');
+                        mainFrame.style.removeProperty('--reading-rail-bottom');
+                    }
+                    return;
+                }
+                const mainRect = mainFrame.getBoundingClientRect();
+                const panelRect = readingPanel.getBoundingClientRect();
+                mainFrame.style.setProperty('--reading-rail-top', Math.max(0, panelRect.top - mainRect.top) + 'px');
+                mainFrame.style.setProperty('--reading-rail-bottom', Math.max(0, mainRect.bottom - panelRect.bottom) + 'px');
+            }
+            if ('ResizeObserver' in window && mainFrame && readingPanel) {
+                const railObserver = new ResizeObserver(syncReadingRail);
+                railObserver.observe(mainFrame);
+                railObserver.observe(readingPanel);
+            }
+            window.addEventListener('resize', syncReadingRail);
             function syncDtog(){
                 if (!dtog) return;
                 const folded = document.body.classList.contains('terminal-folded');
@@ -933,6 +1003,7 @@
             function setTerminalFolded(folded){
                 document.body.classList.toggle('terminal-folded', folded);
                 syncDtog();
+                requestAnimationFrame(syncReadingRail);
                 if (folded && document.activeElement === input) input.blur();
                 if (!folded && desktopMq.matches && canFocus) setTimeout(() => input.focus(), 720);
             }
@@ -963,7 +1034,7 @@
                             document.body.classList.add('mcollapsed');
                             syncCtog();
                         }
-                        setTimeout(() => document.body.classList.remove('terminal-intro-folding'), 1300);
+                        setTimeout(() => document.body.classList.remove('terminal-intro-folding'), desktopMq.matches ? 1950 : 1300);
                     }));
                 }, delay);
             }
@@ -985,7 +1056,7 @@
                 } else {
                     setTimeout(() => autorun('welcome-network', () => setTimeout(() => autorun('whoami', () => setTimeout(manStep, 500)), 450)), 250);
                 }
-                autoFoldTerminal(skipWelcome ? 1800 : 3200);
+                autoFoldTerminal(desktopMq.matches ? 0 : (skipWelcome ? 1800 : 3200));
                 setTimeout(() => document.body.classList.add('networks-revealed'), 6000);
             };
             if (document.getElementById('intro') && !VIEW[hsec]) {
