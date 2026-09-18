@@ -1,0 +1,110 @@
+/* Terminal placement tests (?term=a|b|c). Loaded always, applied only with the query string. */
+
+.tlx-chooser { position: fixed; z-index: 9500; top: .45rem; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: .4rem; padding: .26rem .6rem;
+    border: 1px solid var(--line); border-radius: 999px; background: color-mix(in srgb, var(--bg) 90%, transparent);
+    font-family: var(--mono); font-size: .55rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.tlx-chooser a { display: grid; place-items: center; width: 1.2rem; height: 1.2rem;
+    border: 1px solid var(--line); border-radius: 50%; color: var(--muted); text-decoration: none; }
+.tlx-chooser a:hover { color: var(--gold); border-color: var(--gold); }
+.tlx-chooser a[aria-current="page"] { background: var(--gold); border-color: var(--gold); color: var(--bg); }
+.tlx-chooser .tlx-plain { width: auto; padding: 0 .5rem; border-radius: 999px; }
+.tlx-chooser em { font-style: normal; color: var(--gold); letter-spacing: .05em; text-transform: none; }
+
+/* the intro is skipped in these tests, so the pane should not fade in from nothing */
+body.tlx .home-welcome { transition: none; }
+
+@media (min-width: 881px) {
+
+    /* the console has left the hero grid, so the reading panel takes the whole column */
+    body.tlx.terminal-folded .hero-cols,
+    body.tlx.terminal-folded.mode-section .hero-cols { grid-template-columns: minmax(0, 1fr); gap: 0; }
+
+    /* …and is re-homed inside the reading panel, above the stage */
+    body.tlx.terminal-folded .terminal { position: absolute; z-index: 5;
+        background: var(--bg-2); border-color: var(--line); box-shadow: none; }
+    /* b and c show their bar or prompt while rolled up; a is a modal, so its
+       contents stay inert until it opens — otherwise the hidden window keeps
+       swallowing pointer events across the middle of the page. */
+    body.tlx-b.terminal-folded .terminal > :not(.terminal-drawer-toggle),
+    body.tlx-c.terminal-folded .terminal > :not(.terminal-drawer-toggle),
+    body.tlx-a.tlx-open.terminal-folded .terminal > :not(.terminal-drawer-toggle) {
+        opacity: 1; visibility: visible; transform: none; pointer-events: auto; }
+    body.tlx-a:not(.tlx-open) .terminal,
+    body.tlx-a:not(.tlx-open) .terminal * { pointer-events: none; }
+    body.tlx-a:not(.tlx-open) .tlx-scrim { pointer-events: none; }
+    body.tlx .terminal-drawer-toggle { display: none; }
+
+    .tlx-scrim { position: absolute; inset: 0; z-index: 4; background: color-mix(in srgb, var(--bg) 60%, transparent);
+        opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility .3s; }
+
+    /* ─── a · a console centred over the page ───────────────────────────── */
+    body.tlx.tlx-a.terminal-folded .terminal { position: fixed; z-index: 9300;
+        inset: 0; margin: auto; width: min(760px, 78vw); height: min(520px, 74vh);
+        border: 1px solid color-mix(in srgb, var(--fg) 16%, var(--line)); border-radius: 6px;
+        box-shadow: 0 30px 90px rgba(0, 0, 0, .55);
+        opacity: 0; visibility: hidden; transform: translateY(-8px) scale(.985);
+        transition: opacity .28s ease, transform .42s cubic-bezier(.22, 1, .36, 1), visibility .28s; }
+    body.tlx.tlx-a.tlx-open.terminal-folded .terminal { opacity: 1; visibility: visible; transform: none; }
+
+    /* the dim covers the whole page, not just the reading panel */
+    body.tlx-a .tlx-scrim { position: fixed; z-index: 9200; inset: 0;
+        background: color-mix(in srgb, #06060a 68%, transparent); }
+    body.tlx-a.tlx-open .tlx-scrim { opacity: 1; visibility: visible; }
+
+    .tlx-launch { position: absolute; z-index: 7; top: .65rem; right: .65rem;
+        display: flex; align-items: center; gap: .42rem; padding: .36rem .62rem;
+        border: 1px solid var(--line); border-radius: 3px; background: color-mix(in srgb, var(--bg) 84%, transparent);
+        color: var(--gold); cursor: pointer; font-family: var(--mono); font-size: .58rem;
+        letter-spacing: .13em; text-transform: uppercase;
+        transition: color .2s, border-color .2s, background-color .2s, opacity .25s; }
+    .tlx-launch:hover { border-color: var(--gold); background: color-mix(in srgb, var(--gold) 10%, var(--bg)); }
+    body.tlx-a.tlx-open .tlx-launch { opacity: 0; pointer-events: none; }
+
+    /* …and the same control, as a close, on the right of the window's own bar */
+    body.tlx-a .term-bar { padding-right: .7rem; }
+    .tlx-closer { position: static; z-index: auto; margin-left: .7rem; padding: .22rem .5rem;
+        background: color-mix(in srgb, var(--bg) 55%, transparent); }
+    body.tlx-a.tlx-open .tlx-closer { opacity: 1; pointer-events: auto; }
+
+    /* ─── b · thin bar across the top, drops down ────────────────────────── */
+    body.tlx-b .terminal { top: 0; left: 0; right: 0; height: 2.2rem;
+        border: 0; border-bottom: 1px solid var(--line); border-radius: 0;
+        transition: height .5s cubic-bezier(.22, 1, .36, 1), box-shadow .45s ease; }
+    body.tlx-b.tlx-open .terminal { height: min(62%, 380px);
+        box-shadow: 0 20px 44px color-mix(in srgb, #000 42%, transparent); }
+    body.tlx-b .term-bar { height: 2.2rem; padding-right: .7rem; cursor: pointer; }
+    body.tlx-b .tlx-hint { margin-left: .6rem; color: var(--muted); transition: opacity .3s ease; }
+    body.tlx-b.tlx-open .tlx-hint { opacity: 0; }
+    body.tlx-b .home-welcome, body.tlx-b .stage { top: 2.2rem; }
+
+    /* ─── c · live prompt at the foot, transcript rises ──────────────────── */
+    body.tlx-c .terminal { left: 0; right: 0; bottom: 0; height: 3.4rem; justify-content: flex-end;
+        border: 0; border-top: 1px solid var(--line); border-radius: 0;
+        transition: height .5s cubic-bezier(.22, 1, .36, 1), box-shadow .45s ease; }
+    body.tlx-c.tlx-open .terminal { height: min(64%, 390px);
+        box-shadow: 0 -18px 44px color-mix(in srgb, #000 40%, transparent); }
+    body.tlx-c:not(.tlx-open) .term-bar { display: none; }
+    body.tlx-c:not(.tlx-open) .term-body { opacity: 0; }
+    body.tlx-c .term-foot { padding-right: 3rem; }
+    body.tlx-c .home-welcome, body.tlx-c .stage { bottom: 3.4rem; }
+
+    /* ─── shared affordance chrome ───────────────────────────────────────── */
+    .tlx-chevron { display: grid; place-items: center; width: 1.5rem; height: 1.5rem; flex: 0 0 1.5rem;
+        border: 1px solid var(--line); border-radius: 2px; background: color-mix(in srgb, var(--bg) 70%, transparent);
+        color: var(--gold); cursor: pointer; transition: color .2s, border-color .2s; }
+    .tlx-chevron:hover { border-color: var(--gold); }
+    .tlx-chevron span { width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent;
+        border-top: 5px solid currentColor; transition: transform .4s cubic-bezier(.22, 1, .36, 1); }
+    body.tlx-b .tlx-chevron { position: relative; margin-left: .55rem; }
+    body.tlx-b.tlx-open .tlx-chevron span { transform: rotate(180deg); }
+    body.tlx-c .tlx-chevron { position: absolute; z-index: 7; right: .6rem; bottom: .62rem; }
+    body.tlx-c .tlx-chevron span { transform: rotate(180deg); }
+    body.tlx-c.tlx-open .tlx-chevron span { transform: none; }
+
+    body.tlx-activity .tlx-launch::after,
+    body.tlx-activity .tlx-chevron::after { content: ''; position: absolute; top: -4px; right: -4px;
+        width: 6px; height: 6px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 2px var(--bg);
+        animation: tlx-pulse 2.2s ease-in-out infinite; }
+    @keyframes tlx-pulse { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+}
