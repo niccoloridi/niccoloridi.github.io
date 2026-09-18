@@ -1,0 +1,63 @@
+/* The site console — a centred window over a dimmed page. */
+
+/* both controls belong to the desktop modal only */
+.console-launch, .console-closer { display: none; }
+
+@media (min-width: 881px) {
+
+    /* the console has left the hero grid, so the reading panel takes the whole column */
+    body.console-modal.terminal-folded .hero-cols,
+    body.console-modal.terminal-folded.mode-section .hero-cols { grid-template-columns: minmax(0, 1fr); gap: 0; }
+
+    body.console-modal.terminal-folded .terminal { position: fixed; z-index: 9300;
+        inset: 0; margin: auto; width: min(760px, 78vw); height: min(520px, 74vh);
+        background: var(--bg-2); border: 1px solid color-mix(in srgb, var(--fg) 16%, var(--line));
+        border-radius: 6px; box-shadow: 0 30px 90px rgba(0, 0, 0, .55);
+        opacity: 0; visibility: hidden; transform: translateY(-8px) scale(.985);
+        transition: opacity .28s ease, transform .42s cubic-bezier(.22, 1, .36, 1), visibility .28s; }
+    body.console-modal.console-open.terminal-folded .terminal { opacity: 1; visibility: visible; transform: none; }
+
+    /* contents stay inert until it opens, or the hidden window swallows pointer
+       events across the middle of the page */
+    body.console-modal.console-open.terminal-folded .terminal > :not(.terminal-drawer-toggle) {
+        opacity: 1; visibility: visible; transform: none; pointer-events: auto; }
+    body.console-modal:not(.console-open) .terminal,
+    body.console-modal:not(.console-open) .terminal *,
+    body.console-modal:not(.console-open) .console-scrim { pointer-events: none; }
+
+    .console-scrim { position: fixed; z-index: 9200; inset: 0;
+        background: color-mix(in srgb, #06060a 68%, transparent);
+        opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility .3s; }
+    body.console-open .console-scrim { opacity: 1; visibility: visible; }
+
+    body.console-modal .terminal-drawer-toggle { display: none; }
+    body.console-modal .term-bar { padding-right: .7rem; }
+
+    /* the control that opens it, at the top right of the reading pane… */
+    body.console-modal .console-launch { position: absolute; z-index: 7; top: .65rem; right: .65rem;
+        display: flex; align-items: center; gap: .42rem; padding: .36rem .62rem;
+        border: 1px solid var(--line); border-radius: 3px; background: color-mix(in srgb, var(--bg) 84%, transparent);
+        color: var(--gold); cursor: pointer; font-family: var(--mono); font-size: .58rem;
+        letter-spacing: .13em; text-transform: uppercase;
+        transition: color .2s, border-color .2s, background-color .2s, opacity .25s; }
+    body.console-modal .console-launch:hover { border-color: var(--gold);
+        background: color-mix(in srgb, var(--gold) 10%, var(--bg)); }
+    body.console-open .console-launch { opacity: 0; pointer-events: none; }
+
+    /* …and the same control, as a close, on the right of the window's own bar */
+    body.console-modal .console-closer { display: flex; align-items: center; gap: .42rem; margin-left: .7rem; padding: .22rem .5rem;
+        border: 1px solid var(--line); border-radius: 3px; background: color-mix(in srgb, var(--bg) 55%, transparent);
+        color: var(--gold); cursor: pointer; font-family: var(--mono); font-size: .58rem;
+        letter-spacing: .13em; text-transform: uppercase; transition: color .2s, border-color .2s, background-color .2s; }
+    body.console-modal .console-closer:hover { border-color: var(--gold); background: color-mix(in srgb, var(--gold) 10%, var(--bg)); }
+
+    body.console-unread .console-launch::after { content: ''; position: absolute; top: -4px; right: -4px;
+        width: 6px; height: 6px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 2px var(--bg);
+        animation: console-pulse 2.2s ease-in-out infinite; }
+    @keyframes console-pulse { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.console-modal.terminal-folded .terminal { transition: opacity .01ms, visibility .01ms; transform: none; }
+    body.console-unread .console-launch::after { animation: none; }
+}
