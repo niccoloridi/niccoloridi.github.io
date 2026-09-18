@@ -40,12 +40,16 @@
 
         /* The tiles' right-hand rail is driven by .terminal-folded. Holding it on means
            opening the console can never reflow the generative plates. */
+        let openSeq = 0;
         let onSection = body.classList.contains('mode-section');
         const watchBody = () => {
             if (!body.classList.contains('terminal-folded')) body.classList.add('terminal-folded');
             // a command that opens a section has done its job; let the console get out of the way
             const now = body.classList.contains('mode-section');
-            if (now && !onSection && body.classList.contains('tlx-open')) setTimeout(close, 900);
+            if (now && !onSection && body.classList.contains('tlx-open')) {
+                const seq = openSeq;
+                setTimeout(() => { if (seq === openSeq) close(); }, 900);
+            }
             onSection = now;
         };
         new MutationObserver(watchBody).observe(body, { attributes: true, attributeFilter: ['class'] });
@@ -72,6 +76,7 @@
         host.insertBefore(scrim, term);
 
         function open() {
+            openSeq++;
             body.classList.add('tlx-open');
             body.classList.remove('tlx-activity');
             if (input) setTimeout(() => input.focus(), 240);
@@ -129,7 +134,7 @@
            command submitted from the closed state unrolls it to show the answer. */
         if (input) {
             if (which === 'c') input.addEventListener('keydown', e => { if (e.key === 'Enter') open(); });
-            else input.addEventListener('focus', open);
+            else if (which === 'b') input.addEventListener('focus', open);
         }
 
         const redDot = term.querySelector('.terminal-close-dot');
@@ -137,17 +142,14 @@
 
         document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 
-        // a click anywhere but the console itself puts it away
+        /* A click anywhere but the console itself puts it away. Nothing here opens it:
+           tiles, chips and links autotype into the transcript without summoning the
+           window, so cycling through sections never makes it appear. */
         document.addEventListener('click', e => {
             if (!body.classList.contains('tlx-open')) return;
-            if (e.target.closest('#terminal, .tlx-launch, .tlx-chevron, .tile, .chip')) return;
+            if (e.target.closest('#terminal, .tlx-launch, .tlx-chevron')) return;
             close();
         });
-
-        // tiles and chips autotype into the terminal — surface it when they do
-        document.addEventListener('click', e => {
-            if (e.target.closest('.tile, .chip, .term-suggest .sug')) open();
-        }, true);
 
         // an unread marker while the console is rolled up
         if (log) new MutationObserver(() => {
