@@ -1,6 +1,6 @@
 /* Callouts on the homepage photograph, revealed together by "explore this photo". */
 
-.welcome-portrait.pa-ready { position: relative; }
+.welcome-portrait.pa-ready { position: relative; transition: padding-top .3s cubic-bezier(.22, 1, .36, 1); }
 .pa-stage { position: relative; display: block; line-height: 0; }
 
 /* ─── leaders and rings ──────────────────────────────────────────────────── */

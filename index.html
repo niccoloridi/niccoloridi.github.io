@@ -149,6 +149,7 @@
             opacity: 0; transform: translateY(10px); transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1);
             pointer-events: none; }
         .welcome-intro, .site-changelog { width: min(100%,72ch); }
+        .mobile-welcome { display: none; }
         .welcome-copy { font-family: var(--grotesk); font-size: clamp(0.96rem,1.22vw,1.18rem);
             line-height: 1.65; text-align: justify; text-justify: inter-word; hyphens: none; overflow-wrap: normal; word-break: normal; }
         .welcome-copy strong { color: var(--gold); font-weight: 600; }
@@ -405,6 +406,15 @@
             body.mcollapsed .hero-cols { max-height: 0; opacity: 0; margin-top: 0; }
             body.mode-section .hero-cols { max-height: 3000px; opacity: 1; }
             body.mode-section .terminal { display: none; }   /* section view = content only on mobile */
+            /* the welcome paragraph and photograph, moved here by mobile-welcome.js */
+            .mobile-welcome { display: flex; flex-direction: column; gap: 1.1rem;
+                padding: 1.1rem var(--gutter) 1.4rem; opacity: 0; transition: opacity 0.9s ease; }
+            body.home-content-ready .mobile-welcome { opacity: 1; }
+            body.mode-section .mobile-welcome { display: none; }
+            .mobile-welcome .welcome-intro { width: 100%; }
+            .mobile-welcome .welcome-copy { text-align: left; }
+            .mobile-welcome .welcome-portrait { width: 100%; }
+            .mobile-welcome .welcome-portrait img { height: clamp(200px, 56vw, 320px); }
             .terminal-drawer-toggle { display: none; }
             .console-toggle { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.7rem;
                 background: none; border: 1px solid var(--line); color: var(--muted); cursor: pointer;
@@ -459,7 +469,7 @@
             body.nav-open .burger span:nth-child(3){ transform: translateY(-5.5px) rotate(-45deg); }
         }
     </style>
-    <link rel="stylesheet" href="photo-annotations.css?v=20260919-1">
+    <link rel="stylesheet" href="photo-annotations.css?v=20260919-7">
     <link rel="stylesheet" href="console-modal.css?v=20260918-3">
     <!-- prototype, inert without its query string: ?pane=1…5 -->
     <link rel="stylesheet" href="home-pane-variants.css?v=20260918-7">
@@ -784,7 +794,7 @@
             // ─── in-panel "viewport": sections render in the network space ───
             const stage = document.getElementById('stage');
             const VIEW = {
-                profile: { n:'01', plate:'chrome', photo:'images/IMG_18.jpg', pf:[0.27,0.33], body:
+                profile: { n:'01', plate:'chrome', photo:'images/niccolo-portrait.jpg', pf:[0.54,0.44], body:
                     '<p>Senior Lecturer (Associate Professor) in Public International Law at The Dickson Poon School of Law, King\'s College London — Associate Director of CIGAD, Associate Dean for Doctoral Studies, Fellow of the Centre for Data Futures, and liaison to the King\'s Institute for AI.</p>'
                   + '<p>My research concerns the authority and effectiveness of international law — how it is produced and changes — applying empirical and computational methods to legal argumentation and actor behaviour.</p>'
                   + '<h3>positions &amp; affiliations</h3><ul>'
@@ -1176,7 +1186,8 @@
     </script>
 
     <script src="generative-plates.js?v=20260811-3"></script>
-    <script src="photo-annotations.js?v=20260919-5"></script>
+    <script src="photo-annotations.js?v=20260919-7"></script>
+    <script src="mobile-welcome.js?v=20260919-2"></script>
     <script src="console-modal.js?v=20260918-3"></script>
     <script src="home-pane-variants.js?v=20260918-7"></script>
     <script type="module">

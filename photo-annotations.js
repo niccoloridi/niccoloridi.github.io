@@ -31,7 +31,6 @@
         const img = figure && figure.querySelector('img');
         if (!figure || !img) return;
 
-        const bounds = figure.closest('.net-panel') || figure.parentElement;
         figure.classList.add('pa-ready');
 
         const stage = document.createElement('div');
@@ -89,15 +88,19 @@
            the top therefore extends leftward, away from the leaders above it. */
         function layout() {
             const sr = stage.getBoundingClientRect();
+            // the figure moves between the pane and the mobile strip, so its boundary is looked up each time
+            const bounds = figure.closest('.net-panel, .mobile-welcome') || figure.parentElement;
             const br = bounds.getBoundingClientRect();
             const fr = figure.getBoundingClientRect();
-            // captions may hang past the frame, but not across the gutter into the text
-            const minLeft = Math.max(br.left + EDGE, fr.left - OVERHANG) - sr.left;
-            const maxRight = br.right - EDGE - sr.left;
+            /* in the pane, captions may hang past the frame but not across the gutter into
+               the text; in the narrow mobile strip there is no room to hang, so they stay in */
+            const inStrip = bounds.classList.contains('mobile-welcome');
+            const minLeft = (inStrip ? fr.left + EDGE : Math.max(br.left + EDGE, fr.left - OVERHANG)) - sr.left;
+            const maxRight = (inStrip ? fr.right - EDGE : br.right - EDGE) - sr.left;
 
             const rows = built.slice().sort((a, b) => b.pos.x - a.pos.x);
             let ruleY = Math.min(...built.map(b => b.pos.y)) - LEAD;
-            let prevRule = null, prevRight = -Infinity;
+            let prevRule = null, prevRight = -Infinity, top = Infinity;
 
             for (let i = rows.length - 1; i >= 0; i--) {
                 const b = rows[i];
@@ -125,6 +128,16 @@
                 if (!shares) ruleY = y - th - GAP;
                 prevRule = y;
                 prevRight = left + tw;
+                top = Math.min(top, y - th);
+            }
+
+            /* In the mobile strip the shelf sits too near the top of a short picture for
+               three rows of labels, so the frame grows at the top to make room — the
+               picture moves down inside it rather than the labels running over the text. */
+            figure.style.paddingTop = '';
+            if (inStrip) {
+                const need = -(stage.offsetTop + top) + EDGE;
+                if (need > 0) figure.style.paddingTop = (parseFloat(getComputedStyle(figure).paddingTop) + need) + 'px';
             }
         }
 
@@ -132,6 +145,7 @@
             exploring = on;
             if (on) { project(); layout(); }
             figure.classList.toggle('pa-exploring', on);
+            if (!on) figure.style.paddingTop = '';
             btn.setAttribute('aria-expanded', String(on));
             btn.innerHTML = on
                 ? '<span aria-hidden="true">&times;</span> hide captions'
