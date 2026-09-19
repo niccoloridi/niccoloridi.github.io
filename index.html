@@ -167,13 +167,16 @@
         /* full colour on the cream ground; eased back on the dark one, where an
            untreated snapshot is the brightest thing on the page */
         html:not(.light-mode) .welcome-portrait img { filter: saturate(0.82) brightness(0.88) contrast(1.02); }
+        .welcome-portrait figcaption { display: flex; align-items: center; justify-content: space-between; gap: 0.7rem;
+            margin-top: clamp(0.4rem,0.9cqi,0.6rem); padding-top: 0.45rem; border-top: 1px dotted var(--line);
+            font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.11em; text-transform: uppercase; color: var(--muted); }
         @container readingpane (min-width: 780px) {
             .home-welcome { display: grid; align-content: center;
                 grid-template-columns: minmax(0,1.24fr) minmax(0,1fr); grid-template-rows: auto auto;
                 column-gap: clamp(1.4rem,3.4cqi,2.8rem); }
             .welcome-intro { grid-column: 1; grid-row: 1; }
             .site-changelog { grid-column: 1; grid-row: 2; }
-            .welcome-portrait { grid-column: 2; grid-row: 1 / span 2; align-self: center; width: 100%; }
+            .welcome-portrait { grid-column: 2; grid-row: 1 / span 2; align-self: start; width: 100%; }
         }
         .site-changelog { padding: 0.65rem 0 0.15rem; border-top: 1px dashed var(--gold); border-bottom: 1px dashed var(--gold);
             font-family: var(--mono); }
@@ -456,7 +459,7 @@
             body.nav-open .burger span:nth-child(3){ transform: translateY(-5.5px) rotate(-45deg); }
         }
     </style>
-    <link rel="stylesheet" href="photo-annotations.css?v=20260918-10">
+    <link rel="stylesheet" href="photo-annotations.css?v=20260919-1">
     <link rel="stylesheet" href="console-modal.css?v=20260918-3">
     <!-- prototype, inert without its query string: ?pane=1…5 -->
     <link rel="stylesheet" href="home-pane-variants.css?v=20260918-7">
@@ -518,6 +521,7 @@
                     <div class="home-welcome" id="home-welcome">
                         <figure class="welcome-portrait">
                             <img src="images/niccolo-portrait.jpg" alt="Niccolò Ridi in his office at King’s College London, in front of a wall of law books" width="1080" height="720">
+                            <figcaption><span class="wp-caption">Austere office portrait</span></figcaption>
                         </figure>
                         <div class="welcome-intro">
                             <p class="welcome-copy">Welcome to my website. I am Senior Lecturer (Associate Professor) in Public International Law at The Dickson Poon School of Law, King&rsquo;s College London. Here you will mostly find research on <strong>public international law</strong>, computational methodologies, and random musings on applying data science to international law. You can also find information on my academic work, practice, and various data projects.</p>
@@ -1172,7 +1176,7 @@
     </script>
 
     <script src="generative-plates.js?v=20260811-3"></script>
-    <script src="photo-annotations.js?v=20260918-13"></script>
+    <script src="photo-annotations.js?v=20260919-5"></script>
     <script src="console-modal.js?v=20260918-3"></script>
     <script src="home-pane-variants.js?v=20260918-7"></script>
     <script type="module">
