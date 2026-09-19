@@ -160,11 +160,12 @@
            what stop it reading as a picture dropped on top. */
         .welcome-portrait { margin: 0; width: min(100%,72ch); padding: clamp(0.4rem,0.9cqi,0.6rem);
             border: 1px solid var(--line); background: color-mix(in srgb, var(--bg-2) 72%, transparent); }
-        /* Height is set independently of width, so narrowing the window cuts the sides
-           away rather than shrinking the whole picture. Centred on both axes, which is
-           what the annotation layer's cover arithmetic assumes. */
-        .welcome-portrait img { display: block; width: 100%; height: clamp(190px, 32vh, 310px);
-            object-fit: cover; object-position: 50% 50%; }
+        /* The height has a floor rather than a fixed value. Above the floor the picture keeps
+           its own 3:2 proportion, so it is shown whole; when the column is too narrow for 3:2
+           at that height, the floor holds and the sides are cropped away instead of the whole
+           picture shrinking. A fixed height used to letterbox it on very wide screens. */
+        .welcome-portrait img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2;
+            min-height: clamp(190px, 32vh, 310px); object-fit: cover; object-position: 50% 50%; }
         /* full colour on the cream ground; eased back on the dark one, where an
            untreated snapshot is the brightest thing on the page */
         html:not(.light-mode) .welcome-portrait img { filter: saturate(0.82) brightness(0.88) contrast(1.02); }
@@ -177,7 +178,8 @@
                 column-gap: clamp(1.4rem,3.4cqi,2.8rem); }
             .welcome-intro { grid-column: 1; grid-row: 1; }
             .site-changelog { grid-column: 1; grid-row: 2; }
-            .welcome-portrait { grid-column: 2; grid-row: 1 / span 2; align-self: start; width: 100%; }
+            .welcome-portrait { grid-column: 2; grid-row: 1 / span 2; align-self: start; width: 100%;
+                max-width: calc(78vh + 1.2rem); }
         }
         .site-changelog { padding: 0.65rem 0 0.15rem; border-top: 1px dashed var(--gold); border-bottom: 1px dashed var(--gold);
             font-family: var(--mono); }
@@ -414,7 +416,7 @@
             .mobile-welcome .welcome-intro { width: 100%; }
             .mobile-welcome .welcome-copy { text-align: left; }
             .mobile-welcome .welcome-portrait { width: 100%; }
-            .mobile-welcome .welcome-portrait img { height: clamp(200px, 56vw, 320px); }
+            .mobile-welcome .welcome-portrait img { min-height: clamp(200px, 56vw, 320px); max-height: 70vh; }
             .terminal-drawer-toggle { display: none; }
             .console-toggle { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.7rem;
                 background: none; border: 1px solid var(--line); color: var(--muted); cursor: pointer;
