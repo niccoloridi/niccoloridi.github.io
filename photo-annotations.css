@@ -19,10 +19,15 @@
     background: rgba(6, 6, 10, .9); border: 1px solid rgba(251, 247, 238, .2); border-bottom: 1.4px solid #fbf7ee;
     box-shadow: 0 3px 12px rgba(0, 0, 0, .5);
     font-family: var(--mono); font-size: 11px; line-height: 1.3; letter-spacing: .02em;
-    color: #fdfbf6; white-space: normal; text-wrap: balance; pointer-events: none;
+    color: #fdfbf6; white-space: normal; text-wrap: balance; text-decoration: none; pointer-events: none;
     visibility: hidden; opacity: 0; transform: translateY(-100%) translateY(4px);
     transition: opacity .22s ease, transform .3s cubic-bezier(.22, 1, .36, 1), visibility .22s; }
-.pa-exploring .pa-tag { visibility: visible; opacity: 1; transform: translateY(-100%); }
+.pa-exploring .pa-tag { visibility: visible; opacity: 1; transform: translateY(-100%); pointer-events: auto; }
+/* the captions link to the case reports, so say so */
+.pa-tag::after { content: "\2197"; margin-left: .35em; opacity: .75; }
+.pa-tag:hover, .pa-tag:focus-visible { background: #1b1b28; border-color: #fbf7ee; color: #fff;
+    text-decoration: underline; text-underline-offset: 2px; outline: none; }
+.pa-tag:focus-visible { box-shadow: 0 0 0 2px var(--gold); }
 
 /* ─── the control under the picture ──────────────────────────────────────── */
 .pa-explore { display: inline-flex; align-items: center; gap: .4rem; flex: none;

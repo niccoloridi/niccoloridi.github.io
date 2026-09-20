@@ -7,10 +7,14 @@
     const IMG_W = 1080, IMG_H = 720;
 
     const MARKS = [
-        { key: 'unatra',    x: 515, y: 324, label: 'UNATRA share' },
-        { key: 'beyrouth',  x: 582, y: 315, label: 'Électricité de Beyrouth share' },
-        { key: 'barcelona', x: 670, y: 324, label: 'Barcelona Traction, Light and Power share' },
-        { key: 'brazil',    x: 746, y: 321, label: 'Brazilian loan' }
+        { key: 'unatra', x: 515, y: 324, label: 'UNATRA share',
+          href: 'https://www.icj-cij.org/sites/default/files/permanent-court-of-international-justice/serie_AB/AB_63/01_Oscar_Chinn_Arret.pdf' },
+        { key: 'beyrouth', x: 582, y: 315, label: '\u00c9lectricit\u00e9 de Beyrouth share',
+          href: 'https://www.icj-cij.org/case/20' },
+        { key: 'barcelona', x: 670, y: 324, label: 'Barcelona Traction, Light and Power share',
+          href: 'https://www.icj-cij.org/case/50' },
+        { key: 'serbian', x: 746, y: 321, label: 'Serbian loan',
+          href: 'https://www.icj-cij.org/sites/default/files/permanent-court-of-international-justice/serie_A/A_20/62_Emprunts_Serbes_Arret.pdf' }
     ];
 
     const LEAD = 16;    // clearance between the lowest rule and the frames
@@ -49,9 +53,13 @@
             ring.setAttribute('r', RING);
             svg.append(kase, line, ring);
 
-            const tag = document.createElement('span');
+            // each caption links to the case the certificate belongs to
+            const tag = document.createElement('a');
             tag.className = 'pa-tag';
             tag.textContent = m.label;
+            tag.href = m.href;
+            tag.target = '_blank';
+            tag.rel = 'noopener noreferrer';
             stage.appendChild(tag);
             return { m, tag, kase, line, ring, pos: { x: 0, y: 0 } };
         });
