@@ -562,47 +562,47 @@
 
                 <div class="terminal">
                     <div class="term-line"><span class="p">$</span><span class="cmd">pip install "echr-py[citations,analysis]"</span><button class="copy-btn" data-cmd='pip install "echr-py[citations,analysis]"'>copy</button></div>
-                    <div class="term-out">Successfully installed echr-py-0.2.0</div>
+                    <div class="term-out">Successfully installed echr-py-0.2.3</div>
                     <div class="term-line"><span class="p">&gt;&gt;&gt;</span><span class="cmd">from hudoc_py import search</span><button class="copy-btn" data-cmd="from hudoc_py import search">copy</button></div>
-                    <div class="term-line"><span class="p">&gt;&gt;&gt;</span><span class="cmd">cases = search(article="6", respondent="TUR", year_from=2015)</span><button class="copy-btn" data-cmd='cases = search(article="6", respondent="TUR", year_from=2015)'>copy</button></div>
-                    <div class="term-out">Fetching metadata... [████████████] 87/87
-Downloaded 87 cases (72 with full text)</div>
-                    <div class="term-line"><span class="p">&gt;&gt;&gt;</span><span class="cmd">print(cases[0].name, cases[0].articles, cases[0].kp_date)</span><button class="copy-btn" data-cmd="print(cases[0].name, cases[0].articles, cases[0].kp_date)">copy</button></div>
-                    <div class="term-out">CASE OF ÖCALAN v. TÜRKIYE ['2', '3', '14', '41'] 2015-03-18</div>
+                    <div class="term-line"><span class="p">&gt;&gt;&gt;</span><span class="cmd">cases = search(article="6", respondent="TUR", date_from="2015-01-01", languages=("ENG",), sort="kpdate Ascending")</span><button class="copy-btn" data-cmd='cases = search(article="6", respondent="TUR", date_from="2015-01-01", languages=("ENG",), sort="kpdate Ascending")'>copy</button></div>
+                    <div class="term-line"><span class="p">&gt;&gt;&gt;</span><span class="cmd">len(cases)</span><button class="copy-btn" data-cmd="len(cases)">copy</button></div>
+                    <div class="term-out">1019</div>
+                    <div class="term-line"><span class="p">&gt;&gt;&gt;</span><span class="cmd">print(cases[0].docname, cases[0].articles, cases[0].kp_date)</span><button class="copy-btn" data-cmd="print(cases[0].docname, cases[0].articles, cases[0].kp_date)">copy</button></div>
+                    <div class="term-out">CASE OF GÜLAY COŞKUN v. TURKEY ['6', '6-1'] 2015-01-27</div>
                 </div>
 
                 <h3>2. Citation extraction</h3>
 
-                <p>The <code>corpus build</code> pipeline parses the judgment text and finds citations in the body, the footnotes, and any separate opinions. It then resolves each one to a target document, using a paragraph pinpoint where the text provides one.</p>
+                <p>The <code>corpus build</code> pipeline fetches every document under an application number, parses each into sections, paragraphs, opinions and bench, and resolves the Court-supplied citation list to exact documents. A second pass, <code>citations locate</code>, then finds every printed citation in the body, the footnotes and the separate opinions, with a paragraph pinpoint where the text provides one. The output below is what the commands print.</p>
 
                 <div class="terminal">
                     <div class="term-line"><span class="p">$</span><span class="cmd">echr-py corpus build --appno 46221/99 \</span><button class="copy-btn" data-cmd="echr-py corpus build --appno 46221/99 --rich-sections --citations --out ocalan/">copy</button></div>
                     <div class="term-line term-cont"><span class="cmd">--rich-sections --citations --out ocalan/</span></div>
-                    <div class="term-out">Parsing document...     ✓ 2,145 blocks parsed
-Extracting citations... ✓ 127 citations resolved (94 internal)
-Building graph...       ✓ 58 unique targets verified
-Written to ocalan/cases.parquet</div>
+                    <div class="term-out">echr-py corpus: 6 searched → 3 matched pairs; saved to ocalan/</div>
                     <div class="term-line"><span class="p">&gt;&gt;&gt;</span><span class="cmd">import pandas as pd</span><button class="copy-btn" data-cmd="import pandas as pd">copy</button></div>
                     <div class="term-line"><span class="p">&gt;&gt;&gt;</span><span class="cmd">df = pd.read_parquet('ocalan/cases.parquet')</span><button class="copy-btn" data-cmd="df = pd.read_parquet('ocalan/cases.parquet')">copy</button></div>
-                    <div class="term-line"><span class="p">&gt;&gt;&gt;</span><span class="cmd">print(df[['name', 'respondent', 'articles', 'dissent']].head())</span><button class="copy-btn" data-cmd="print(df[['name', 'respondent', 'articles', 'dissent']].head())">copy</button></div>
-                    <div class="term-out">name          CASE OF ÖCALAN v. TÜRKIYE
-respondent                          TUR
-articles              ['2', '3', '14', '41']
-dissent                            True</div>
+                    <div class="term-line"><span class="p">&gt;&gt;&gt;</span><span class="cmd">print(df[['itemid', 'docname', 'kp_date', 'separate_opinion']])</span><button class="copy-btn" data-cmd="print(df[['itemid', 'docname', 'kp_date', 'separate_opinion']])">copy</button></div>
+                    <div class="term-out">      itemid                   docname     kp_date separate_opinion
+0  001-69022  CASE OF ÖCALAN v. TURKEY  2005-05-12             True
+1  001-60979  CASE OF ÖCALAN v. TURKEY  2003-03-12             True
+2   001-5562          ÖCALAN v. TURKEY  2000-12-14             None</div>
+                    <div class="term-line"><span class="p">&gt;&gt;&gt;</span><span class="cmd">r = json.load(open('ocalan/citations/resolution-report.json'))</span><button class="copy-btn" data-cmd="r = json.load(open('ocalan/citations/resolution-report.json'))">copy</button></div>
+                    <div class="term-line"><span class="p">&gt;&gt;&gt;</span><span class="cmd">print(r['mentions'], r['resolved'], r['review_required'])</span><button class="copy-btn" data-cmd="print(r['mentions'], r['resolved'], r['review_required'])">copy</button></div>
+                    <div class="term-out">122 95 27</div>
                 </div>
 
                 <h3>3. Network export</h3>
 
-                <p>You can export the citation graph as JSON, GraphML, or a NetworkX object, where each edge represents a citation from case A to case B.</p>
+                <p>You can export the citation graph as JSON, GEXF for Gephi, or a single offline HTML viewer, where each edge represents a citation from case A to case B; the JSON loads straight into NetworkX. The export below is a run of 7 October 2026 on the corpus-scoped resolution of every Grand Chamber judgment. Its 525th node is the Court's 2004 decision on its competence to give an advisory opinion, which the authority table resolves from its reporter reference; it is a decision, not a judgment, and the counts in Part III leave it out.</p>
 
                 <div class="terminal">
-                    <div class="term-line"><span class="p">$</span><span class="cmd">echr-py graph export --kind case-case \</span><button class="copy-btn" data-cmd="echr-py graph export --kind case-case --format json --in corpus/citations --out network.json">copy</button></div>
+                    <div class="term-line"><span class="p">$</span><span class="cmd">echr-py graph export --kind citation-scl \</span><button class="copy-btn" data-cmd="echr-py graph export --kind citation-scl --format json --in corpus/citations --out network.json">copy</button></div>
                     <div class="term-line term-cont"><span class="cmd">--format json --in corpus/citations --out network.json</span></div>
-                    <div class="term-out">✓ Exported network with 525 nodes and 4416 edges</div>
+                    <div class="term-out">echr-py graph: wrote network.json</div>
                     <div class="term-line"><span class="p">&gt;&gt;&gt;</span><span class="cmd">import json, networkx as nx</span><button class="copy-btn" data-cmd="import json, networkx as nx">copy</button></div>
-                    <div class="term-line"><span class="p">&gt;&gt;&gt;</span><span class="cmd">G = nx.node_link_graph(json.load(open('network.json')))</span><button class="copy-btn" data-cmd="G = nx.node_link_graph(json.load(open('network.json')))">copy</button></div>
+                    <div class="term-line"><span class="p">&gt;&gt;&gt;</span><span class="cmd">G = nx.node_link_graph(json.load(open('network.json')), edges='links', directed=True)</span><button class="copy-btn" data-cmd="G = nx.node_link_graph(json.load(open('network.json')), edges='links', directed=True)">copy</button></div>
                     <div class="term-line"><span class="p">&gt;&gt;&gt;</span><span class="cmd">print(G.number_of_nodes(), G.number_of_edges(), round(nx.density(G), 4))</span><button class="copy-btn" data-cmd="print(G.number_of_nodes(), G.number_of_edges(), round(nx.density(G), 4))">copy</button></div>
-                    <div class="term-out">525 4416 0.0161</div>
+                    <div class="term-out">525 4426 0.0161</div>
                 </div>
 
                 <h2>III. Replicating Voeten &amp; Lupu</h2>
@@ -621,7 +621,7 @@ dissent                            True</div>
 
                 <h3>Second corpus: the complete Grand Chamber</h3>
 
-                <p>Now take a corpus that is closed rather than clipped: every Grand Chamber judgment the Court has handed down between 1994 and 2026. There are 524 of them, the same size as the slice above, which is a coincidence and a convenient one.</p>
+                <p>Now take a corpus that is closed rather than clipped: every Grand Chamber judgment the Court has handed down between 1994 and 2026. There are 524 of them, the same size as the slice above, which is a coincidence and a convenient one. The figures in this Part come from a run on 25 August 2026. A rebuild on 7 October 2026 with echr-py 0.2.3 returned 15,043 references, 4,426 internal citations, a density of 1.61% and eleven isolated judgments, with the same twelve hub cases within one or two citations of the counts below. Louvain community detection depends on its random seed: across forty seeds it returned seven, eight or nine clusters, so the eight below are one defensible partition rather than the partition.</p>
 
                 <p>Same method, same number of judgments, and the network is roughly seven hundred times denser at 1.61% against 0.0022%, with a mean in-degree of 8.41. 86% of Grand Chamber judgments are cited by at least one other Grand Chamber judgment, the median is cited six times, and the most-cited is cited sixty-two times.</p>
 
@@ -667,7 +667,7 @@ dissent                            True</div>
                         </div>
                     </div>
                 </div>
-                <p class="viz-caption">Figure 1 shows the complete Grand Chamber citation network, with 513 judgments and all 4,416 citations between them. The colours come from community detection rather than from Convention articles, using Louvain modularity on the citation graph, and node size scales with in-degree. You can scroll to zoom, drag to pan, hover over a node to see its neighbours, and click for the full record. Clicking a cluster in the legend mutes it. (Twelve judgments that neither cite nor are cited within the corpus are omitted.)</p>
+                <p class="viz-caption">Figure 1 shows the complete Grand Chamber citation network, with 513 judgments and all 4,416 citations between them. The colours come from community detection rather than from Convention articles, using Louvain modularity on the citation graph, and node size scales with in-degree. You can scroll to zoom, drag to pan, hover over a node to see its neighbours, and click for the full record. Clicking a cluster in the legend mutes it. (Eleven judgments that neither cite nor are cited within the corpus are omitted, together with the one non-judgment node described in Part II.)</p>
 
                 <h3>The clusters are doctrinal</h3>
 
