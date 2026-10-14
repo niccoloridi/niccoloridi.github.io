@@ -121,7 +121,7 @@
 
         /* ─── prose column with margin notes ─── */
         .prose { max-width: var(--measure); margin: 0 auto; padding: 0 clamp(1.2rem, 4vw, 2rem); position: relative; }
-        .prose p { margin: 0 0 1.35rem; }
+        .prose p { margin: 0 0 1.35rem; text-align: justify; -webkit-hyphens: auto; hyphens: auto; hyphenate-limit-chars: 7 3 3; }
         .prose p.lead { font-size: 1.22rem; line-height: 1.5; }
         .prose p.lead::first-letter { float: left; font-size: 4.6rem; line-height: 0.82; padding: 0.12em 0.1em 0 0; color: var(--gold); font-weight: 300; font-variation-settings: 'opsz' 72; }
         .prose em { font-style: italic; }
@@ -131,7 +131,7 @@
         .section-head h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.7rem, 3.4vw, 2.3rem); line-height: 1.1; letter-spacing: -0.015em; font-variation-settings: 'opsz' 72; }
         .section-head::after { content: ''; grid-column: 1 / -1; height: 1px; background: var(--line); margin-top: 0.6rem; }
         .sn-ref { font-family: var(--mono); font-size: 0.62em; color: var(--gold); vertical-align: super; line-height: 0; margin-left: 0.1em; }
-        .sn { font-family: var(--sans); font-size: 0.74rem; line-height: 1.5; color: var(--muted); }
+        .sn { font-family: var(--sans); font-size: 0.74rem; line-height: 1.5; color: var(--muted); text-align: justify; -webkit-hyphens: auto; hyphens: auto; }
         @media (min-width: 1180px) {
             .sn { float: right; clear: right; width: var(--note); margin-right: calc(-1 * var(--note) - 2.6rem); margin-top: 0.15rem; margin-bottom: 0.8rem; position: relative; }
             .sn::before { content: attr(data-n); font-family: var(--mono); font-size: 0.6rem; color: var(--gold); margin-right: 0.4rem; }
@@ -168,7 +168,7 @@
         .plate-head .sub { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.06em; color: var(--muted); margin-left: auto; }
         .plate-body { position: relative; }
         .plate-caption { padding: 0.9rem 1.4rem 1.1rem; border-top: 1px solid var(--line); font-family: var(--sans); font-size: 0.78rem; line-height: 1.55; color: var(--muted); display: flex; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
-        .plate-caption .cap { flex: 1 1 28rem; }
+        .plate-caption .cap { flex: 1 1 28rem; text-align: justify; -webkit-hyphens: auto; hyphens: auto; }
         .plate-caption details { flex: 0 0 auto; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; }
         .plate-caption summary { cursor: pointer; color: var(--gold); list-style: none; }
         .plate-caption summary::-webkit-details-marker { display: none; }
