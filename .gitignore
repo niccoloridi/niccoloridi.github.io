@@ -54,3 +54,26 @@ index-aidev.html
 index-plates-backup.html
 index-dissolve.html
 index-ai-celestial-backup.html
+
+# Obituaries essay: sources are tracked; full-resolution originals, intermediate
+# copies and review/preview outputs stay local (published portraits live in images/obituaries/)
+data/obituaries/portraits/
+data/obituaries/portraits-extra/
+data/obituaries/portraits-small/
+data/obituaries/preview.html
+data/obituaries/contact-extra.html
+
+# Retro (GeoCities) homepage theme: kept local until it is chosen for release.
+# Its three wiring lines in index.html are left unstaged on purpose.
+retro-theme.css
+retro-theme.js
+images/retro/
+images/nyan-cat-cursor.gif
+nyan-cursor-test.html
+
+# Local leftovers: a superseded ILC Atlas snapshot (the topic is published under
+# ilc-atlas/data/topics/) and three unused generated images
+ilc-atlas/data/general-principles.json
+images/ai/eye.jpg
+images/ai/hourglass.jpg
+images/ai/tree.jpg

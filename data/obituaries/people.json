@@ -1,0 +1,4724 @@
+{
+ "Hilary Charlesworth": {
+  "how": "alias",
+  "title": "Hilary Charlesworth",
+  "found": true,
+  "page": "Hilary Charlesworth",
+  "url": "https://en.wikipedia.org/wiki/Hilary_Charlesworth",
+  "desc": "Australian legal academic and judge of the International Court of Justice",
+  "extract": "Hilary Christiane Mary Charlesworth is an Australian international lawyer. She has been a Judge of the International Court of Justice since 5 November 2021, and is Harrison Moore Professor of Law and Melbourne Laureate Professor at the University of Melbourne, and Distinguished Professor at the Australian National University.",
+  "qid": "Q5760919",
+  "image_file": "Hilary_Christiane_Mary_Charlesworth_(born_1955)_giving_the_lecture_Assessing_International_Adjudication_–_The_World_Court_at_100.png",
+  "thumb": "https://upload.wikimedia.org/wikipedia/commons/1/15/Hilary_Christiane_Mary_Charlesworth_%28born_1955%29_giving_the_lecture_Assessing_International_Adjudication_%E2%80%93_The_World_Court_at_100.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1955,
+  "died": null,
+  "gender_q": "Q6581072",
+  "birthplace_q": "Q118958",
+  "citizen_q": [
+   "Q408"
+  ],
+  "birthplace": {
+   "name": "Leuven",
+   "coords": [
+    50.877,
+    4.704
+   ],
+   "country": "Belgium"
+  },
+  "citizenship": [
+   "Australia"
+  ],
+  "gender": "female",
+  "portrait": {
+   "file": "Hilary_Christiane_Mary_Charlesworth_(born_1955)_giving_the_lecture_Assessing_International_Adjudication_–_The_World_Court_at_100.png",
+   "page": "https://commons.wikimedia.org/wiki/File:Hilary_Christiane_Mary_Charlesworth_(born_1955)_giving_the_lecture_Assessing_International_Adjudication_%E2%80%93_The_World_Court_at_100.png",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/1/15/Hilary_Christiane_Mary_Charlesworth_%28born_1955%29_giving_the_lecture_Assessing_International_Adjudication_%E2%80%93_The_World_Court_at_100.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "ANU TV",
+   "license": "CC BY 3.0",
+   "local": "portraits/hilary-charlesworth.jpg"
+  }
+ },
+ "Lassa Oppenheim": {
+  "how": "direct",
+  "title": "Lassa Oppenheim",
+  "found": true,
+  "page": "L. F. L. Oppenheim",
+  "url": "https://en.wikipedia.org/wiki/L._F._L._Oppenheim",
+  "desc": "German legal scholar (1858–1919)",
+  "extract": "Lassa Francis Lawrence Oppenheim was a German jurist. He has been characterized as the father of the modern discipline of international law, especially the hard legal positivist school of thought. His two-volume International Law: A Treatise has influenced international law. He inspired Joseph Raz and Prosper Weil.",
+  "qid": "Q77956",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1858,
+  "died": 1919,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q2583462",
+  "citizen_q": [
+   "Q183"
+  ],
+  "birthplace": {
+   "name": "Windecken",
+   "coords": [
+    50.224,
+    8.88
+   ],
+   "country": "Germany"
+  },
+  "citizenship": [
+   "Germany"
+  ],
+  "gender": "male"
+ },
+ "Lord Arnold McNair": {
+  "how": "alias",
+  "title": "Arnold McNair, 1st Baron McNair",
+  "found": true,
+  "page": "Arnold McNair, 1st Baron McNair",
+  "url": "https://en.wikipedia.org/wiki/Arnold_McNair%2C_1st_Baron_McNair",
+  "desc": null,
+  "extract": "Arnold Duncan McNair, 1st Baron McNair was a British jurist and judge of the International Court of Justice and later the first president of the European Court of Human Rights.",
+  "qid": "Q335881",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1885,
+  "died": 1975,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q84",
+  "citizen_q": [
+   "Q145"
+  ],
+  "birthplace": {
+   "name": "London",
+   "coords": [
+    51.507,
+    -0.128
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male"
+ },
+ "Mielville W. Fuller": {
+  "how": "alias",
+  "title": "Melville Fuller",
+  "found": true,
+  "page": "Melville Fuller",
+  "url": "https://en.wikipedia.org/wiki/Melville_Fuller",
+  "desc": "Chief Justice of the United States from 1888 to 1910",
+  "extract": "Melville Weston Fuller was an American politician, attorney, and jurist who served as the eighth chief justice of the United States from 1888 until his death in 1910. Staunch conservatism marked his tenure on the Supreme Court, exhibited by his tendency to support unfettered free enterprise and to oppose broad federal power. He wrote major opinions on the federal income tax, the Commerce Clause, a",
+  "qid": "Q943046",
+  "image_file": "Melville_W._Fuller_portrait.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Melville_W._Fuller_portrait.jpg/330px-Melville_W._Fuller_portrait.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1833,
+  "died": 1910,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q28206",
+  "citizen_q": [
+   "Q30"
+  ],
+  "birthplace": {
+   "name": "Augusta",
+   "coords": [
+    44.311,
+    -69.779
+   ],
+   "country": "United States"
+  },
+  "citizenship": [
+   "United States"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Melville_W._Fuller_portrait.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Melville_W._Fuller_portrait.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Melville_W._Fuller_portrait.jpg/500px-Melville_W._Fuller_portrait.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "File:FULLER, MELVILLE W. CHIEF JUSTICE LCCN2016857465.jpg: Harris &amp; Ewing, photographer\nderivative work: Robertus Pius",
+   "license": "Public domain",
+   "local": "portraits/mielville-w-fuller.jpg"
+  }
+ },
+ "Ernest Nys": {
+  "how": "direct",
+  "title": "Ernest Nys",
+  "found": true,
+  "page": "Ernest Nys",
+  "url": "https://en.wikipedia.org/wiki/Ernest_Nys",
+  "desc": "Belgian lawyer and scholar",
+  "extract": "Ernest Nys was a Belgian lawyer and a professor of Public International Law at the University of Brussels. He also served as a member of the Permanent Court of Arbitration.",
+  "qid": "Q572442",
+  "image_file": "Ernest_Nys.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Ernest_Nys.jpg/330px-Ernest_Nys.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1851,
+  "died": 1920,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q12995",
+  "citizen_q": [
+   "Q31"
+  ],
+  "birthplace": {
+   "name": "Kortrijk",
+   "coords": [
+    50.828,
+    3.266
+   ],
+   "country": "Belgium"
+  },
+  "citizenship": [
+   "Belgium"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Ernest_Nys.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Ernest_Nys.jpg",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/8/8d/Ernest_Nys.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "Unknown photographer",
+   "license": "Public domain",
+   "local": "portraits/ernest-nys.jpg"
+  }
+ },
+ "Rupert Cross": {
+  "how": "direct",
+  "title": "Rupert Cross",
+  "found": true,
+  "page": "Rupert Cross",
+  "url": "https://en.wikipedia.org/wiki/Rupert_Cross",
+  "desc": "English legal scholar",
+  "extract": "\nSir Alfred Rupert Neale Cross was an English legal scholar. He was the second of two sons of Arthur George Cross, an architect in Hastings, and Mary Elizabeth.",
+  "qid": "Q7380271",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1912,
+  "died": 1980,
+  "gender_q": "Q6581097",
+  "birthplace_q": null,
+  "citizen_q": [
+   "Q145"
+  ],
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male"
+ },
+ "Dr Kruger": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Maurice Mendelson": {
+  "title": "Maurice Mendelson",
+  "how": "wikidata",
+  "found": true,
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male",
+  "page": "Maurice Mendelson",
+  "qid": "Q107317333",
+  "desc": "British legal scholar",
+  "verified": true,
+  "url": "https://www.wikidata.org/wiki/Q107317333",
+  "born": 1943,
+  "died": null,
+  "birthplace_q": null,
+  "image_file": null,
+  "gender_q": "Q6581097",
+  "citizen_q": [
+   "Q145"
+  ]
+ },
+ "Sir C. Wilfred Jenks": {
+  "how": "alias",
+  "title": "C. Wilfred Jenks",
+  "found": true,
+  "page": "C. Wilfred Jenks",
+  "url": "https://en.wikipedia.org/wiki/C._Wilfred_Jenks",
+  "desc": null,
+  "extract": "C. Wilfred Jenks was an international lawyer and director-general of the International Labour Organization (1970–1973).",
+  "qid": "Q3568179",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1909,
+  "died": 1973,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q24826",
+  "citizen_q": [
+   "Q145",
+   "Q174193"
+  ],
+  "birthplace": {
+   "name": "Liverpool",
+   "coords": [
+    53.407,
+    -2.992
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom",
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male"
+ },
+ "Lord Justice Scrutton": {
+  "how": "alias",
+  "title": "Thomas Edward Scrutton",
+  "found": true,
+  "page": "Thomas Edward Scrutton",
+  "url": "https://en.wikipedia.org/wiki/Thomas_Edward_Scrutton",
+  "desc": null,
+  "extract": "Sir Thomas Edward Scrutton was an English barrister, judge, and legal writer.",
+  "qid": "Q7789276",
+  "image_file": "SirThomasEdwardScrutton.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/80/SirThomasEdwardScrutton.jpg/330px-SirThomasEdwardScrutton.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1856,
+  "died": 1934,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q123360",
+  "citizen_q": [
+   "Q174193"
+  ],
+  "birthplace": {
+   "name": "Poplar",
+   "coords": [
+    51.507,
+    -0.018
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "SirThomasEdwardScrutton.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:SirThomasEdwardScrutton.jpg",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/8/80/SirThomasEdwardScrutton.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "William Hartley",
+   "license": "Public domain",
+   "local": "portraits/lord-justice-scrutton.jpg"
+  }
+ },
+ "W. R. Bisschop": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Philippe Sands": {
+  "how": "alias",
+  "title": "Philippe Sands",
+  "found": true,
+  "page": "Philippe Sands",
+  "url": "https://en.wikipedia.org/wiki/Philippe_Sands",
+  "desc": "British/French lawyer, legal academic and author (born 1960)",
+  "extract": "Philippe Joseph Sands is a British and French writer and lawyer at 11 King's Bench Walk and Professor of Laws and Director of the Centre on International Courts and Tribunals at the Faculty of Laws, University College London. A specialist in international law, he appears as counsel and advocate before many international courts and tribunals, including the International Court of Justice, the Intern",
+  "qid": "Q13221733",
+  "image_file": "Philippe_Sands_at_the_Frankfurt_Book_Fair_2026-6399.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Philippe_Sands_at_the_Frankfurt_Book_Fair_2026-6399.jpg/330px-Philippe_Sands_at_the_Frankfurt_Book_Fair_2026-6399.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1960,
+  "died": null,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q84",
+  "citizen_q": [
+   "Q145",
+   "Q142"
+  ],
+  "birthplace": {
+   "name": "London",
+   "coords": [
+    51.507,
+    -0.128
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom",
+   "France"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Philippe_Sands_at_the_Frankfurt_Book_Fair_2026-6399.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Philippe_Sands_at_the_Frankfurt_Book_Fair_2026-6399.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Philippe_Sands_at_the_Frankfurt_Book_Fair_2026-6399.jpg/500px-Philippe_Sands_at_the_Frankfurt_Book_Fair_2026-6399.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Harald Krichel",
+   "license": "CC BY-SA 4.0",
+   "local": "portraits/philippe-sands.jpg"
+  }
+ },
+ "Christina Lyon": {
+  "found": false,
+  "how": "rejected"
+ },
+ "Dame Hazel Fox": {
+  "how": "alias",
+  "title": "Hazel Fox",
+  "found": true,
+  "page": "Hazel Fox",
+  "url": "https://en.wikipedia.org/wiki/Hazel_Fox",
+  "desc": "British lawyer (1928–2025)",
+  "extract": "Hazel Mary Fox CMG KC, often known as Lady Fox, was a British international lawyer and an expert in State Immunity. She was involved in a number of British high profile cases where individuals had legal disputes with governments.",
+  "qid": "Q111121882",
+  "image_file": "Hazel_Fox_lawyer.png",
+  "thumb": "https://upload.wikimedia.org/wikipedia/en/5/53/Hazel_Fox_lawyer.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1928,
+  "died": 2025,
+  "gender_q": "Q6581072",
+  "birthplace_q": "Q1360318",
+  "citizen_q": [
+   "Q145"
+  ],
+  "birthplace": {
+   "name": "Pyin Oo Lwin",
+   "coords": [
+    22.028,
+    96.471
+   ],
+   "country": "Myanmar"
+  },
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "female"
+ },
+ "Peter Carter": {
+  "found": false,
+  "how": "rejected"
+ },
+ "Unknown": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "A. Beernaert": {
+  "how": "alias",
+  "title": "Auguste Beernaert",
+  "found": true,
+  "page": "Auguste Beernaert",
+  "url": "https://en.wikipedia.org/wiki/Auguste_Beernaert",
+  "desc": "14th Prime Minister of Belgium and human rights activist",
+  "extract": "Auguste Marie François Beernaert was the prime minister of Belgium from October 1884 to March 1894, and the 1909 Nobel Peace Prize laureate.",
+  "qid": "Q202049",
+  "image_file": "Auguste_Beernaert(03).jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/commons/4/47/Auguste_Beernaert%2803%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1829,
+  "died": 1912,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q12996",
+  "citizen_q": [
+   "Q31"
+  ],
+  "birthplace": {
+   "name": "Ostend",
+   "coords": [
+    51.226,
+    2.919
+   ],
+   "country": "Belgium"
+  },
+  "citizenship": [
+   "Belgium"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Auguste_Beernaert(03).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Auguste_Beernaert(03).jpg",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/4/47/Auguste_Beernaert%2803%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "Unknown authorUnknown author",
+   "license": "Public domain",
+   "local": "portraits/a-beernaert.jpg"
+  }
+ },
+ "S. Maccoby": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Francis Hagerup": {
+  "how": "direct",
+  "title": "Francis Hagerup",
+  "found": true,
+  "page": "Francis Hagerup",
+  "url": "https://en.wikipedia.org/wiki/Francis_Hagerup",
+  "desc": "Norwegian politician",
+  "extract": "George Francis Hagerup was a Norwegian law professor, diplomat, politician for the Conservative Party and women's rights advocate. He was the prime minister of Norway from 1895 to 1898 and from 1903 to 1905, and leader of the Conservative Party from 1899 to 1902. As a legal scholar, he is known for his contributions to the development of public international law, and was chairman of the Institut d",
+  "qid": "Q1441544",
+  "image_file": "Francis_Hagerup_(OB.SZ02297).jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/Francis_Hagerup_%28OB.SZ02297%29.jpg/330px-Francis_Hagerup_%28OB.SZ02297%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1853,
+  "died": 1921,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q12715526",
+  "citizen_q": [
+   "Q20"
+  ],
+  "birthplace": {
+   "name": "Horten",
+   "coords": [
+    59.417,
+    10.483
+   ],
+   "country": "Norway"
+  },
+  "citizenship": [
+   "Norway"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Francis_Hagerup_(OB.SZ02297).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Francis_Hagerup_(OB.SZ02297).jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/Francis_Hagerup_%28OB.SZ02297%29.jpg/500px-Francis_Hagerup_%28OB.SZ02297%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "L. Szaciński / Oslo Museum",
+   "license": "CC BY-SA 4.0",
+   "local": "portraits/francis-hagerup.jpg"
+  }
+ },
+ "Sir John Freeland": {
+  "how": "alias",
+  "title": "John Freeland",
+  "found": true,
+  "page": "John Freeland",
+  "url": "https://en.wikipedia.org/wiki/John_Freeland",
+  "desc": "British diplomat and international lawyer",
+  "extract": "Sir John Redvers Freeland was a British diplomat and international lawyer.",
+  "qid": "Q51537475",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1927,
+  "died": 2014,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q149787",
+  "citizen_q": [],
+  "birthplace": {
+   "name": "Hendon",
+   "coords": [
+    51.584,
+    -0.225
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [],
+  "gender": "male"
+ },
+ "Guenter Heinz Treitel": {
+  "how": "alias",
+  "title": "Guenter Treitel",
+  "found": true,
+  "page": "Guenter Treitel",
+  "url": "https://en.wikipedia.org/wiki/Guenter_Treitel",
+  "desc": "German-born English legal academic (1928–2019)",
+  "extract": "Sir Guenter Heinz Treitel was a German-born English academic and Vinerian Professor of English Law.",
+  "qid": "Q5614832",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1928,
+  "died": 2019,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q64",
+  "citizen_q": [
+   "Q145"
+  ],
+  "birthplace": {
+   "name": "Berlin",
+   "coords": [
+    52.517,
+    13.383
+   ],
+   "country": "Germany"
+  },
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male"
+ },
+ "George Gray": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Sir Cecil Hurst": {
+  "how": "alias",
+  "title": "Cecil Hurst",
+  "found": true,
+  "page": "Cecil Hurst",
+  "url": "https://en.wikipedia.org/wiki/Cecil_Hurst",
+  "desc": "British judge",
+  "extract": "Sir Cecil James Barrington Hurst, GCMG, KCB, QC was a British international lawyer. He worked from 1929 to 1945 as a judge to the Permanent Court of International Justice in The Hague, serving from 1934 to 1936 as president of the court.",
+  "qid": "Q1052312",
+  "image_file": null,
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/Het_Permanente_Hof_van_Internationale_Justitie_bijeen._Laatste_sessie_voor_de_op%2C_Bestanddeelnr_900-9770.jpg/330px-Het_Permanente_Hof_van_Internationale_Justitie_bijeen._Laatste_sessie_voor_de_op%2C_Bestanddeelnr_900-9770.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1870,
+  "died": 1963,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q177544",
+  "citizen_q": [
+   "Q145"
+  ],
+  "birthplace": {
+   "name": "Horsham",
+   "coords": [
+    51.062,
+    -0.325
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male"
+ },
+ "Wilhelm Wundt": {
+  "how": "direct",
+  "title": "Wilhelm Wundt",
+  "found": true,
+  "page": "Wilhelm Wundt",
+  "url": "https://en.wikipedia.org/wiki/Wilhelm_Wundt",
+  "desc": "German founder of psychology (1832–1920)",
+  "extract": "Wilhelm Maximilian Wundt was a German physiologist, philosopher, professor, and one of the fathers of modern psychology. Wundt, who distinguished psychology as a science from philosophy and biology, was the first person to call himself a psychologist.",
+  "qid": "Q75814",
+  "image_file": "Wilhelm_Wundt.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/56/Wilhelm_Wundt.jpg/330px-Wilhelm_Wundt.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1832,
+  "died": 1920,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q1973682",
+  "citizen_q": [
+   "Q183"
+  ],
+  "birthplace": {
+   "name": "Neckarau",
+   "coords": [
+    49.454,
+    8.491
+   ],
+   "country": "Germany"
+  },
+  "citizenship": [
+   "Germany"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Wilhelm_Wundt.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Wilhelm_Wundt.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/56/Wilhelm_Wundt.jpg/500px-Wilhelm_Wundt.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Unknown authorUnknown author",
+   "license": "Public domain",
+   "local": "portraits/wilhelm-wundt.jpg"
+  }
+ },
+ "Sir John Sparrow": {
+  "how": "alias",
+  "title": "John Sparrow (academic)",
+  "found": true,
+  "page": "John Sparrow (academic)",
+  "url": "https://en.wikipedia.org/wiki/John_Sparrow_(academic)",
+  "desc": "British academic, barrister and book-collector (1906–1992)",
+  "extract": "\nJohn Hanbury Angus Sparrow OBE was an English academic, barrister, book-collector, and Warden of All Souls College, Oxford, from 1952 to 1977.",
+  "qid": "Q6237541",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1906,
+  "died": 1992,
+  "gender_q": "Q6581097",
+  "birthplace_q": null,
+  "citizen_q": [
+   "Q145"
+  ],
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male"
+ },
+ "John Collier": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Rolv Ryssdal": {
+  "how": "direct",
+  "title": "Rolv Ryssdal",
+  "found": true,
+  "page": "Rolv Ryssdal",
+  "url": "https://en.wikipedia.org/wiki/Rolv_Ryssdal",
+  "desc": "Norwegian judge",
+  "extract": "\nRolv Einar Rasmussen Ryssdal was a Norwegian judge.",
+  "qid": "Q370238",
+  "image_file": "Ryssdal_byste.JPG",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/09/Ryssdal_byste.JPG/330px-Ryssdal_byste.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1914,
+  "died": 1998,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q6479792",
+  "citizen_q": [
+   "Q20"
+  ],
+  "birthplace": {
+   "name": "Laksevåg",
+   "coords": [
+    60.373,
+    5.24
+   ],
+   "country": "Norway"
+  },
+  "citizenship": [
+   "Norway"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Ryssdal_byste.JPG",
+   "page": "https://commons.wikimedia.org/wiki/File:Ryssdal_byste.JPG",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/09/Ryssdal_byste.JPG/500px-Ryssdal_byste.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Erik den yngre",
+   "license": "CC BY-SA 4.0",
+   "local": "portraits/rolv-ryssdal.jpg"
+  }
+ },
+ "Sir Hersch Lauterpacht": {
+  "how": "alias",
+  "title": "Hersch Lauterpacht",
+  "found": true,
+  "page": "Hersch Lauterpacht",
+  "url": "https://en.wikipedia.org/wiki/Hersch_Lauterpacht",
+  "desc": "Polish-British judge (1897–1960)",
+  "extract": "Sir Hersch Lauterpacht was a British international lawyer, human rights activist, and judge at the International Court of Justice.",
+  "qid": "Q113316",
+  "image_file": "Hersch_lauterpacht.jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/en/3/30/Hersch_lauterpacht.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1897,
+  "died": 1960,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q864836",
+  "citizen_q": [
+   "Q145",
+   "Q28513"
+  ],
+  "birthplace": {
+   "name": "Zhovkva",
+   "coords": [
+    50.067,
+    23.967
+   ],
+   "country": "Ukraine"
+  },
+  "citizenship": [
+   "United Kingdom",
+   "Austria–Hungary"
+  ],
+  "gender": "male"
+ },
+ "Van Eysinga": {
+  "how": "alias",
+  "title": "Willem van Eysinga",
+  "found": true,
+  "page": "Willem van Eysinga",
+  "url": "https://en.wikipedia.org/wiki/Willem_van_Eysinga",
+  "desc": "Dutch legal historian and professor (1878–1961)",
+  "extract": "Willem Jan Mari van Eysinga was a Dutch diplomat and jurist. He served as a judge on the Permanent Court of International Justice from 1931 to 1945.",
+  "qid": "Q2576783",
+  "image_file": "WJMvanEysinga1907.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/WJMvanEysinga1907.jpg/330px-WJMvanEysinga1907.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1878,
+  "died": 1961,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q848988",
+  "citizen_q": [
+   "Q29999"
+  ],
+  "birthplace": {
+   "name": "Noordwijkerhout",
+   "coords": [
+    52.259,
+    4.492
+   ],
+   "country": "Netherlands"
+  },
+  "citizenship": [
+   "Kingdom of the Netherlands"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "WJMvanEysinga1907.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:WJMvanEysinga1907.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/WJMvanEysinga1907.jpg/500px-WJMvanEysinga1907.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Unknown photographer",
+   "license": "Public domain",
+   "local": "portraits/van-eysinga.jpg"
+  }
+ },
+ "Shigeru Oda": {
+  "how": "direct",
+  "title": "Shigeru Oda",
+  "found": true,
+  "page": "Shigeru Oda",
+  "url": "https://en.wikipedia.org/wiki/Shigeru_Oda",
+  "desc": "Japanese judge (1924–2025)",
+  "extract": "Shigeru Oda  was a Japanese jurist who was a judge on the International Court of Justice from 1976 until 2003, when he retired. He served as vice-president from 1991 to 1994. His main area of expertise was law of the sea. He was born in Sapporo.",
+  "qid": "Q432850",
+  "image_file": "Shigeru_Oda_cropped_Shigeru_Oda_19941212.jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Shigeru_Oda_cropped_Shigeru_Oda_19941212.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1924,
+  "died": 2025,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q37951",
+  "citizen_q": [
+   "Q17"
+  ],
+  "birthplace": {
+   "name": "Sapporo",
+   "coords": [
+    43.062,
+    141.354
+   ],
+   "country": "Japan"
+  },
+  "citizenship": [
+   "Japan"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Shigeru_Oda_cropped_Shigeru_Oda_19941212.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Shigeru_Oda_cropped_Shigeru_Oda_19941212.jpg",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Shigeru_Oda_cropped_Shigeru_Oda_19941212.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "日本学士院",
+   "license": "CC BY 4.0",
+   "local": "portraits/shigeru-oda.jpg"
+  }
+ },
+ "A. Pearce Higgins": {
+  "how": "alias",
+  "title": "Alexander Pearce Higgins",
+  "found": true,
+  "page": "Alexander Pearce Higgins",
+  "url": "https://en.wikipedia.org/wiki/Alexander_Pearce_Higgins",
+  "desc": "British international law scholar (1865–1935)",
+  "extract": "\n\nAlexander Pearce Higgins was a British international law scholar. He was Whewell Professor of International Law at the University of Cambridge (1920–1935), President of the Institut de Droit International (1929–1931), and a member of the Permanent Court of Arbitration (1930–1935).",
+  "qid": "Q55526911",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1865,
+  "died": 1935,
+  "gender_q": "Q6581097",
+  "birthplace_q": null,
+  "citizen_q": [],
+  "citizenship": [],
+  "gender": "male"
+ },
+ "G. C. Cheshire": {
+  "how": "alias",
+  "title": "Geoffrey Cheshire",
+  "found": true,
+  "page": "Geoffrey Cheshire",
+  "url": "https://en.wikipedia.org/wiki/Geoffrey_Cheshire",
+  "desc": "British barrister (1886-1978)",
+  "extract": "Geoffrey Chevalier Cheshire  was a British barrister and legal scholar. He was the father of Leonard Cheshire, the British war hero and founder of the Cheshire Foundation Homes for the Sick.",
+  "qid": "Q5534513",
+  "image_file": "Geoffrey_Chevalier_Cheshire.jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/en/b/b1/Geoffrey_Chevalier_Cheshire.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1886,
+  "died": 1978,
+  "gender_q": "Q6581097",
+  "birthplace_q": null,
+  "citizen_q": [],
+  "citizenship": [],
+  "gender": "male"
+ },
+ "Ernst Rabel": {
+  "how": "direct",
+  "title": "Ernst Rabel",
+  "found": true,
+  "page": "Ernst Rabel",
+  "url": "https://en.wikipedia.org/wiki/Ernst_Rabel",
+  "desc": "Austrian-American legal scholar",
+  "extract": "Ernst Rabel was an Austrian-born scholar of Roman law, German private law, and comparative law, who, as the founding director of the Kaiser Wilhelm Institute for Foreign and International Private Law, in Berlin, achieved international recognition in the period between the World Wars, before being forced into retirement under the Nazi regime, and immigrating to the United States, in 1939. In the fi",
+  "qid": "Q216637",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1874,
+  "died": 1955,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q1741",
+  "citizen_q": [
+   "Q40"
+  ],
+  "birthplace": {
+   "name": "Vienna",
+   "coords": [
+    48.208,
+    16.372
+   ],
+   "country": "Austria"
+  },
+  "citizenship": [
+   "Austria"
+  ],
+  "gender": "male"
+ },
+ "Joyce Gutteridge": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Cherry Hopkins": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "J. A. S.": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "George Grenville Phillimore": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "John McDonnell": {
+  "how": "alias",
+  "title": "John Macdonell (jurist)",
+  "found": true,
+  "page": "John Macdonell (judge)",
+  "url": "https://en.wikipedia.org/wiki/John_Macdonell_(judge)",
+  "desc": "British jurist (1846–1921)",
+  "extract": "Sir John Macdonell was a British jurist. He was King's Remembrancer (1912–1920) and invested as a Knight Commander of the Order of the Bath. Shaw of Dunfermline gives a prefatory biography in Historical Trials.",
+  "qid": "Q15047427",
+  "image_file": "Sir_John_Macdonell.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/Sir_John_Macdonell.jpg/330px-Sir_John_Macdonell.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1846,
+  "died": 1921,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q45848",
+  "citizen_q": [
+   "Q174193"
+  ],
+  "birthplace": {
+   "name": "Brechin",
+   "coords": [
+    56.73,
+    -2.655
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Sir_John_Macdonell.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Sir_John_Macdonell.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/Sir_John_Macdonell.jpg/500px-Sir_John_Macdonell.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Unknown authorUnknown author",
+   "license": "Public domain",
+   "local": "portraits/john-mcdonnell.jpg"
+  }
+ },
+ "W. A. Steiner": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Malgosia Fitzmaurice": {
+  "how": "alias",
+  "title": "Malgosia Fitzmaurice",
+  "found": true,
+  "page": "Malgosia Fitzmaurice",
+  "url": "https://en.wikipedia.org/wiki/Malgosia_Fitzmaurice",
+  "desc": "Polish lawyer (born 1955)",
+  "extract": "Malgosia A. Fitzmaurice is a Polish lawyer who is professor of public international law at Queen Mary University of London. She is an international lawyer with a specialist interest in marine environmental matters, the law of treaties, and indigenous peoples.",
+  "qid": "Q124804954",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1955,
+  "died": null,
+  "gender_q": "Q6581072",
+  "birthplace_q": "Q580",
+  "citizen_q": [
+   "Q36"
+  ],
+  "birthplace": {
+   "name": "Łódź",
+   "coords": [
+    51.75,
+    19.467
+   ],
+   "country": "Poland"
+  },
+  "citizenship": [
+   "Poland"
+  ],
+  "gender": "female"
+ },
+ "Sir Gerald Fitzmaurice": {
+  "how": "alias",
+  "title": "Gerald Fitzmaurice",
+  "found": true,
+  "page": "Gerald Fitzmaurice",
+  "url": "https://en.wikipedia.org/wiki/Gerald_Fitzmaurice",
+  "desc": "British barrister and judge (1901–1982)",
+  "extract": "Sir Gerald Gray Fitzmaurice was an English barrister and judge. He was a member of the Permanent Court of Arbitration between 1964 and 1973 and a Judge of the International Court of Justice between 1960 and 1973, before becoming a Judge of the European Court of Human Rights at Strasbourg in 1974.",
+  "qid": "Q1509871",
+  "image_file": "Gerald_Fitzmaurice_(1961).jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Gerald_Fitzmaurice_%281961%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1901,
+  "died": 1982,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q23346",
+  "citizen_q": [
+   "Q145"
+  ],
+  "birthplace": {
+   "name": "Sussex",
+   "coords": [
+    50.947,
+    -0.141
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Gerald_Fitzmaurice_(1961).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Gerald_Fitzmaurice_(1961).jpg",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Gerald_Fitzmaurice_%281961%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "Joop van Bilsen for Anefo",
+   "license": "CC0",
+   "local": "portraits/sir-gerald-fitzmaurice.jpg"
+  }
+ },
+ "Charles Henry Alexandrowicz": {
+  "how": "direct",
+  "title": "Charles Henry Alexandrowicz",
+  "found": true,
+  "page": "Charles Henry Alexandrowicz",
+  "url": "https://en.wikipedia.org/wiki/Charles_Henry_Alexandrowicz",
+  "desc": "Lawyer and scholar of international law",
+  "extract": "Charles Henry Alexandrowicz, born Karol Aleksandrowicz, was a lawyer and scholar of international law.",
+  "qid": "Q59627796",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1902,
+  "died": 1975,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q36036",
+  "citizen_q": [
+   "Q145"
+  ],
+  "birthplace": {
+   "name": "Lviv",
+   "coords": [
+    49.842,
+    24.032
+   ],
+   "country": "Ukraine"
+  },
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male"
+ },
+ "Francis Lorimer": {
+  "found": true,
+  "how": "manual",
+  "title": "James Lorimer (jurist)",
+  "page": "James Lorimer",
+  "qid": "Q1680493",
+  "desc": "Scottish jurist; Regius Professor of Public Law at Edinburgh (named \"Francis\" in the dataset)",
+  "url": "https://en.wikipedia.org/wiki/James_Lorimer_(jurist)",
+  "born": 1818,
+  "died": 1890,
+  "gender": "male",
+  "verified": true,
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "birthplace": {
+   "name": "Aberdalgie",
+   "coords": [
+    56.367,
+    -3.483
+   ],
+   "country": "United Kingdom"
+  },
+  "birthplace_fixed": true
+ },
+ "Julio Sanguinetti": {
+  "how": "alias",
+  "title": "Julio María Sanguinetti",
+  "found": true,
+  "page": "Julio María Sanguinetti",
+  "url": "https://en.wikipedia.org/wiki/Julio_Mar%C3%ADa_Sanguinetti",
+  "desc": "President of Uruguay (1985–1990; 1995–2000)",
+  "extract": "Julio María Sanguinetti Coirolo often known by his initials JMS, is a Uruguayan former lawyer, journalist and politician of the Colorado Party (PC) who served as the President of Uruguay as the 35th president from 1985 to 1990, and again as the 37th president from 1995 to 2000. He was the first democratically elected president after twelve years of military dictatorship.",
+  "qid": "Q311428",
+  "image_file": "Cuadro_oficial_de_Sanguinetti_(cropped).jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/Cuadro_oficial_de_Sanguinetti_%28cropped%29.jpg/330px-Cuadro_oficial_de_Sanguinetti_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1936,
+  "died": null,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q1335",
+  "citizen_q": [
+   "Q77"
+  ],
+  "birthplace": {
+   "name": "Montevideo",
+   "coords": [
+    -34.906,
+    -56.191
+   ],
+   "country": "Uruguay"
+  },
+  "citizenship": [
+   "Uruguay"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Cuadro_oficial_de_Sanguinetti_(cropped).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Cuadro_oficial_de_Sanguinetti_(cropped).jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/Cuadro_oficial_de_Sanguinetti_%28cropped%29.jpg/500px-Cuadro_oficial_de_Sanguinetti_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "JacobinoWunsh",
+   "license": "CC BY 4.0",
+   "local": "portraits/julio-sanguinetti.jpg"
+  }
+ },
+ "Sir Eric Beckett": {
+  "how": "alias",
+  "title": "Eric Beckett",
+  "found": true,
+  "page": "Eric Beckett",
+  "url": "https://en.wikipedia.org/wiki/Eric_Beckett",
+  "desc": "British lawyer",
+  "extract": "Sir William Eric Beckett, KCMG, QC was a British international lawyer who served as Legal Adviser to the Foreign Office from 1945 to 1953.",
+  "qid": "Q18528771",
+  "image_file": "Sir_Eric_Beckett.jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/en/b/b2/Sir_Eric_Beckett.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1896,
+  "died": 1966,
+  "gender_q": "Q6581097",
+  "birthplace_q": null,
+  "citizen_q": [],
+  "citizenship": [],
+  "gender": "male"
+ },
+ "Kenneth Simmonds": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Sir James Fawcett": {
+  "how": "search",
+  "title": "James Fawcett (lawyer)",
+  "found": true,
+  "page": "James Fawcett",
+  "url": "https://en.wikipedia.org/wiki/James_Fawcett",
+  "desc": "Barrister and member of the European Commission for Human Rights",
+  "extract": "Sir James Edmund Sandford Fawcett was a British barrister. He was a member of the European Commission for Human Rights from 1962 to 1984, and its president from 1972 to 1981, and was knighted in 1984. He is a grandfather of former British Prime Minister Boris Johnson.",
+  "qid": "Q16012597",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1913,
+  "died": 1991,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q988100",
+  "citizen_q": [
+   "Q145"
+  ],
+  "birthplace": {
+   "name": "Wallingford",
+   "coords": [
+    51.599,
+    -1.125
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male"
+ },
+ "Sir Michael Wood": {
+  "how": "alias",
+  "title": "Michael Wood (lawyer)",
+  "found": true,
+  "page": "Michael Wood (lawyer)",
+  "url": "https://en.wikipedia.org/wiki/Michael_Wood_(lawyer)",
+  "desc": "British lawyer",
+  "extract": "Sir Michael Charles Wood is a member of the International Law Commission. He also practices as a barrister from chambers at 20 Essex Street, in London.",
+  "qid": "Q6835436",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1947,
+  "died": null,
+  "gender_q": "Q6581097",
+  "birthplace_q": null,
+  "citizen_q": [],
+  "citizenship": [],
+  "gender": "male"
+ },
+ "J. B. Scott": {
+  "how": "alias",
+  "title": "James Brown Scott",
+  "found": true,
+  "page": "James Brown Scott",
+  "url": "https://en.wikipedia.org/wiki/James_Brown_Scott",
+  "desc": "American legal scholar (1866–1943)",
+  "extract": "James Brown Scott was an American legal scholar. He founded the law school at University of Southern California and was professor of law at the University of Illinois, Columbia University, George Washington University, and Georgetown University. He was editor in chief of the American Journal of International Law, played a key role in founding the American Society of International Law, and was an e",
+  "qid": "Q6130367",
+  "image_file": "JamesBrownScott.jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/commons/b/b8/JamesBrownScott.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1866,
+  "died": 1943,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q3492582",
+  "citizen_q": [
+   "Q30"
+  ],
+  "birthplace": {
+   "name": "Kincardine",
+   "coords": [
+    44.169,
+    -81.635
+   ],
+   "country": "Canada"
+  },
+  "citizenship": [
+   "United States"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "JamesBrownScott.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:JamesBrownScott.jpg",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/b/b8/JamesBrownScott.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "http://www.asil.org/",
+   "license": "CC BY 3.0",
+   "local": "portraits/j-b-scott.jpg"
+  }
+ },
+ "James Crawford": {
+  "how": "alias",
+  "title": "James Crawford (jurist)",
+  "found": true,
+  "page": "James Crawford (jurist)",
+  "url": "https://en.wikipedia.org/wiki/James_Crawford_(jurist)",
+  "desc": "Australian legal academic and practitioner (1948–2021)",
+  "extract": "James Richard Crawford, AC, SC, FBA was an Australian academic and practitioner in the field of public international law. He was a Judge of the International Court of Justice from February 2015 to his death in 2021. From 1990 to 1992 Crawford was Dean of the Sydney Law School where he was also the Challis Professor of International Law from 1986 to 1992. From 1992 to 2014, he was Whewell Professor",
+  "qid": "Q1680223",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1948,
+  "died": 2021,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q5112",
+  "citizen_q": [
+   "Q408"
+  ],
+  "birthplace": {
+   "name": "Adelaide",
+   "coords": [
+    -34.928,
+    138.6
+   ],
+   "country": "Australia"
+  },
+  "citizenship": [
+   "Australia"
+  ],
+  "gender": "male"
+ },
+ "James Brierly": {
+  "how": "alias",
+  "title": "James Leslie Brierly",
+  "found": true,
+  "page": "James Leslie Brierly",
+  "url": "https://en.wikipedia.org/wiki/James_Leslie_Brierly",
+  "desc": "English scholar of international law (1881–1955)",
+  "extract": "James Leslie Brierly was an English scholar of international law.",
+  "qid": "Q16918000",
+  "image_file": "Jame_Leslie_Brierley.jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/en/2/2a/Jame_Leslie_Brierley.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1881,
+  "died": 1955,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q201812",
+  "citizen_q": [
+   "Q145",
+   "Q174193"
+  ],
+  "birthplace": {
+   "name": "Huddersfield",
+   "coords": [
+    53.645,
+    -1.78
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom",
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male"
+ },
+ "D. P. OConnell": {
+  "how": "alias",
+  "title": "Daniel Patrick O'Connell",
+  "found": true,
+  "page": "D. P. O'Connell",
+  "url": "https://en.wikipedia.org/wiki/D._P._O'Connell",
+  "desc": "Barrister and professor of law (1924–1979)",
+  "extract": "Daniel Patrick O'Connell, known as D. P. O'Connell, was a New Zealand barrister and academic, specializing in international law. From 1972 to his death in 1979, he was Chichele Professor of Public International Law at the University of Oxford.",
+  "qid": "Q283020",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1924,
+  "died": 1979,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q37100",
+  "citizen_q": [
+   "Q664"
+  ],
+  "birthplace": {
+   "name": "Auckland",
+   "coords": [
+    -36.849,
+    174.765
+   ],
+   "country": "New Zealand"
+  },
+  "citizenship": [
+   "New Zealand"
+  ],
+  "gender": "male"
+ },
+ "Sir Francis Vallat": {
+  "how": "alias",
+  "title": "Francis Vallat",
+  "found": true,
+  "page": "Francis Vallat",
+  "url": "https://en.wikipedia.org/wiki/Francis_Vallat",
+  "desc": "British international lawyer",
+  "extract": "Sir Francis Aimé Vallat, was a British international lawyer.",
+  "qid": "Q18526872",
+  "image_file": "Francis_Vallat.jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/en/1/17/Francis_Vallat.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1912,
+  "died": 2008,
+  "gender_q": "Q6581097",
+  "birthplace_q": null,
+  "citizen_q": [
+   "Q145"
+  ],
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male"
+ },
+ "Sir Henry Maine": {
+  "how": "alias",
+  "title": "Henry James Sumner Maine",
+  "found": true,
+  "page": "Henry James Sumner Maine",
+  "url": "https://en.wikipedia.org/wiki/Henry_James_Sumner_Maine",
+  "desc": "British jurist and historian (1822–1888)",
+  "extract": "Sir Henry James Sumner Maine,, was a British Whig comparative jurist and historian. He is famous for the thesis outlined in his book Ancient Law that law and society developed \"from status to contract.\" According to the thesis, in the ancient world individuals were tightly bound by status dealing with(in) a particular group while in the modern one, in which individuals are viewed as autonomous age",
+  "qid": "Q1195523",
+  "image_file": "Maine by Dickinson.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4a/HSMaine.jpg/330px-HSMaine.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1822,
+  "died": 1888,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q654945",
+  "citizen_q": [
+   "Q174193"
+  ],
+  "birthplace": {
+   "name": "Kelso",
+   "coords": [
+    55.599,
+    -2.434
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Maine by Dickinson.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Maine_by_Dickinson.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/Maine_by_Dickinson.jpg/500px-Maine_by_Dickinson.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Lowes Cato Dickinson",
+   "license": "Public domain",
+   "local": "portraits/sir-henry-maine.jpg"
+  }
+ },
+ "C. Hopkins": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Hisashi Owada": {
+  "how": "direct",
+  "title": "Hisashi Owada",
+  "found": true,
+  "page": "Hisashi Owada",
+  "url": "https://en.wikipedia.org/wiki/Hisashi_Owada",
+  "desc": "Japanese jurist (born 1932)",
+  "extract": "Hisashi Owada  is a Japanese jurist, diplomat and professor of law. He served as a judge on the International Court of Justice from 6 February 2003 until 7 June 2018, and was president of the court from 2009 to 2012. He is the father of Empress Masako and the father-in-law of the reigning Emperor of Japan, Naruhito.",
+  "qid": "Q701990",
+  "image_file": "33._ISC-Symposium-Hisashi_Owada-HSGN_028-01695.JPG",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ac/33._ISC-Symposium-Hisashi_Owada-HSGN_028-01695.JPG/330px-33._ISC-Symposium-Hisashi_Owada-HSGN_028-01695.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1932,
+  "died": null,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q601950",
+  "citizen_q": [
+   "Q17"
+  ],
+  "birthplace": {
+   "name": "Shibata",
+   "coords": [
+    37.948,
+    139.327
+   ],
+   "country": "Japan"
+  },
+  "citizenship": [
+   "Japan"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "33._ISC-Symposium-Hisashi_Owada-HSGN_028-01695.JPG",
+   "page": "https://commons.wikimedia.org/wiki/File:33._ISC-Symposium-Hisashi_Owada-HSGN_028-01695.JPG",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ac/33._ISC-Symposium-Hisashi_Owada-HSGN_028-01695.JPG/500px-33._ISC-Symposium-Hisashi_Owada-HSGN_028-01695.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Regina Kühne",
+   "license": "CC BY-SA 4.0",
+   "local": "portraits/hisashi-owada.jpg"
+  }
+ },
+ "F. A. Mann": {
+  "how": "search",
+  "title": "Frederick Alexander Mann",
+  "found": true,
+  "page": "F. A. Mann",
+  "url": "https://en.wikipedia.org/wiki/F._A._Mann",
+  "desc": null,
+  "extract": "Frederick Alexander Mann, CBE, FBA, QC (Hon.) also known as Francis Mann was a German-born British jurist. A solicitor in private practice for most of his career, he was nevertheless one of the most influential legal scholars of his generation, being a noted authority on international law and the law of money.",
+  "qid": "Q15734535",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1907,
+  "died": 1991,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q6905",
+  "citizen_q": [
+   "Q183"
+  ],
+  "birthplace": {
+   "name": "Frankenthal",
+   "coords": [
+    49.533,
+    8.35
+   ],
+   "country": "Germany"
+  },
+  "citizenship": [
+   "Germany"
+  ],
+  "gender": "male"
+ },
+ "Sir Frank Berman": {
+  "how": "alias",
+  "title": "Frank Berman",
+  "found": true,
+  "page": "Frank Berman",
+  "url": "https://en.wikipedia.org/wiki/Frank_Berman",
+  "desc": "British diplomat and judge",
+  "extract": "\nSir Franklin Delow Berman, is a British barrister and leading authority in international law. He was Legal Adviser to the Foreign and Commonwealth Office from 1991 to 1999.",
+  "qid": "Q5491305",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1939,
+  "died": null,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q5465",
+  "citizen_q": [],
+  "birthplace": {
+   "name": "Cape Town",
+   "coords": [
+    -33.925,
+    18.424
+   ],
+   "country": "South Africa"
+  },
+  "citizenship": [],
+  "gender": "male"
+ },
+ "Edouard Rolin Jaequemyns": {
+  "how": "search",
+  "title": "Édouard Rolin-Jaequemyns",
+  "found": true,
+  "page": "Edouard Rolin-Jaequemyns",
+  "url": "https://en.wikipedia.org/wiki/Edouard_Rolin-Jaequemyns",
+  "desc": "Belgian jurist and politician",
+  "extract": "Edouard Gustave Marie Rolin-Jaequemyns (1863–1936) was a Belgian jurist, diplomat and politician. He served as Belgian Minister of the Interior between 1925 and 1926, as a member of the Permanent Court of Arbitration between 1928 and 1930, and as a judge at the Permanent Court of International Justice between 1931 and 1936. He was the son of Gustave Rolin-Jaequemyns and the cousin of Henri Rolin.",
+  "qid": "Q1287604",
+  "image_file": "Edouard Rolin-Jaequemyns.jpg",
+  "thumb": null,
+  "verified": true,
+  "born": 1863,
+  "died": 1936,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q1296",
+  "citizen_q": [
+   "Q31"
+  ],
+  "birthplace": {
+   "name": "Ghent",
+   "coords": [
+    51.054,
+    3.725
+   ],
+   "country": "Belgium"
+  },
+  "citizenship": [
+   "Belgium"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Edouard Rolin-Jaequemyns.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Edouard_Rolin-Jaequemyns.jpg",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/3/37/Edouard_Rolin-Jaequemyns.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "L. Greuze",
+   "license": "Public domain",
+   "local": "portraits/edouard-rolin-jaequemyns.jpg"
+  }
+ },
+ "Sir William Harrison Moore": {
+  "how": "alias",
+  "title": "William Harrison Moore",
+  "found": true,
+  "page": "Harrison Moore",
+  "url": "https://en.wikipedia.org/wiki/Harrison_Moore",
+  "desc": "Australian lawyer and academic",
+  "extract": "Sir William Harrison Moore KBE CMG, usually known as Harrison Moore or W. Harrison Moore, was an Australian lawyer and academic who was a professor at the University of Melbourne and the third dean of the Melbourne University Law School.",
+  "qid": "Q8010951",
+  "image_file": "William_Harrison_Moore.jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/commons/9/9b/William_Harrison_Moore.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1867,
+  "died": 1935,
+  "gender_q": "Q6581097",
+  "birthplace_q": null,
+  "citizen_q": [
+   "Q408"
+  ],
+  "citizenship": [
+   "Australia"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "William_Harrison_Moore.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:William_Harrison_Moore.jpg",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/9/9b/William_Harrison_Moore.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "McKellar, Doris",
+   "license": "Public domain",
+   "local": "portraits/sir-william-harrison-moore.jpg"
+  }
+ },
+ "Vaughan Lowe": {
+  "how": "alias",
+  "title": "Vaughan Lowe",
+  "found": true,
+  "page": "Vaughan Lowe",
+  "url": "https://en.wikipedia.org/wiki/Vaughan_Lowe",
+  "desc": "British legal academic and international lawyer, born 1952",
+  "extract": "Alan Vaughan Lowe is a barrister and academic specialising in the field of international law. Chichele Professor of Public International Law in the University of Oxford, and a Fellow of All Souls College, Oxford, 1999–2012; Emeritus Professor of International Law and Emeritus Fellow of All Souls College, University of Oxford, since 2012; visiting professor, University of Chichester, 2024.",
+  "qid": "Q7917300",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1952,
+  "died": null,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q1018565",
+  "citizen_q": [
+   "Q145"
+  ],
+  "birthplace": {
+   "name": "Smethwick",
+   "coords": [
+    52.493,
+    -1.969
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male"
+ },
+ "Sir Ian Brownlie": {
+  "how": "alias",
+  "title": "Ian Brownlie",
+  "found": true,
+  "page": "Ian Brownlie",
+  "url": "https://en.wikipedia.org/wiki/Ian_Brownlie",
+  "desc": "British barrister and academic (1932–2010)",
+  "extract": "Sir Ian Brownlie, was an English barrister and academic, specialising in international law. He was Chichele Professor of Public International Law from 1980 to 1999.",
+  "qid": "Q350911",
+  "image_file": null,
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/39/Uitspraak_Internationaal_Gerechtshof_Den_Haag_in_zaak_Nicaragua_tegen_Verenigde_%2C_Bestanddeelnr_933-6999.jpg/330px-Uitspraak_Internationaal_Gerechtshof_Den_Haag_in_zaak_Nicaragua_tegen_Verenigde_%2C_Bestanddeelnr_933-6999.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1932,
+  "died": 2010,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q24826",
+  "citizen_q": [
+   "Q145"
+  ],
+  "birthplace": {
+   "name": "Liverpool",
+   "coords": [
+    53.407,
+    -2.992
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male"
+ },
+ "C. A. Stavropoulos": {
+  "how": "alias",
+  "title": "Constantin Stavropoulos",
+  "found": true,
+  "page": "Constantin Stavropoulos",
+  "url": "https://en.wikipedia.org/wiki/Constantin_Stavropoulos",
+  "desc": "Political figure",
+  "extract": "Constantin Stavropoulos was the former Undersecretary General of the United Nations Office of Legal Affairs of the United Nations.",
+  "qid": "Q17582150",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1905,
+  "died": 1984,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q1524",
+  "citizen_q": [
+   "Q41"
+  ],
+  "birthplace": {
+   "name": "Athens",
+   "coords": [
+    37.984,
+    23.728
+   ],
+   "country": "Greece"
+  },
+  "citizenship": [
+   "Greece"
+  ],
+  "gender": "male"
+ },
+ "Edward Jenks": {
+  "how": "alias",
+  "title": "Edward Jenks",
+  "found": true,
+  "page": "Edward Jenks",
+  "url": "https://en.wikipedia.org/wiki/Edward_Jenks",
+  "desc": "British legal academic",
+  "extract": "Edward Jenks, FBA (1861–1939) was an English jurist, and noted writer on law and its place in history. Born on 20 February 1861 in Lambeth, London, to Robert Jenks, upholsterer, and his wife Frances Sarah, née Jones, he was educated at Dulwich College (1874–77) and King's College, Cambridge, where he was scholar (1886) and, in 1889-95, fellow. He graduated B.A., LL.B. in 1886, and M.A. in 1890. He",
+  "qid": "Q5343752",
+  "image_file": "Edward_Jenks.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8e/Edward_Jenks.jpg/330px-Edward_Jenks.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1861,
+  "died": 1939,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q148349",
+  "citizen_q": [],
+  "birthplace": {
+   "name": "Lambeth",
+   "coords": [
+    51.49,
+    -0.119
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [],
+  "gender": "male",
+  "portrait": {
+   "file": "Edward_Jenks.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Edward_Jenks.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8e/Edward_Jenks.jpg/500px-Edward_Jenks.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Library of the London School of Economics and Political Science",
+   "license": "No restrictions",
+   "local": "portraits/edward-jenks.jpg"
+  }
+ },
+ "G. Conradi": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Charles de Visscher": {
+  "how": "direct",
+  "title": "Charles de Visscher",
+  "found": true,
+  "page": "Charles de Visscher",
+  "url": "https://en.wikipedia.org/wiki/Charles_de_Visscher",
+  "desc": "Belgian international law judge",
+  "extract": "Charles Marie Joseph Désiré de Visscher was a Belgian scholar and practitioner of international law, as well as judge on the Permanent Court of International Justice and International Court of Justice.",
+  "qid": "Q872220",
+  "image_file": "Charles de Visscher (1884-1973).jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Charles_de_Visscher_%281884-1973%29.jpg/330px-Charles_de_Visscher_%281884-1973%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1884,
+  "died": 1973,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q1296",
+  "citizen_q": [
+   "Q31"
+  ],
+  "birthplace": {
+   "name": "Ghent",
+   "coords": [
+    51.054,
+    3.725
+   ],
+   "country": "Belgium"
+  },
+  "citizenship": [
+   "Belgium"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Charles de Visscher (1884-1973).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Charles_de_Visscher_(1884-1973).jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Charles_de_Visscher_%281884-1973%29.jpg/500px-Charles_de_Visscher_%281884-1973%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Family of Charles de Visscher",
+   "license": "CC BY-SA 3.0",
+   "local": "portraits/charles-de-visscher.jpg"
+  }
+ },
+ "J. W. Mellor": {
+  "how": "alias",
+  "title": "John William Mellor",
+  "found": true,
+  "page": "John William Mellor",
+  "url": "https://en.wikipedia.org/wiki/John_William_Mellor",
+  "desc": "British politician (1835–1911)",
+  "extract": "John William Mellor PC DL KC was an English lawyer and Liberal Party politician.",
+  "qid": "Q6264221",
+  "image_file": "1895_John_William_Mellor.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/en/thumb/2/26/1895_John_William_Mellor.jpg/330px-1895_John_William_Mellor.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1835,
+  "died": 1911,
+  "gender_q": "Q6581097",
+  "birthplace_q": null,
+  "citizen_q": [
+   "Q174193"
+  ],
+  "citizenship": [
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "1895_John_William_Mellor.jpg",
+   "page": "https://en.wikipedia.org/wiki/File:1895_John_William_Mellor.jpg",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/en/2/26/1895_John_William_Mellor.jpg?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "Unknown (not specifically credited by Black and White publishing company)\n(Life time: not applicable)",
+   "license": "PD-US",
+   "local": "portraits/j-w-mellor.jpg"
+  }
+ },
+ "Manley O. Hudson": {
+  "how": "direct",
+  "title": "Manley O. Hudson",
+  "found": true,
+  "page": "Manley Ottmer Hudson",
+  "url": "https://en.wikipedia.org/wiki/Manley_Ottmer_Hudson",
+  "desc": "American judge (1886–1960)",
+  "extract": "Manley Ottmer Hudson was an American lawyer specializing in public international law. He was a judge at the Permanent Court of International Justice, a member of the International Law Commission, and a mediator in international conflicts. Hudson has been credited with shaping the American perspective on international law.",
+  "qid": "Q1890532",
+  "image_file": "Manley O. Hudson LCCN2014717317 (cropped).jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Manley_O._Hudson_LCCN2014717317.jpg/330px-Manley_O._Hudson_LCCN2014717317.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1886,
+  "died": 1960,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q963597",
+  "citizen_q": [
+   "Q30"
+  ],
+  "birthplace": {
+   "name": "St. Peters",
+   "coords": [
+    38.779,
+    -90.603
+   ],
+   "country": "United States"
+  },
+  "citizenship": [
+   "United States"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Manley O. Hudson LCCN2014717317 (cropped).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Manley_O._Hudson_LCCN2014717317_(cropped).jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/31/Manley_O._Hudson_LCCN2014717317_%28cropped%29.jpg/500px-Manley_O._Hudson_LCCN2014717317_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Bain News Service, publisher",
+   "license": "Public domain",
+   "local": "portraits/manley-o-hudson.jpg"
+  }
+ },
+ "Lord Denning": {
+  "how": "alias",
+  "title": "Tom Denning, Baron Denning",
+  "found": true,
+  "page": "Tom Denning, Baron Denning",
+  "url": "https://en.wikipedia.org/wiki/Tom_Denning%2C_Baron_Denning",
+  "desc": "English lawyer and judge (1899–1999)",
+  "extract": "Alfred Thompson Denning, Baron Denning,, was an English barrister and judge. He was called to the Bar of England and Wales in 1923 and became a King's Counsel in 1938. Denning became a judge in 1944 when he was appointed to the Probate, Divorce and Admiralty Division of the High Court of Justice, and transferred to the King's Bench Division in 1945. He was made a Lord Justice of Appeal in 1948 aft",
+  "qid": "Q324398",
+  "image_file": "Tom_Denning,_Baron_Denning,_in_1950.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/Tom_Denning%2C_Baron_Denning%2C_in_1950.jpg/330px-Tom_Denning%2C_Baron_Denning%2C_in_1950.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1899,
+  "died": 1999,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q632258",
+  "citizen_q": [
+   "Q145",
+   "Q174193"
+  ],
+  "birthplace": {
+   "name": "Whitchurch",
+   "coords": [
+    51.23,
+    -1.339
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom",
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Tom_Denning,_Baron_Denning,_in_1950.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Tom_Denning,_Baron_Denning,_in_1950.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/Tom_Denning%2C_Baron_Denning%2C_in_1950.jpg/500px-Tom_Denning%2C_Baron_Denning%2C_in_1950.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Elliott &amp; Fry",
+   "license": "Public domain",
+   "local": "portraits/lord-denning.jpg"
+  }
+ },
+ "Karl Binding": {
+  "how": "direct",
+  "title": "Karl Binding",
+  "found": true,
+  "page": "Karl Binding",
+  "url": "https://en.wikipedia.org/wiki/Karl_Binding",
+  "desc": "German jurist",
+  "extract": "Karl Ludwig Lorenz Binding was a German jurist known as a promoter of the theory of retributive justice. His influential book, Die Freigabe der Vernichtung lebensunwerten Lebens, written together with the psychiatrist Alfred Hoche, was used by the Nazis to justify their Aktion T4 euthanasia program.",
+  "qid": "Q75787",
+  "image_file": "Karl_Binding.jpeg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/commons/8/80/Karl_Binding.jpeg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1841,
+  "died": 1920,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q1794",
+  "citizen_q": [
+   "Q183"
+  ],
+  "birthplace": {
+   "name": "Frankfurt",
+   "coords": [
+    50.111,
+    8.682
+   ],
+   "country": "Germany"
+  },
+  "citizenship": [
+   "Germany"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Karl_Binding.jpeg",
+   "page": "https://commons.wikimedia.org/wiki/File:Karl_Binding.jpeg",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/8/80/Karl_Binding.jpeg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "Unknown; original uploader was Matthias Bock at de.wikipedia",
+   "license": "Public domain",
+   "local": "portraits/karl-binding.jpg"
+  }
+ },
+ "Geoffrey Marston": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Ronald Roxburgh": {
+  "how": "alias",
+  "title": "Ronald Roxburgh",
+  "found": true,
+  "page": "Ronald Roxburgh",
+  "url": "https://en.wikipedia.org/wiki/Ronald_Roxburgh",
+  "desc": "English judge",
+  "extract": "Sir Ronald Francis Roxburgh was a British barrister, High Court judge, and writer on international law and on the history of the Inns of Court.",
+  "qid": "Q64374571",
+  "image_file": "Sir_Ronald_Roxburgh.jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/en/7/78/Sir_Ronald_Roxburgh.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1889,
+  "died": 1981,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q208262",
+  "citizen_q": [],
+  "birthplace": {
+   "name": "Eastbourne",
+   "coords": [
+    50.766,
+    0.286
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [],
+  "gender": "male"
+ },
+ "Rudolph Von Jhering": {
+  "how": "alias",
+  "title": "Rudolf von Jhering",
+  "found": true,
+  "page": "Rudolf von Jhering",
+  "url": "https://en.wikipedia.org/wiki/Rudolf_von_Jhering",
+  "desc": "German jurist (1818–1892)",
+  "extract": "Caspar Rudolph von Jhering was a German jurist. He is best known for his 1872 book Der Kampf ums Recht, as a legal scholar, and as the founder of a modern sociological and historical school of law. His ideas were important to the subsequent development of the \"jurisprudence of interests\" in Germany.",
+  "qid": "Q62605",
+  "image_file": "RudolfvonIhering2.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/RudolfvonIhering2.jpg/330px-RudolfvonIhering2.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1818,
+  "died": 1892,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q14839",
+  "citizen_q": [
+   "Q27306"
+  ],
+  "birthplace": {
+   "name": "Aurich",
+   "coords": [
+    53.471,
+    7.484
+   ],
+   "country": "Germany"
+  },
+  "citizenship": [
+   "Kingdom of Prussia"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "RudolfvonIhering2.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:RudolfvonIhering2.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/RudolfvonIhering2.jpg/500px-RudolfvonIhering2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Unknown photographer",
+   "license": "Public domain",
+   "local": "portraits/rudolph-von-jhering.jpg"
+  }
+ },
+ "Stephen Schwebel": {
+  "how": "direct",
+  "title": "Stephen Schwebel",
+  "found": true,
+  "page": "Stephen M. Schwebel",
+  "url": "https://en.wikipedia.org/wiki/Stephen_M._Schwebel",
+  "desc": "American judge (1929–2026)",
+  "extract": "Stephen Myron Schwebel was an American jurist and international judge, counsel and arbitrator. He previously served as judge of the World Bank Administrative Tribunal (2010–2017), as a member of the U.S. National Group at the Permanent Court of Arbitration, as president of the International Monetary Fund Administrative Tribunal (1993–2010), as president of the International Court of Justice (1997–",
+  "qid": "Q928833",
+  "image_file": "Stephen_Myron_Schwebel.jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/commons/9/9e/Stephen_Myron_Schwebel.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1929,
+  "died": 2026,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q60",
+  "citizen_q": [
+   "Q30"
+  ],
+  "birthplace": {
+   "name": "New York City",
+   "coords": [
+    40.713,
+    -74.006
+   ],
+   "country": "United States"
+  },
+  "citizenship": [
+   "United States"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Stephen_Myron_Schwebel.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Stephen_Myron_Schwebel.jpg",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/9/9e/Stephen_Myron_Schwebel.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "Max Koot Studio, The Hague",
+   "license": "Copyrighted free use",
+   "local": "portraits/stephen-schwebel.jpg"
+  }
+ },
+ "Ake Hammerskjold": {
+  "how": "alias",
+  "title": "Åke Hammarskjöld",
+  "found": true,
+  "page": "Åke Hammarskjöld",
+  "url": "https://en.wikipedia.org/wiki/%C3%85ke_Hammarskj%C3%B6ld",
+  "desc": "Swedish lawyer and diplomat (1893–1937)",
+  "extract": "Åke Wilhelm Hjalmar Hammarskjöld was a Swedish lawyer and diplomat. He was the first Registrar of the Permanent Court of International Justice, serving from 1922 to 1936, when he was elected to the position of judge to the same court. He served in the latter position until his death.",
+  "qid": "Q270874",
+  "image_file": "Åke_Hammarskjöld_SPA_(cropped).jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/%C3%85ke_Hammarskj%C3%B6ld_SPA_%28cropped%29.jpg/330px-%C3%85ke_Hammarskj%C3%B6ld_SPA_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1893,
+  "died": 1937,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q25286",
+  "citizen_q": [
+   "Q34"
+  ],
+  "birthplace": {
+   "name": "Uppsala",
+   "coords": [
+    59.85,
+    17.639
+   ],
+   "country": "Sweden"
+  },
+  "citizenship": [
+   "Sweden"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Åke_Hammarskjöld_SPA_(cropped).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:%C3%85ke_Hammarskj%C3%B6ld_SPA_(cropped).jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/%C3%85ke_Hammarskj%C3%B6ld_SPA_%28cropped%29.jpg/500px-%C3%85ke_Hammarskj%C3%B6ld_SPA_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Unknown",
+   "license": "CC BY 4.0",
+   "local": "portraits/ake-hammerskjold.jpg"
+  }
+ },
+ "Sir Ian Sinclair": {
+  "how": "alias",
+  "title": "Ian Sinclair (lawyer)",
+  "found": true,
+  "page": "Ian Sinclair (barrister)",
+  "url": "https://en.wikipedia.org/wiki/Ian_Sinclair_(barrister)",
+  "desc": "British international lawyer and diplomat",
+  "extract": "Sir Ian McTaggart Sinclair was a British international lawyer and diplomat.",
+  "qid": "Q29843913",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1926,
+  "died": 2013,
+  "gender_q": "Q6581097",
+  "birthplace_q": null,
+  "citizen_q": [
+   "Q145",
+   "Q174193"
+  ],
+  "citizenship": [
+   "United Kingdom",
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male"
+ },
+ "Martin Wolff": {
+  "how": "direct",
+  "title": "Martin Wolff",
+  "found": true,
+  "page": "Martin Wolff",
+  "url": "https://en.wikipedia.org/wiki/Martin_Wolff",
+  "desc": "German lawyer (1872–1953)",
+  "extract": "Martin Wolff was a professor of law at the University of Berlin in Germany. In 1935, he was prematurely retired from his post by the Nazis, and emigrated to Britain in 1938, where All Souls College, Oxford supported him with a scholarship. He specialized in private international law, property law, commercial law and comparative law, writing numerous works, including standard works in German and En",
+  "qid": "Q1243942",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1872,
+  "died": 1953,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q64",
+  "citizen_q": [
+   "Q183"
+  ],
+  "birthplace": {
+   "name": "Berlin",
+   "coords": [
+    52.517,
+    13.383
+   ],
+   "country": "Germany"
+  },
+  "citizenship": [
+   "Germany"
+  ],
+  "gender": "male"
+ },
+ "Sir Christopher Greenwood": {
+  "how": "alias",
+  "title": "Christopher Greenwood",
+  "found": true,
+  "page": "Christopher Greenwood",
+  "url": "https://en.wikipedia.org/wiki/Christopher_Greenwood",
+  "desc": "British judge (born 1955)",
+  "extract": "Sir Christopher John Greenwood is Master of Magdalene College, Cambridge, an arbitrator of international disputes, and a former British judge at the International Court of Justice. Prior to his election, he was professor of international law at the London School of Economics and a barrister who regularly appeared as counsel before the International Court of Justice, the European Court of Human Rig",
+  "qid": "Q265445",
+  "image_file": "Christopher_Greenwood,_2018_(cropped).jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/Christopher_Greenwood%2C_2018_%28cropped%29.jpg/330px-Christopher_Greenwood%2C_2018_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1955,
+  "died": null,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q913499",
+  "citizen_q": [
+   "Q145"
+  ],
+  "birthplace": {
+   "name": "Wellingborough",
+   "coords": [
+    52.294,
+    -0.696
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Christopher_Greenwood,_2018_(cropped).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Christopher_Greenwood,_2018_(cropped).jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/Christopher_Greenwood%2C_2018_%28cropped%29.jpg/500px-Christopher_Greenwood%2C_2018_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Chensiyuan",
+   "license": "CC BY-SA 4.0",
+   "local": "portraits/sir-christopher-greenwood.jpg"
+  }
+ },
+ "Lawrence Collins": {
+  "how": "alias",
+  "title": "Lawrence Collins, Baron Collins of Mapesbury",
+  "found": true,
+  "page": "Lawrence Collins, Baron Collins of Mapesbury",
+  "url": "https://en.wikipedia.org/wiki/Lawrence_Collins%2C_Baron_Collins_of_Mapesbury",
+  "desc": "British former judge (born 1941)",
+  "extract": "Lawrence Antony Collins, Baron Collins of Mapesbury is a British judge and former Justice of the Supreme Court of the United Kingdom. He was also appointed to the Court of Final Appeal of Hong Kong on 11 April 2011 as a non-permanent judge from other common law jurisdictions. He resigned from the court on 6 June 2024 due to the political situation in Hong Kong.",
+  "qid": "Q1809152",
+  "image_file": "Official_portrait_of_Lord_Collins_of_Mapesbury_crop_2.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/Official_portrait_of_Lord_Collins_of_Mapesbury_crop_2.jpg/330px-Official_portrait_of_Lord_Collins_of_Mapesbury_crop_2.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1941,
+  "died": null,
+  "gender_q": "Q6581097",
+  "birthplace_q": null,
+  "citizen_q": [
+   "Q145"
+  ],
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Official_portrait_of_Lord_Collins_of_Mapesbury_crop_2.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Official_portrait_of_Lord_Collins_of_Mapesbury_crop_2.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/Official_portrait_of_Lord_Collins_of_Mapesbury_crop_2.jpg/500px-Official_portrait_of_Lord_Collins_of_Mapesbury_crop_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Chris McAndrew",
+   "license": "CC BY 3.0",
+   "local": "portraits/lawrence-collins.jpg"
+  }
+ },
+ "John McMahon": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Sir Augustus Phillimore": {
+  "how": "alias",
+  "title": "Augustus Phillimore",
+  "found": true,
+  "page": "Augustus Phillimore",
+  "url": "https://en.wikipedia.org/wiki/Augustus_Phillimore",
+  "desc": "Royal Navy Admiral (1822–1897)",
+  "extract": "Admiral Sir Augustus Phillimore was a Royal Navy officer who served as Commander-in-Chief, Plymouth. He is credited with first proposing the creation of a modern naval dockyard in Gibraltar.",
+  "qid": "Q4821518",
+  "image_file": "Capt_augustus_phillimore.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ef/Capt_augustus_phillimore.jpg/330px-Capt_augustus_phillimore.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": false,
+  "born": 1822,
+  "died": 1897,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q214820",
+  "citizen_q": [
+   "Q174193"
+  ],
+  "birthplace": {
+   "name": "Whitehall",
+   "coords": [
+    51.504,
+    -0.126
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Capt_augustus_phillimore.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Capt_augustus_phillimore.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ef/Capt_augustus_phillimore.jpg/500px-Capt_augustus_phillimore.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "unknown - phillimore died in 1897",
+   "license": "Public domain",
+   "local": "portraits/sir-augustus-phillimore.jpg"
+  }
+ },
+ "Sir Clarence Wilfred Jenks": {
+  "how": "alias",
+  "title": "C. Wilfred Jenks",
+  "found": true,
+  "page": "C. Wilfred Jenks",
+  "url": "https://en.wikipedia.org/wiki/C._Wilfred_Jenks",
+  "desc": null,
+  "extract": "C. Wilfred Jenks was an international lawyer and director-general of the International Labour Organization (1970–1973).",
+  "qid": "Q3568179",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1909,
+  "died": 1973,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q24826",
+  "citizen_q": [
+   "Q145",
+   "Q174193"
+  ],
+  "birthplace": {
+   "name": "Liverpool",
+   "coords": [
+    53.407,
+    -2.992
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom",
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male"
+ },
+ "Andres Aguillar": {
+  "how": "alias",
+  "title": "Andrés Aguilar Mawdsley",
+  "found": true,
+  "page": "Andrés Aguilar Mawdsley",
+  "url": "https://en.wikipedia.org/wiki/Andr%C3%A9s_Aguilar_Mawdsley",
+  "desc": "Venezuelan judge and jurist (1924–1995)",
+  "extract": "Andrés Aguilar Mawdsley was a Venezuelan lawyer and diplomat. He represented his native country as ambassador to the United Nations and as envoy to the United States, and served as Venezuela's minister of justice from 1958 to 1962. From 1991 until his death, he served as a judge at the International Court of Justice.",
+  "qid": "Q523815",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1924,
+  "died": 1995,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q1533",
+  "citizen_q": [
+   "Q717"
+  ],
+  "birthplace": {
+   "name": "Caracas",
+   "coords": [
+    10.506,
+    -66.914
+   ],
+   "country": "Venezuela"
+  },
+  "citizenship": [
+   "Venezuela"
+  ],
+  "gender": "male"
+ },
+ "W. W. Buckland": {
+  "how": "alias",
+  "title": "William Warwick Buckland",
+  "found": true,
+  "page": "William Warwick Buckland",
+  "url": "https://en.wikipedia.org/wiki/William_Warwick_Buckland",
+  "desc": "British scholar of Roman law (1859–1946)",
+  "extract": "William Warwick Buckland, FBA was a scholar of Roman law, Regius Professor of Civil Law at the University of Cambridge from 1914 to 1945.",
+  "qid": "Q8020045",
+  "image_file": "William_Warwick_Buckland.jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/en/f/fe/William_Warwick_Buckland.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1859,
+  "died": 1946,
+  "gender_q": "Q6581097",
+  "birthplace_q": null,
+  "citizen_q": [
+   "Q145",
+   "Q174193"
+  ],
+  "citizenship": [
+   "United Kingdom",
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male"
+ },
+ "Henri Fromageot": {
+  "how": "direct",
+  "title": "Henri Fromageot",
+  "found": true,
+  "page": "Henri Fromageot",
+  "url": "https://en.wikipedia.org/wiki/Henri_Fromageot",
+  "desc": null,
+  "extract": "Henri Fromageot was a French lawyer and judge. He studied at the University of Paris, University of Oxford and University of Leipzig, gaining a gold medal at Paris in 1891 and serving as the Doctor of Law in the University of Paris Law Faculty. At the end of World War I, Fromageot served as the French representative on the Paris Peace Conference's drafting committee. On 19 September 1929 he became",
+  "qid": "Q1605841",
+  "image_file": "Mr_Fromageot,_expert.png",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/Mr_Fromageot%2C_expert.png/330px-Mr_Fromageot%2C_expert.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1864,
+  "died": 1949,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q621",
+  "citizen_q": [
+   "Q142"
+  ],
+  "birthplace": {
+   "name": "Versailles",
+   "coords": [
+    48.805,
+    2.135
+   ],
+   "country": "France"
+  },
+  "citizenship": [
+   "France"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Mr_Fromageot,_expert.png",
+   "page": "https://commons.wikimedia.org/wiki/File:Mr_Fromageot,_expert.png",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/Mr_Fromageot%2C_expert.png/500px-Mr_Fromageot%2C_expert.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Agence Meurisse",
+   "license": "Public domain",
+   "local": "portraits/henri-fromageot.jpg"
+  }
+ },
+ "Henry Barnes": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Jules Basdevant": {
+  "how": "direct",
+  "title": "Jules Basdevant",
+  "found": true,
+  "page": "Jules Basdevant",
+  "url": "https://en.wikipedia.org/wiki/Jules_Basdevant",
+  "desc": "French legal scholar",
+  "extract": "Jules Basdevant was a French law professor.",
+  "qid": "Q933519",
+  "image_file": "Jules Basdevant.JPG",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Jules_Basdevant.JPG/330px-Jules_Basdevant.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1877,
+  "died": 1968,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q776282",
+  "citizen_q": [
+   "Q142"
+  ],
+  "birthplace": {
+   "name": "Anost",
+   "coords": [
+    47.078,
+    4.099
+   ],
+   "country": "France"
+  },
+  "citizenship": [
+   "France"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Jules Basdevant.JPG",
+   "page": "https://commons.wikimedia.org/wiki/File:Jules_Basdevant.JPG",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Jules_Basdevant.JPG/500px-Jules_Basdevant.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Famille Basdevant",
+   "license": "CC BY-SA 4.0",
+   "local": "portraits/jules-basdevant.jpg"
+  }
+ },
+ "Sir Arthur Watts": {
+  "how": "alias",
+  "title": "Arthur Watts (lawyer)",
+  "found": true,
+  "page": "Arthur Watts (barrister)",
+  "url": "https://en.wikipedia.org/wiki/Arthur_Watts_(barrister)",
+  "desc": "British lawyer and diplomat",
+  "extract": "Sir Arthur Watts, KCMG, QC was an international lawyer, diplomat and arbitrator. He was employed as a legal adviser at the Foreign Office between 1956 and 1991 being appointed the Chief Legal Adviser to the Foreign Office from 1987 to 1991.",
+  "qid": "Q4800627",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1931,
+  "died": 2007,
+  "gender_q": "Q6581097",
+  "birthplace_q": null,
+  "citizen_q": [
+   "Q145"
+  ],
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male"
+ },
+ "Edward Arthur Whittuck": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Sir Erle Richards": {
+  "how": "alias",
+  "title": "Henry Erle Richards",
+  "found": true,
+  "page": "Henry Erle Richards",
+  "url": "https://en.wikipedia.org/wiki/Henry_Erle_Richards",
+  "desc": "British academic (1861–1922)",
+  "extract": "\nSir Henry Erle Richards, (1861–1922), also Erle Richards or H. Erle Richards, was the Chichele Professor of International Law and Diplomacy at Oxford University, the Legal Member of Council in British India. He was a fellow of All Souls College, Oxford.",
+  "qid": "Q18508289",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1861,
+  "died": 1922,
+  "gender_q": "Q6581097",
+  "birthplace_q": null,
+  "citizen_q": [
+   "Q174193"
+  ],
+  "citizenship": [
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male"
+ },
+ "Don Greig": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Mr. Justice Mellor": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Sir Humphrey Waldock": {
+  "how": "alias",
+  "title": "Humphrey Waldock",
+  "found": true,
+  "page": "Humphrey Waldock",
+  "url": "https://en.wikipedia.org/wiki/Humphrey_Waldock",
+  "desc": "British jurist and international lawyer",
+  "extract": "Sir Claud Humphrey Meredith Waldock, was a British jurist and international lawyer.",
+  "qid": "Q1637275",
+  "image_file": "Humphrey_Waldock,_International_Court_of_Justice_1979.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/Humphrey_Waldock%2C_International_Court_of_Justice_1979.jpg/330px-Humphrey_Waldock%2C_International_Court_of_Justice_1979.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1904,
+  "died": 1981,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q35381",
+  "citizen_q": [
+   "Q145"
+  ],
+  "birthplace": {
+   "name": "Colombo",
+   "coords": [
+    6.927,
+    79.861
+   ],
+   "country": "Sri Lanka"
+  },
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Humphrey_Waldock,_International_Court_of_Justice_1979.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Humphrey_Waldock,_International_Court_of_Justice_1979.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/Humphrey_Waldock%2C_International_Court_of_Justice_1979.jpg/500px-Humphrey_Waldock%2C_International_Court_of_Justice_1979.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Rob C. Croes (ANEFO)",
+   "license": "CC0",
+   "local": "portraits/sir-humphrey-waldock.jpg"
+  }
+ },
+ "Louis M. Drago": {
+  "how": "alias",
+  "title": "Luis María Drago",
+  "found": true,
+  "page": "Luis María Drago",
+  "url": "https://en.wikipedia.org/wiki/Luis_Mar%C3%ADa_Drago",
+  "desc": "Argentine politician (1859–1921)",
+  "extract": "Luis María Drago was an Argentine politician.",
+  "qid": "Q726607",
+  "image_file": "Luis_María_Drago.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/Luis_Mar%C3%ADa_Drago.jpg/330px-Luis_Mar%C3%ADa_Drago.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1859,
+  "died": 1921,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q1027041",
+  "citizen_q": [
+   "Q414"
+  ],
+  "birthplace": {
+   "name": "Mercedes",
+   "coords": [
+    -34.65,
+    -59.433
+   ],
+   "country": "Argentina"
+  },
+  "citizenship": [
+   "Argentina"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Luis_María_Drago.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Luis_Mar%C3%ADa_Drago.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/Luis_Mar%C3%ADa_Drago.jpg/500px-Luis_Mar%C3%ADa_Drago.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Unknown authorUnknown author",
+   "license": "Public domain",
+   "local": "portraits/louis-m-drago.jpg"
+  }
+ },
+ "Hugh Bellot": {
+  "found": true,
+  "how": "manual",
+  "title": "Hugh Hale Leigh Bellot",
+  "page": "Hugh Hale Leigh Bellot",
+  "qid": null,
+  "desc": "English barrister and international lawyer; secretary of the Grotius Society",
+  "url": null,
+  "born": 1860,
+  "died": 1928,
+  "gender": "male",
+  "verified": true,
+  "citizenship": [
+   "United Kingdom"
+  ]
+ },
+ "Jonkheer A. F. de Savornin Lohman": {
+  "how": "alias",
+  "title": "Alexander de Savornin Lohman",
+  "found": true,
+  "page": "Alexander de Savornin Lohman",
+  "url": "https://en.wikipedia.org/wiki/Alexander_de_Savornin_Lohman",
+  "desc": "Dutch politician (1837–1924)",
+  "extract": "Jhr. Alexander Frederik de Savornin Lohman was a Dutch politician and leader of the Christian Historical Union during the first quarter of the 20th century.",
+  "qid": "Q560539",
+  "image_file": "Alexander_de_Savornin_Lohman_1918_(1).jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/06/Alexander_de_Savornin_Lohman_1918_%281%29.jpg/330px-Alexander_de_Savornin_Lohman_1918_%281%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1837,
+  "died": 1924,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q749",
+  "citizen_q": [
+   "Q29999"
+  ],
+  "birthplace": {
+   "name": "Groningen",
+   "coords": [
+    53.219,
+    6.567
+   ],
+   "country": "Netherlands"
+  },
+  "citizenship": [
+   "Kingdom of the Netherlands"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Alexander_de_Savornin_Lohman_1918_(1).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Alexander_de_Savornin_Lohman_1918_(1).jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/06/Alexander_de_Savornin_Lohman_1918_%281%29.jpg/500px-Alexander_de_Savornin_Lohman_1918_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Unknown authorUnknown author",
+   "license": "Public domain",
+   "local": "portraits/jonkheer-a-f-de-savornin-lohman.jpg"
+  }
+ },
+ "Sir Robert Yewdall Jennings": {
+  "how": "search",
+  "title": "Robert Jennings (judge)",
+  "found": true,
+  "page": "Robert Yewdall Jennings",
+  "url": "https://en.wikipedia.org/wiki/Robert_Yewdall_Jennings",
+  "desc": "English academic (1913–2004)",
+  "extract": "Sir Robert Yewdall Jennings was Whewell Professor of International Law at Cambridge University from 1955 to 1982 and a Judge of the International Court of Justice (ICJ) from 1982. He served as President of the ICJ between 1991 and 1994 before he resigned from the Court on 10 July 1995.",
+  "qid": "Q777588",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1913,
+  "died": 2004,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q163",
+  "citizen_q": [
+   "Q145"
+  ],
+  "birthplace": {
+   "name": "Yorkshire",
+   "coords": [
+    53.958,
+    -1.083
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male"
+ },
+ "Sir Charles Fitzpatrick": {
+  "how": "alias",
+  "title": "Charles Fitzpatrick",
+  "found": true,
+  "page": "Charles Fitzpatrick",
+  "url": "https://en.wikipedia.org/wiki/Charles_Fitzpatrick",
+  "desc": "20th-century Chief Justice of Canada and Lieutenant Governor of Quebec",
+  "extract": "Sir Charles Fitzpatrick, was a Canadian lawyer and politician who served as Minister of Justice of Canada, as Chief Justice of Canada and then as Lieutenant Governor of Quebec.",
+  "qid": "Q443059",
+  "image_file": "Charles_Fitzpatrick.jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/commons/6/66/Charles_Fitzpatrick.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1851,
+  "died": 1942,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q14875569",
+  "citizen_q": [
+   "Q16"
+  ],
+  "birthplace": {
+   "name": "Sainte-Foy",
+   "coords": [
+    46.769,
+    -71.308
+   ],
+   "country": "Canada"
+  },
+  "citizenship": [
+   "Canada"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Charles_Fitzpatrick.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Charles_Fitzpatrick.jpg",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/6/66/Charles_Fitzpatrick.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "Unknown authorUnknown author",
+   "license": "Public domain",
+   "local": "portraits/sir-charles-fitzpatrick.jpg"
+  }
+ },
+ "T. Barkley": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Sakuye Takahashi": {
+  "how": "search",
+  "title": "Takahashi Sakue",
+  "found": true,
+  "page": "Sakuye Takahashi",
+  "url": "https://en.wikipedia.org/wiki/Sakuye_Takahashi",
+  "desc": null,
+  "extract": "Sakuye Takahashi was a Japanese expert on international law.",
+  "qid": "Q7403227",
+  "image_file": "Takahashi_Sakue.jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/commons/3/34/Takahashi_Sakue.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1865,
+  "died": 1920,
+  "gender_q": "Q6581097",
+  "birthplace_q": null,
+  "citizen_q": [
+   "Q17"
+  ],
+  "citizenship": [
+   "Japan"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Takahashi_Sakue.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Takahashi_Sakue.jpg",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/3/34/Takahashi_Sakue.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "Unknown authorUnknown author",
+   "license": "Public domain",
+   "local": "portraits/sakuye-takahashi.jpg"
+  }
+ },
+ "Yenkong Ngangjoh Hodu": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Heinrich Lammasch": {
+  "how": "direct",
+  "title": "Heinrich Lammasch",
+  "found": true,
+  "page": "Heinrich Lammasch",
+  "url": "https://en.wikipedia.org/wiki/Heinrich_Lammasch",
+  "desc": "Austrian jurist and prime minister",
+  "extract": "Heinrich Lammasch was an Austrian jurist. He was a professor of criminal and international law, a member of the Hague Arbitration Tribunal, and served as the last Minister-President of Austria for a few weeks in October and November 1918. He was the first and only Minister-President in the Austrian half of the Habsburg Monarchy to have been a commoner, although he was not the first to have been bo",
+  "qid": "Q112023",
+  "image_file": "Heinrich_Lammasch_(1853–1920)_by_Isidor_Harkányi.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/Heinrich_Lammasch_%281853%E2%80%931920%29_by_Isidor_Hark%C3%A1nyi.jpg/330px-Heinrich_Lammasch_%281853%E2%80%931920%29_by_Isidor_Hark%C3%A1nyi.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1853,
+  "died": 1920,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q640190",
+  "citizen_q": [
+   "Q40"
+  ],
+  "birthplace": {
+   "name": "Seitenstetten",
+   "coords": [
+    48.035,
+    14.654
+   ],
+   "country": "Austria"
+  },
+  "citizenship": [
+   "Austria"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Heinrich_Lammasch_(1853–1920)_by_Isidor_Harkányi.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Heinrich_Lammasch_(1853%E2%80%931920)_by_Isidor_Hark%C3%A1nyi.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/Heinrich_Lammasch_%281853%E2%80%931920%29_by_Isidor_Hark%C3%A1nyi.jpg/500px-Heinrich_Lammasch_%281853%E2%80%931920%29_by_Isidor_Hark%C3%A1nyi.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Isidor Harkányi (1852–1932)",
+   "license": "Public domain",
+   "local": "portraits/heinrich-lammasch.jpg"
+  }
+ },
+ "Dionisio Anzilotti": {
+  "how": "direct",
+  "title": "Dionisio Anzilotti",
+  "found": true,
+  "page": "Dionisio Anzilotti",
+  "url": "https://en.wikipedia.org/wiki/Dionisio_Anzilotti",
+  "desc": "Italian judge and legal scholar (1867–1950)",
+  "extract": "Dionisio Anzilotti was an Italian jurist and judge of the Permanent Court of International Justice.",
+  "qid": "Q1226953",
+  "image_file": null,
+  "thumb": "https://upload.wikimedia.org/wikipedia/commons/5/50/Anzilotti_Enrico_e_Dioniso_1937_%28cropped%29.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1867,
+  "died": 1950,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q102661",
+  "citizen_q": [
+   "Q38",
+   "Q172579"
+  ],
+  "birthplace": {
+   "name": "Pescia",
+   "coords": [
+    43.902,
+    10.69
+   ],
+   "country": "Italy"
+  },
+  "citizenship": [
+   "Italy",
+   "Kingdom of Italy"
+  ],
+  "gender": "male"
+ },
+ "Harding": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Arthur Cohen": {
+  "how": "alias",
+  "title": "Arthur Cohen (politician)",
+  "found": true,
+  "page": "Arthur Cohen (politician)",
+  "url": "https://en.wikipedia.org/wiki/Arthur_Cohen_(politician)",
+  "desc": "English barrister and politician (1830–1914)",
+  "extract": "Arthur Cohen, was an English barrister and Liberal Party politician.",
+  "qid": "Q708951",
+  "image_file": "Sargent_-_Arthur_Cohen,_1897,_nr._344.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/Sargent_-_Arthur_Cohen%2C_1897%2C_nr._344.jpg/330px-Sargent_-_Arthur_Cohen%2C_1897%2C_nr._344.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1830,
+  "died": 1914,
+  "gender_q": "Q6581097",
+  "birthplace_q": null,
+  "citizen_q": [
+   "Q174193"
+  ],
+  "citizenship": [
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Sargent_-_Arthur_Cohen,_1897,_nr._344.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Sargent_-_Arthur_Cohen,_1897,_nr._344.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/Sargent_-_Arthur_Cohen%2C_1897%2C_nr._344.jpg/500px-Sargent_-_Arthur_Cohen%2C_1897%2C_nr._344.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "John Singer Sargent",
+   "license": "Public domain",
+   "local": "portraits/arthur-cohen.jpg"
+  }
+ },
+ "Lord Wilberforce": {
+  "how": "alias",
+  "title": "Richard Wilberforce, Baron Wilberforce",
+  "found": true,
+  "page": "Richard Wilberforce, Baron Wilberforce",
+  "url": "https://en.wikipedia.org/wiki/Richard_Wilberforce%2C_Baron_Wilberforce",
+  "desc": "British judge (1907–2003)",
+  "extract": "Richard Orme Wilberforce, Baron Wilberforce, was a British judge. He was a Lord of Appeal in Ordinary from 1964 to 1982.",
+  "qid": "Q1590405",
+  "image_file": "RichardWilberforce.jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/en/8/8c/RichardWilberforce.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1907,
+  "died": 2003,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q33377",
+  "citizen_q": [
+   "Q145"
+  ],
+  "birthplace": {
+   "name": "Jalandhar",
+   "coords": [
+    31.326,
+    75.579
+   ],
+   "country": "India"
+  },
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male"
+ },
+ "Griswold": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Sir John MacDonnell": {
+  "how": "alias",
+  "title": "John Macdonell (jurist)",
+  "found": true,
+  "page": "John Macdonell (judge)",
+  "url": "https://en.wikipedia.org/wiki/John_Macdonell_(judge)",
+  "desc": "British jurist (1846–1921)",
+  "extract": "Sir John Macdonell was a British jurist. He was King's Remembrancer (1912–1920) and invested as a Knight Commander of the Order of the Bath. Shaw of Dunfermline gives a prefatory biography in Historical Trials.",
+  "qid": "Q15047427",
+  "image_file": "Sir_John_Macdonell.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/Sir_John_Macdonell.jpg/330px-Sir_John_Macdonell.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1846,
+  "died": 1921,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q45848",
+  "citizen_q": [
+   "Q174193"
+  ],
+  "birthplace": {
+   "name": "Brechin",
+   "coords": [
+    56.73,
+    -2.655
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Sir_John_Macdonell.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Sir_John_Macdonell.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/Sir_John_Macdonell.jpg/500px-Sir_John_Macdonell.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Unknown authorUnknown author",
+   "license": "Public domain",
+   "local": "portraits/sir-john-macdonnell.jpg"
+  }
+ },
+ "Walther Schucking": {
+  "how": "alias",
+  "title": "Walther Schücking",
+  "found": true,
+  "page": "Walther Schücking",
+  "url": "https://en.wikipedia.org/wiki/Walther_Sch%C3%BCcking",
+  "desc": "German lawyer and politician (1875–1935)",
+  "extract": "Walther Adrian Schücking was a German liberal politician, professor of public international law and the first German judge at the Permanent Court of International Justice in The Hague.",
+  "qid": "Q74745",
+  "image_file": "Walther_Schücking_Kohlezeichnung_Ausschnitt.jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/commons/8/86/Walther_Sch%C3%BCcking_Kohlezeichnung_Ausschnitt.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1875,
+  "died": 1935,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q2742",
+  "citizen_q": [
+   "Q183"
+  ],
+  "birthplace": {
+   "name": "Münster",
+   "coords": [
+    51.962,
+    7.626
+   ],
+   "country": "Germany"
+  },
+  "citizenship": [
+   "Germany"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Walther_Schücking_Kohlezeichnung_Ausschnitt.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Walther_Sch%C3%BCcking_Kohlezeichnung_Ausschnitt.jpg",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/8/86/Walther_Sch%C3%BCcking_Kohlezeichnung_Ausschnitt.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "Karl Doerbecker (1879–1946)",
+   "license": "Public domain",
+   "local": "portraits/walther-schucking.jpg"
+  }
+ },
+ "Peter North": {
+  "how": "alias",
+  "title": "Peter North (legal scholar)",
+  "found": true,
+  "page": "Peter North (legal scholar)",
+  "url": "https://en.wikipedia.org/wiki/Peter_North_(legal_scholar)",
+  "desc": "British academic lawyer",
+  "extract": "Sir Peter Machin North is a British academic lawyer who served as Principal of Jesus College, Oxford, from 1984 to 2005 and Vice-Chancellor of the University of Oxford from 1993 to 1997.",
+  "qid": "Q7176130",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1936,
+  "died": null,
+  "gender_q": "Q6581097",
+  "birthplace_q": null,
+  "citizen_q": [
+   "Q145"
+  ],
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male"
+ },
+ "J. G. Merrills": {
+  "title": "John Merrills",
+  "how": "wikidata",
+  "found": true,
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male",
+  "page": "John Merrills",
+  "qid": "Q58005554",
+  "desc": "legal scholar",
+  "verified": true,
+  "url": "https://www.wikidata.org/wiki/Q58005554",
+  "born": 1942,
+  "died": 2018,
+  "birthplace_q": null,
+  "image_file": null,
+  "gender_q": "Q6581097",
+  "citizen_q": [
+   "Q145"
+  ]
+ },
+ "D. H. N. Johnson": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Richard Cohen": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Sir Elihu Lauterpacht": {
+  "how": "alias",
+  "title": "Elihu Lauterpacht",
+  "found": true,
+  "page": "Elihu Lauterpacht",
+  "url": "https://en.wikipedia.org/wiki/Elihu_Lauterpacht",
+  "desc": "British academic and lawyer",
+  "extract": "\nSir Elihu Lauterpacht was a British academic and lawyer, who specialized in international law. The son of Sir Hersch Lauterpacht, he was founder of the Lauterpacht Centre for International Law at the law faculty in Cambridge University.",
+  "qid": "Q1329346",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1928,
+  "died": 2017,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q151048",
+  "citizen_q": [
+   "Q145"
+  ],
+  "birthplace": {
+   "name": "London Borough of Barnet",
+   "coords": [
+    51.625,
+    -0.153
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male"
+ },
+ "John Hopkins": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Sir John Paget Mellor": {
+  "how": "alias",
+  "title": "Sir John Mellor, 1st Baronet",
+  "found": true,
+  "page": "Sir John Mellor, 1st Baronet",
+  "url": "https://en.wikipedia.org/wiki/Sir_John_Mellor%2C_1st_Baronet",
+  "desc": "English lawyer and U.K. Treasury Solicitor",
+  "extract": "\n\nSir John Paget Mellor, 1st Baronet, was an English lawyer and U.K. Treasury Solicitor. He was a talented amateur artist who contributed caricatures to Vanity Fair as Quiz.",
+  "qid": "Q15990171",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1862,
+  "died": 1929,
+  "gender_q": "Q6581097",
+  "birthplace_q": null,
+  "citizen_q": [
+   "Q174193"
+  ],
+  "citizenship": [
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male"
+ },
+ "Catherine Redgwell": {
+  "how": "alias",
+  "title": "Catherine Redgwell",
+  "found": true,
+  "page": "Catherine Redgwell",
+  "url": "https://en.wikipedia.org/wiki/Catherine_Redgwell",
+  "desc": null,
+  "extract": "Catherine Redgwell is Emeritus Chichele Professor of Public International Law and a fellow of All Souls College, Oxford, as well as a Co-Director of the Oxford Geoengineering Programme of the Oxford Martin School. Professor Redgwell previously held positions as Professor of International Law at the Faculty of Laws, University College London, at the University of Oxford, the University of Nottingha",
+  "qid": "Q20054087",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": null,
+  "died": null,
+  "gender_q": "Q6581072",
+  "birthplace_q": null,
+  "citizen_q": [],
+  "citizenship": [],
+  "gender": "female"
+ },
+ "Margaret Blazier": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Iain Scobbie": {
+  "found": false,
+  "how": "rejected"
+ },
+ "J. Mervyn Jones": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Chris Beeby": {
+  "how": "alias",
+  "title": "Chris Beeby",
+  "found": true,
+  "page": "Chris Beeby",
+  "url": "https://en.wikipedia.org/wiki/Chris_Beeby",
+  "desc": "New Zealand diplomat",
+  "extract": "Christopher David Beeby was a New Zealand diplomat who held several ambassadorships and was involved in international litigation and negotiations, notably over Antarctic resources. Beeby was New Zealand's ambassador to Iran and to France and was a member of the World Trade Organization's Appellate Body from 1995 to his death in 2000. While ambassador to Iran, Beeby assisted American diplomats in t",
+  "qid": "Q91047510",
+  "image_file": "Chris_Beeby_(new_zealand_diplomat).png",
+  "thumb": "https://upload.wikimedia.org/wikipedia/en/5/59/Chris_Beeby_%28new_zealand_diplomat%29.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1935,
+  "died": 2000,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q23661",
+  "citizen_q": [
+   "Q664"
+  ],
+  "birthplace": {
+   "name": "Wellington",
+   "coords": [
+    -41.289,
+    174.777
+   ],
+   "country": "New Zealand"
+  },
+  "citizenship": [
+   "New Zealand"
+  ],
+  "gender": "male"
+ },
+ "Dame Rosalyn Higgins": {
+  "how": "alias",
+  "title": "Rosalyn Higgins",
+  "found": true,
+  "page": "Rosalyn Higgins, Lady Higgins",
+  "url": "https://en.wikipedia.org/wiki/Rosalyn_Higgins%2C_Lady_Higgins",
+  "desc": "British judge (born 1937)",
+  "extract": " Rosalyn Cohen Higgins, Lady Higgins, is a British judge who was a judge of the International Court of Justice (ICJ) from 1995 to 2009. She was the first female judge elected to the ICJ. Higgins was elected to a three-year term as its president in 2006.",
+  "qid": "Q273691",
+  "image_file": "Rosalyn_Higgins_(cropped).jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/commons/e/e3/Rosalyn_Higgins_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1937,
+  "died": null,
+  "gender_q": "Q6581072",
+  "birthplace_q": "Q84",
+  "citizen_q": [
+   "Q145"
+  ],
+  "birthplace": {
+   "name": "London",
+   "coords": [
+    51.507,
+    -0.128
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "female",
+  "portrait": {
+   "file": "Rosalyn_Higgins_(cropped).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Rosalyn_Higgins_(cropped).jpg",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/e/e3/Rosalyn_Higgins_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "Jeroen Bouman",
+   "license": "Public domain",
+   "local": "portraits/dame-rosalyn-higgins.jpg"
+  }
+ },
+ "T. M. C. Asser": {
+  "how": "alias",
+  "title": "Tobias Asser",
+  "found": true,
+  "page": "Tobias Asser",
+  "url": "https://en.wikipedia.org/wiki/Tobias_Asser",
+  "desc": "Dutch lawyer and academic (1838–1913)",
+  "extract": "Tobias Michael Carel Asser was a Dutch lawyer and legal scholar.\nIn 1911, he won the Nobel Peace Prize for his role in the establishment of the Permanent Court of Arbitration at the First Hague Peace Conference in 1899 and for his achievements in establishing the Hague Conference on Private International Law (HCCH).",
+  "qid": "Q216872",
+  "image_file": "TMCasser.jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/commons/a/ac/TMCasser.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1838,
+  "died": 1913,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q727",
+  "citizen_q": [
+   "Q29999"
+  ],
+  "birthplace": {
+   "name": "Amsterdam",
+   "coords": [
+    52.367,
+    4.883
+   ],
+   "country": "Netherlands"
+  },
+  "citizenship": [
+   "Kingdom of the Netherlands"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "TMCasser.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:TMCasser.jpg",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/a/ac/TMCasser.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "Unknown authorUnknown author",
+   "license": "Public domain",
+   "local": "portraits/t-m-c-asser.jpg"
+  }
+ },
+ "Hans Kelsen": {
+  "how": "direct",
+  "title": "Hans Kelsen",
+  "found": true,
+  "page": "Hans Kelsen",
+  "url": "https://en.wikipedia.org/wiki/Hans_Kelsen",
+  "desc": "Austrian jurist and legal philosopher (1881–1973)",
+  "extract": "Hans Kelsen was an Austrian and later American jurist, legal philosopher and political philosopher. He is known principally for his theory of law, which he named the \"pure theory of law \", and for his writings on international law and theory of democracy.",
+  "qid": "Q84165",
+  "image_file": "Hans_Kelsen_(1881–1973)_~1930_©_Georg_Fayer_(1892–1950)_OeNB_8026867.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c0/Hans_Kelsen_%281881%E2%80%931973%29_~1930_%C2%A9_Georg_Fayer_%281892%E2%80%931950%29_OeNB_8026867.jpg/330px-Hans_Kelsen_%281881%E2%80%931973%29_~1930_%C2%A9_Georg_Fayer_%281892%E2%80%931950%29_OeNB_8026867.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1881,
+  "died": 1973,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q1085",
+  "citizen_q": [
+   "Q533534",
+   "Q30",
+   "Q40",
+   "Q33946"
+  ],
+  "birthplace": {
+   "name": "Prague",
+   "coords": [
+    50.087,
+    14.421
+   ],
+   "country": "Czech Republic"
+  },
+  "citizenship": [
+   "Cisleithania",
+   "United States",
+   "Austria",
+   "Czechoslovakia"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Hans_Kelsen_(1881–1973)_~1930_©_Georg_Fayer_(1892–1950)_OeNB_8026867.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Hans_Kelsen_(1881%E2%80%931973)_~1930_%C2%A9_Georg_Fayer_(1892%E2%80%931950)_OeNB_8026867.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c0/Hans_Kelsen_%281881%E2%80%931973%29_~1930_%C2%A9_Georg_Fayer_%281892%E2%80%931950%29_OeNB_8026867.jpg/500px-Hans_Kelsen_%281881%E2%80%931973%29_~1930_%C2%A9_Georg_Fayer_%281892%E2%80%931950%29_OeNB_8026867.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Georg Fayer",
+   "license": "Public domain",
+   "local": "portraits/hans-kelsen.jpg"
+  }
+ },
+ "Pierre Klein": {
+  "title": "Pierre Klein",
+  "how": "wikidata",
+  "found": true,
+  "citizenship": [
+   "Belgium"
+  ],
+  "gender": "male",
+  "page": "Pierre Klein",
+  "qid": "Q112445810",
+  "desc": "Belgian jurist",
+  "verified": true,
+  "url": "https://www.wikidata.org/wiki/Q112445810",
+  "born": 1964,
+  "died": null,
+  "birthplace_q": null,
+  "image_file": null,
+  "gender_q": "Q6581097",
+  "citizen_q": [
+   "Q31"
+  ]
+ },
+ "Erskine Holland": {
+  "how": "alias",
+  "title": "Thomas Erskine Holland",
+  "found": true,
+  "page": "Thomas Erskine Holland",
+  "url": "https://en.wikipedia.org/wiki/Thomas_Erskine_Holland",
+  "desc": "British jurist (1835–1926)",
+  "extract": "Sir Thomas Erskine Holland KC, FBA was a British jurist.",
+  "qid": "Q1998197",
+  "image_file": "Thomas Erskine Holland.jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Thomas_Erskine_Holland.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1835,
+  "died": 1926,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q131491",
+  "citizen_q": [
+   "Q174193",
+   "Q145"
+  ],
+  "birthplace": {
+   "name": "Brighton",
+   "coords": [
+    50.821,
+    -0.138
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom of Great Britain and Ireland",
+   "United Kingdom"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Thomas Erskine Holland.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Thomas_Erskine_Holland.jpg",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Thomas_Erskine_Holland.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "Unknown authorUnknown author",
+   "license": "Public domain",
+   "local": "portraits/erskine-holland.jpg"
+  }
+ },
+ "Sir Vincent Evans": {
+  "how": "search",
+  "title": "Vincent Evans (diplomat)",
+  "found": true,
+  "page": "Vincent Evans",
+  "url": "https://en.wikipedia.org/wiki/Vincent_Evans",
+  "desc": "British diplomat and international lawyer (1915-2007)",
+  "extract": "Sir William Vincent John Evans was a British diplomat and international lawyer, who served as Judge of the European Court of Human Rights in respect of the United Kingdom from 1980 to 1991.",
+  "qid": "Q7931775",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1915,
+  "died": 2007,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q84",
+  "citizen_q": [
+   "Q145"
+  ],
+  "birthplace": {
+   "name": "London",
+   "coords": [
+    51.507,
+    -0.128
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male"
+ },
+ "Felice Morgenstern": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Gustave Rolin Jaequemyns": {
+  "how": "alias",
+  "title": "Gustave Rolin-Jaequemyns",
+  "found": true,
+  "page": "Gustave Rolin-Jaequemyns",
+  "url": "https://en.wikipedia.org/wiki/Gustave_Rolin-Jaequemyns",
+  "desc": "Belgian lawyer, diplomat and Minister of the Interior",
+  "extract": "Gustave Henri Ange Hippolyte Rolin-Jaequemyns was a Belgian lawyer, diplomat, politician and Minister of the Interior (1878–1884) as a member of the Unitarian Liberal Party. \nHe was the son of Hippolyte Rolin, the son in law of Edouard Jaequemyns, the brother of Albéric Rolin, the father of Edouard Rolin-Jaequemyns, and the uncle of Henri Rolin.Together with the Swiss jurist Gustave Moynier, he fo",
+  "qid": "Q714406",
+  "image_file": "Rolin_Jacquermyns.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/89/Rolin_Jacquermyns.jpg/330px-Rolin_Jacquermyns.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1835,
+  "died": 1902,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q1296",
+  "citizen_q": [
+   "Q31"
+  ],
+  "birthplace": {
+   "name": "Ghent",
+   "coords": [
+    51.054,
+    3.725
+   ],
+   "country": "Belgium"
+  },
+  "citizenship": [
+   "Belgium"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Rolin_Jacquermyns.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Rolin_Jacquermyns.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/89/Rolin_Jacquermyns.jpg/500px-Rolin_Jacquermyns.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Unknown authorUnknown author",
+   "license": "Public domain",
+   "local": "portraits/gustave-rolin-jaequemyns.jpg"
+  }
+ },
+ "Elihu Root": {
+  "how": "direct",
+  "title": "Elihu Root",
+  "found": true,
+  "page": "Elihu Root",
+  "url": "https://en.wikipedia.org/wiki/Elihu_Root",
+  "desc": "American politician, statesman, and Nobel Laureate (1845–1937)",
+  "extract": "Elihu Root was an American lawyer, Republican politician, and statesman who served as the 41st United States Secretary of War under presidents William McKinley and Theodore Roosevelt and the 38th United States Secretary of State, also under Roosevelt. In both positions as well as a long legal career, he pioneered the American practice of international law. Root is sometimes considered the prototyp",
+  "qid": "Q220619",
+  "image_file": "Elihu Root, bw photo portrait, 1902 (cropped).jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ed/Elihu_Root%2C_Secretary_of_War%2C_half-length_portrait%2C_facing_slightly_left_LCCN90714305_Trim_%28cropped%29%282%29.jpg/330px-Elihu_Root%2C_Secretary_of_War%2C_half-length_portrait%2C_facing_slightly_left_LCCN90714305_Trim_%28cropped%29%282%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1845,
+  "died": 1937,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q1021657",
+  "citizen_q": [
+   "Q30"
+  ],
+  "birthplace": {
+   "name": "Clinton",
+   "coords": [
+    43.049,
+    -75.38
+   ],
+   "country": "United States"
+  },
+  "citizenship": [
+   "United States"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Elihu Root, bw photo portrait, 1902 (cropped).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Elihu_Root,_bw_photo_portrait,_1902_(cropped).jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ce/Elihu_Root%2C_bw_photo_portrait%2C_1902_%28cropped%29.jpg/500px-Elihu_Root%2C_bw_photo_portrait%2C_1902_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "George Prince",
+   "license": "Public domain",
+   "local": "portraits/elihu-root.jpg"
+  }
+ },
+ "Gustav Radbruch": {
+  "how": "direct",
+  "title": "Gustav Radbruch",
+  "found": true,
+  "page": "Gustav Radbruch",
+  "url": "https://en.wikipedia.org/wiki/Gustav_Radbruch",
+  "desc": "German legal scholar and politician (1878–1949)",
+  "extract": "Gustav Radbruch was a German legal scholar and politician. He served as Minister of Justice of Germany during the early Weimar period. Radbruch is also regarded as one of the most influential legal philosophers of the 20th century.",
+  "qid": "Q61922",
+  "image_file": "RadbruchGustav.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/28/RadbruchGustav.jpg/330px-RadbruchGustav.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1878,
+  "died": 1949,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q2843",
+  "citizen_q": [
+   "Q1206012"
+  ],
+  "birthplace": {
+   "name": "Lübeck",
+   "coords": [
+    53.87,
+    10.686
+   ],
+   "country": "Germany"
+  },
+  "citizenship": [
+   "German Reich"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "RadbruchGustav.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:RadbruchGustav.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/28/RadbruchGustav.jpg/500px-RadbruchGustav.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Unknown",
+   "license": "Public domain",
+   "local": "portraits/gustav-radbruch.jpg"
+  }
+ },
+ "Woodrow Wilson": {
+  "how": "direct",
+  "title": "Woodrow Wilson",
+  "found": true,
+  "page": "Woodrow Wilson",
+  "url": "https://en.wikipedia.org/wiki/Woodrow_Wilson",
+  "desc": "President of the United States from 1913 to 1921",
+  "extract": "Thomas Woodrow Wilson was the 28th president of the United States, serving from 1913 to 1921. He was the only Democrat to serve as president during the Progressive Era, when Republicans dominated the presidency and legislative branches. As president, Wilson made significant economic reforms and led the United States through World War I. He was the leading architect of the League of Nations, and hi",
+  "qid": "Q34296",
+  "image_file": "President_Woodrow_Wilson_Harris_&_Ewing_(3x4_cropped_b).jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/96/President_Woodrow_Wilson_Harris_%26_Ewing_%283x4_cropped_b%29.jpg/330px-President_Woodrow_Wilson_Harris_%26_Ewing_%283x4_cropped_b%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1856,
+  "died": 1924,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q64691879",
+  "citizen_q": [
+   "Q30"
+  ],
+  "birthplace": {
+   "name": "Staunton",
+   "coords": [
+    38.15,
+    -79.072
+   ],
+   "country": "United States"
+  },
+  "citizenship": [
+   "United States"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "President_Woodrow_Wilson_Harris_&_Ewing_(3x4_cropped_b).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:President_Woodrow_Wilson_Harris_%26_Ewing_(3x4_cropped_b).jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/96/President_Woodrow_Wilson_Harris_%26_Ewing_%283x4_cropped_b%29.jpg/500px-President_Woodrow_Wilson_Harris_%26_Ewing_%283x4_cropped_b%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Harris &amp; Ewing, photographer",
+   "license": "Public domain",
+   "local": "portraits/woodrow-wilson.jpg"
+  },
+  "birthplace_fixed": true
+ },
+ "Inazo Nitobe": {
+  "how": "alias",
+  "title": "Nitobe Inazō",
+  "found": true,
+  "page": "Nitobe Inazō",
+  "url": "https://en.wikipedia.org/wiki/Nitobe_Inaz%C5%8D",
+  "desc": "Japanese writer and diplomat (1862–1933)",
+  "extract": "Nitobe Inazō  was a Japanese agronomist, diplomat, political scientist, politician, and writer. He studied at Sapporo Agricultural College under the influence of its first president William S. Clark and later went to the United States to study agricultural policy. After returning to Japan, he served as a professor at Sapporo Agricultural College, Kyoto Imperial University, and Tokyo Imperial Unive",
+  "qid": "Q12696",
+  "image_file": "Monsieur_Inazō_Nitobe.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f2/Monsieur_Inaz%C5%8D_Nitobe.jpg/330px-Monsieur_Inaz%C5%8D_Nitobe.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1862,
+  "died": 1933,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q200077",
+  "citizen_q": [
+   "Q17"
+  ],
+  "birthplace": {
+   "name": "Morioka",
+   "coords": [
+    39.702,
+    141.155
+   ],
+   "country": "Japan"
+  },
+  "citizenship": [
+   "Japan"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Monsieur_Inazō_Nitobe.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Monsieur_Inaz%C5%8D_Nitobe.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f2/Monsieur_Inaz%C5%8D_Nitobe.jpg/500px-Monsieur_Inaz%C5%8D_Nitobe.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Auguste Léon",
+   "license": "Public domain",
+   "local": "portraits/inazo-nitobe.jpg"
+  }
+ },
+ "Christine Chinkin": {
+  "how": "alias",
+  "title": "Christine Chinkin",
+  "found": true,
+  "page": "Christine Chinkin",
+  "url": "https://en.wikipedia.org/wiki/Christine_Chinkin",
+  "desc": "British legal scholar (born 1949)",
+  "extract": "Christine Mary Chinkin is a professor of international law and founding director of the Centre for Women, Peace and Security at the London School of Economics and Political Science. She is the \nWilliam W. Cook Global Law Professor at the University of Michigan Law School.",
+  "qid": "Q5110968",
+  "image_file": "Christine_Chinkin.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Christine_Chinkin.jpg/330px-Christine_Chinkin.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1949,
+  "died": null,
+  "gender_q": "Q6581072",
+  "birthplace_q": "Q23298",
+  "citizen_q": [],
+  "birthplace": {
+   "name": "Kent",
+   "coords": [
+    51.19,
+    0.73
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [],
+  "gender": "female",
+  "portrait": {
+   "file": "Christine_Chinkin.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Christine_Chinkin.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Christine_Chinkin.jpg/500px-Christine_Chinkin.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Foreign and Commonwealth Office",
+   "license": "CC BY 2.0",
+   "local": "portraits/christine-chinkin.jpg"
+  }
+ },
+ "J. H. C. Morris": {
+  "how": "alias",
+  "title": "John Humphrey Carlile Morris",
+  "found": true,
+  "page": "J. H. C. Morris",
+  "url": "https://en.wikipedia.org/wiki/J._H._C._Morris",
+  "desc": "British legal scholar (1910–1984)",
+  "extract": "John Humphrey Carlile Morris was a British legal scholar, best known for his contributions to the conflict of laws.",
+  "qid": "Q23001089",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1910,
+  "died": 1984,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q34217",
+  "citizen_q": [
+   "Q145",
+   "Q174193"
+  ],
+  "birthplace": {
+   "name": "Oxford",
+   "coords": [
+    51.752,
+    -1.258
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom",
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male"
+ },
+ "Pitt Corbett": {
+  "how": "alias",
+  "title": "Pitt Cobbett",
+  "found": true,
+  "page": "Pitt Cobbett",
+  "url": "https://en.wikipedia.org/wiki/Pitt_Cobbett",
+  "desc": "Australian academic, jurist and editor",
+  "extract": "\n\nWilliam Pitt Cobbett was an Australian academic, jurist, and editor. Cobbett was the founding Challis Chair of Law of the University of Sydney Faculty of Law.",
+  "qid": "Q16967138",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1853,
+  "died": 1919,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q5112",
+  "citizen_q": [
+   "Q408"
+  ],
+  "birthplace": {
+   "name": "Adelaide",
+   "coords": [
+    -34.928,
+    138.6
+   ],
+   "country": "Australia"
+  },
+  "citizenship": [
+   "Australia"
+  ],
+  "gender": "male"
+ },
+ "Jean d'Aspremont": {
+  "how": "alias",
+  "title": "Jean d'Aspremont",
+  "found": true,
+  "page": "Jean d'Aspremont",
+  "url": "https://en.wikipedia.org/wiki/Jean_d'Aspremont",
+  "desc": "Legal theorist and international lawyer",
+  "extract": "Jean Marie Gobert Count d'Aspremont Lynden is a lawyer and professor of international legal theory at Sciences Po in Paris, at the University of Manchester and at the Graduate Institute of International and Development Studies in Geneva.",
+  "qid": "Q55076169",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1978,
+  "died": null,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q9005",
+  "citizen_q": [
+   "Q31"
+  ],
+  "birthplace": {
+   "name": "Brussels",
+   "coords": [
+    50.847,
+    4.357
+   ],
+   "country": "Belgium"
+  },
+  "citizenship": [
+   "Belgium"
+  ],
+  "gender": "male",
+  "birthplace_fixed": true
+ },
+ "Lord Finlay of Nairn": {
+  "how": "alias",
+  "title": "Robert Finlay, 1st Viscount Finlay",
+  "found": true,
+  "page": "Robert Finlay, 1st Viscount Finlay",
+  "url": "https://en.wikipedia.org/wiki/Robert_Finlay%2C_1st_Viscount_Finlay",
+  "desc": "British politician (1842–1929)",
+  "extract": "Robert Bannatyne Finlay, 1st Viscount Finlay,, known as Sir Robert Finlay from 1895 to 1916, was a British barrister and politician who was Lord High Chancellor of Great Britain from 1916 to 1919.",
+  "qid": "Q332700",
+  "image_file": "1stViscountFinlay.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a7/1stViscountFinlay.jpg/330px-1stViscountFinlay.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1842,
+  "died": 1929,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q23436",
+  "citizen_q": [
+   "Q145"
+  ],
+  "birthplace": {
+   "name": "Edinburgh",
+   "coords": [
+    55.953,
+    -3.189
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "1stViscountFinlay.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:1stViscountFinlay.jpg",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/a/a7/1stViscountFinlay.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "Henry Macbeth-Raeburn",
+   "license": "Public domain",
+   "local": "portraits/lord-finlay-of-nairn.jpg"
+  }
+ },
+ "John Pawley Bate": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Lord Davies": {
+  "how": "alias",
+  "title": "David Davies, 1st Baron Davies",
+  "found": true,
+  "page": "David Davies, 1st Baron Davies",
+  "url": "https://en.wikipedia.org/wiki/David_Davies%2C_1st_Baron_Davies",
+  "desc": "Welsh Liberal politician (1880-1944)",
+  "extract": "David Davies, 1st Baron Davies was a Welsh Liberal Party politician and public benefactor who was MP for Montgomeryshire from 1906 to 1929. He was a grandson of the Welsh industrialist David Davies. As a philanthropist, he established the King Edward VII Welsh National Memorial Association to combat tuberculosis in Wales, as well as the Wilson Chair of International Politics at the University Coll",
+  "qid": "Q3404390",
+  "image_file": "David_Davies,_Esquire_(5294050).jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/David_Davies%2C_Esquire_%285294050%29.jpg/330px-David_Davies%2C_Esquire_%285294050%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1880,
+  "died": 1944,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q6661212",
+  "citizen_q": [
+   "Q145",
+   "Q174193"
+  ],
+  "birthplace": {
+   "name": "Llandinam",
+   "coords": [
+    52.485,
+    -3.436
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom",
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "David_Davies,_Esquire_(5294050).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:David_Davies,_Esquire_(5294050).jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/David_Davies%2C_Esquire_%285294050%29.jpg/500px-David_Davies%2C_Esquire_%285294050%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "anonymous",
+   "license": "Public domain",
+   "local": "portraits/lord-davies.jpg"
+  }
+ },
+ "Maitre Senart": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Lord Bryce": {
+  "how": "alias",
+  "title": "James Bryce, 1st Viscount Bryce",
+  "found": true,
+  "page": "James Bryce, 1st Viscount Bryce",
+  "url": "https://en.wikipedia.org/wiki/James_Bryce%2C_1st_Viscount_Bryce",
+  "desc": "British diplomat and politician (1838–1922)",
+  "extract": "James Bryce, 1st Viscount Bryce,, was a British academic, jurist, historian, diplomat, and Liberal politician. He was a widely traveled authority on law, government, and history whose expertise led to high political offices, culminating with his successful role as ambassador to the United States from 1907 to 1913. He entered the House of Commons in 1880, successively representing the constituencie",
+  "qid": "Q336497",
+  "image_file": "1st_Viscount_Bryce_1902b.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b8/1st_Viscount_Bryce_1902b.jpg/330px-1st_Viscount_Bryce_1902b.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1838,
+  "died": 1922,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q10686",
+  "citizen_q": [
+   "Q174193"
+  ],
+  "birthplace": {
+   "name": "Belfast",
+   "coords": [
+    54.597,
+    -5.93
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "1st_Viscount_Bryce_1902b.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:1st_Viscount_Bryce_1902b.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b8/1st_Viscount_Bryce_1902b.jpg/500px-1st_Viscount_Bryce_1902b.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "George Charles Beresford",
+   "license": "Public domain",
+   "local": "portraits/lord-bryce.jpg"
+  }
+ },
+ "Roberto Ago": {
+  "how": "direct",
+  "title": "Roberto Ago",
+  "found": true,
+  "page": "Roberto Ago",
+  "url": "https://en.wikipedia.org/wiki/Roberto_Ago",
+  "desc": "Italian jurist",
+  "extract": "Roberto Ago was an Italian jurist. He served as a judge on the International Court of Justice from 1979 until 1995. He was Professor of International Law at the Universities of Catania (1934–1935), Genoa (1935–1938), and finally Rome (1956–1982). He specialized in both private and public international law.",
+  "qid": "Q932787",
+  "image_file": "Saragat Ago 1965 cropped.png",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/78/Saragat_Ago_1965.jpg/330px-Saragat_Ago_1965.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1907,
+  "died": 1995,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q40832",
+  "citizen_q": [
+   "Q38",
+   "Q172579"
+  ],
+  "birthplace": {
+   "name": "Vigevano",
+   "coords": [
+    45.317,
+    8.867
+   ],
+   "country": "Italy"
+  },
+  "citizenship": [
+   "Italy",
+   "Kingdom of Italy"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Saragat Ago 1965 cropped.png",
+   "page": "https://commons.wikimedia.org/wiki/File:Saragat_Ago_1965_cropped.png",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/c/c2/Saragat_Ago_1965_cropped.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "Unknown authorUnknown author",
+   "license": "Public domain",
+   "local": "portraits/roberto-ago.jpg"
+  }
+ },
+ "R. H. Graveson": {
+  "title": "Ronald Harry Graveson",
+  "how": "wikidata",
+  "found": true,
+  "citizenship": [],
+  "gender": "male",
+  "page": "Ronald Harry Graveson",
+  "qid": "Q94833300",
+  "desc": "British jurist and barrister (1911–1991)",
+  "verified": true,
+  "url": "https://www.wikidata.org/wiki/Q94833300",
+  "born": 1911,
+  "died": 1991,
+  "birthplace_q": "Q42448",
+  "image_file": null,
+  "birthplace": {
+   "name": "Sheffield",
+   "coords": [
+    53.381,
+    -1.47
+   ],
+   "country": "United Kingdom"
+  },
+  "gender_q": "Q6581097",
+  "citizen_q": []
+ },
+ "Sir Derek Bowett": {
+  "how": "alias",
+  "title": "Derek Bowett",
+  "found": true,
+  "page": "Derek Bowett",
+  "url": "https://en.wikipedia.org/wiki/Derek_Bowett",
+  "desc": "International lawyer and academic",
+  "extract": "Sir Derek William Bowett, was an international lawyer and academic. He was appointed Whewell Professor of International Law in 1981 and was President of Queens' College, Cambridge 1970–1982.",
+  "qid": "Q1200004",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1927,
+  "died": 2009,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q18125",
+  "citizen_q": [
+   "Q145"
+  ],
+  "birthplace": {
+   "name": "Manchester",
+   "coords": [
+    53.479,
+    -2.245
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male"
+ },
+ "N. V. Moerawieff": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Sir George Sherston Baker": {
+  "how": "alias",
+  "title": "George Sherston Baker",
+  "found": true,
+  "page": "George Sherston Baker",
+  "url": "https://en.wikipedia.org/wiki/George_Sherston_Baker",
+  "desc": "British barrister and legal author (1846–1923)",
+  "extract": "Sir George Edward Dunstan Sherston Baker, 4th Baronet was a British barrister and judge. He was a County Court judge from 1901 until his death. He was also a prolific writer on legal topics.",
+  "qid": "Q75418231",
+  "image_file": "Sir_George_Sherston_Baker,_4th_Bt.jpg",
+  "thumb": "https://upload.wikimedia.org/wikipedia/en/0/03/Sir_George_Sherston_Baker%2C_4th_Bt.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "verified": true,
+  "born": 1846,
+  "died": 1923,
+  "gender_q": "Q6581097",
+  "birthplace_q": null,
+  "citizen_q": [],
+  "citizenship": [],
+  "gender": "male"
+ },
+ "Friederich von Martens": {
+  "how": "alias",
+  "title": "Friedrich Martens",
+  "found": true,
+  "page": "Friedrich Martens",
+  "url": "https://en.wikipedia.org/wiki/Friedrich_Martens",
+  "desc": "Legal scholar, Imperial Russian diplomat (1845–1909)",
+  "extract": "Friedrich Fromhold Martens, or Friedrich Fromhold von Martens, was a diplomat and jurist in service of the Russian Empire who made important contributions to the science of international law. He represented Russia at the Hague Peace Conferences and helped to settle the first cases of international arbitration, notably the dispute between France and the United Kingdom over Newfoundland. As a schola",
+  "qid": "Q537519",
+  "image_file": "Friedrich_Fromhold_Martens_1878-huge.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/Friedrich_Fromhold_Martens_1878-huge.jpg/330px-Friedrich_Fromhold_Martens_1878-huge.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1845,
+  "died": 1909,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q102365",
+  "citizen_q": [
+   "Q34266"
+  ],
+  "birthplace": {
+   "name": "Pärnu",
+   "coords": [
+    58.384,
+    24.499
+   ],
+   "country": "Estonia"
+  },
+  "citizenship": [
+   "Russian Empire"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Friedrich_Fromhold_Martens_1878-huge.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Friedrich_Fromhold_Martens_1878-huge.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/Friedrich_Fromhold_Martens_1878-huge.jpg/500px-Friedrich_Fromhold_Martens_1878-huge.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Iosif Goffert",
+   "license": "Public domain",
+   "local": "portraits/friederich-von-martens.jpg"
+  }
+ },
+ "Johann Kaspar Bluntshchili": {
+  "how": "alias",
+  "title": "Johann Caspar Bluntschli",
+  "found": true,
+  "page": "Johann Kaspar Bluntschli",
+  "url": "https://en.wikipedia.org/wiki/Johann_Kaspar_Bluntschli",
+  "desc": "Swiss jurist and politician (1808–1881)",
+  "extract": "Johann Caspar Bluntschli was a Swiss jurist and politician. Together with fellow liberals Francis Lieber and Édouard René de Laboulaye, he developed one of the first codes of international law and war.",
+  "qid": "Q124094",
+  "image_file": "Johann_Caspar_Bluntschli_alt.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/Johann_Caspar_Bluntschli_alt.jpg/330px-Johann_Caspar_Bluntschli_alt.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1808,
+  "died": 1881,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q72",
+  "citizen_q": [
+   "Q39"
+  ],
+  "birthplace": {
+   "name": "Zurich",
+   "coords": [
+    47.374,
+    8.541
+   ],
+   "country": "Switzerland"
+  },
+  "citizenship": [
+   "Switzerland"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Johann_Caspar_Bluntschli_alt.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Johann_Caspar_Bluntschli_alt.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/Johann_Caspar_Bluntschli_alt.jpg/500px-Johann_Caspar_Bluntschli_alt.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "G. Pauli &amp; Cie",
+   "license": "Public domain",
+   "local": "portraits/johann-kaspar-bluntshchili.jpg"
+  }
+ },
+ "Lord Phillimore": {
+  "how": "alias",
+  "title": "Walter Phillimore, 1st Baron Phillimore",
+  "found": true,
+  "page": "Walter Phillimore, 1st Baron Phillimore",
+  "url": "https://en.wikipedia.org/wiki/Walter_Phillimore%2C_1st_Baron_Phillimore",
+  "desc": "British lawyer and judge",
+  "extract": "Walter George Frank Phillimore, 1st Baron Phillimore, known as Sir Walter Phillimore, 2nd Baronet, from 1885 to 1918, was a British lawyer and judge.",
+  "qid": "Q7965830",
+  "image_file": "1stLordPhillimore2.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f2/1stLordPhillimore2.jpg/330px-1stLordPhillimore2.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1845,
+  "died": 1929,
+  "gender_q": "Q6581097",
+  "birthplace_q": null,
+  "citizen_q": [
+   "Q145",
+   "Q174193"
+  ],
+  "citizenship": [
+   "United Kingdom",
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "1stLordPhillimore2.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:1stLordPhillimore2.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f2/1stLordPhillimore2.jpg/500px-1stLordPhillimore2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "",
+   "license": "Public domain",
+   "local": "portraits/lord-phillimore.jpg"
+  }
+ },
+ "H. C. Gutteridge": {
+  "title": "Harold Gutteridge",
+  "how": "wikidata",
+  "found": true,
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male",
+  "page": "Harold Gutteridge",
+  "qid": "Q18917731",
+  "desc": "jurist",
+  "verified": true,
+  "url": "https://www.wikidata.org/wiki/Q18917731",
+  "born": 1876,
+  "died": 1953,
+  "birthplace_q": null,
+  "image_file": null,
+  "gender_q": "Q6581097",
+  "citizen_q": [
+   "Q145"
+  ]
+ },
+ "Rivier": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Gonzalo de Quezada": {
+  "how": "alias",
+  "title": "Gonzalo de Quesada y Aróstegui",
+  "found": true,
+  "page": "Gonzalo de Quesada y Aróstegui",
+  "url": "https://en.wikipedia.org/wiki/Gonzalo_de_Quesada_y_Ar%C3%B3stegui",
+  "desc": "Cuban writer and diplomat (1868–1915)",
+  "extract": "Gonzalo de Quesada was a key architect of Cuba's Independence Movement with José Martí during the late 19th century. He received the National Order of the Legion of Honour of France.",
+  "qid": "Q5582288",
+  "image_file": "Gonzalo_de_Quesada_y_Aróstegui.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/13/Gonzalo_de_Quesada_y_Ar%C3%B3stegui.jpg/330px-Gonzalo_de_Quesada_y_Ar%C3%B3stegui.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1868,
+  "died": 1915,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q1563",
+  "citizen_q": [
+   "Q241"
+  ],
+  "birthplace": {
+   "name": "Havana",
+   "coords": [
+    23.137,
+    -82.359
+   ],
+   "country": "Cuba"
+  },
+  "citizenship": [
+   "Cuba"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "Gonzalo_de_Quesada_y_Aróstegui.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Gonzalo_de_Quesada_y_Ar%C3%B3stegui.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/13/Gonzalo_de_Quesada_y_Ar%C3%B3stegui.jpg/500px-Gonzalo_de_Quesada_y_Ar%C3%B3stegui.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Bain News Service",
+   "license": "Public domain",
+   "local": "portraits/gonzalo-de-quezada.jpg"
+  }
+ },
+ "Georg Schwarzenberger": {
+  "found": false,
+  "how": "rejected"
+ },
+ "Sir David Hughes-Morgan": {
+  "title": "Sir David Hughes-Morgan, 3rd Baronet",
+  "how": "wikidata",
+  "found": true,
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male",
+  "page": "Sir David Hughes-Morgan, 3rd Baronet",
+  "qid": "Q76032722",
+  "desc": "British judge (1925-2006)",
+  "verified": true,
+  "url": "https://www.wikidata.org/wiki/Q76032722",
+  "born": 1925,
+  "died": 2006,
+  "birthplace_q": null,
+  "image_file": null,
+  "gender_q": "Q6581097",
+  "citizen_q": [
+   "Q145"
+  ]
+ },
+ "Sir John Fischer-Williams": {
+  "how": "wikidata",
+  "title": "John Williams",
+  "found": true,
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male",
+  "page": "John Williams",
+  "qid": "Q18546658",
+  "desc": "English international lawyer",
+  "verified": true,
+  "url": "https://www.wikidata.org/wiki/Q18546658",
+  "born": 1870,
+  "died": 1947,
+  "birthplace_q": null,
+  "image_file": null,
+  "gender_q": "Q6581097",
+  "citizen_q": [
+   "Q145"
+  ]
+ },
+ "Gerald Draper": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Eileen Denza": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "John Westlake": {
+  "how": "wikidata",
+  "title": "John Westlake",
+  "found": true,
+  "citizenship": [
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male",
+  "page": "John Westlake",
+  "qid": "Q1314430",
+  "desc": "British politician (1828-1913)",
+  "verified": true,
+  "url": "https://en.wikipedia.org/wiki/John_Westlake_%28law_scholar%29",
+  "born": 1828,
+  "died": 1913,
+  "birthplace_q": "Q23148",
+  "image_file": "John Westlake by Marianne Stokes.jpg",
+  "birthplace": {
+   "name": "Lostwithiel",
+   "coords": [
+    50.407,
+    -4.668
+   ],
+   "country": "United Kingdom"
+  },
+  "portrait": {
+   "file": "John Westlake by Marianne Stokes.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:John_Westlake_by_Marianne_Stokes.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/82/John_Westlake_by_Marianne_Stokes.jpg/500px-John_Westlake_by_Marianne_Stokes.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Marianne Stokes",
+   "license": "Public domain",
+   "local": "portraits/john-westlake.jpg"
+  },
+  "gender_q": "Q6581097",
+  "citizen_q": [
+   "Q174193"
+  ],
+  "birthplace_fixed": true
+ },
+ "Professor Frowein": {
+  "title": "Jochen Abraham Frowein",
+  "how": "wikidata",
+  "found": true,
+  "citizenship": [
+   "Germany"
+  ],
+  "gender": "male",
+  "page": "Jochen Abraham Frowein",
+  "qid": "Q1691042",
+  "desc": "German jurist and university teacher (1934-2026)",
+  "verified": true,
+  "url": "https://www.wikidata.org/wiki/Q1691042",
+  "born": 1934,
+  "died": 2026,
+  "birthplace_q": "Q64",
+  "image_file": null,
+  "birthplace": {
+   "name": "Berlin",
+   "coords": [
+    52.517,
+    13.383
+   ],
+   "country": "Germany"
+  },
+  "gender_q": "Q6581097",
+  "citizen_q": [
+   "Q183"
+  ]
+ },
+ "Sir Kenneth Bailey": {
+  "how": "alias",
+  "title": "Kenneth Bailey (lawyer)",
+  "found": true,
+  "page": "Kenneth Bailey (lawyer)",
+  "url": "https://en.wikipedia.org/wiki/Kenneth_Bailey_(lawyer)",
+  "desc": "Australian public servant, lawyer and diplomat",
+  "extract": "Sir Kenneth Hamilton Bailey was a senior Australian civil servant and lawyer, best known for his time as Secretary of the Attorney-General's Department between 1946 and 1964.",
+  "qid": "Q19560017",
+  "image_file": null,
+  "thumb": null,
+  "verified": true,
+  "born": 1898,
+  "died": 1972,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q1033731",
+  "citizen_q": [
+   "Q408"
+  ],
+  "birthplace": {
+   "name": "Canterbury",
+   "coords": [
+    -37.825,
+    145.078
+   ],
+   "country": "Australia"
+  },
+  "citizenship": [
+   "Australia"
+  ],
+  "gender": "male"
+ },
+ "Gillian White": {
+  "found": false,
+  "how": "rejected"
+ },
+ "Clive Parry": {
+  "title": "Clive Parry",
+  "how": "wikidata",
+  "found": true,
+  "citizenship": [],
+  "gender": "male",
+  "page": "Clive Parry",
+  "qid": "Q59527998",
+  "desc": "born:1917-07-13|died:1982-09-10|; Parry, Clive; Parry, Clive, jurist, 1917-1982; Parry, Clive, 1917-",
+  "verified": true,
+  "url": "https://www.wikidata.org/wiki/Q59527998",
+  "born": 1917,
+  "died": 1982,
+  "birthplace_q": null,
+  "image_file": null,
+  "gender_q": "Q6581097",
+  "citizen_q": []
+ },
+ "Maitre Clunet": {
+  "title": "Édouard Clunet",
+  "how": "wikidata",
+  "found": true,
+  "citizenship": [
+   "France"
+  ],
+  "gender": "male",
+  "page": "Édouard Clunet",
+  "qid": "Q16335955",
+  "desc": "lawyer",
+  "verified": true,
+  "url": "https://www.wikidata.org/wiki/Q16335955",
+  "born": 1845,
+  "died": 1922,
+  "birthplace_q": "Q1289",
+  "image_file": null,
+  "birthplace": {
+   "name": "Grenoble",
+   "coords": [
+    45.187,
+    5.726
+   ],
+   "country": "France"
+  },
+  "gender_q": "Q6581097",
+  "citizen_q": [
+   "Q142"
+  ]
+ },
+ "G. I. A. D. Draper": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Norman S. Marsh": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Mendelssohn-Bartholdy": {
+  "title": "Albrecht Mendelssohn Bartholdy",
+  "how": "wikidata",
+  "found": true,
+  "citizenship": [
+   "Germany"
+  ],
+  "gender": "male",
+  "page": "Albrecht Mendelssohn Bartholdy",
+  "qid": "Q104333",
+  "desc": "German jurist (1874-1936)",
+  "verified": true,
+  "url": "https://www.wikidata.org/wiki/Q104333",
+  "born": 1874,
+  "died": 1936,
+  "birthplace_q": "Q1040",
+  "image_file": "Albrecht Mendelssohn Bartholdy (1933).jpg",
+  "birthplace": {
+   "name": "Karlsruhe",
+   "coords": [
+    49.017,
+    8.4
+   ],
+   "country": "Germany"
+  },
+  "portrait": {
+   "file": "Albrecht Mendelssohn Bartholdy (1933).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Albrecht_Mendelssohn_Bartholdy_(1933).jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Albrecht_Mendelssohn_Bartholdy_%281933%29.jpg/500px-Albrecht_Mendelssohn_Bartholdy_%281933%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Agence Rol. Agence photographique (commanditaire)",
+   "license": "Public domain",
+   "local": "portraits/mendelssohn-bartholdy.jpg"
+  },
+  "gender_q": "Q6581097",
+  "citizen_q": [
+   "Q183"
+  ]
+ },
+ "T. J. Lawrence": {
+  "title": "Thomas Joseph Lawrence",
+  "how": "wikidata",
+  "found": true,
+  "citizenship": [],
+  "gender": "male",
+  "page": "Thomas Joseph Lawrence",
+  "qid": "Q98835144",
+  "desc": "Scholar of international law",
+  "verified": true,
+  "url": "https://www.wikidata.org/wiki/Q98835144",
+  "born": 1849,
+  "died": 1919,
+  "birthplace_q": null,
+  "image_file": null,
+  "gender_q": "Q6581097",
+  "citizen_q": []
+ },
+ "Philip Allott": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Max Huber": {
+  "found": true,
+  "how": "manual",
+  "title": "Max Huber",
+  "page": "Max Huber (jurist)",
+  "qid": "Q123181",
+  "desc": "Swiss jurist and diplomat; President of the Permanent Court of International Justice",
+  "url": "https://en.wikipedia.org/wiki/Max_Huber",
+  "born": 1874,
+  "died": 1960,
+  "gender": "male",
+  "verified": true,
+  "citizenship": [
+   "Switzerland"
+  ],
+  "birthplace": {
+   "name": "Zürich",
+   "coords": [
+    47.374,
+    8.541
+   ],
+   "country": "Switzerland"
+  },
+  "image_file": "Max Huber (1874-196) in 1940.jpg",
+  "portrait": {
+   "file": "Max Huber (1874-196) in 1940.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Max_Huber_(1874-196)_in_1940.jpg",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/d/d6/Max_Huber_%281874-196%29_in_1940.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "Unknown authorUnknown author",
+   "license": "CC BY-SA 4.0",
+   "local": "portraits/max-huber.jpg"
+  }
+ },
+ "Cyrill M. Picciotto": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Ben Wortley": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Charles Cheney Hyde": {
+  "how": "wikidata",
+  "title": "Charles Cheney Hyde",
+  "found": true,
+  "citizenship": [
+   "United States"
+  ],
+  "gender": "male",
+  "page": "Charles Cheney Hyde",
+  "qid": "Q52156069",
+  "desc": "American legal scholar",
+  "verified": true,
+  "url": "https://www.wikidata.org/wiki/Q52156069",
+  "born": 1873,
+  "died": 1952,
+  "birthplace_q": null,
+  "image_file": null,
+  "gender_q": "Q6581097",
+  "citizen_q": [
+   "Q30"
+  ]
+ },
+ "Mr. Justice Bray": {
+  "title": "Reginald Bray",
+  "how": "wikidata",
+  "found": true,
+  "citizenship": [
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male",
+  "page": "Reginald Bray",
+  "qid": "Q18821831",
+  "desc": "judge",
+  "verified": true,
+  "url": "https://en.wikipedia.org/wiki/Reginald_More_Bray",
+  "born": 1842,
+  "died": 1923,
+  "birthplace_q": null,
+  "image_file": "Reginald More Bray, Vanity Fair, 1906-10-17.jpg",
+  "portrait": {
+   "file": "Reginald More Bray, Vanity Fair, 1906-10-17.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Reginald_More_Bray,_Vanity_Fair,_1906-10-17.jpg",
+   "thumb_url": "https://upload.wikimedia.org/wikipedia/commons/8/8d/Reginald_More_Bray%2C_Vanity_Fair%2C_1906-10-17.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "artist": "Leslie Ward",
+   "license": "Public domain",
+   "local": "portraits/mr-justice-bray.jpg"
+  },
+  "gender_q": "Q6581097",
+  "citizen_q": [
+   "Q174193"
+  ]
+ },
+ "Cecil Fifoot": {
+  "title": "C. H. S. Fifoot",
+  "how": "wikidata",
+  "found": true,
+  "citizenship": [],
+  "gender": "male",
+  "page": "C. H. S. Fifoot",
+  "qid": "Q23989527",
+  "desc": "British legal scholar (1899–1975)",
+  "verified": true,
+  "url": "https://en.wikipedia.org/wiki/C._H._S._Fifoot",
+  "born": 1899,
+  "died": 1975,
+  "birthplace_q": null,
+  "image_file": null,
+  "gender_q": "Q6581097",
+  "citizen_q": []
+ },
+ "Michael Akehurst": {
+  "title": "Michael Barton Akehurst",
+  "how": "wikidata",
+  "found": true,
+  "citizenship": [
+   "United Kingdom"
+  ],
+  "gender": "male",
+  "page": "Michael Barton Akehurst",
+  "qid": "Q6828476",
+  "desc": "international lawyer",
+  "verified": true,
+  "url": "https://en.wikipedia.org/wiki/Michael_Barton_Akehurst",
+  "born": 1940,
+  "died": 1989,
+  "birthplace_q": null,
+  "image_file": null,
+  "gender_q": "Q6581097",
+  "citizen_q": [
+   "Q145"
+  ]
+ },
+ "Ben Atkinson Wortley": {
+  "title": null,
+  "how": "none",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Sir Geoffrey Butler": {
+  "how": "search",
+  "title": "Geoffrey Butler (politician)",
+  "found": false,
+  "citizenship": [],
+  "gender": null
+ },
+ "Sir John Salmond": {
+  "how": "alias",
+  "title": "John Salmond (judge)",
+  "found": true,
+  "page": "John Salmond (judge)",
+  "url": "https://en.wikipedia.org/wiki/John_Salmond_(judge)",
+  "desc": "New Zealand judge",
+  "extract": "Sir John William Salmond was a legal scholar, public servant and judge in New Zealand.",
+  "qid": "Q6256532",
+  "image_file": "SirJohnSalmond.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/SirJohnSalmond.jpg/330px-SirJohnSalmond.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1862,
+  "died": 1924,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q746096",
+  "citizen_q": [
+   "Q664"
+  ],
+  "birthplace": {
+   "name": "North Shields",
+   "coords": [
+    55.01,
+    -1.445
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "New Zealand"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "SirJohnSalmond.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:SirJohnSalmond.jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/SirJohnSalmond.jpg/500px-SirJohnSalmond.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Harris &amp; Ewing",
+   "license": "Public domain",
+   "local": "portraits/sir-john-salmond.jpg"
+  }
+ },
+ "Sir Samuel Evans": {
+  "how": "alias",
+  "title": "Samuel Evans (British politician)",
+  "found": true,
+  "page": "Samuel Evans (British politician)",
+  "url": "https://en.wikipedia.org/wiki/Samuel_Evans_(British_politician)",
+  "desc": "British politician and Judge (1859–1918)",
+  "extract": "Sir Samuel Thomas Evans was a Welsh barrister, judge and Liberal politician.",
+  "qid": "Q7412772",
+  "image_file": "The_Times_history_of_the_war_(1914)_(14577874670).jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/The_Times_history_of_the_war_%281914%29_%2814577874670%29.jpg/330px-The_Times_history_of_the_war_%281914%29_%2814577874670%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "verified": true,
+  "born": 1859,
+  "died": 1918,
+  "gender_q": "Q6581097",
+  "birthplace_q": "Q3396741",
+  "citizen_q": [
+   "Q174193"
+  ],
+  "birthplace": {
+   "name": "Skewen",
+   "coords": [
+    51.658,
+    -3.847
+   ],
+   "country": "United Kingdom"
+  },
+  "citizenship": [
+   "United Kingdom of Great Britain and Ireland"
+  ],
+  "gender": "male",
+  "portrait": {
+   "file": "The_Times_history_of_the_war_(1914)_(14577874670).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:The_Times_history_of_the_war_(1914)_(14577874670).jpg",
+   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/The_Times_history_of_the_war_%281914%29_%2814577874670%29.jpg/500px-The_Times_history_of_the_war_%281914%29_%2814577874670%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "artist": "Internet Archive Book Images",
+   "license": "No restrictions",
+   "local": "portraits/sir-samuel-evans.jpg"
+  }
+ }
+}

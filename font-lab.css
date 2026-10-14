@@ -1,0 +1,18 @@
+/* Switcher for the type lab. Only ever visible when font-lab.js builds it. */
+.font-lab { position: fixed; z-index: 9800; left: clamp(0.6rem, 2vw, 1.4rem); bottom: clamp(0.6rem, 2vh, 1.4rem);
+    width: min(17rem, 72vw); padding: 0.6rem 0.75rem 0.7rem;
+    border: 1px solid var(--line); border-radius: 4px; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(6px); box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
+    font-family: var(--mono), ui-monospace, monospace; color: var(--muted); }
+.font-lab .fl-head { display: flex; align-items: center; gap: 0.3rem; margin-bottom: 0.45rem; }
+.font-lab .fl-label { margin-right: 0.2rem; font-size: 0.56rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
+.font-lab button { width: 1.35rem; height: 1.35rem; padding: 0; border: 1px solid var(--line); border-radius: 2px;
+    background: none; color: var(--muted); cursor: pointer; font: inherit; font-size: 0.62rem; line-height: 1; }
+.font-lab button:hover { color: var(--fg); border-color: var(--muted); }
+.font-lab button[aria-current="true"] { background: var(--gold); border-color: var(--gold); color: var(--bg); }
+.font-lab .fl-exit { margin-left: auto; font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none; border-bottom: 1px dotted currentColor; }
+.font-lab .fl-exit:hover { color: var(--gold); }
+.font-lab .fl-name { color: var(--fg); font-size: 0.68rem; line-height: 1.35; }
+.font-lab .fl-note { margin-top: 0.15rem; font-size: 0.6rem; line-height: 1.4; opacity: 0.85; }
+@media (max-width: 700px) { .font-lab { width: min(15rem, 84vw); } }

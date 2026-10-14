@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Invisible College, Mapped | Niccolò Ridi</title>
+    <meta name="description" content="A network of 180 international lawyers and 226 ties, drawn from a century of obituaries in the British Yearbook of International Law.">
+    <link rel="canonical" href="https://niccoloridi.com/obituaries.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="niccoloridi.com">
+    <meta property="og:title" content="The Invisible College, Mapped: international lawyers through obituaries">
+    <meta property="og:description" content="180 international lawyers, 226 ties, and a century of obituaries in the British Yearbook of International Law.">
+    <meta property="og:url" content="https://niccoloridi.com/obituaries.html">
+    <meta property="og:image" content="https://niccoloridi.com/images/niccolo-ridi-social.png?v=20260817">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="627">
+    <meta property="og:image:alt" content="Niccolò Ridi: public international law, research, profile, practice, and data.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://niccoloridi.com/images/niccolo-ridi-social.png?v=20260817">
+    <script>(function(){var q=new URLSearchParams(location.search).get('theme');var t=q||localStorage.getItem('noir-theme');if(!t){var h=new Date().getHours();t=(h>=7&&h<19)?'light':'dark';}if(t==='light')document.documentElement.classList.add('light-mode');})()</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..800;1,6..72,300..800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!--VENDOR-->
+    <style>
+        :root {
+            --bg: #0a0a0c; --bg-2: #111114; --bg-3: #17171b;
+            --fg: #ece8df; --muted: #7d786d; --gold: #d7a13b; --gold-soft: rgba(215,161,59,0.16); --line: #232327;
+            --ink-on-gold: #0a0a0c;
+            --sans: 'Space Grotesk', sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+            --serif: 'Newsreader', 'Iowan Old Style', Georgia, serif;
+            --measure: 40rem;
+            --note: 15rem;
+        }
+        .light-mode {
+            --bg: #ece7dc; --bg-2: #f4efe5; --bg-3: #e4ddce;
+            --fg: #16140f; --muted: #6b6457; --gold: #9a7521; --gold-soft: rgba(154,117,33,0.14); --line: #d3cab6;
+            --ink-on-gold: #f4efe5;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--serif); font-size: 1.08rem; line-height: 1.62; background: var(--bg); color: var(--fg);
+            -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; min-height: 100vh; display: flex; flex-direction: column;
+            transition: background-color 300ms ease, color 300ms ease; font-variant-numeric: oldstyle-nums proportional-nums; }
+        body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background: radial-gradient(120% 90% at 70% 0%, transparent 55%, rgba(0,0,0,0.55) 100%); }
+        .light-mode body::before { background: radial-gradient(120% 90% at 70% 0%, transparent 60%, rgba(0,0,0,0.10) 100%); }
+        body > * { position: relative; z-index: 1; }
+        main { flex: 1; }
+        a { color: var(--fg); text-decoration: none; }
+        .prose a { border-bottom: 1px solid var(--gold); transition: color .2s; }
+        .prose a:hover { color: var(--gold); }
+        ::selection { background: var(--gold); color: var(--ink-on-gold); }
+
+        /* ─── top bar and footer, as on the rest of the site ─── */
+        .page-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+            background: var(--bg); border-bottom: 1px solid var(--line); padding: 0.9rem clamp(1.1rem, 3vw, 3rem);
+            font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+            position: sticky; top: 0; z-index: 1000; }
+        .page-header .home { color: var(--fg); font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.12em; }
+        .page-header .home b { color: var(--gold); }
+        .page-header .bar-right { display: flex; align-items: center; gap: 1rem; }
+        .page-header .bar-right a { color: var(--muted); }
+        .page-header .bar-right a:hover { color: var(--fg); }
+        .tog { background: none; border: 1px solid var(--line); color: var(--muted); cursor: pointer; font-family: var(--mono);
+            font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.3rem 0.6rem; border-radius: 2px; transition: all .2s; }
+        .tog:hover { color: var(--fg); border-color: var(--gold); }
+        .page-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.6rem 1.5rem;
+            padding: 0.9rem clamp(1.1rem, 3vw, 3rem); border-top: 1px solid var(--line); font-family: var(--mono); font-size: 0.68rem;
+            color: var(--muted); letter-spacing: 0.03em; }
+        .page-footer a { color: var(--muted); font-weight: 400; }
+        .page-footer a:hover { color: var(--gold); }
+        .page-footer .copy { color: var(--gold); }
+        .page-footer .foot-right { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+
+        /* ─── progress rail and plate index ─── */
+        .rail { position: fixed; top: 0; left: 0; height: 2px; width: 0; background: var(--gold); z-index: 1100; transition: width .1s linear; }
+        .plate-index { position: fixed; right: clamp(0.6rem, 1.6vw, 1.6rem); top: 50%; transform: translateY(-50%); z-index: 900;
+            display: flex; flex-direction: column; gap: 0.55rem; font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.08em; }
+        .plate-index a { color: var(--muted); display: flex; align-items: center; gap: 0.4rem; opacity: 0.7; transition: opacity .2s, color .2s; }
+        .plate-index a::before { content: ''; width: 14px; height: 1px; background: currentColor; }
+        .plate-index a:hover, .plate-index a.on { color: var(--gold); opacity: 1; }
+        .plate-index a span { display: none; }
+        .plate-index a:hover span, .plate-index a.on span { display: inline; }
+        @media (max-width: 1180px) { .plate-index { display: none; } }
+
+        /* ─── masthead ─── */
+        .masthead { padding: clamp(3rem, 9vh, 6.5rem) clamp(1.2rem, 4vw, 3rem) 0; text-align: center; }
+        .masthead .kicker { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
+        .masthead .kicker::before, .masthead .kicker::after { content: ' \00b7 '; color: var(--muted); }
+        .masthead h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(2.8rem, 8.5vw, 6.6rem); line-height: 0.98; letter-spacing: -0.025em;
+            margin: 1.1rem auto 0; max-width: 14ch; font-variation-settings: 'opsz' 72; text-wrap: balance; }
+        .masthead h1 em { font-style: italic; font-weight: 300; color: var(--gold); }
+        .masthead .dek { font-family: var(--serif); font-style: italic; font-size: clamp(1.15rem, 2.2vw, 1.5rem); line-height: 1.4; color: var(--muted);
+            max-width: 34em; margin: 1.6rem auto 0; text-wrap: balance; }
+        .masthead .byline { margin-top: 1.8rem; font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+        .masthead .byline b { color: var(--fg); font-weight: 500; }
+        .masthead .rule { width: 3rem; height: 1px; background: var(--gold); margin: 2.2rem auto 0; }
+
+        /* ─── the frieze of faces ─── */
+        .frieze { margin: 2.6rem 0 0; padding: 1rem 0 1.2rem; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; position: relative; }
+        .frieze::before, .frieze::after { content: ''; position: absolute; top: 0; bottom: 0; width: 12vw; z-index: 2; pointer-events: none; }
+        .frieze::before { left: 0; background: linear-gradient(90deg, var(--bg), transparent); }
+        .frieze::after { right: 0; background: linear-gradient(270deg, var(--bg), transparent); }
+        .frieze-track { display: flex; gap: 0.7rem; width: max-content; animation: frieze 90s linear infinite; }
+        .frieze:hover .frieze-track { animation-play-state: paused; }
+        @keyframes frieze { to { transform: translateX(-50%); } }
+        .frieze .face { width: 54px; height: 54px; border-radius: 50%; overflow: hidden; border: 1px solid var(--line); background: var(--bg-2); flex: none;
+            cursor: pointer; position: relative; transition: transform .25s, border-color .25s; }
+        .frieze .face:hover { transform: scale(1.18); border-color: var(--gold); z-index: 3; }
+        .frieze .face img, .face img, .medal img, .woman img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; display: block; }
+        .frieze-caption { text-align: center; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 0.9rem; }
+
+        /* portraits everywhere share one treatment, so photographs from many archives read as a set */
+        .face img, .medal img, .obt-card img, .portrait-node image, .woman img { filter: grayscale(1) sepia(0.42) contrast(1.06) brightness(1.1); }
+        .light-mode .face img, .light-mode .medal img, .light-mode .obt-card img, .light-mode .portrait-node image, .light-mode .woman img { filter: grayscale(1) sepia(0.35) contrast(1.02); }
+
+        /* ─── prose column with margin notes ─── */
+        .prose { max-width: var(--measure); margin: 0 auto; padding: 0 clamp(1.2rem, 4vw, 2rem); position: relative; }
+        .prose p { margin: 0 0 1.35rem; text-align: justify; -webkit-hyphens: auto; hyphens: auto; hyphenate-limit-chars: 7 3 3; }
+        .prose p.lead { font-size: 1.22rem; line-height: 1.5; }
+        .prose p.lead::first-letter { float: left; font-size: 4.6rem; line-height: 0.82; padding: 0.12em 0.1em 0 0; color: var(--gold); font-weight: 300; font-variation-settings: 'opsz' 72; }
+        .prose em { font-style: italic; }
+        .prose strong { font-weight: 600; }
+        .section-head { max-width: var(--measure); margin: 4.2rem auto 1.6rem; padding: 0 clamp(1.2rem, 4vw, 2rem); display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: baseline; }
+        .section-head .num { font-family: var(--serif); font-style: italic; font-size: 2.2rem; color: var(--gold); line-height: 1; font-variation-settings: 'opsz' 72; }
+        .section-head h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.7rem, 3.4vw, 2.3rem); line-height: 1.1; letter-spacing: -0.015em; font-variation-settings: 'opsz' 72; }
+        .section-head::after { content: ''; grid-column: 1 / -1; height: 1px; background: var(--line); margin-top: 0.6rem; }
+        .sn-ref { font-family: var(--mono); font-size: 0.62em; color: var(--gold); vertical-align: super; line-height: 0; margin-left: 0.1em; }
+        .sn { font-family: var(--sans); font-size: 0.74rem; line-height: 1.5; color: var(--muted); text-align: justify; -webkit-hyphens: auto; hyphens: auto; }
+        @media (min-width: 1180px) {
+            .sn { float: right; clear: right; width: var(--note); margin-right: calc(-1 * var(--note) - 2.6rem); margin-top: 0.15rem; margin-bottom: 0.8rem; position: relative; }
+            .sn::before { content: attr(data-n); font-family: var(--mono); font-size: 0.6rem; color: var(--gold); margin-right: 0.4rem; }
+        }
+        @media (max-width: 1179px) {
+            .sn { display: block; margin: 0.4rem 0 1rem 1.4rem; padding-left: 0.8rem; border-left: 1px solid var(--line); }
+            .sn::before { content: attr(data-n) '  '; font-family: var(--mono); font-size: 0.6rem; color: var(--gold); }
+        }
+
+        /* the thesis, set as a strip */
+        .thesis { max-width: 60rem; margin: 3.4rem auto; padding: 2.4rem clamp(1.2rem, 4vw, 3rem); text-align: center; position: relative; }
+        .thesis::before, .thesis::after { content: ''; position: absolute; left: 50%; transform: translateX(-50%); width: 3rem; height: 1px; background: var(--gold); }
+        .thesis::before { top: 0; } .thesis::after { bottom: 0; }
+        .thesis p { font-family: var(--serif); font-size: clamp(1.35rem, 2.6vw, 1.95rem); line-height: 1.32; font-weight: 300; font-variation-settings: 'opsz' 72; text-wrap: balance; }
+        .thesis p b { font-weight: 500; font-style: italic; color: var(--gold); }
+        .thesis small { display: block; margin-top: 1rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+
+        /* stat strip */
+        .stats { max-width: 64rem; margin: 2.4rem auto 0; display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+        @media (max-width: 900px) { .stats { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 480px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 1100px) { .stats { margin-left: clamp(0.8rem, 3vw, 2rem); margin-right: clamp(0.8rem, 3vw, 2rem); } }
+        .stat { background: var(--bg); padding: 1.1rem 1rem 1rem; }
+        .stat .n { font-family: var(--sans); font-weight: 600; font-size: 2rem; line-height: 1; color: var(--gold); font-variant-numeric: lining-nums proportional-nums; }
+        .stat .l { margin-top: 0.45rem; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); line-height: 1.45; }
+
+        /* ─── plates ─── */
+        .plate { max-width: 76rem; margin: 2.6rem auto; padding: 0 clamp(0.8rem, 3vw, 2rem); }
+        .plate-frame { border: 1px solid var(--line); background: var(--bg-2); position: relative; }
+        .plate-frame::before { content: ''; position: absolute; inset: 6px; border: 1px solid var(--line); pointer-events: none; opacity: 0.6; z-index: 5; }
+        .plate-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding: 1.1rem 1.4rem 0.9rem; border-bottom: 1px solid var(--line); position: relative; z-index: 6; }
+        .plate-head .pn { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+        .plate-head h3 { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: clamp(1.25rem, 2.4vw, 1.7rem); letter-spacing: -0.01em; font-variation-settings: 'opsz' 48; }
+        .plate-head .sub { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.06em; color: var(--muted); margin-left: auto; }
+        .plate-body { position: relative; }
+        .plate-caption { padding: 0.9rem 1.4rem 1.1rem; border-top: 1px solid var(--line); font-family: var(--sans); font-size: 0.78rem; line-height: 1.55; color: var(--muted); display: flex; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+        .plate-caption .cap { flex: 1 1 28rem; text-align: justify; -webkit-hyphens: auto; hyphens: auto; }
+        .plate-caption details { flex: 0 0 auto; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; }
+        .plate-caption summary { cursor: pointer; color: var(--gold); list-style: none; }
+        .plate-caption summary::-webkit-details-marker { display: none; }
+        .plate-caption summary::before { content: '+ '; }
+        .plate-caption details[open] summary::before { content: '\2212  '; }
+        .plate-caption table { margin-top: 0.8rem; border-collapse: collapse; text-transform: none; letter-spacing: 0; font-size: 0.66rem; max-height: 18rem; }
+        .plate-caption .tbl { max-height: 18rem; overflow: auto; }
+        .plate-caption td, .plate-caption th { padding: 0.2rem 0.9rem 0.2rem 0; text-align: left; border-bottom: 1px solid var(--line); color: var(--fg); font-weight: 400; white-space: nowrap; }
+        .plate-caption th { color: var(--muted); }
+        .plate-caption td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+        /* toolbar inside the network plate */
+        .obt-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.45rem; padding: 0.7rem 1.4rem; border-bottom: 1px solid var(--line); position: relative; z-index: 6; }
+        .obt-toolbar input { flex: 1 1 14rem; min-width: 0; padding: 0.4rem 0.6rem; border: 1px solid var(--line); border-radius: 2px; background: var(--bg); color: var(--fg); font-family: var(--mono); font-size: 0.7rem; }
+        .obt-toolbar input:focus { outline: none; border-color: var(--gold); }
+        .obt-toolbar .group { display: flex; gap: 0.35rem; flex-wrap: wrap; align-items: center; }
+        .obt-toolbar .group-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 0 0.2rem 0 0.4rem; }
+        .chip { padding: 0.3rem 0.55rem; border: 1px solid var(--line); border-radius: 2px; background: none; color: var(--muted); cursor: pointer; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.04em; transition: color .2s, border-color .2s, background-color .2s; }
+        .chip:hover { color: var(--fg); border-color: var(--muted); }
+        .chip[aria-pressed="true"] { color: var(--ink-on-gold); background: var(--gold); border-color: var(--gold); }
+        .chip.lineage { border-style: dashed; }
+        .obt-stage { position: relative; height: clamp(460px, 72vh, 760px); background: var(--bg); }
+        .obt-stage svg { width: 100%; height: 100%; display: block; cursor: grab; }
+        .obt-stage svg.dragging { cursor: grabbing; }
+        .obt-hint { position: absolute; left: 1rem; bottom: 0.8rem; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.06em; color: var(--muted); pointer-events: none; }
+        .obt-zoom { position: absolute; right: 0.9rem; bottom: 0.8rem; display: flex; gap: 0.3rem; }
+        .obt-zoom button { width: 1.7rem; height: 1.7rem; border: 1px solid var(--line); background: var(--bg-2); color: var(--muted); cursor: pointer; font-family: var(--mono); font-size: 0.8rem; border-radius: 2px; }
+        .obt-zoom button:hover { color: var(--gold); border-color: var(--gold); }
+        .obt-card { position: absolute; top: 1rem; left: 1rem; width: min(300px, 70%); padding: 0.9rem 1rem 0.9rem; border: 1px solid var(--line); background: var(--bg-2);
+            font-family: var(--sans); font-size: 0.74rem; line-height: 1.45; color: var(--muted); opacity: 0; transform: translateY(-4px); transition: opacity .2s, transform .2s; pointer-events: none; z-index: 7; }
+        .obt-card.on { opacity: 1; transform: none; pointer-events: auto; }
+        .obt-card .who { display: flex; gap: 0.8rem; align-items: center; }
+        .obt-card .who .face { width: 54px; height: 54px; border-radius: 50%; overflow: hidden; border: 1px solid var(--gold); flex: none; background: var(--bg); }
+        .obt-card .who .face.initials { display: grid; place-items: center; font-family: var(--serif); font-size: 1.1rem; color: var(--gold); }
+        .obt-card b { display: block; color: var(--fg); font-family: var(--serif); font-size: 1.05rem; font-weight: 500; line-height: 1.2; }
+        .obt-card .dates { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.06em; color: var(--muted); margin-top: 0.15rem; }
+        .obt-card .desc { margin-top: 0.55rem; font-family: var(--serif); font-style: italic; font-size: 0.86rem; color: var(--fg); }
+        .obt-card .roles { margin-top: 0.4rem; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); }
+        .obt-card ul { list-style: none; margin: 0.55rem 0 0; padding-top: 0.55rem; border-top: 1px solid var(--line); max-height: 9.5rem; overflow: auto; }
+        .obt-card li { margin-bottom: 0.15rem; }
+        .obt-card li span { color: var(--fg); cursor: pointer; border-bottom: 1px dotted var(--muted); }
+        .obt-card li span:hover { color: var(--gold); }
+        .obt-card .wiki { display: inline-block; margin-top: 0.5rem; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); }
+        .obt-label { font-family: var(--mono); font-size: 9px; fill: var(--muted); pointer-events: none; paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; }
+        .obt-label.hub { fill: var(--fg); font-size: 10px; }
+        .lineage-path { fill: none; stroke: var(--gold); stroke-width: 2px; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 6 5; animation: march 1.6s linear infinite; }
+        @keyframes march { to { stroke-dashoffset: -22; } }
+
+        /* ─── lineages plate ─── */
+        .lineages { padding: 1.2rem 1.4rem 0.4rem; display: grid; gap: 1.6rem; }
+        .lineage { display: grid; grid-template-columns: 9.5rem 1fr; gap: 1rem; align-items: start; }
+        .lineage .lt { font-family: var(--serif); font-style: italic; font-size: 1.05rem; line-height: 1.25; color: var(--fg); padding-top: 0.5rem; }
+        .lineage .lt small { display: block; margin-top: 0.3rem; font-family: var(--mono); font-style: normal; font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+        .chain { display: flex; align-items: flex-start; gap: 0; overflow-x: auto; padding: 0.3rem 0 0.8rem; position: relative; scrollbar-width: thin; }
+        .chain::before { content: ''; position: absolute; left: 1.5rem; right: 1.5rem; top: calc(0.3rem + 29px); height: 1px; background: var(--line); }
+        .medal { flex: 0 0 6.2rem; text-align: center; position: relative; cursor: pointer; background: none; border: 0; color: inherit; font: inherit; padding: 0; }
+        .medal .ring { width: 58px; height: 58px; border-radius: 50%; margin: 0 auto; border: 1px solid var(--line); overflow: hidden; background: var(--bg); display: grid; place-items: center; transition: border-color .2s, transform .2s; position: relative; }
+        .medal:hover .ring, .medal.on .ring { border-color: var(--gold); transform: scale(1.08); }
+        .medal .ring.ghost { border-style: dashed; }
+        .medal .ring .ini { font-family: var(--serif); font-size: 1rem; color: var(--gold); }
+        .medal .nm { margin-top: 0.5rem; font-family: var(--sans); font-size: 0.68rem; line-height: 1.25; color: var(--fg); padding: 0 0.2rem; }
+        .medal .yr { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 0.15rem; font-variant-numeric: lining-nums; }
+        .medal.ghost .nm { color: var(--muted); font-style: italic; }
+        @media (max-width: 700px) { .lineage { grid-template-columns: 1fr; gap: 0.3rem; } .lineage .lt { padding-top: 0; } }
+
+        /* ─── lives plate ─── */
+        .lives-wrap { padding: 0.6rem 1.4rem 0.4rem; position: relative; }
+        .lives-wrap svg { width: 100%; display: block; }
+        .lives-wrap .ax text, .map-wrap text, .bars text, .chord text { font-family: var(--mono); font-size: 10px; fill: var(--muted); }
+        .lives-wrap .ax line { stroke: var(--line); }
+        .lives-wrap .band { fill: var(--gold); opacity: 0.07; }
+        .lives-wrap .war { fill: var(--muted); opacity: 0.12; }
+        .lives-wrap .life { stroke: var(--muted); stroke-width: 1.6px; stroke-linecap: butt; opacity: 0.55; }
+        .lives-wrap .life.subject { stroke: var(--gold); opacity: 0.9; }
+        .lives-wrap .life.living { stroke-dasharray: 2 2; }
+        .lives-wrap .life.woman { stroke: var(--fg); opacity: 0.95; }
+        .lives-wrap .death { fill: var(--gold); }
+        .lives-wrap .nm { font-family: var(--sans); font-size: 9px; fill: var(--muted); }
+        .lives-wrap .row-hit { fill: transparent; cursor: pointer; }
+        .lives-wrap .row-hit:hover { fill: var(--gold-soft); }
+        .legend { display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem; padding: 0.5rem 1.4rem 0.2rem; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.06em; color: var(--muted); }
+        .legend i { display: inline-block; width: 16px; height: 2px; vertical-align: middle; margin-right: 0.35rem; background: var(--muted); }
+        .legend i.gold { background: var(--gold); } .legend i.fg { background: var(--fg); } .legend i.dash { background: repeating-linear-gradient(90deg, var(--muted) 0 3px, transparent 3px 6px); }
+        .legend i.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
+
+        /* ─── map plate ─── */
+        .map-wrap { position: relative; padding: 0.4rem 0.6rem; }
+        .map-wrap svg { width: 100%; height: auto; display: block; }
+        .map-wrap .land { fill: var(--bg-3); stroke: var(--bg); stroke-width: 0.5px; }
+        .map-wrap .inset-frame { fill: var(--bg-2); stroke: var(--line); }
+        .map-wrap .graticule { fill: none; stroke: var(--line); stroke-width: 0.5px; opacity: 0.5; }
+        .map-wrap .pt { fill: var(--gold); stroke: var(--bg); stroke-width: 1px; opacity: 0.85; cursor: pointer; }
+        .map-wrap .pt:hover { opacity: 1; stroke: var(--fg); }
+        .map-wrap .pl { font-family: var(--sans); font-size: 10px; fill: var(--fg); paint-order: stroke; stroke: var(--bg-2); stroke-width: 3px; stroke-linejoin: round; pointer-events: none; }
+        .map-wrap .pl.small { font-size: 9px; fill: var(--muted); }
+        .map-wrap .inset-title { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; fill: var(--muted); text-transform: uppercase; }
+
+        /* ─── bars and chord ─── */
+        .bars { padding: 1rem 1.4rem 0.6rem; }
+        .bars svg { width: 100%; display: block; }
+        .bars rect.bar { fill: var(--gold); }
+        .bars .val { fill: var(--fg); font-family: var(--mono); font-size: 10px; }
+        .bars .k { fill: var(--fg); font-family: var(--sans); font-size: 11.5px; }
+        .bars .row { cursor: default; }
+        .bars .row.clickable { cursor: pointer; }
+        .bars .row:hover rect.bar { opacity: 0.8; }
+        .two { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); }
+        .two > div { background: var(--bg-2); }
+        @media (max-width: 860px) { .two { grid-template-columns: 1fr; } }
+        .chord { padding: 1rem 1.4rem; display: grid; grid-template-columns: minmax(0, 1fr) 15rem; gap: 1rem; align-items: center; }
+        .chord svg { width: 100%; height: auto; display: block; }
+        .chord .ribbon { fill: var(--gold); opacity: 0.32; stroke: none; transition: opacity .15s; mix-blend-mode: normal; }
+        .chord .ribbon.dim { opacity: 0.05; }
+        .chord .ribbon.lit { opacity: 0.75; }
+        .chord .arc { fill: var(--fg); opacity: 0.85; cursor: pointer; }
+        .chord .arc:hover { fill: var(--gold); }
+        .chord .alabel { font-family: var(--sans); font-size: 11px; fill: var(--fg); }
+        .chord .aside { font-family: var(--sans); font-size: 0.78rem; line-height: 1.5; color: var(--muted); }
+        .chord .aside b { display: block; font-family: var(--serif); font-size: 1.05rem; color: var(--fg); font-weight: 500; margin-bottom: 0.3rem; }
+        .chord .aside .n { color: var(--gold); font-family: var(--mono); font-size: 0.7rem; }
+        @media (max-width: 860px) { .chord { grid-template-columns: 1fr; } }
+
+        /* ─── the women and the missing ─── */
+        .women { max-width: 76rem; margin: 2rem auto; padding: 0 clamp(0.8rem, 3vw, 2rem); display: grid; grid-template-columns: repeat(auto-fill, minmax(11.5rem, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+        .woman { background: var(--bg-2); padding: 1.1rem 1rem 1rem; display: grid; grid-template-columns: 52px 1fr; gap: 0.8rem; align-items: start; cursor: pointer; transition: background .2s; }
+        .woman:hover { background: var(--bg-3); }
+        .woman .face { width: 52px; height: 52px; border-radius: 50%; overflow: hidden; border: 1px solid var(--line); background: var(--bg); display: grid; place-items: center; font-family: var(--serif); color: var(--gold); }
+        .woman .nm { font-family: var(--serif); font-size: 1rem; line-height: 1.2; color: var(--fg); }
+        .woman .rl { margin-top: 0.3rem; font-family: var(--sans); font-size: 0.7rem; line-height: 1.4; color: var(--muted); }
+        .woman .tag { display: inline-block; margin-top: 0.4rem; font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
+        .missing { max-width: 76rem; margin: 1.4rem auto 0; padding: 0 clamp(0.8rem, 3vw, 2rem); display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 1rem; }
+        .frame { aspect-ratio: 4 / 5; border: 1px dashed var(--gold); display: flex; flex-direction: column; justify-content: flex-end; padding: 1rem; position: relative; opacity: 0.85; }
+        .frame::before { content: ''; position: absolute; inset: 7px; border: 1px solid var(--line); }
+        .frame .nm { font-family: var(--serif); font-size: 1.05rem; line-height: 1.2; color: var(--fg); position: relative; }
+        .frame .yr { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.08em; color: var(--muted); margin-top: 0.3rem; position: relative; font-variant-numeric: lining-nums; }
+        .frame .why { font-family: var(--sans); font-size: 0.68rem; line-height: 1.4; color: var(--muted); margin-top: 0.4rem; position: relative; }
+        .frame .pn { position: absolute; top: 0.9rem; left: 1rem; font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
+
+        /* ─── colophon and credits ─── */
+        .colophon { max-width: var(--measure); margin: 3.5rem auto 4rem; padding: 1.4rem clamp(1.2rem, 4vw, 2rem); border-top: 1px solid var(--line); font-family: var(--sans); font-size: 0.8rem; line-height: 1.6; color: var(--muted); }
+        .colophon h4 { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin: 1.4rem 0 0.5rem; }
+        .colophon a { color: var(--fg); border-bottom: 1px solid var(--line); }
+        .colophon a:hover { color: var(--gold); border-color: var(--gold); }
+        .colophon details summary { cursor: pointer; color: var(--fg); }
+        .credits { margin-top: 0.6rem; columns: 2; column-gap: 2rem; font-size: 0.68rem; }
+        .credits li { list-style: none; margin-bottom: 0.3rem; break-inside: avoid; }
+        @media (max-width: 700px) { .credits { columns: 1; } }
+
+        .tip { position: fixed; z-index: 2000; pointer-events: none; opacity: 0; transition: opacity .12s; background: var(--bg-2); border: 1px solid var(--line); padding: 0.45rem 0.65rem;
+            font-family: var(--sans); font-size: 0.72rem; line-height: 1.4; color: var(--muted); max-width: 16rem; box-shadow: 0 6px 20px rgba(0,0,0,0.35); }
+        .tip b { color: var(--fg); font-family: var(--serif); font-size: 0.9rem; font-weight: 500; display: block; }
+        .tip.on { opacity: 1; }
+
+        .reveal { opacity: 0; transform: translateY(14px); transition: opacity .7s ease-out, transform .7s ease-out; }
+        .reveal.in { opacity: 1; transform: none; }
+        @media (prefers-reduced-motion: reduce) {
+            .frieze-track { animation: none; } .lineage-path { animation: none; } .reveal { opacity: 1; transform: none; transition: none; } html { scroll-behavior: auto; }
+        }
+
+        /* gate */
+        .gate { max-width: 30rem; margin: clamp(3rem, 12vh, 7rem) auto; padding: 1.8rem 1.6rem; border: 1px solid var(--line); background: var(--bg-2); }
+        .gate .gate-kicker { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+        .gate h1 { font-family: var(--serif); font-weight: 400; font-size: 1.8rem; letter-spacing: -0.01em; margin: 0 0 0.6rem; }
+        .gate p { font-family: var(--sans); font-size: 0.78rem; line-height: 1.6; color: var(--muted); margin: 0 0 1.1rem; }
+        .gate form { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .gate input { flex: 1 1 12rem; padding: 0.5rem 0.7rem; border: 1px solid var(--line); border-radius: 2px; background: var(--bg); color: var(--fg); font-family: var(--mono); font-size: 0.8rem; }
+        .gate input:focus { outline: none; border-color: var(--gold); }
+        .gate button { padding: 0.5rem 1rem; border: 1px solid var(--gold); border-radius: 2px; background: var(--gold); color: var(--ink-on-gold); cursor: pointer; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
+        .gate button[disabled] { opacity: 0.55; cursor: progress; }
+        .gate .gate-note { margin: 1.1rem 0 0; font-size: 0.66rem; }
+        .gate .gate-msg { min-height: 1.2em; margin: 0.8rem 0 0; color: var(--gold); font-size: 0.7rem; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+    </style>
+</head>
+<body>
+    <div class="rail" id="rail"></div>
+    <header class="page-header">
+        <a class="home" href="../../index.html"><b>&#9670;</b> NICCOLÒ RIDI</a>
+        <span class="bar-right"><a href="../../data.html">data essays</a><button class="tog" onclick="toggleTheme()"><span id="tlabel">light</span></button></span>
+    </header>
+    <main>
+<!--GATE-->
+<!--ESSAY-->
+    <script type="application/json" id="obt-config">{
+ "lineages": [
+  {
+   "key": "whewell",
+   "title": "Whewell Chair of International Law",
+   "place": "Cambridge",
+   "chain": [
+    [
+     "John Westlake",
+     "1888–1908"
+    ],
+    [
+     "Lassa Oppenheim",
+     "1908–1919"
+    ],
+    [
+     "A. Pearce Higgins",
+     "1920–1935"
+    ],
+    [
+     "Lord Arnold McNair",
+     "1935–1937"
+    ],
+    [
+     "Sir Hersch Lauterpacht",
+     "1938–1955"
+    ],
+    [
+     "Sir Robert Yewdall Jennings",
+     "1955–1981"
+    ],
+    [
+     "Sir Derek Bowett",
+     "1981–1991"
+    ],
+    [
+     "James Crawford",
+     "1992–2014"
+    ]
+   ]
+  },
+  {
+   "key": "chichele",
+   "title": "Chichele Chair of Public International Law",
+   "place": "Oxford",
+   "chain": [
+    [
+     "Erskine Holland",
+     "1874–1910"
+    ],
+    [
+     "Sir Erle Richards",
+     "1911–1922"
+    ],
+    [
+     "James Brierly",
+     "1922–1947"
+    ],
+    [
+     "Sir Humphrey Waldock",
+     "1947–1972"
+    ],
+    [
+     "D. P. OConnell",
+     "1972–1979"
+    ],
+    [
+     "Sir Ian Brownlie",
+     "1980–1999"
+    ],
+    [
+     "Vaughan Lowe",
+     "1999–2012"
+    ],
+    [
+     "Catherine Redgwell",
+     "2013–"
+    ]
+   ]
+  },
+  {
+   "key": "hague",
+   "title": "The British judge at the World Court",
+   "place": "The Hague",
+   "chain": [
+    [
+     "Lord Finlay of Nairn",
+     "1921–1929"
+    ],
+    [
+     "Sir Cecil Hurst",
+     "1929–1946"
+    ],
+    [
+     "Lord Arnold McNair",
+     "1946–1955"
+    ],
+    [
+     "Sir Hersch Lauterpacht",
+     "1955–1960"
+    ],
+    [
+     "Sir Gerald Fitzmaurice",
+     "1960–1973"
+    ],
+    [
+     "Sir Humphrey Waldock",
+     "1973–1981"
+    ],
+    [
+     "Sir Robert Yewdall Jennings",
+     "1982–1995"
+    ],
+    [
+     "Dame Rosalyn Higgins",
+     "1995–2009"
+    ],
+    [
+     "Sir Christopher Greenwood",
+     "2009–2018"
+    ]
+   ]
+  },
+  {
+   "key": "strasbourg",
+   "title": "The British judge at Strasbourg",
+   "place": "European Court of Human Rights",
+   "chain": [
+    [
+     "Lord Arnold McNair",
+     "1959–1965"
+    ],
+    [
+     "Sir Humphrey Waldock",
+     "1966–1974"
+    ],
+    [
+     "Sir Gerald Fitzmaurice",
+     "1974–1980"
+    ],
+    [
+     "Sir Vincent Evans",
+     "1980–1991"
+    ],
+    [
+     "Sir John Freeland",
+     "1991–1998"
+    ]
+   ]
+  },
+  {
+   "key": "fco",
+   "title": "Legal Adviser to the Foreign Office",
+   "place": "Whitehall",
+   "chain": [
+    [
+     "Sir Cecil Hurst",
+     "1918–1929"
+    ],
+    [
+     "Sir William Malkin",
+     "1929–1945",
+     true
+    ],
+    [
+     "Sir Eric Beckett",
+     "1945–1953"
+    ],
+    [
+     "Sir Gerald Fitzmaurice",
+     "1953–1960"
+    ],
+    [
+     "Sir Francis Vallat",
+     "1960–1968"
+    ],
+    [
+     "Sir Vincent Evans",
+     "1968–1975"
+    ],
+    [
+     "Sir Ian Sinclair",
+     "1976–1984"
+    ],
+    [
+     "Sir John Freeland",
+     "1984–1987"
+    ],
+    [
+     "Sir Arthur Watts",
+     "1987–1991"
+    ],
+    [
+     "Sir Frank Berman",
+     "1991–1999"
+    ],
+    [
+     "Sir Michael Wood",
+     "1999–2006"
+    ]
+   ]
+  }
+ ],
+ "short": {"Sir Robert Yewdall Jennings": "Robert Jennings", "Lord Finlay of Nairn": "Finlay", "D. P. OConnell": "D. P. O'Connell", "Lord Arnold McNair": "Arnold McNair"},
+ "women": {
+  "Joyce Gutteridge": [
+   "Assistant Legal Adviser, Foreign Office, 1950; the first woman in the post",
+   "Obituary, 1992"
+  ],
+  "Gillian White": [
+   "Professor of Law at Manchester; pioneer of international economic law",
+   "Obituary, 2017"
+  ],
+  "Dame Rosalyn Higgins": [
+   "Judge and President of the International Court; Jennings’s pupil",
+   "Wrote an obituary"
+  ],
+  "Felice Morgenstern": [
+   "International Labour Office; member of the Yearbook’s editorial board",
+   "Wrote an obituary"
+  ],
+  "Eileen Denza": [
+   "Foreign Office legal adviser; author on diplomatic law",
+   "Mentioned"
+  ],
+  "Catherine Redgwell": [
+   "Chichele Professor; White’s research assistant",
+   "Mentioned"
+  ],
+  "Hilary Charlesworth": [
+   "Judge of the International Court; co-author of The Boundaries of International Law",
+   "Mentioned"
+  ],
+  "Christine Chinkin": [
+   "Professor at the LSE; co-author of The Boundaries of International Law",
+   "Mentioned"
+  ],
+  "Malgosia Fitzmaurice": [
+   "Professor at Queen Mary; edited the Jennings Festschrift",
+   "Mentioned"
+  ],
+  "Dame Hazel Fox": [
+   "Barrister; editor of the ICLQ; authority on state immunity",
+   "Mentioned"
+  ],
+  "Cherry Hopkins": [
+   "Fellow of Girton College, Cambridge",
+   "Mentioned"
+  ],
+  "Christina Lyon": [
+   "Named in a Manchester obituary",
+   "Mentioned"
+  ],
+  "Margaret Blazier": [
+   "Named in an obituary",
+   "Mentioned"
+  ]
+ }
+}</script>
+    <nav class="plate-index" id="plate-index" aria-label="Plates"></nav>
+
+    <section class="masthead">
+        <p class="kicker">A data essay</p>
+        <h1>The Invisible College, <em>Mapped</em></h1>
+        <p class="dek">Ninety-seven years of obituaries in the British Yearbook of International Law, and what they record about who made international law, how they knew one another, and who was left out.</p>
+        <p class="byline"><b>Luíza Leão Soares Pereira</b> &amp; <b>Niccolò Ridi</b> &middot; after (2021) 34 Leiden Journal of International Law 67</p>
+        <div class="rule"></div>
+    </section>
+
+    <div class="frieze" id="frieze" aria-hidden="true"><div class="frieze-track" id="frieze-track"></div></div>
+    <p class="frieze-caption"><span id="frieze-n"></span> of the 180 people in the network, in the portraits that survive of them</p>
+
+    <div class="section-head"><span class="num">I</span><h2>The invisible college</h2></div>
+    <div class="prose">
+        <p class="lead">In 1977 Oscar Schachter described the people who practise, teach and judge international law as an "invisible college".<span class="sn-ref">1</span><span class="sn" data-n="1">O. Schachter, 'The Invisible College of International Lawyers' (1977) 72 Northwestern University Law Review 217. He had first used the phrase in 1973, in a piece for the centenary of the Institut de Droit International.</span> The phrase has stuck because it describes something members of the profession recognise but rarely write down: a small, mobile community whose members move between the academy, the Foreign Office, the Bar, arbitral tribunals and the international bench, and who carry ideas with them as they go. The standard account of the sources of international law leaves little room for them. States make the law, by treaty and by custom, and the writings of jurists are at most evidence of what states have done.</p>
+        <p>Obituaries give a different picture, written by the profession about itself. The British Yearbook of International Law has printed obituaries of international lawyers since its first volume in 1920, which opened with a notice of Lassa Oppenheim, one of its founders.<span class="sn-ref">2</span><span class="sn" data-n="2">E. A. Whittuck, 'Professor Oppenheim' (1920) 1 BYIL 1. Oppenheim died in 1919, before the first volume appeared.</span> Between 1920 and 2017 the Yearbook published 58 of them. They name mentors and pupils, predecessors and successors, co-counsel and co-arbitrators, friends and the occasional rival. They also acknowledge, more openly than academic writing usually does, that individuals shaped the law. Michael Wood's encyclopaedia entry on the teachings of publicists keeps writers to the role of promoting a better understanding of the law. His obituary of Ian Sinclair credits Sinclair with "a significant role in the recognition" of the commercial exception to state immunity.<span class="sn-ref">3</span><span class="sn" data-n="3">Compare M. Wood, 'Teachings of the Most Highly Qualified Publicists', Max Planck Encyclopedia of Public International Law (2010), with F. Berman and M. Wood, 'Sir Ian Sinclair, KCMG, QC (1926–2013)' (2013) 83 BYIL 1.</span></p>
+        <p>We read every obituary, logged every person it named and every relationship it described, and drew the result as a network of 180 people and 226 ties. The plates below show that network, with portraits where one exists, together with the lives, birthplaces and offices behind it. The dataset is partial by design: the Yearbook is a national journal, so the college it remembers is a British one, and an obituary describes the profession as it was when its subject was active. We have tried to read the material with those limits in view.</p>
+    </div>
+
+    <aside class="thesis reveal">
+        <p>The paper takes the <b>dead white men</b> trope to an extreme. It uses the profession's own memorials to question the state-centred account of how international law is made, <b>playfully</b> and on the evidence.</p>
+        <small>The argument in brief</small>
+    </aside>
+
+    <div class="stats reveal" id="stats">
+        <div class="stat"><div class="n">58</div><div class="l">obituaries, 1920 to 2017</div></div>
+        <div class="stat"><div class="n" id="st-nodes">180</div><div class="l">people named</div></div>
+        <div class="stat"><div class="n" id="st-edges">226</div><div class="l">ties between them</div></div>
+        <div class="stat"><div class="n" id="st-giant">&nbsp;</div><div class="l">in one connected web</div></div>
+        <div class="stat"><div class="n">2</div><div class="l">women among the subjects</div></div>
+        <div class="stat"><div class="n">14</div><div class="l">subjects who were not British</div></div>
+    </div>
+
+    <div class="section-head"><span class="num">II</span><h2>The map</h2></div>
+    <div class="prose">
+        <p>Hover over a face to see that person's ties, and click to hold them. The layout is the one from the original analysis, in which people who share connections are drawn together and the best connected settle near the middle. Lord McNair is at the centre because his own obituary and those of his pupils mention him repeatedly: he taught Hersch Lauterpacht, Robert Jennings and Gerald Fitzmaurice, Lauterpacht followed him into the Whewell Chair and then on to the International Court, and Humphrey Waldock followed him at Strasbourg.<span class="sn-ref">4</span><span class="sn" data-n="4">Size is degree, the number of recorded ties. Faces appear where a portrait could be found; the rest are plain discs.</span> The dashed chips highlight the holders of one office in turn.</p>
+    </div>
+
+    <section class="plate reveal" id="plate-1" data-plate="I · The map">
+        <div class="plate-frame">
+            <div class="plate-head"><span class="pn">Plate I</span><h3>The network</h3><span class="sub">180 people &middot; 226 ties &middot; original layout</span></div>
+            <div class="obt-toolbar">
+                <input id="obt-search" type="search" placeholder="Find a name" aria-label="Find a person in the network">
+                <span class="group"><span class="group-label">Part of the profession</span>
+                    <button class="chip role" data-role="Academy">Academy</button><button class="chip role" data-role="Bar">Bar</button><button class="chip role" data-role="Government">Government</button><button class="chip role" data-role="Bench">Bench</button><button class="chip role" data-role="Arbitration">Arbitration</button><button class="chip role" data-role="Codification bodies">Codification</button><button class="chip role" data-role="__oxbridge">Oxford or Cambridge</button></span>
+                <span class="group" id="lineage-chips"><span class="group-label">Follow an office</span></span>
+            </div>
+            <div class="plate-body obt-stage" id="obt-stage">
+                <svg id="obt-svg" role="img" aria-label="Network of international lawyers drawn from British Yearbook obituaries"></svg>
+                <div class="obt-card" id="obt-card"></div>
+                <div class="obt-hint">scroll to zoom &middot; drag to pan &middot; click a face to hold</div>
+                <div class="obt-zoom"><button id="z-in" aria-label="Zoom in">+</button><button id="z-out" aria-label="Zoom out">&minus;</button><button id="z-fit" aria-label="Fit">&#8982;</button></div>
+            </div>
+            <div class="plate-caption"><div class="cap">Each line is a relationship an obituary records: who wrote it, who taught whom, who succeeded whom, who argued with or against whom. The regions are the ones the article describes. Foreign Office lawyers gather to one side, the Cambridge academics who went on to the International Court fill the middle, and the League of Nations generation, the one largely non-British part of the map, lies along the bottom. The unconnected points are early unsigned notices, private international lawyers, and the two Japanese members, Sakuyé Takahashi and Inazō Nitobe, whose ties reach nobody else in the Yearbook.</div>
+                <details><summary>Table of ties</summary><div class="tbl" id="tbl-ties"></div></details></div>
+        </div>
+    </section>
+
+    <div class="section-head"><span class="num">III</span><h2>Lineages</h2></div>
+    <div class="prose">
+        <p>In some cases international law ran in the family. Lord Phillimore, the British member of the committee that drafted the Statute of the Permanent Court, was the son of a judge of the Admiralty Court, which at the time heard most of the English cases with an international element. Édouard Rolin-Jaequemyns, "born in the purple" in Wilfred Jenks's phrase, was present as a child at the founding of the Institut de Droit International in his father's house in Ghent, and later followed his father as editor of the Revue and member of the Institut.<span class="sn-ref">5</span><span class="sn" data-n="5">C. W. Jenks, 'Baron Édouard Rolin Jaequemyns' (1937) 18 BYIL 156; J. Fischer Williams, 'Lord Phillimore' (1929) 10 BYIL 197.</span></p>
+        <p>The professional lineages are longer and better documented, because an obituary almost always says whose pupil its subject was and who took over the chair or the seat. McNair taught at the London School of Economics, revised Oppenheim's treatise, held the Whewell Chair at Cambridge, became the first British judge of the International Court and then the first President of the European Court of Human Rights. Lauterpacht, who became his closest friend in the difficult years after arriving from Vienna, followed him at the LSE, in the Whewell Chair and at The Hague, and moved his family into McNair's former house in Cambridge.<span class="sn-ref">6</span><span class="sn" data-n="6">R. Y. Jennings, 'Hersch Lauterpacht: A Personal Recollection' (1997) 8 EJIL 301. Jennings, another McNair pupil, wrote that it was "quite right to couple a recollection of Hersch Lauterpacht with Arnold McNair".</span> Lauterpacht's seat at the Court passed to Fitzmaurice, another McNair pupil. Fitzmaurice and Waldock then swapped: Waldock took the Hague seat and Fitzmaurice the Strasbourg one, and Waldock also finished Fitzmaurice's work on the law of treaties at the International Law Commission. Jennings held the Whewell Chair for twenty-one years, went to the Court when Waldock died, and was followed there by his own pupil, Rosalyn Higgins. Jennings's chair went to Derek Bowett, whose career ran in parallel with Ian Brownlie's: rival theses on the use of force, opposite sides in case after case, and the rival chairs at Cambridge and Oxford. James Crawford was Brownlie's doctoral student at Oxford and held the Whewell Chair for another twenty-one years before going to the Court himself.</p>
+        <p>Plate II lays five of these successions out in order. The obituaries supply the links between the people; the tenures come from the published lists of office-holders, and where an office-holder never appears in the Yearbook the frame is left empty.</p>
+    </div>
+
+    <section class="plate reveal" id="plate-2" data-plate="II · Lineages">
+        <div class="plate-frame">
+            <div class="plate-head"><span class="pn">Plate II</span><h3>Five successions</h3><span class="sub">click a face to find them on the map</span></div>
+            <div class="plate-body lineages" id="lineages"></div>
+            <div class="plate-caption"><div class="cap">The Whewell Chair at Cambridge, the Chichele Chair at Oxford, the British seat on the World Court, the British seat at Strasbourg and the post of Legal Adviser at the Foreign Office. Every holder shown is in the network, and most of them are connected to their predecessor by a tie an obituary records. Dashed frames mark holders the Yearbook never memorialised and nobody mentioned.</div></div>
+        </div>
+    </section>
+
+    <div class="section-head"><span class="num">IV</span><h2>A century of lives</h2></div>
+    <div class="prose">
+        <p>The Yearbook runs from 1920 to 2017, with a break during the Second World War. The lives it records extend well beyond those dates in both directions. The oldest people in the network were born in the 1820s, and the most recent are still alive, because an obituary names the living alongside the dead: the pupil who wrote it, the colleague who was mentioned, the successor who took the chair. Plate III draws every life for which Wikidata gives dates, ordered by year of birth, with the subjects of obituaries marked in gold and the women in white.<span class="sn-ref">7</span><span class="sn" data-n="7">Dates come from Wikidata, matched to the names in the dataset. The matching was automatic and then checked by hand; a handful of minor figures have no entry and are left out of this plate.</span></p>
+    </div>
+
+    <section class="plate reveal" id="plate-3" data-plate="III · Lives">
+        <div class="plate-frame">
+            <div class="plate-head"><span class="pn">Plate III</span><h3>Lifespans</h3><span class="sub" id="lives-sub"></span></div>
+            <div class="legend"><span><i class="gold"></i>subject of an obituary</span><span><i></i>named in one</span><span><i class="fg"></i>woman</span><span><i class="dash"></i>living</span><span><i class="dot"></i>death</span></div>
+            <div class="plate-body lives-wrap" id="lives"></div>
+            <div class="plate-caption"><div class="cap">Each bar runs from birth to death. The gold band is the Yearbook's span and the grey one its wartime suspension. Hover over a bar for the name. The band of overlapping lives in the middle of the chart is McNair's generation and its pupils, the densest region of the map.</div>
+                <details><summary>Table of lives</summary><div class="tbl" id="tbl-lives"></div></details></div>
+        </div>
+    </section>
+
+    <div class="section-head"><span class="num">V</span><h2>Where the college was born</h2></div>
+    <div class="prose">
+        <p>Fourteen of the 58 subjects were not British. The early volumes were the most open: Édouard Clunet in 1923, Ernest Nys and Francis Hagerup in 1921, Walther Schücking and Albrecht Mendelssohn Bartholdy in 1937. Only four of the fourteen were born outside Europe, and two of those four, Elihu Root and Manley Hudson, were American; the others were D. P. O'Connell, an Australian, and Sakuyé Takahashi.<span class="sn-ref">8</span><span class="sn" data-n="8">The non-British subjects are listed at n 125 of the article. Oppenheim and Lauterpacht count among them: both were born abroad and made their careers in England.</span> International law has a long history of contributions from the Global South, and even a list as selective as this one is notable for the names it lacks. Alejandro Álvarez, Christopher Weeramantry and Eduardo Jiménez de Aréchaga are absent from the Yearbook's obituaries, as are Felice Morgenstern and Suzanne Bastid.</p>
+    </div>
+
+    <section class="plate reveal" id="plate-4" data-plate="IV · Birthplaces">
+        <div class="plate-frame">
+            <div class="plate-head"><span class="pn">Plate IV</span><h3>Birthplaces</h3><span class="sub" id="map-sub"></span></div>
+            <div class="plate-body map-wrap" id="map"></div>
+            <div class="plate-caption"><div class="cap">One disc per place of birth, sized by the number of people born there. The inset enlarges Britain and Ireland, where most of the network begins; London, Cambridge and Oxford account for a large share of it. The scatter across the Continent is the League generation and the émigrés, and the far points are the handful of Japanese, American, Australasian and Latin American members.</div>
+                <details><summary>Table of places</summary><div class="tbl" id="tbl-places"></div></details></div>
+        </div>
+    </section>
+
+    <div class="section-head"><span class="num">VI</span><h2>What the ties are made of</h2></div>
+    <div class="prose">
+        <p>The most common tie in the network is the obituary itself: who wrote about whom. The rest records the informal side of the profession, which rosters, judgments and citation counts leave out. Colleagues at Cambridge or at the Foreign Office, editors and co-authors of the Yearbook and the treatises, mentors and pupils, co-counsel and co-arbitrators, successors in a chair or a seat, friends, rivals and kin. Two of the strongest ties in the map join people who disagreed: McNair and Lauterpacht on the law of treaties, Bowett and Brownlie on the use of force. A network shows where ideas travelled, and says nothing about whether they were accepted.</p>
+        <p>Schachter's lasting point was that the same people move between roles, and that the moving is how a sense of justice gets written into the law without any state consenting to it. The obituaries bear him out. Of the 180 people, 105 held an academic post at some point, 66 practised at the Bar, 48 advised a government, 47 sat on a bench of some kind and 37 arbitrated. Nearly half held two or more of these roles. Filtering the fuller attributes in the original dataset, thirty people were both academics and barristers, fifteen were Foreign Office advisers who also practised, and Roberto Ago, Gerald Fitzmaurice and Humphrey Waldock sat on both the International Law Commission and the International Court.<span class="sn-ref">9</span><span class="sn" data-n="9">The role counts in the chord diagram are computed from the six role families in the published dataset. The filter results are those reported at nn 122–124 of the article, which drew on finer-grained attributes.</span></p>
+    </div>
+
+    <section class="plate reveal" id="plate-5" data-plate="V · Ties and hubs">
+        <div class="plate-frame">
+            <div class="plate-head"><span class="pn">Plate V</span><h3>Kinds of tie, and the best connected</h3><span class="sub">computed from the dataset</span></div>
+            <div class="plate-body two">
+                <div><div class="bars" id="bars-ties"></div></div>
+                <div><div class="bars" id="bars-degree"></div></div>
+            </div>
+            <div class="plate-caption"><div class="cap">Left, the 226 ties grouped into eight families. Right, the fifteen people with the most recorded ties; click a name to find them on the map. Degree counts how often obituaries name someone, so long lives, many pupils and a detailed memorial all raise it.</div>
+                <details><summary>Tables</summary><div class="tbl" id="tbl-bars"></div></details></div>
+        </div>
+    </section>
+
+    <section class="plate reveal" id="plate-6" data-plate="VI · Many hats">
+        <div class="plate-frame">
+            <div class="plate-head"><span class="pn">Plate VI</span><h3>Many hats</h3><span class="sub">roles held by the same person</span></div>
+            <div class="plate-body chord" id="chord"></div>
+            <div class="plate-caption"><div class="cap">Each arc is one part of the profession and each ribbon joins two parts held by the same people; the wider the ribbon, the more people held both. Hover over an arc to isolate its ribbons. The Academy to Bar ribbon is the widest, reflecting the English pattern of the academic who also pleads, and the Bench connects to every other role because judges came from all of them.</div>
+                <details><summary>Table of role pairs</summary><div class="tbl" id="tbl-roles"></div></details></div>
+        </div>
+    </section>
+
+    <div class="section-head"><span class="num">VII</span><h2>Who is remembered</h2></div>
+    <div class="prose">
+        <p>Whose life is memorialised says something about how a group works. In ninety-seven years the Yearbook devoted an obituary to two women. Joyce Gutteridge, the first woman appointed Assistant Legal Adviser at the Foreign Office, was remembered in 1992 by Francis Vallat, who wrote that had she been a man she would have received the CMG rather than the CBE. Gillian White, the first woman to hold a chair in law in mainland Britain, was remembered in 2017 by Iain Scobbie, Jean d'Aspremont and Yenkong Ngangjoh Hodu.<span class="sn-ref">10</span><span class="sn" data-n="10">F. Vallat, 'Miss Joyce Gutteridge, CBE (1906–1992)' (1992) 63 BYIL xiv; I. Scobbie, J. d'Aspremont and Y. Ngangjoh Hodu, 'Professor Gillian White (1936–2016)' (2017) 86 BYIL 1.</span> Two women wrote obituaries: Rosalyn Higgins on Robert Jennings, and Felice Morgenstern, with two others, on Wilfred Jenks. A few more are mentioned as pupils, research assistants or colleagues. The remaining women in the obituaries are widows, former wives and daughters.</p>
+        <p>White's position in the network is also telling. She has one of the higher degrees in it, and her ties run mostly to other women and to colleagues at Manchester, so she sits away from the centre, which is occupied by men who combined academic work with practice. Education points the same way: filter the map by Oxford or Cambridge with the chip on Plate I, and most of it stays lit.</p>
+    </div>
+
+    <div class="women reveal" id="women"></div>
+
+    <div class="prose" style="margin-top:2.6rem">
+        <p>The absences matter as much as the entries. Five people whose standing in the discipline would have earned a notice in most other journals have none here.</p>
+    </div>
+    <div class="missing reveal" id="missing">
+        <div class="frame"><span class="pn">No plate</span><div><div class="nm">Alejandro Álvarez</div><div class="yr">1868–1960 · Chile</div><div class="why">Judge of the International Court, 1946–55. Not memorialised.</div></div></div>
+        <div class="frame"><span class="pn">No plate</span><div><div class="nm">Eduardo Jiménez de Aréchaga</div><div class="yr">1918–1994 · Uruguay</div><div class="why">President of the International Court, 1976–79. Not memorialised.</div></div></div>
+        <div class="frame"><span class="pn">No plate</span><div><div class="nm">Christopher Weeramantry</div><div class="yr">1926–2017 · Sri Lanka</div><div class="why">Vice-President of the International Court, 1997–2000. Not memorialised.</div></div></div>
+        <div class="frame"><span class="pn">No plate</span><div><div class="nm">Suzanne Bastid</div><div class="yr">1906–1995 · France</div><div class="why">First woman to sit at the International Court, as judge ad hoc. Not memorialised.</div></div></div>
+        <div class="frame"><span class="pn">No plate</span><div><div class="nm">Felice Morgenstern</div><div class="yr">1930s–2006 · Austria and Britain</div><div class="why">Member of the Yearbook's editorial board. Wrote part of Jenks's obituary. Received none.</div></div></div>
+    </div>
+
+    <div class="section-head"><span class="num">VIII</span><h2>Limits</h2></div>
+    <div class="prose">
+        <p>A network built from one journal's obituaries records what that journal chose to remember. It privileges the British experience, it reflects the profession as it stood when its subjects were active rather than as it stands now, and it says nothing about the large law firms and the proliferating tribunals that have reshaped practice since the 1990s. We have not run the centrality and clustering measures a sociologist would run, because the data would not bear them. The method is social network analysis used descriptively, to show insiders what they already half know and outsiders what they rarely see. The article describes the result as reliable but not bulletproof, and the plates should be read on that basis.<span class="sn-ref">11</span><span class="sn" data-n="11">The phrase is Isobel Roele's: 'The Making of International Lawyers: Winnicott's Transitional Objects', in J. Hohmann and D. Joyce (eds), International Law's Objects (2018) 72, at 87.</span></p>
+        <p>The data were gathered into two spreadsheets. One lists people, with the positions each held, where they were educated and the bodies and journals they belonged to. The other lists ties, each with its source obituary, its target and the kind of relationship the text described, so that a pair who were both colleagues and co-authors appear twice. The layout and the clusters were computed in Gephi for the article and are reproduced here unchanged. Dates, birthplaces and the short descriptions on the cards were added for this essay from Wikipedia and Wikidata, matched by name and then checked. Portraits were gathered from public collections and institutional pages, and the credits below list the source of every image.</p>
+    </div>
+
+    <div class="colophon">
+        <h4>Source</h4>
+        <p>Luíza Leão Soares Pereira and Niccolò Ridi, 'Mapping the "Invisible College of International Lawyers" through Obituaries' (2021) 34 Leiden Journal of International Law 67, <a href="https://doi.org/10.1017/S0922156520000667" target="_blank" rel="noopener">doi:10.1017/S0922156520000667</a>. The interactive network that accompanied the article is reproduced in Plate I on its original coordinates. Figures quoted from the article are so marked; everything else is computed from the dataset in the browser.</p>
+        <h4>Portraits</h4>
+        <p>Portraits come from Wikimedia Commons, the National Portrait Gallery, courts, universities and other institutions, and are credited individually below with the licence or rights statement given by each source. <span id="credits-n"></span></p>
+        <details><summary>Image credits</summary><ul class="credits" id="credits"></ul></details>
+    </div>
+<!--/ESSAY-->
+    </main>
+
+    <footer class="page-footer">
+        <span class="foot-left"><span class="copy">&copy;</span> 2025 niccolò ridi &middot; <a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a></span>
+        <span class="foot-right">
+            <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" rel="noopener">linkedin</a>
+            <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" rel="noopener">scholar</a>
+            <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank" rel="noopener">ssrn</a>
+            <a href="https://www.kcl.ac.uk/people/niccolo-ridi" target="_blank" rel="noopener">kcl</a>
+            <a href="https://niccoloridi.com/llms.txt" rel="help">LLMs, start here: llms.txt</a>
+        </span>
+    </footer>
+    <div class="tip" id="tip"></div>
+<!--DATA-->
+    <script>
+    function toggleTheme(){
+        const light = document.documentElement.classList.toggle('light-mode');
+        document.body.classList.toggle('light-mode', light);
+        localStorage.setItem('noir-theme', light ? 'light' : 'dark');
+        const l = document.getElementById('tlabel'); if (l) l.textContent = light ? 'dark' : 'light';
+        window.dispatchEvent(new Event('themechange'));
+    }
+    (function(){
+        const light = document.documentElement.classList.contains('light-mode');
+        document.body.classList.toggle('light-mode', light);
+        const l = document.getElementById('tlabel'); if (l) l.textContent = light ? 'dark' : 'light';
+        const rail = document.getElementById('rail');
+        addEventListener('scroll', () => { const h = document.documentElement; rail.style.width = (100 * h.scrollTop / (h.scrollHeight - h.clientHeight)) + '%'; }, { passive: true });
+    })();
+
+    /* The successions and the list of women are part of the essay and travel with it: see #obt-config. */
+    let LINEAGES = [], WOMEN = {};
+
+    window.initObituaries = function initObituaries() {
+        if (!window.OBT_DATA || window.__obtDone) return; window.__obtDone = true;
+        const CFG = JSON.parse(document.getElementById('obt-config').textContent); LINEAGES = CFG.lineages; WOMEN = CFG.women;
+        const shortName = n => CFG.short[n] || n.replace(/^(Sir|Lord|Dame)\s+/, '');
+        const { net: OBT, people: PEOPLE, world: WORLD, uk: UK } = window.OBT_DATA;
+        const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+        const byId = new Map(OBT.nodes.map(n => [n.id, n]));
+        const nbrs = new Map(OBT.nodes.map(n => [n.id, []]));
+        OBT.edges.forEach(e => { nbrs.get(e.s).push(e); nbrs.get(e.t).push(e); });
+        const P = name => PEOPLE[name] || null;
+        const portrait = name => { const p = P(name); return p && p.portrait && p.portrait.local ? p.portrait.local : null; };
+        const initials = name => name.replace(/^(Sir|Lord|Dame|Dr|Professor|Mr\. Justice|Maitre|Jonkheer)\s+/, '').split(/\s+/).filter(w => /^[A-Z]/.test(w)).map(w => w[0]).slice(0, 2).join('');
+        const dates = name => { const p = P(name); if (!p || !p.born) return ''; return p.born + '–' + (p.died || ''); };
+        const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+        const subjects = new Set(OBT.edges.filter(e => /obituary|eulogy/i.test(e.r)).map(e => e.s));
+        const isWoman = name => WOMEN[name] !== undefined || (P(name) && P(name).gender === 'female');
+        const tip = document.getElementById('tip');
+        const showTip = (ev, html) => { tip.innerHTML = html; tip.classList.add('on'); moveTip(ev); };
+        const moveTip = ev => { const w = tip.offsetWidth, h = tip.offsetHeight; let x = ev.clientX + 14, y = ev.clientY + 14; if (x + w > innerWidth - 8) x = ev.clientX - w - 10; if (y + h > innerHeight - 8) y = ev.clientY - h - 10; tip.style.left = x + 'px'; tip.style.top = y + 'px'; };
+        const hideTip = () => tip.classList.remove('on');
+        const personTip = name => { const p = P(name); return '<b>' + esc(name) + '</b>' + (dates(name) ? '<span style="font-family:var(--mono);font-size:.6rem;letter-spacing:.06em">' + dates(name) + '</span><br>' : '') + (p && p.desc ? esc(p.desc) : '') ; };
+
+        /* ── frieze ── */
+        (function () {
+            const track = document.getElementById('frieze-track');
+            const faces = OBT.nodes.filter(n => portrait(n.id)).sort((a, b) => b.d - a.d);
+            document.getElementById('frieze-n').textContent = faces.length;
+            const html = faces.map(n => '<div class="face" data-name="' + esc(n.id) + '" title="' + esc(n.id) + '"><img src="' + portrait(n.id) + '" alt="" loading="lazy"></div>').join('');
+            track.innerHTML = html + html;
+            track.style.animationDuration = Math.max(40, faces.length * 1.1) + 's';
+            track.addEventListener('click', ev => { const f = ev.target.closest('.face'); if (f) window.__obtSelect(f.dataset.name); });
+            track.addEventListener('mouseover', ev => { const f = ev.target.closest('.face'); if (f) showTip(ev, personTip(f.dataset.name)); });
+            track.addEventListener('mousemove', moveTip); track.addEventListener('mouseout', hideTip);
+        })();
+
+        /* ── Plate I: the network ── */
+        const svg = d3.select('#obt-svg');
+        const stage = document.getElementById('obt-stage');
+        const card = document.getElementById('obt-card');
+        const defs = svg.append('defs');
+        const gRoot = svg.append('g');
+        const gEdge = gRoot.append('g');
+        const gPath = gRoot.append('g');
+        const gNode = gRoot.append('g');
+        const gLabel = gRoot.append('g');
+        const maxDeg = d3.max(OBT.nodes, d => d.d) || 1;
+        const rOf = d => (portrait(d.id) ? 7 : 3) + 10 * Math.sqrt(d.d / maxDeg);
+        const pid = name => 'p-' + name.replace(/[^a-z0-9]/gi, '');
+        OBT.nodes.filter(n => portrait(n.id)).forEach(n => {
+            defs.append('pattern').attr('id', pid(n.id)).attr('patternContentUnits', 'objectBoundingBox').attr('width', 1).attr('height', 1)
+                .append('image').attr('class', 'portrait-node').attr('href', portrait(n.id)).attr('width', 1).attr('height', 1).attr('preserveAspectRatio', 'xMidYMin slice');
+        });
+        const edgeSel = gEdge.selectAll('line').data(OBT.edges).join('line')
+            .attr('x1', e => byId.get(e.s).x).attr('y1', e => byId.get(e.s).y).attr('x2', e => byId.get(e.t).x).attr('y2', e => byId.get(e.t).y).attr('stroke-width', 1);
+        const nodeG = gNode.selectAll('g').data(OBT.nodes).join('g').attr('class', 'obt-node').attr('transform', d => 'translate(' + d.x + ',' + d.y + ')').style('cursor', 'pointer');
+        nodeG.append('circle').attr('class', 'hit').attr('r', d => Math.max(12, rOf(d) + 4)).attr('fill', 'transparent');
+        const ring = nodeG.append('circle').attr('class', 'ring').attr('r', d => rOf(d) + 1.5).attr('fill', css('--bg'));
+        const disc = nodeG.append('circle').attr('class', 'disc').attr('r', rOf).attr('fill', d => portrait(d.id) ? 'url(#' + pid(d.id) + ')' : (d.d >= 6 ? css('--fg') : css('--gold')));
+        const labelSel = gLabel.selectAll('text').data(OBT.nodes.filter(d => d.d >= 5)).join('text')
+            .attr('class', d => 'obt-label' + (d.d >= 10 ? ' hub' : '')).attr('x', d => d.x).attr('y', d => d.y - rOf(d) - 5).attr('text-anchor', 'middle').text(d => d.id);
+
+        let held = null, roleFilter = null, query = '', lineage = null;
+        const oxbridge = d => /cambridge|oxford|whewell|chichele|all souls/i.test(d.p || '');
+        function matches(d) {
+            if (roleFilter === '__oxbridge' && !oxbridge(d)) return false;
+            if (roleFilter && roleFilter !== '__oxbridge' && !d.r.includes(roleFilter)) return false;
+            if (query && !d.id.toLowerCase().includes(query)) return false;
+            if (lineage && !lineage.set.has(d.id)) return false;
+            return true;
+        }
+        function paint(focus) {
+            const near = focus ? new Set([focus.id, ...nbrs.get(focus.id).map(e => e.s === focus.id ? e.t : e.s)]) : null;
+            const dimmed = d => (near && !near.has(d.id)) || !matches(d);
+            nodeG.attr('opacity', d => dimmed(d) ? 0.1 : 1);
+            ring.attr('fill', d => (focus && d.id === focus.id) || (lineage && lineage.set.has(d.id)) ? css('--gold') : css('--bg'));
+            labelSel.attr('opacity', d => focus ? (near.has(d.id) ? 1 : 0) : (matches(d) ? 1 : 0.08));
+            edgeSel.attr('stroke', e => (focus && (e.s === focus.id || e.t === focus.id)) ? css('--gold') : css('--muted'))
+                .attr('opacity', e => {
+                    if (focus) return (e.s === focus.id || e.t === focus.id) ? 0.95 : 0.04;
+                    if (lineage) return (lineage.set.has(e.s) && lineage.set.has(e.t)) ? 0.5 : 0.03;
+                    return (matches(byId.get(e.s)) && matches(byId.get(e.t))) ? 0.3 : 0.03;
+                });
+        }
+        function show(d) {
+            const p = P(d.id);
+            const ties = nbrs.get(d.id).map(e => { const other = e.s === d.id ? e.t : e.s; return '<li>' + esc(e.r.replace(/aAuthorship/, 'authorship')) + ' &middot; <span data-name="' + esc(other) + '">' + esc(other) + '</span></li>'; });
+            card.innerHTML = '<div class="who">' + (portrait(d.id) ? '<div class="face"><img src="' + portrait(d.id) + '" alt=""></div>' : '<div class="face initials">' + initials(d.id) + '</div>')
+                + '<div><b>' + esc(d.id) + '</b><div class="dates">' + (dates(d.id) || '') + (subjects.has(d.id) ? (dates(d.id) ? ' &middot; ' : '') + 'obituary subject' : '') + '</div></div></div>'
+                + (p && p.desc ? '<div class="desc">' + esc(p.desc) + '</div>' : (d.p ? '<div class="desc">' + esc(d.p.split('|')[0].trim()) + '</div>' : ''))
+                + (d.r.length ? '<div class="roles">' + d.r.join(' &middot; ') + '</div>' : '')
+                + '<ul>' + (ties.join('') || '<li>no recorded ties</li>') + '</ul>'
+                + (p && p.url ? '<a class="wiki" href="' + p.url + '" target="_blank" rel="noopener">Wikipedia &rarr;</a>' : '');
+            card.classList.add('on');
+        }
+        card.addEventListener('click', ev => { const s = ev.target.closest('span[data-name]'); if (s) window.__obtSelect(s.dataset.name); });
+        function clear() { card.classList.remove('on'); }
+        nodeG.on('mouseenter', (ev, d) => { if (!held) { paint(d); show(d); } })
+            .on('mouseleave', () => { if (!held) { paint(null); clear(); } })
+            .on('click', (ev, d) => { ev.stopPropagation(); held = (held && held.id === d.id) ? null : d; paint(held); held ? show(held) : clear(); });
+        svg.on('click', () => { held = null; paint(null); clear(); });
+        const zoom = d3.zoom().scaleExtent([0.3, 10]).on('zoom', ev => { gRoot.attr('transform', ev.transform); labelSel.style('display', ev.transform.k > 2.2 ? null : null); });
+        svg.call(zoom).on('mousedown.cursor', function () { this.classList.add('dragging'); }).on('mouseup.cursor', function () { this.classList.remove('dragging'); });
+        function fit(nodes, pad) {
+            nodes = nodes || OBT.nodes; pad = pad || 50;
+            const box = svg.node().getBoundingClientRect();
+            const xs = d3.extent(nodes, d => d.x), ys = d3.extent(nodes, d => d.y);
+            const k = Math.min(6, (box.width - pad * 2) / Math.max(40, xs[1] - xs[0]), (box.height - pad * 2) / Math.max(40, ys[1] - ys[0]));
+            const tx = box.width / 2 - k * (xs[0] + xs[1]) / 2, ty = box.height / 2 - k * (ys[0] + ys[1]) / 2;
+            svg.transition().duration(700).call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(k));
+        }
+        fit(); paint(null);
+        addEventListener('resize', () => fit());
+        document.getElementById('z-in').onclick = () => svg.transition().call(zoom.scaleBy, 1.5);
+        document.getElementById('z-out').onclick = () => svg.transition().call(zoom.scaleBy, 1 / 1.5);
+        document.getElementById('z-fit').onclick = () => fit();
+        document.getElementById('obt-search').addEventListener('input', ev => {
+            query = ev.target.value.trim().toLowerCase();
+            const hit = query ? OBT.nodes.filter(matches) : [];
+            held = hit.length === 1 ? hit[0] : null;
+            paint(held); held ? show(held) : clear();
+        });
+        document.querySelectorAll('.chip.role').forEach(chip => chip.addEventListener('click', () => {
+            const role = chip.dataset.role; roleFilter = roleFilter === role ? null : role;
+            document.querySelectorAll('.chip.role').forEach(c => c.setAttribute('aria-pressed', String(c.dataset.role === roleFilter)));
+            held = null; clear(); paint(null);
+        }));
+        const chipsBox = document.getElementById('lineage-chips');
+        LINEAGES.forEach(L => {
+            const b = document.createElement('button'); b.className = 'chip lineage'; b.textContent = L.title.replace('The British judge at the ', '').replace('The British judge at ', '').replace('Legal Adviser to the ', '').replace(' of Public International Law', '').replace(' of International Law', '');
+            b.dataset.key = L.key; chipsBox.appendChild(b);
+            b.addEventListener('click', () => setLineage(lineage && lineage.key === L.key ? null : L));
+        });
+        function setLineage(L) {
+            lineage = L ? { key: L.key, set: new Set(L.chain.filter(c => !c[2]).map(c => c[0])), order: L.chain.filter(c => !c[2]).map(c => c[0]) } : null;
+            document.querySelectorAll('.chip.lineage').forEach(c => c.setAttribute('aria-pressed', String(!!lineage && c.dataset.key === lineage.key)));
+            gPath.selectAll('*').remove();
+            held = null; clear(); paint(null);
+            if (lineage) {
+                const pts = lineage.order.map(n => byId.get(n)).filter(Boolean);
+                gPath.append('path').attr('class', 'lineage-path').attr('d', d3.line().curve(d3.curveCatmullRom.alpha(0.6))(pts.map(p => [p.x, p.y])));
+                fit(pts, 90);
+            } else fit();
+        }
+        window.__obtSelect = name => {
+            const d = byId.get(name); if (!d) return;
+            held = d; paint(d); show(d);
+            document.getElementById('plate-1').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const box = svg.node().getBoundingClientRect();
+            svg.transition().duration(700).call(zoom.transform, d3.zoomIdentity.translate(box.width / 2 - 2.2 * d.x, box.height / 2 - 2.2 * d.y).scale(2.2));
+        };
+        addEventListener('themechange', () => { ring.attr('fill', css('--bg')); disc.attr('fill', d => portrait(d.id) ? 'url(#' + pid(d.id) + ')' : (d.d >= 6 ? css('--fg') : css('--gold'))); paint(held); drawAll(); });
+
+        /* ── Plate II: lineages ── */
+        (function () {
+            const box = document.getElementById('lineages');
+            box.innerHTML = LINEAGES.map(L => '<div class="lineage"><div class="lt">' + L.title + '<small>' + L.place + '</small></div><div class="chain">'
+                + L.chain.map(([n, y, ghost]) => '<button class="medal' + (ghost ? ' ghost' : '') + '" data-name="' + esc(n) + '" ' + (ghost ? 'disabled' : '') + '><div class="ring' + (ghost ? ' ghost' : '') + '">'
+                    + (portrait(n) ? '<img src="' + portrait(n) + '" alt="" loading="lazy">' : '<span class="ini">' + initials(n) + '</span>') + '</div><div class="nm">' + esc(shortName(n)) + '</div><div class="yr">' + y + '</div></button>').join('')
+                + '</div></div>').join('');
+            box.addEventListener('click', ev => { const m = ev.target.closest('.medal'); if (m && !m.disabled) window.__obtSelect(m.dataset.name); });
+            box.addEventListener('mouseover', ev => { const m = ev.target.closest('.medal'); if (m && !m.disabled) showTip(ev, personTip(m.dataset.name)); });
+            box.addEventListener('mousemove', moveTip); box.addEventListener('mouseout', hideTip);
+        })();
+
+        /* ── Plate III: lives ── */
+        const seenQ = new Set(); const firstOfPerson = n => { const q = P(n.id) && P(n.id).qid; if (!q) return true; if (seenQ.has(q)) return false; seenQ.add(q); return true; };
+        const byDegree = OBT.nodes.slice().sort((a, b) => b.d - a.d);
+        const uniqueNodes = new Set(byDegree.filter(firstOfPerson).map(n => n.id));
+        const livesRows = OBT.nodes.filter(n => uniqueNodes.has(n.id) && P(n.id) && P(n.id).born && P(n.id).born > 1700).map(n => ({ id: n.id, d: n.d, born: P(n.id).born, died: P(n.id).died, subject: subjects.has(n.id), woman: isWoman(n.id) })).sort((a, b) => a.born - b.born || a.died - b.died);
+        document.getElementById('lives-sub').textContent = livesRows.length + ' lives with dates';
+        function drawLives() {
+            const el = d3.select('#lives'); el.selectAll('svg').remove();
+            const W = el.node().getBoundingClientRect().width || 900, rowH = W < 600 ? 7 : 9, padL = 8, padR = W < 600 ? 90 : 170, top = 26;
+            const H = livesRows.length * rowH + top + 10;
+            const s = el.append('svg').attr('viewBox', '0 0 ' + W + ' ' + H).attr('height', H);
+            const x = d3.scaleLinear().domain([1815, 2030]).range([padL, W - padR]);
+            s.append('rect').attr('class', 'band').attr('x', x(1920)).attr('width', x(2017) - x(1920)).attr('y', top - 8).attr('height', H - top + 8);
+            s.append('rect').attr('class', 'war').attr('x', x(1939)).attr('width', x(1944) - x(1939)).attr('y', top - 8).attr('height', H - top + 8);
+            const ax = s.append('g').attr('class', 'ax');
+            d3.range(1820, 2030, 20).forEach(yr => { ax.append('line').attr('x1', x(yr)).attr('x2', x(yr)).attr('y1', top - 8).attr('y2', H); ax.append('text').attr('x', x(yr)).attr('y', 12).attr('text-anchor', 'middle').text(yr); });
+            ax.append('text').attr('x', x(1921)).attr('y', H - 4).attr('fill', css('--gold')).text('the Yearbook, 1920–2017');
+            ax.append('text').attr('x', x(1941.5)).attr('y', H - 4).attr('text-anchor', 'middle').text('war');
+            const g = s.append('g').attr('transform', 'translate(0,' + top + ')');
+            const row = g.selectAll('g').data(livesRows).join('g').attr('transform', (d, i) => 'translate(0,' + i * rowH + ')');
+            row.append('rect').attr('class', 'row-hit').attr('x', 0).attr('width', W).attr('y', -rowH / 2).attr('height', rowH);
+            row.append('line').attr('class', d => 'life' + (d.subject ? ' subject' : '') + (d.woman ? ' woman' : '') + (d.died ? '' : ' living')).attr('x1', d => x(d.born)).attr('x2', d => x(d.died || 2026));
+            row.filter(d => d.died).append('circle').attr('class', 'death').attr('cx', d => x(d.died)).attr('r', 1.8);
+            row.filter(d => d.d >= 5 || d.woman).append('text').attr('class', 'nm').attr('x', d => x(d.died || 2026) + 5).attr('dy', '0.32em').text(d => shortName(d.id));
+            row.on('mouseover', (ev, d) => showTip(ev, personTip(d.id) + '<br><span style="font-family:var(--mono);font-size:.58rem;letter-spacing:.06em">' + (d.subject ? 'subject of an obituary' : 'named in an obituary') + ' · ' + d.d + ' ties</span>')).on('mousemove', moveTip).on('mouseout', hideTip).on('click', (ev, d) => window.__obtSelect(d.id));
+        }
+        document.getElementById('tbl-lives').innerHTML = '<table><tr><th>Name</th><th>Born</th><th>Died</th><th>Ties</th></tr>' + livesRows.map(r => '<tr><td>' + esc(r.id) + '</td><td class="num">' + r.born + '</td><td class="num">' + (r.died || '') + '</td><td class="num">' + r.d + '</td></tr>').join('') + '</table>';
+
+        /* ── Plate IV: map ── */
+        const places = (() => {
+            const m = new Map();
+            OBT.nodes.forEach(n => { const p = P(n.id); if (!uniqueNodes.has(n.id) || !p || !p.birthplace || !p.birthplace.coords) return; const k = p.birthplace.name + '|' + p.birthplace.coords.join(','); if (!m.has(k)) m.set(k, { name: p.birthplace.name, country: p.birthplace.country, lat: p.birthplace.coords[0], lon: p.birthplace.coords[1], people: [] }); m.get(k).people.push(n.id); });
+            return Array.from(m.values()).sort((a, b) => b.people.length - a.people.length);
+        })();
+        const nPlaced = places.reduce((a, p) => a + p.people.length, 0);
+        document.getElementById('map-sub').textContent = nPlaced + ' people · ' + places.length + ' places';
+        function drawMap() {
+            const el = d3.select('#map'); el.selectAll('svg').remove();
+            const W = el.node().getBoundingClientRect().width || 1000, H = Math.round(W * 0.52);
+            const s = el.append('svg').attr('viewBox', '0 0 ' + W + ' ' + H);
+            const land = topojson.feature(WORLD, WORLD.objects.countries);
+            const proj = d3.geoNaturalEarth1().fitExtent([[8, 8], [W - 8, H - 8]], { type: 'Sphere' });
+            const path = d3.geoPath(proj);
+            s.append('path').attr('class', 'graticule').attr('d', path(d3.geoGraticule10()));
+            s.append('path').attr('class', 'land').attr('d', path(land));
+            const rs = d3.scaleSqrt().domain([1, d3.max(places, p => p.people.length) || 1]).range([2.5, 13]);
+            const pts = s.append('g');
+            pts.selectAll('circle').data(places).join('circle').attr('class', 'pt').attr('cx', p => proj([p.lon, p.lat])[0]).attr('cy', p => proj([p.lon, p.lat])[1]).attr('r', p => rs(p.people.length))
+                .on('mouseover', (ev, p) => showTip(ev, '<b>' + esc(p.name) + '</b>' + esc(p.country || '') + '<br>' + p.people.map(esc).join(', '))).on('mousemove', moveTip).on('mouseout', hideTip).on('click', (ev, p) => window.__obtSelect(p.people[0]));
+            const far = places.filter(p => !(p.lat > 49 && p.lat < 61 && p.lon > -11 && p.lon < 3));
+            const firstInCountry = new Set(); far.forEach(p => { const k = p.country || p.name; if (!firstInCountry.has(k)) { firstInCountry.add(k); p._lead = true; } });
+            const farLabels = far.filter(p => p.people.length >= 2 || (p._lead && (Math.abs(p.lon) > 20 || p.lat < 42)));
+            pts.selectAll('text').data(farLabels).join('text').attr('class', 'pl small').attr('x', p => proj([p.lon, p.lat])[0] + rs(p.people.length) + 3).attr('y', p => proj([p.lon, p.lat])[1] + 3).text(p => p.name);
+            /* inset: Britain and Ireland */
+            const iw = Math.min(W * 0.34, 340), ih = iw * 1.15, ix = W - iw - 10, iy = 10;
+            const inset = s.append('g').attr('transform', 'translate(' + ix + ',' + iy + ')');
+            inset.append('rect').attr('class', 'inset-frame').attr('width', iw).attr('height', ih);
+            const ip = d3.geoMercator().fitExtent([[6, 18], [iw - 6, ih - 6]], { type: 'Polygon', coordinates: [[[-10.8, 49.8], [-10.8, 59.2], [2.2, 59.2], [2.2, 49.8], [-10.8, 49.8]]] });
+            const ipath = d3.geoPath(ip);
+            inset.append('clipPath').attr('id', 'inset-clip').append('rect').attr('width', iw).attr('height', ih);
+            const ig = inset.append('g').attr('clip-path', 'url(#inset-clip)');
+            ig.append('path').attr('class', 'land').attr('d', ipath(topojson.feature(UK, UK.objects.countries)));
+            const isles = places.filter(p => p.lat > 49.5 && p.lat < 59.5 && p.lon > -11 && p.lon < 2.5);
+            ig.selectAll('circle').data(isles).join('circle').attr('class', 'pt').attr('cx', p => ip([p.lon, p.lat])[0]).attr('cy', p => ip([p.lon, p.lat])[1]).attr('r', p => rs(p.people.length) * 1.1)
+                .on('mouseover', (ev, p) => showTip(ev, '<b>' + esc(p.name) + '</b>' + p.people.map(esc).join(', '))).on('mousemove', moveTip).on('mouseout', hideTip).on('click', (ev, p) => window.__obtSelect(p.people[0]));
+            ig.selectAll('text').data(isles.filter(p => p.people.length >= 2).slice(0, 10)).join('text').attr('class', 'pl').attr('x', p => ip([p.lon, p.lat])[0] + rs(p.people.length) * 1.1 + 3).attr('y', p => ip([p.lon, p.lat])[1] + 3).text(p => p.name + ' ' + p.people.length);
+            inset.append('text').attr('class', 'inset-title').attr('x', 8).attr('y', 13).text('Britain and Ireland · ' + isles.reduce((a, p) => a + p.people.length, 0) + ' of ' + nPlaced);
+        }
+        document.getElementById('tbl-places').innerHTML = '<table><tr><th>Place</th><th>Country</th><th>People</th></tr>' + places.map(p => '<tr><td>' + esc(p.name) + '</td><td>' + esc(p.country || '') + '</td><td>' + p.people.map(esc).join(', ') + '</td></tr>').join('') + '</table>';
+
+        /* ── Plate V: bars ── */
+        function bars(sel, rows, opts) {
+            const el = d3.select(sel); el.selectAll('*').remove();
+            const W = el.node().getBoundingClientRect().width || 500, rowH = 30, padL = opts.padL || 190, padR = 44, top = 28;
+            const H = rows.length * rowH + top + 6;
+            const s = el.append('svg').attr('viewBox', '0 0 ' + W + ' ' + H).attr('height', H);
+            s.append('text').attr('class', 'k').attr('x', 0).attr('y', 14).style('font-family', 'var(--mono)').style('font-size', '10px').style('letter-spacing', '0.12em').style('text-transform', 'uppercase').attr('fill', css('--gold')).text(opts.title);
+            const x = d3.scaleLinear().domain([0, d3.max(rows, r => r.v)]).range([0, Math.max(60, W - padL - padR)]);
+            const g = s.append('g').attr('transform', 'translate(0,' + top + ')');
+            const row = g.selectAll('g').data(rows).join('g').attr('class', 'row' + (opts.onClick ? ' clickable' : '')).attr('transform', (r, i) => 'translate(0,' + i * rowH + ')').on('click', (ev, r) => opts.onClick && opts.onClick(r));
+            row.append('rect').attr('x', 0).attr('width', W).attr('y', 0).attr('height', rowH).attr('fill', 'transparent');
+            if (opts.faces) row.each(function (r) { const gg = d3.select(this); if (portrait(r.k)) { const id = 'b-' + pid(r.k); gg.append('clipPath').attr('id', id).append('circle').attr('cx', padL - 16).attr('cy', rowH / 2).attr('r', 11); gg.append('image').attr('class', 'portrait-node').attr('href', portrait(r.k)).attr('x', padL - 27).attr('y', rowH / 2 - 11).attr('width', 22).attr('height', 22).attr('preserveAspectRatio', 'xMidYMin slice').attr('clip-path', 'url(#' + id + ')'); } else { gg.append('circle').attr('cx', padL - 16).attr('cy', rowH / 2).attr('r', 11).attr('fill', 'none').attr('stroke', css('--line')); gg.append('text').attr('x', padL - 16).attr('y', rowH / 2).attr('dy', '0.35em').attr('text-anchor', 'middle').style('font-family', 'var(--serif)').style('font-size', '9px').attr('fill', css('--gold')).text(initials(r.k)); } });
+            row.append('text').attr('class', 'k').attr('x', padL - (opts.faces ? 34 : 10)).attr('y', rowH / 2).attr('dy', '0.32em').attr('text-anchor', 'end').text(r => r.label || r.k);
+            row.append('rect').attr('class', 'bar').attr('x', padL).attr('y', 7).attr('height', rowH - 14).attr('width', r => x(r.v)).attr('rx', 2);
+            row.append('text').attr('class', 'val').attr('x', r => padL + x(r.v) + 7).attr('y', rowH / 2).attr('dy', '0.32em').text(r => r.v);
+            row.on('mouseover', (ev, r) => { if (opts.faces) showTip(ev, personTip(r.k)); }).on('mousemove', moveTip).on('mouseout', hideTip);
+        }
+        const ties = OBT.summary.ties.map(([k, v]) => ({ k, v })).filter(r => r.k !== 'Other');
+        const top = OBT.nodes.slice().sort((a, b) => b.d - a.d || d3.ascending(a.id, b.id)).slice(0, 15).map(n => ({ k: n.id, v: n.d, label: shortName(n.id) }));
+        document.getElementById('tbl-bars').innerHTML = '<table><tr><th>Kind of tie</th><th>Count</th></tr>' + OBT.summary.ties.map(([k, v]) => '<tr><td>' + k + '</td><td class="num">' + v + '</td></tr>').join('') + '</table>'
+            + '<table><tr><th>Person</th><th>Ties</th></tr>' + top.map(r => '<tr><td>' + esc(r.k) + '</td><td class="num">' + r.v + '</td></tr>').join('') + '</table>';
+
+        /* ── Plate VI: chord of roles ── */
+        const ROLES = ['Academy', 'Bar', 'Government', 'Bench', 'Arbitration', 'Codification bodies'];
+        const M = ROLES.map(() => ROLES.map(() => 0));
+        const roleCount = ROLES.map(r => OBT.nodes.filter(n => n.r.includes(r)).length);
+        OBT.nodes.forEach(n => n.r.forEach(a => n.r.forEach(b => { if (a !== b) M[ROLES.indexOf(a)][ROLES.indexOf(b)] += 1; })));
+        function drawChord() {
+            const el = d3.select('#chord'); el.selectAll('*').remove();
+            const W = Math.min(480, (el.node().getBoundingClientRect().width || 700) - (innerWidth > 860 ? 340 : 60)), R = W / 2, inner = R - 30, outer = inner + 10;
+            const s = el.append('svg').attr('viewBox', [-R - 70, -R - 70, W + 140, W + 140].join(' ')).style('max-width', (W + 140) + 'px');
+            const chords = d3.chord().padAngle(0.06).sortSubgroups(d3.descending)(M);
+            const arc = d3.arc().innerRadius(inner).outerRadius(outer), ribbon = d3.ribbon().radius(inner - 2);
+            const rib = s.append('g').selectAll('path').data(chords).join('path').attr('class', 'ribbon').attr('d', ribbon)
+                .on('mouseover', (ev, d) => { rib.classed('dim', c => c !== d).classed('lit', c => c === d); showTip(ev, '<b>' + ROLES[d.source.index] + ' and ' + ROLES[d.target.index] + '</b>' + M[d.source.index][d.target.index] + ' people held both'); })
+                .on('mousemove', moveTip).on('mouseout', () => { rib.classed('dim', false).classed('lit', false); hideTip(); });
+            const grp = s.append('g').selectAll('g').data(chords.groups).join('g');
+            grp.append('path').attr('class', 'arc').attr('d', arc)
+                .on('mouseover', (ev, d) => { rib.classed('dim', c => c.source.index !== d.index && c.target.index !== d.index).classed('lit', c => c.source.index === d.index || c.target.index === d.index); aside(d.index); })
+                .on('mouseout', () => { rib.classed('dim', false).classed('lit', false); });
+            grp.append('text').attr('class', 'alabel').each(d => { d.angle = (d.startAngle + d.endAngle) / 2; }).attr('dy', '0.35em')
+                .attr('transform', d => 'rotate(' + (d.angle * 180 / Math.PI - 90) + ') translate(' + (outer + 8) + ') ' + (d.angle > Math.PI ? 'rotate(180)' : ''))
+                .attr('text-anchor', d => d.angle > Math.PI ? 'end' : null).text(d => ROLES[d.index].replace(' bodies', '') + ' ' + roleCount[d.index]);
+            const asideEl = el.append('div').attr('class', 'aside');
+            function aside(i) {
+                const pairs = ROLES.map((r, j) => [r, M[i][j]]).filter(([r, v]) => v && r !== ROLES[i]).sort((a, b) => b[1] - a[1]);
+                asideEl.html('<b>' + ROLES[i] + '</b><span class="n">' + roleCount[i] + ' people</span><br>' + pairs.map(([r, v]) => 'also ' + r.toLowerCase() + ': <span class="n">' + v + '</span>').join('<br>'));
+            }
+            aside(0);
+        }
+        const multi = OBT.summary.rolesPerPerson.filter(([k]) => k >= 2).reduce((a, [, v]) => a + v, 0);
+        document.getElementById('tbl-roles').innerHTML = '<table><tr><th></th>' + ROLES.map(r => '<th>' + r.replace(' bodies', '') + '</th>').join('') + '</tr>' + ROLES.map((r, i) => '<tr><td>' + r + '</td>' + ROLES.map((c, j) => '<td class="num">' + (i === j ? roleCount[i] : M[i][j]) + '</td>').join('') + '</tr>').join('') + '</table><p style="margin-top:.5rem">' + multi + ' of 180 held two or more roles.</p>';
+
+        /* ── the women ── */
+        (function () {
+            const box = document.getElementById('women');
+            const names = Object.keys(WOMEN).filter(n => byId.has(n));
+            box.innerHTML = names.map(n => '<div class="woman" data-name="' + esc(n) + '"><div class="face">' + (portrait(n) ? '<img src="' + portrait(n) + '" alt="">' : initials(n)) + '</div><div><div class="nm">' + esc(n.replace(/^Dame\s+/, '')) + '</div><div class="rl">' + WOMEN[n][0] + (dates(n) ? ' <span style="font-family:var(--mono);font-size:.56rem;letter-spacing:.06em">' + dates(n) + '</span>' : '') + '</div><span class="tag">' + WOMEN[n][1] + ' &middot; ' + byId.get(n).d + (byId.get(n).d === 1 ? ' tie' : ' ties') + '</span></div></div>').join('');
+            box.addEventListener('click', ev => { const w = ev.target.closest('.woman'); if (w) window.__obtSelect(w.dataset.name); });
+        })();
+
+        /* ── tables, credits, figures ── */
+        document.getElementById('tbl-ties').innerHTML = '<table><tr><th>From</th><th>To</th><th>Relationship</th><th>Family</th></tr>' + OBT.edges.map(e => '<tr><td>' + esc(e.s) + '</td><td>' + esc(e.t) + '</td><td>' + esc(e.r) + '</td><td>' + esc(e.f) + '</td></tr>').join('') + '</table>';
+        (function () {
+            const host = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return 'source'; } };
+            const rows = OBT.nodes.filter(n => portrait(n.id)).sort((a, b) => d3.ascending(a.id, b.id)).map(n => { const p = P(n.id).portrait; const label = p.file ? p.file.replace(/_/g, ' ') : host(p.page); return '<li>' + esc(n.id) + ': <a href="' + (p.page || '#') + '" target="_blank" rel="noopener">' + esc(label) + '</a>' + (p.artist ? ', ' + esc(p.artist.replace(/\s*\(.*$/, '').slice(0, 60)) : '') + (p.license && !/^(unknown|not stated|no licence)/i.test(p.license) ? ', ' + esc(p.license.replace(/\s*\(.*$/, '').replace(/;.*$/, '').slice(0, 60)) : '') + '</li>'; });
+            document.getElementById('credits').innerHTML = rows.join('');
+            document.getElementById('credits-n').textContent = rows.length + ' images.';
+        })();
+        (function () {
+            const adj = new Map(OBT.nodes.map(n => [n.id, new Set()]));
+            OBT.edges.forEach(e => { adj.get(e.s).add(e.t); adj.get(e.t).add(e.s); });
+            const seen = new Set(); let giant = 0;
+            OBT.nodes.forEach(n => { if (seen.has(n.id)) return; let size = 0; const st = [n.id]; seen.add(n.id); while (st.length) { const c = st.pop(); size++; adj.get(c).forEach(v => { if (!seen.has(v)) { seen.add(v); st.push(v); } }); } giant = Math.max(giant, size); });
+            document.getElementById('st-giant').textContent = giant;
+            document.getElementById('st-nodes').textContent = OBT.summary.nodes; document.getElementById('st-edges').textContent = OBT.summary.edges;
+        })();
+
+        function drawAll() {
+            bars('#bars-ties', ties, { padL: 200, title: 'Kinds of tie' });
+            bars('#bars-degree', top, { padL: 200, title: 'Most connected', faces: true, onClick: r => window.__obtSelect(r.k) });
+            drawLives(); drawMap(); drawChord();
+        }
+        drawAll();
+        let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(drawAll, 200); });
+
+        /* plate index and reveal */
+        (function () {
+            const idx = document.getElementById('plate-index');
+            const plates = Array.from(document.querySelectorAll('.plate'));
+            idx.innerHTML = plates.map(p => '<a href="#' + p.id + '">' + p.dataset.plate.split(' · ')[0] + '<span>&nbsp;' + p.dataset.plate.split(' · ')[1] + '</span></a>').join('');
+            const links = Array.from(idx.querySelectorAll('a'));
+            const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) links.forEach(l => l.classList.toggle('on', l.getAttribute('href') === '#' + e.target.id)); }), { rootMargin: '-40% 0px -40% 0px' });
+            plates.forEach(p => io.observe(p));
+            const rev = Array.from(document.querySelectorAll('.reveal'));
+            const io2 = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io2.unobserve(e.target); } }), { threshold: 0.08 });
+            rev.forEach(el => { if (el.getBoundingClientRect().top < innerHeight * 1.1) el.classList.add('in'); else io2.observe(el); });
+            setTimeout(() => rev.forEach(el => el.classList.add('in')), 3000);
+        })();
+    };
+    if (window.OBT_DATA) { if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', window.initObituaries); else window.initObituaries(); }
+    </script>
+</body>
+</html>

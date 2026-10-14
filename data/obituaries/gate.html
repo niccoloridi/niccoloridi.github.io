@@ -1,0 +1,53 @@
+<section class="gate" id="gate">
+    <p class="gate-kicker">Draft for comment</p>
+    <h1>The Invisible College, Mapped</h1>
+    <p>A data essay by Lu&iacute;za Le&atilde;o Soares Pereira and Niccol&ograve; Ridi, shared for comment before publication. Please enter the password you were given.</p>
+    <form id="gate-form">
+        <label class="sr-only" for="gate-pw">Password</label>
+        <input id="gate-pw" type="password" autocomplete="current-password" placeholder="Password" required>
+        <button type="submit" id="gate-go">Read</button>
+    </form>
+    <p class="gate-msg" id="gate-msg" role="status"></p>
+    <p class="gate-note">The page is encrypted and decrypts in your browser, so nothing is readable without the password.</p>
+</section>
+<script>
+/* The essay, its datasets and its portraits are held as AES-GCM ciphertext and
+   decrypted in the browser with a key derived from the password. A wrong password
+   fails the authentication tag, so there is nothing to read without it. This keeps
+   a draft away from readers and search engines; it is not a substitute for a real
+   access-controlled host. */
+/*LOCKED*/
+(function () {
+    const form = document.getElementById('gate-form');
+    const pw = document.getElementById('gate-pw');
+    const go = document.getElementById('gate-go');
+    const msg = document.getElementById('gate-msg');
+    const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+    async function unlock(password, quiet) {
+        const enc = new TextEncoder();
+        const base = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
+        const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: b64(LOCKED.salt), iterations: LOCKED.iter, hash: 'SHA-256' },
+            base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+        const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(LOCKED.iv) }, key, b64(LOCKED.ct));
+        const payload = JSON.parse(new TextDecoder().decode(plain));
+        document.getElementById('gate').remove();
+        document.getElementById('obt-content').outerHTML = payload.html;
+        window.OBT_DATA = payload.data;
+        window.initObituaries();
+        try { sessionStorage.setItem('obt-key', password); } catch (e) { /* private window */ }
+        if (quiet) document.documentElement.scrollTop = 0;
+    }
+    form.addEventListener('submit', async ev => {
+        ev.preventDefault();
+        go.disabled = true; msg.textContent = 'Checking…';
+        try { await unlock(pw.value, false); }
+        catch (e) {
+            msg.textContent = crypto.subtle ? 'That password does not open this page.' : 'This page needs a secure connection to decrypt.';
+            go.disabled = false; pw.select();
+        }
+    });
+    let saved = null;
+    try { saved = sessionStorage.getItem('obt-key'); } catch (e) { /* ignore */ }
+    if (saved) unlock(saved, true).catch(() => { try { sessionStorage.removeItem('obt-key'); } catch (e) {} });
+})();
+</script>
