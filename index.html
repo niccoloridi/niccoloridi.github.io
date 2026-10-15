@@ -206,6 +206,16 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(0.8rem, 3vh, 2rem);
             overflow: hidden; transition: opacity 0.9s ease; }
         #intro.done { opacity: 0; pointer-events: none; }
+        /* plate intro: the Data plate fills the screen, then shrinks into its tile */
+        #intro { transition: opacity 0.7s ease, background-color 0.5s ease; }
+        #intro.opening { background: transparent; pointer-events: none; transition: background-color 0.6s ease 0.25s; }
+        #intro.opening .intro-skip { opacity: 0; transition: opacity 0.2s ease; }
+        #intro .intro-plate { position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; opacity: 0; transition: opacity 0.45s ease; }
+        #intro.lit .intro-plate { opacity: 1; }
+        #intro .intro-plate canvas { display: block; width: 100%; height: 100%; }
+        #intro .intro-name { position: relative; z-index: 2; padding: 0.15em 0.35em;
+            background: radial-gradient(closest-side, color-mix(in srgb, var(--bg) 82%, transparent), transparent); }
+        #intro.opening .intro-name { transition: opacity 0.35s ease, transform 0.35s ease; }
         .intro-center { text-align: center; }
         .intro-type { font-family: var(--mono); font-size: clamp(0.7rem, 1.4vw, 0.95rem); color: var(--muted); min-height: 1.5em; letter-spacing: 0.02em; }
         .intro-name { font-family: var(--grotesk); font-weight: 700; text-transform: uppercase; font-size: clamp(2.2rem, 8vw, 6rem);
@@ -436,11 +446,8 @@
 </head>
 <body class="ts-mono terminal-folded">
     <div id="intro" aria-hidden="true">
-        <div class="intro-center">
-            <div class="intro-type"></div>
-            <h1 class="intro-name"><span class="l1">Niccolò</span> <span class="l2">Ridi</span></h1>
-        </div>
-        <div id="intro-net"></div>
+        <div class="intro-plate"><canvas data-plate="dither" data-hue="222" data-hue-span="62" aria-hidden="true"></canvas></div>
+        <h1 class="intro-name"><span class="l1">Niccolò</span> <span class="l2">Ridi</span></h1>
         <button class="intro-skip" type="button">skip intro ↓</button>
     </div>
     <header>
@@ -1171,56 +1178,71 @@
     <script src="home-pane-variants.js?v=20260918-7"></script>
     <script src="home-layout.js?v=20261016-1"></script>
     <script type="module">
-        // ─── Intro constellation; the homepage pane is reserved for content ───
+        // ─── Intro: the Data plate fills the screen, then shrinks into its own tile ───
         const introEl = document.getElementById('intro');
-        const introNetwork = document.getElementById('intro-net');
         const deepLink = /^#(profile|practice|research|data)$/.test(location.hash);
-        function hasWebGL(){ try { const c=document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl2')||c.getContext('webgl'))); } catch(e){ return false; } }
-        let THREE = null;
-        if (hasWebGL()) { try { THREE = await import('three'); } catch(err){ console.warn('three.js failed', err); THREE = null; } }
-        const initialNetworkHost = introEl && !deepLink ? introNetwork : null;
-        if (THREE && initialNetworkHost) {
-            window.__net = createCalmNetwork(THREE, initialNetworkHost);
-        }
-
-        // ─── intro: terminal types in the void → network blooms → homepage content resolves ───
+        const forced = /[?&]intro(=|&|$)/.test(location.search);
+        const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let seen = false; try { seen = sessionStorage.getItem('intro-seen') === '1'; } catch (e) {}
+        const playIntro = introEl && !deepLink && !reducedMotion && (forced || !seen);
+        window.__net = null;
         let __introDone = false;
+        function revealPage(){
+            document.body.classList.add('networks-revealed', 'home-content-ready');
+        }
         function finishIntro(){
             if (__introDone) return; __introDone = true;
-            document.body.classList.add('networks-revealed');
-            if (window.__net && window.__net.bloom) window.__net.bloom();
+            revealPage();
             introEl.classList.add('done');
-            document.body.classList.add('home-content-ready');
             window.dispatchEvent(new Event('intro:done'));
-            setTimeout(() => {
-                introEl.style.display = 'none';
-                if (window.__net && window.__net.destroy) window.__net.destroy();
-                window.__net = null;
-            }, 950);
+            try { sessionStorage.setItem('intro-seen', '1'); } catch (e) {}
+            setTimeout(() => { introEl.style.display = 'none'; }, 760);
         }
-        if (introEl && !deepLink) {
+        if (playIntro) {
             const skip = introEl.querySelector('.intro-skip');
             if (skip) skip.addEventListener('click', finishIntro);
             runIntro();
         } else if (introEl) {
             introEl.style.display = 'none';
-            document.body.classList.add('home-content-ready');
+            revealPage();
+            if (!deepLink) window.dispatchEvent(new Event('intro:done'));
         }
         async function runIntro(){
             const wait = ms => new Promise(r => setTimeout(r, ms));
-            const typeEl = introEl.querySelector('.intro-type');
+            const box = introEl.querySelector('.intro-plate');
             const nameEl = introEl.querySelector('.intro-name');
-            async function type(el, str, sp){ el.textContent = ''; for (let i = 0; i < str.length; i++){ el.textContent += str[i]; await wait(sp); } }
-            await wait(450);
-            await type(typeEl, 'niccolo@website:~$ welcome-network', 44);
-            await wait(300);
-            document.body.classList.add('networks-revealed');              // network blooms first, beneath the command
-            if (window.__net && window.__net.bloom) window.__net.bloom();
-            introEl.classList.add('lit');
-            await wait(950);
-            if (nameEl) nameEl.classList.add('show');                      // then the name fades in above it
-            await wait(2300);
-            finishIntro();                                                 // dissolve to the homepage
+            const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            requestAnimationFrame(() => introEl.classList.add('lit'));
+            await wait(140);
+            if (nameEl) nameEl.classList.add('show');
+            await wait(1150);
+            if (__introDone) return;
+            /* where the Data tile's own canvas sits: the plate lands exactly on it, clipped to the tile's window */
+            const tileCanvas = document.querySelector('.tiles .tile:nth-child(4) canvas');
+            const spec = tileCanvas && tileCanvas.closest('.specimen');
+            const cr = tileCanvas && tileCanvas.getBoundingClientRect();
+            const sr = spec && spec.getBoundingClientRect();
+            const visible = cr && sr && sr.width > 20 && sr.height > 20 && sr.top >= 0 && sr.bottom <= innerHeight && sr.left >= 0 && sr.right <= innerWidth;
+            introEl.classList.add('opening');
+            setTimeout(revealPage, 260);
+            if (nameEl) nameEl.classList.remove('show');
+            if (!visible) { await wait(450); finishIntro(); return; }
+            const W = innerWidth, H = innerHeight, D = 900, t0 = performance.now();
+            await new Promise(done => {
+                function step(now){
+                    if (__introDone) return done();
+                    const k = ease(Math.min(1, (now - t0) / D));
+                    const x = cr.left * k, y = cr.top * k, w = W + (cr.width - W) * k, h = H + (cr.height - H) * k;
+                    box.style.left = x + 'px'; box.style.top = y + 'px'; box.style.width = w + 'px'; box.style.height = h + 'px';
+                    /* the clip closes from the full screen to the tile's window */
+                    const ct = (sr.top - cr.top) * k, cl = (sr.left - cr.left) * k;
+                    const cb = (cr.bottom - sr.bottom) * k, crr = (cr.right - sr.right) * k;
+                    box.style.clipPath = `inset(${ct}px ${crr}px ${cb}px ${cl}px)`;
+                    if (k < 1) requestAnimationFrame(step); else done();
+                }
+                requestAnimationFrame(step);
+            });
+            finishIntro();
         }
 
         function createCalmNetwork(THREE, container){
