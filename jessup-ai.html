@@ -501,8 +501,52 @@
             .detection-grid { max-width: 100%; }
         }
     </style>
+    <link rel="stylesheet" href="essay-plates.css">
+    <script src="essay-plates.js"></script>
+    <style>
+        /* Page-specific adjustments for the plated layout. imprint.css sets the
+           root size to 17px and a 300 weight on html; reset both so the kit
+           renders at the same scale as the other plated essays. */
+        html { font-size: 16px; }
+        .ep { font-weight: 400; }
+        /* imprint.css draws a hover rule under every link; the kit has its own. */
+        .ep .essay-body a::after, .ep-index a::after { content: none; }
+        .ep .essay-body a { display: inline; }
+        /* The long judge's comment reads better at a smaller strip size. */
+        .ep .essay-body > .pullquote.long { max-width: 46rem !important; }
+        .ep .essay-body > .pullquote.long, .ep .essay-body > .pullquote.long p { font-size: clamp(1.1rem, 1.7vw, 1.3rem); line-height: 1.45; }
+        /* imprint.css justifies every article p, which pushes the one-line kicker left. */
+        .ep .essay-header p { text-align: center; }
+
+        /* Chart marks and labels (Plates I to V). */
+        .ep .viz-block svg .jx-axis .domain, .ep .viz-block svg .jx-axis .tick line { stroke: var(--line); shape-rendering: crispEdges; }
+        .ep .viz-block svg .jx-axis .tick text { fill: var(--muted); font-size: 10px; }
+        .jx-row, .jx-grid { stroke: var(--line); stroke-width: 1; shape-rendering: crispEdges; }
+        .jx-ref { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; }
+        .jx-link { stroke: var(--muted); stroke-width: 2; opacity: 0.45; }
+        .jx-curve { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+        .jx-curve-fill { fill: var(--line); opacity: 0.5; }
+        .ep .viz-block svg .jx-note { fill: var(--muted); font-size: 10px; }
+        .ep .viz-block svg .jx-axis-title { fill: var(--muted); font-size: 10px; letter-spacing: 0.04em; }
+        .ep .viz-block svg .jx-label { fill: var(--muted); font-size: 10.5px; }
+        .ep .viz-block svg .jx-label-lg { fill: var(--fg); font-size: 11px; }
+        .ep .viz-block svg .jx-label .jx-sub { fill: var(--muted); font-size: 9.5px; }
+        .ep .viz-block svg .jx-label-on { fill: var(--fg); }
+        .ep .viz-block svg .jx-value { fill: var(--fg); font-size: 11px; font-weight: 500; }
+        .ep .viz-block svg .jx-value-sm { font-size: 10px; }
+        .jx-hit { fill: transparent; cursor: default; }
+        .jx-judge { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+        .jx-judge.on { fill: var(--gold); stroke: var(--bg-2); stroke-width: 2; }
+        .jx-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem 1.3rem; margin-top: 0.7rem;
+            font-family: var(--ep-mono); font-size: 0.62rem; letter-spacing: 0.06em; color: var(--muted); }
+        .jx-legend span { display: inline-flex; align-items: center; }
+        .jx-legend i { width: 9px; height: 9px; border-radius: 50%; margin-right: 0.45rem; display: inline-block; }
+        .jx-detect { text-align: center; padding: 0.6rem 0 0.2rem; }
+        .jx-big { font-family: var(--ep-sans); font-weight: 600; font-size: 3rem; line-height: 1; color: var(--gold); font-variant-numeric: lining-nums; }
+        .jx-big-l { margin: 0.5rem 0 1.2rem; font-family: var(--ep-mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    </style>
 </head>
-<body>
+<body class="ep">
 
         <header class="page-header">
         <a class="home" href="index.html" style="color:var(--fg)"><b style="color:var(--gold)">◆</b> NICCOLÒ RIDI</a>
@@ -515,11 +559,13 @@
             <a href="index.html#data" class="back-link">&larr; Back to Data</a>
 
             <header class="essay-header">
-                <h1>GenAI as an International Lawyer</h1>
+                <p class="ep-kicker">A data essay</p>
+                <h1>GenAI as an International <em>Lawyer</em></h1>
+                <p class="ep-dek">A Case Study with the Jessup International Law Moot Court Competition</p>
                 <div class="essay-meta">
-                    <span class="authors">Damien Charlotin &amp; Niccolò Ridi</span><br>
-                    A Case Study with the Jessup International Law Moot Court Competition (2025)
+                    <span class="authors">Damien Charlotin &amp; Niccolò Ridi</span> &middot; 2025
                 </div>
+                <div class="ep-rule"></div>
             </header>
 
             <div class="essay-body">
@@ -530,17 +576,28 @@
 
                 <p>We used two frontier LLMs &ndash; Google's Gemini 2.0 Flash and OpenAI's GPT-4o &ndash; to generate memorials under three input conditions of increasing informational richness: <strong>Pure AI</strong> (basic materials only), <strong>Textbook AI</strong> (with leading treatise extracts), and <strong>Informed AI</strong> (with the organizers' Bench Memo). Each memorial was submitted under a fictitious team number and graded blindly alongside roughly 900 human-authored submissions.</p>
 
-                <h2>I. Hiding in Plain Sight</h2>
+                <div class="ep-stats" style="--cols:4">
+                    <div class="ep-stat"><div class="n">10</div><div class="l">AI-generated memorials, blindly graded</div></div>
+                    <div class="ep-stat"><div class="n">78</div><div class="l">Average score out of 100</div></div>
+                    <div class="ep-stat"><div class="n">Top 5%</div><div class="l">Placing of A_442/630, one of our best memorials</div></div>
+                    <div class="ep-stat"><div class="n">0</div><div class="l">Penalties against the AI memorials</div></div>
+                </div>
+
+                <div class="ep-section-head"><span class="num">I</span><h2>Hiding in Plain Sight</h2></div>
 
                 <p>The headline finding: our AI-generated memorials scored an average of <strong>78 points out of 100</strong>, virtually indistinguishable from the historical average (77.80) and the 2025 cohort average (78.15). The AI did not stand out &ndash; it blended in.</p>
 
                 <p>The chart below shows where each AI memorial falls against the overall score distribution. The bell curve represents all memorials graded in the 2025 competition; the coloured markers are our ten AI submissions.</p>
 
-                <!-- Distribution chart -->
-                <div class="viz-block viz-reveal" id="viz-distribution"></div>
-                <p class="viz-caption">Figure 1: Score distribution of all 2025 Jessup memorials (approximated from published statistics). AI memorials marked as dots.</p>
+                <section class="ep-plate ep-reveal" data-plate="I · Distribution">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate I</span><h3>Where the AI memorials fall</h3><span class="sub">2025 score distribution</span></div>
+                        <div class="ep-plate-body"><div class="viz-block" id="viz-distribution"></div></div>
+                        <div class="ep-plate-caption"><div class="cap">Score distribution of all 2025 Jessup memorials (approximated from published statistics). AI memorials marked as dots.</div></div>
+                    </div>
+                </section>
 
-                <p>But averages conceal volatility. The same memorial (A_126/562, Gemini Pure AI) received both the lowest individual grade in our batch &ndash; <strong>51</strong> &ndash; and the highest &ndash; <strong>98</strong>. The judge awarding 51 wrote that the memorial contained hallucinated content; the judge awarding 98 called it outstanding. This variance is itself revealing: AI-generated text can simultaneously impress and alarm depending on where a reader looks.</p>
+                <p>But averages conceal volatility. The same memorial (A_126/562, Gemini Pure AI) received both the lowest individual grade in our batch &ndash; <strong>51</strong> &ndash; and the highest &ndash; <strong>98</strong>. The judge awarding 51 wrote that the memorial contained hallucinated content, which makes the 98 the anomaly. This variance is itself revealing: AI-generated text can simultaneously impress and alarm depending on where a reader looks.</p>
 
                 <div class="pullquote">
                     "At times, I question if the Agents were reading the same Compromis that I was."
@@ -552,58 +609,74 @@
                     <cite>&ndash; Judge comment on memorial A_442/630 (score: 95)</cite>
                 </div>
 
-                <h2>II. The Scoreboard</h2>
+                <div class="ep-section-head"><span class="num">II</span><h2>The Scoreboard</h2></div>
 
                 <p>Below are the aggregate scores for each of the ten AI-generated memorials, coloured by model. GPT-4 memorials (blue) cluster higher; Gemini memorials (gold) show more variance.</p>
 
-                <!-- Individual memorial scores -->
-                <div class="viz-block viz-reveal" id="viz-memorials"></div>
-                <p class="viz-caption">Figure 2: Aggregate scores for each AI memorial. Dashed line marks the 2025 cohort average (78.15).</p>
+                <section class="ep-plate narrow ep-reveal" data-plate="II · Scoreboard">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate II</span><h3>The ten memorials</h3><span class="sub">aggregate score out of 100</span></div>
+                        <div class="ep-plate-body"><div class="viz-block" id="viz-memorials"></div></div>
+                        <div class="ep-plate-caption"><div class="cap">Aggregate scores for each AI memorial. Dashed line marks the 2025 cohort average (78.15).</div></div>
+                    </div>
+                </section>
 
-                <p>Our best memorial, A_442/630 (GPT-4 Pure AI), placed in the <strong>top 5%</strong> of all submissions. It was not generated with insider knowledge &ndash; it relied only on the competition problem and basic materials. Nearly half of human teams received at least one penalty (averaging 2 points deducted); our memorials received <strong>zero</strong>.</p>
+                <p>One of our best memorials, A_442/630 (GPT-4 Pure AI), placed in the <strong>top 5%</strong> of all submissions. It was not generated with insider knowledge &ndash; it relied only on the competition problem and basic materials. Nearly half of human teams received at least one penalty (averaging 2 points deducted); our memorials received <strong>zero</strong>.</p>
 
-                <h2>III. GPT-4 vs Gemini</h2>
+                <div class="ep-section-head"><span class="num">III</span><h2>GPT-4 vs Gemini</h2></div>
 
                 <p>A statistically significant difference emerged between the two models (p=0.0316). GPT-4 achieved a higher average total score of <strong>80.8</strong> compared to Gemini's <strong>76.0</strong>, placing it firmly in the sixth decile of all scores.</p>
 
-                <!-- Model comparison -->
-                <div class="viz-block viz-reveal" id="viz-models"></div>
-                <p class="viz-caption">Figure 3: Average total scores by model and input condition. GPT-4 consistently outperformed Gemini.</p>
+                <section class="ep-plate narrow ep-reveal" data-plate="III · Models">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate III</span><h3>Model and input condition</h3><span class="sub">average total score</span></div>
+                        <div class="ep-plate-body"><div class="viz-block" id="viz-models"></div></div>
+                        <div class="ep-plate-caption"><div class="cap">Average total scores by model and input condition. GPT-4 consistently outperformed Gemini.</div></div>
+                    </div>
+                </section>
 
                 <p>Surprisingly, GPT-4 scored higher despite producing shorter texts &ndash; some memorials fell 1,000 to 3,500 words below the 9,500-word limit, a disadvantage given that longer memorials tend to score better in the Jessup. Gemini, by contrast, generated more text but exhibited greater variance, with occasional severe factual hallucinations pulling down its averages.</p>
 
                 <p>Fascinatingly, varying the informational context provided to the models &ndash; from basic materials (Pure AI) to textbooks to the organizers' Bench Memo (Informed AI) &ndash; produced <strong>no statistically significant difference</strong> in overall scores (F=0.08, p=0.92). More information did not reliably mean better performance, suggesting that expanding the models' context may be a recipe to confuse them.</p>
 
-                <h2>IV. What AI Does Well (and Poorly)</h2>
+                <div class="ep-section-head"><span class="num">IV</span><h2>What AI Does Well (and Poorly)</h2></div>
 
                 <p>The Jessup's five scoring categories reveal a striking pattern. AI memorials excelled in presentation &ndash; <strong>Clarity and Organization</strong> and <strong>Style, Formatting, Grammar, Citation</strong> &ndash; while scoring lowest in <strong>Extent and Use of Research</strong>. In other words, the AI can <em>write</em> well, but it cannot necessarily <em>research</em> or <em>reason</em> well.</p>
 
-                <!-- Category radar -->
-                <div class="viz-block viz-reveal" id="viz-categories"></div>
-                <p class="viz-caption">Figure 4: Average category scores by model (each category scored out of 20).</p>
+                <section class="ep-plate narrow ep-reveal" data-plate="IV · Categories">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate IV</span><h3>The five scoring categories</h3><span class="sub">each scored out of 20</span></div>
+                        <div class="ep-plate-body"><div class="viz-block" id="viz-categories"></div></div>
+                        <div class="ep-plate-caption"><div class="cap">Average category scores by model (each category scored out of 20).</div></div>
+                    </div>
+                </section>
 
                 <p>This pattern held for both models. Judges frequently praised the memorials' structure and linguistic coherence, even when critical of the substance. Comments described them as having "excellent hierarchy of argument," being "very organized," "well-organized with logical flow," or "clearly structured &hellip; squeaky clean."</p>
 
                 <p>But beneath the polished surface lay substantive weaknesses. Research scores were dragged down by fabricated citations, hallucinated case law, and sources that did not support the propositions for which they were cited. The strongest critique came from a judge who wrote:</p>
 
-                <div class="pullquote">
+                <div class="pullquote long">
                     "[O]n surface level &hellip; is a stellar memorial. However, closer inspection reveals that a number of cited sources do not contain the quotation for which they are cited, or do not support the proposition they are cited for, or relate to an entirely different legal issue altogether. This is inappropriate in legal work. For that reason, the only points that have been awarded relate to the quality of the writing and clarity of the analytical process. No points have been awarded for research, knowledge of law, or other areas implicated by the misuse of authorities."
                     <cite>&ndash; Judge comment on memorial R_276/733</cite>
                 </div>
 
-                <h2>V. Can Judges Tell?</h2>
+                <div class="ep-section-head"><span class="num">V</span><h2>Can Judges Tell?</h2></div>
 
                 <p>Overwhelmingly, no. Of the 13 judges who graded at least one of our AI-generated memorials, only <strong>2 suspected AI use</strong>. At least 11 judges read and graded our 100% AI-generated memorials without flagging them. In the broader survey of all judges, only 27 out of 90 respondents reported any suspicion of AI use across all the memorials they graded.</p>
 
-                <!-- Detection visual -->
-                <div class="viz-block viz-reveal" id="viz-detection"></div>
-                <p class="viz-caption">Figure 5: Of the 13 judges who graded AI memorials, only 2 suspected AI involvement.</p>
+                <section class="ep-plate narrow ep-reveal" data-plate="V · Detection">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate V</span><h3>Judges who suspected AI</h3><span class="sub">13 judges</span></div>
+                        <div class="ep-plate-body"><div class="viz-block" id="viz-detection"></div></div>
+                        <div class="ep-plate-caption"><div class="cap">Of the 13 judges who graded AI memorials, only 2 suspected AI involvement.</div></div>
+                    </div>
+                </section>
 
                 <p>The clues that did raise suspicion were "lack of depth," "repetitive phrasing," and occasional hallucinations &ndash; but these were identified by very few. Most judges were not confident at all in their ability to detect AI use, with several highlighting the inherent difficulty.</p>
 
                 <p>One judge captured the paradox elegantly, observing that in the 2025 edition "there's often greater clarity in structure, grammar, and formatting &ndash; which may reflect the use of AI tools for editing and polishing. However, in some cases, there's also a noticeable drop in originality, depth of analysis, or strategic argumentation, which could suggest over-reliance on generic AI-generated content."</p>
 
-                <h2>VI. The Centaur Model</h2>
+                <div class="ep-section-head"><span class="num">VI</span><h2>The Centaur Model</h2></div>
 
                 <p>Our results point to a clear conclusion: the most effective use of AI in legal writing is not full automation but a <strong>"centaur" model</strong> &ndash; human-AI collaboration where the machine handles drafting and structure while humans maintain control over substantive legal analysis and factual verification.</p>
 
@@ -616,10 +689,8 @@
                     <cite>&ndash; Judge survey respondent</cite>
                 </div>
 
-                <p style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.88rem; color: var(--secondary-color);">
-                    <strong>Full paper:</strong> Damien Charlotin &amp; Niccolò Ridi, 'GenAI as an International Lawyer: A Case Study with the Jessup International Law Moot Court' (2025).
-                    <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5283722" target="_blank">Available on SSRN</a>.
-                </p>
+                <div class="ep-colophon"><h4>Source</h4><p><strong>Full paper:</strong> Damien Charlotin &amp; Niccolò Ridi, 'GenAI as an International Lawyer: A Case Study with the Jessup International Law Moot Court' (2025).
+                    <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5283722" target="_blank">Available on SSRN</a>.</p></div>
 
             </div>
 
@@ -675,7 +746,7 @@
     ];
 
     const overallMean = 78.15;
-    const overallStd = 10.20;
+    const overallStd = 7.4;   // 2025 standard deviation reported in the paper (around 7.4 points)
 
     function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
 
@@ -684,17 +755,64 @@
     function isNarrow() { return window.matchMedia('(max-width: 768px)').matches; }
     function isXNarrow() { return window.matchMedia('(max-width: 480px)').matches; }
 
+    /* ── SHARED CHART HELPERS ─────────────────────────── */
+    const MODELS = ["GPT-4", "Gemini"];
+    const modelColour = m => css(m === "GPT-4" ? '--gpt4-color' : '--gemini-color');
+    const f1 = v => v.toFixed(1);
+
+    function makeSvg(container, w, h, label) {
+        return container.append("svg")
+            .attr("width", w).attr("height", h)
+            .attr("viewBox", `0 0 ${w} ${h}`)
+            .attr("role", "img")
+            .attr("aria-label", label);
+    }
+
+    function legend(container, items) {
+        const leg = container.append("div").attr("class", "jx-legend");
+        items.forEach(it => leg.append("span").html(`<i style="background:${it.colour}"></i>${it.label}`));
+    }
+
+    function bindTip(sel, html) {
+        // mousemove re-shows the tip too, since the kit hides it on scroll while
+        // the pointer may still be inside the same hit area.
+        sel.on("mouseenter", (e, d) => EP.tip(e, html(d)))
+           .on("mousemove", (e, d) => EP.tip(e, html(d)))
+           .on("mouseleave", () => EP.hide());
+    }
+
+    /* Hairline x axis: solid, recessive, mono ticks (kit styles .tick / .domain). */
+    function xAxis(svg, x, y, ticks) {
+        svg.append("g")
+            .attr("class", "jx-axis")
+            .attr("transform", `translate(0,${y})`)
+            .call(d3.axisBottom(x).tickValues(ticks).tickSize(4).tickSizeOuter(0));
+    }
+
+    /* Dashed reference line for the 2025 cohort average, labelled in a text colour. */
+    function refLine(svg, x, y1, y2, label, anchor) {
+        svg.append("line")
+            .attr("class", "jx-ref")
+            .attr("x1", x).attr("x2", x).attr("y1", y1).attr("y2", y2);
+        svg.append("text")
+            .attr("class", "jx-note")
+            .attr("x", x).attr("y", y1 - 7)
+            .attr("text-anchor", anchor || "middle")
+            .text(label);
+    }
+
     /* ── DISTRIBUTION ─────────────────────────────────── */
     function drawDistribution() {
         const container = d3.select("#viz-distribution");
         container.selectAll("*").remove();
         const w = container.node().getBoundingClientRect().width;
-        const h = Math.min(320, w * 0.5);
-        const m = { top: 20, right: 30, bottom: 50, left: 40 };
+        const narrow = isNarrow();
+        const h = narrow ? 250 : Math.max(270, Math.min(330, w * 0.32));
+        const m = narrow ? { top: 30, right: 12, bottom: 44, left: 12 } : { top: 30, right: 24, bottom: 46, left: 24 };
+        const base = h - m.bottom;
 
-        const svg = container.append("svg")
-            .attr("width", w).attr("height", h)
-            .attr("viewBox", `0 0 ${w} ${h}`);
+        const svg = makeSvg(container, w, h,
+            "Normal curve approximating the 2025 Jessup score distribution, mean 78.15, with the ten AI memorials marked as dots between 70.9 and 82.8.");
 
         const xScale = d3.scaleLinear().domain([45, 100]).range([m.left, w - m.right]);
         const points = d3.range(45, 100.5, 0.5).map(x => {
@@ -703,111 +821,85 @@
             return { x, y };
         });
         const yMax = d3.max(points, d => d.y);
-        const yScale = d3.scaleLinear().domain([0, yMax]).range([h - m.bottom, m.top]);
-
-        // Area
-        const area = d3.area()
-            .x(d => xScale(d.x))
-            .y0(h - m.bottom)
-            .y1(d => yScale(d.y))
-            .curve(d3.curveBasis);
+        const yScale = d3.scaleLinear().domain([0, yMax]).range([base, m.top]);
 
         svg.append("path")
             .datum(points)
-            .attr("d", area)
-            .attr("fill", css('--border-color'))
-            .attr("opacity", 0.4);
-
-        // Line
-        const line = d3.line()
-            .x(d => xScale(d.x))
-            .y(d => yScale(d.y))
-            .curve(d3.curveBasis);
-
+            .attr("class", "jx-curve-fill")
+            .attr("d", d3.area().x(d => xScale(d.x)).y0(base).y1(d => yScale(d.y)).curve(d3.curveBasis));
         svg.append("path")
             .datum(points)
-            .attr("d", line)
-            .attr("fill", "none")
-            .attr("stroke", css('--secondary-color'))
-            .attr("stroke-width", 1.5);
+            .attr("class", "jx-curve")
+            .attr("d", d3.line().x(d => xScale(d.x)).y(d => yScale(d.y)).curve(d3.curveBasis));
 
-        // Mean line
-        svg.append("line")
-            .attr("x1", xScale(overallMean)).attr("x2", xScale(overallMean))
-            .attr("y1", m.top).attr("y2", h - m.bottom)
-            .attr("stroke", css('--secondary-color'))
-            .attr("stroke-dasharray", "4,3")
-            .attr("stroke-width", 1);
+        refLine(svg, xScale(overallMean), m.top, base, "Mean 78.15");
 
+        // Note on what the curve is, top left where the curve sits near the baseline.
+        const note = svg.append("text").attr("class", "jx-note").attr("x", m.left).attr("y", m.top - 7);
+        if (narrow) {
+            note.append("tspan").attr("x", m.left).text("Normal curve,");
+            note.append("tspan").attr("x", m.left).attr("dy", "1.25em").text("SD 7.4");
+        } else {
+            note.text("Normal curve, mean 78.15, SD 7.4");
+        }
+
+        xAxis(svg, xScale, base, narrow ? [50, 60, 70, 80, 90, 100] : d3.range(45, 101, 5));
         svg.append("text")
-            .attr("x", xScale(overallMean) + 5).attr("y", m.top + 12)
-            .text("Mean: 78.15")
-            .attr("font-size", "10px")
-            .attr("fill", css('--secondary-color'));
-
-        // X axis
-        svg.append("g")
-            .attr("transform", `translate(0,${h - m.bottom})`)
-            .call(d3.axisBottom(xScale).ticks(8).tickSize(4))
-            .attr("class", "bar-axis")
-            .selectAll("text").attr("fill", css('--secondary-color'));
-
-        svg.append("text")
-            .attr("x", w / 2).attr("y", h - 8)
+            .attr("class", "jx-axis-title")
+            .attr("x", (m.left + w - m.right) / 2).attr("y", h - 8)
             .attr("text-anchor", "middle")
-            .attr("font-size", "11px")
-            .attr("fill", css('--secondary-color'))
-            .text("Score");
+            .text("Score (out of 100)");
 
-        // Memorial dots
-        const dotY = function(score) {
-            const z = (score - overallMean) / overallStd;
-            const y = Math.exp(-0.5 * z * z) / (overallStd * Math.sqrt(2 * Math.PI));
-            return yScale(y);
-        };
+        // AI memorials: a dodged strip of dots sitting on the baseline, so their
+        // height carries no meaning and close scores do not hide one another.
+        const r = narrow ? 4.5 : 5;
+        const step = 2 * r + 2.5;
+        const placed = [];
+        const dots = [...memorials].sort((a, b) => a.score - b.score).map(d => {
+            const cx = xScale(d.score);
+            let level = 0;
+            while (placed.some(p => p.level === level && Math.abs(p.cx - cx) < step)) level++;
+            const p = { d, cx, cy: base - r - 4 - level * step, level };
+            placed.push(p);
+            return p;
+        });
 
-        const tooltip = d3.select("body").selectAll(".dist-tip").data([0]).join("div")
-            .attr("class", "dist-tip")
-            .style("position", "fixed")
-            .style("background", css('--card-bg'))
-            .style("border", `1px solid ${css('--border-color')}`)
-            .style("border-radius", "4px")
-            .style("padding", "6px 10px")
-            .style("font-size", "12px")
-            .style("pointer-events", "none")
-            .style("opacity", 0)
-            .style("z-index", 1000)
-            .style("color", css('--text-color'))
-            .style("box-shadow", "0 2px 8px rgba(0,0,0,0.15)");
-
-        svg.selectAll(".mem-dot")
-            .data(memorials)
+        const dotSel = svg.append("g").selectAll("circle")
+            .data(dots)
             .join("circle")
             .attr("class", "mem-dot")
-            .attr("cx", d => xScale(d.score))
-            .attr("cy", d => dotY(d.score) - 8)
-            .attr("r", 5)
-            .attr("fill", d => d.model === "GPT-4" ? css('--gpt4-color') : css('--gemini-color'))
-            .attr("stroke", css('--background-color'))
-            .attr("stroke-width", 1.5)
-            .style("cursor", "pointer")
-            .on("mouseenter", function(event, d) {
-                tooltip.style("opacity", 1)
-                    .html(`<strong>${d.id}</strong><br>${d.model} &middot; ${d.condition}<br>Score: ${d.score}`);
-                d3.select(this).attr("r", 7);
-            })
-            .on("mousemove", function(event) {
-                tooltip.style("left", (event.clientX + 12) + "px").style("top", (event.clientY - 10) + "px");
-            })
-            .on("mouseleave", function() {
-                tooltip.style("opacity", 0);
-                d3.select(this).attr("r", 5);
-            });
+            .attr("cx", p => p.cx).attr("cy", p => p.cy)
+            .attr("r", r)
+            .attr("fill", p => modelColour(p.d.model))
+            .attr("stroke", css('--bg-2'))
+            .attr("stroke-width", 1.5);
 
-        // Legend
-        const leg = container.append("div").attr("class", "viz-legend");
-        leg.append("span").html(`<span class="swatch" style="background:${css('--gpt4-color')}"></span> GPT-4`);
-        leg.append("span").html(`<span class="swatch" style="background:${css('--gemini-color')}"></span> Gemini`);
+        // Nearest-dot hover layer (hit radius 24px); elsewhere under the curve
+        // the tooltip explains what the curve is.
+        const delaunay = d3.Delaunay.from(dots, p => p.cx, p => p.cy);
+        svg.append("rect")
+            .attr("class", "jx-hit")
+            .attr("x", m.left).attr("y", m.top)
+            .attr("width", w - m.left - m.right).attr("height", base - m.top + 2)
+            .on("mousemove", function(event) {
+                const [mx, my] = d3.pointer(event, svg.node());
+                const i = delaunay.find(mx, my);
+                const p = dots[i];
+                const near = Math.hypot(p.cx - mx, p.cy - my) <= 24;
+                dotSel.attr("r", q => near && q === p ? r + 2 : r);
+                if (near) {
+                    EP.tip(event, `<b>${p.d.id}</b>${p.d.model} &middot; ${p.d.condition}<br>Aggregate score <span class="v">${f1(p.d.score)}</span>`);
+                } else {
+                    const sx = xScale.invert(mx);
+                    const z = (sx - overallMean) / overallStd;
+                    const underCurve = my >= yScale(Math.exp(-0.5 * z * z) / (overallStd * Math.sqrt(2 * Math.PI)));
+                    if (underCurve) EP.tip(event, `<b>All 2025 memorials</b>Approximated as a normal curve with mean <span class="v">78.15</span> and SD <span class="v">7.4</span>`);
+                    else EP.hide();
+                }
+            })
+            .on("mouseleave", () => { dotSel.attr("r", r); EP.hide(); });
+
+        legend(container, MODELS.map(mod => ({ label: mod, colour: modelColour(mod) })));
     }
 
     /* ── MEMORIAL SCORES ──────────────────────────────── */
@@ -815,85 +907,60 @@
         const container = d3.select("#viz-memorials");
         container.selectAll("*").remove();
         const w = container.node().getBoundingClientRect().width;
-        const barH = isNarrow() ? 24 : 28;
-        const m = isNarrow()
-            ? { top: 10, right: 34, bottom: 30, left: 68 }
-            : { top: 10, right: 50, bottom: 30, left: 90 };
-        const sorted = [...memorials].sort((a, b) => a.score - b.score);
-        const h = m.top + sorted.length * (barH + 6) + m.bottom;
+        const narrow = isNarrow();
+        const rowH = 28;
+        const m = narrow ? { top: 30, right: 40, bottom: 34, left: 74 } : { top: 30, right: 56, bottom: 34, left: 92 };
+        const sorted = [...memorials].sort((a, b) => b.score - a.score);
+        const h = m.top + sorted.length * rowH + m.bottom;
+        const svg = makeSvg(container, w, h,
+            "Dot plot of the aggregate score of each of the ten AI memorials, from 82.8 for A_206/283 down to 70.9 for A_126/562, against the 2025 cohort average of 78.15.");
 
-        const svg = container.append("svg")
-            .attr("width", w).attr("height", h)
-            .attr("viewBox", `0 0 ${w} ${h}`);
+        const xScale = d3.scaleLinear().domain([65, 90]).range([m.left, w - m.right]);
+        const yScale = d3.scaleBand().domain(sorted.map(d => d.id)).range([m.top, m.top + sorted.length * rowH]);
+        const cy = d => yScale(d.id) + rowH / 2;
+        const plotBottom = m.top + sorted.length * rowH;
 
-        const xScale = d3.scaleLinear().domain([50, 90]).range([m.left, w - m.right]);
-        const yScale = d3.scaleBand()
-            .domain(sorted.map(d => d.id))
-            .range([m.top, h - m.bottom])
-            .padding(0.18);
+        svg.append("g").selectAll("line")
+            .data(sorted).join("line")
+            .attr("class", "jx-row")
+            .attr("x1", m.left).attr("x2", w - m.right)
+            .attr("y1", cy).attr("y2", cy);
 
-        // Avg line
-        svg.append("line")
-            .attr("x1", xScale(overallMean)).attr("x2", xScale(overallMean))
-            .attr("y1", m.top).attr("y2", h - m.bottom)
-            .attr("stroke", css('--secondary-color'))
-            .attr("stroke-dasharray", "4,3")
-            .attr("stroke-width", 1);
+        refLine(svg, xScale(overallMean), m.top, plotBottom, "2025 avg 78.15");
 
-        svg.append("text")
-            .attr("x", xScale(overallMean)).attr("y", h - m.bottom + 16)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "9px")
-            .attr("fill", css('--secondary-color'))
-            .text("Avg 78.15");
-
-        // Bars
-        svg.selectAll(".mem-bar")
-            .data(sorted)
-            .join("rect")
-            .attr("x", xScale(50))
-            .attr("y", d => yScale(d.id))
-            .attr("width", d => xScale(d.score) - xScale(50))
-            .attr("height", yScale.bandwidth())
-            .attr("rx", 3)
-            .attr("fill", d => d.model === "GPT-4" ? css('--gpt4-color') : css('--gemini-color'))
-            .attr("opacity", 0.85);
-
-        // Labels
-        svg.selectAll(".mem-label")
-            .data(sorted)
-            .join("text")
-            .attr("x", m.left - 6)
-            .attr("y", d => yScale(d.id) + yScale.bandwidth() / 2)
-            .attr("dy", "0.35em")
+        svg.append("g").selectAll("text")
+            .data(sorted).join("text")
+            .attr("class", "jx-label")
+            .attr("x", m.left - 10).attr("y", cy).attr("dy", "0.35em")
             .attr("text-anchor", "end")
-            .attr("font-size", "10px")
-            .attr("fill", css('--secondary-color'))
             .text(d => d.id);
 
-        // Score values
-        svg.selectAll(".mem-val")
-            .data(sorted)
-            .join("text")
-            .attr("x", d => xScale(d.score) + 5)
-            .attr("y", d => yScale(d.id) + yScale.bandwidth() / 2)
-            .attr("dy", "0.35em")
-            .attr("font-size", "11px")
-            .attr("font-weight", "bold")
-            .attr("fill", css('--primary-color'))
-            .text(d => d.score);
+        svg.append("g").selectAll("circle")
+            .data(sorted).join("circle")
+            .attr("cx", d => xScale(d.score)).attr("cy", cy)
+            .attr("r", 5.5)
+            .attr("fill", d => modelColour(d.model))
+            .attr("stroke", css('--bg-2'))
+            .attr("stroke-width", 1.5);
 
-        // X axis
-        svg.append("g")
-            .attr("transform", `translate(0,${h - m.bottom})`)
-            .call(d3.axisBottom(xScale).ticks(5).tickSize(3))
-            .attr("class", "bar-axis")
-            .selectAll("text").attr("fill", css('--secondary-color'));
+        // Values in a fixed right-hand column, so no label crosses the reference line.
+        svg.append("g").selectAll("text")
+            .data(sorted).join("text")
+            .attr("class", "jx-value")
+            .attr("x", w - 4).attr("y", cy).attr("dy", "0.35em")
+            .attr("text-anchor", "end")
+            .text(d => f1(d.score));
 
-        // Legend
-        const leg = container.append("div").attr("class", "viz-legend");
-        leg.append("span").html(`<span class="swatch" style="background:${css('--gpt4-color')}"></span> GPT-4`);
-        leg.append("span").html(`<span class="swatch" style="background:${css('--gemini-color')}"></span> Gemini`);
+        xAxis(svg, xScale, plotBottom + 4, [65, 70, 75, 80, 85, 90]);
+
+        const hits = svg.append("g").selectAll("rect")
+            .data(sorted).join("rect")
+            .attr("class", "jx-hit")
+            .attr("x", 0).attr("y", d => yScale(d.id))
+            .attr("width", w).attr("height", rowH);
+        bindTip(hits, d => `<b>${d.id}</b>${d.model} &middot; ${d.condition}<br>Aggregate score <span class="v">${f1(d.score)}</span>`);
+
+        legend(container, MODELS.map(mod => ({ label: mod, colour: modelColour(mod) })));
     }
 
     /* ── MODEL × CONDITION ────────────────────────────── */
@@ -901,231 +968,241 @@
         const container = d3.select("#viz-models");
         container.selectAll("*").remove();
         const w = container.node().getBoundingClientRect().width;
-        const h = Math.min(280, w * 0.45);
-        const m = { top: 20, right: 20, bottom: 50, left: 45 };
-
-        const svg = container.append("svg")
-            .attr("width", w).attr("height", h)
-            .attr("viewBox", `0 0 ${w} ${h}`);
-
+        const narrow = isNarrow();
         const conditions = ["Pure AI", "Textbook", "Informed"];
-        const x0 = d3.scaleBand().domain(conditions).range([m.left, w - m.right]).padding(0.3);
-        const x1 = d3.scaleBand().domain(["Gemini", "GPT-4"]).range([0, x0.bandwidth()]).padding(0.08);
-        const yScale = d3.scaleLinear().domain([60, 90]).range([h - m.bottom, m.top]);
+        const rowH = narrow ? 50 : 54;
+        const m = narrow ? { top: 30, right: 16, bottom: 46, left: 76 } : { top: 30, right: 40, bottom: 46, left: 110 };
+        const plotBottom = m.top + conditions.length * rowH;
+        const h = plotBottom + m.bottom;
+        const svg = makeSvg(container, w, h,
+            "Dot plot of average total score by model and input condition. Pure AI: Gemini 76.4, GPT-4 79.6. Textbook: Gemini 73.2, GPT-4 82.1. Informed: Gemini 78.7, no GPT-4 memorial. 2025 cohort average 78.15.");
 
-        // Y axis
-        svg.append("g")
-            .attr("transform", `translate(${m.left},0)`)
-            .call(d3.axisLeft(yScale).ticks(4).tickSize(-w + m.left + m.right))
-            .attr("class", "bar-axis")
-            .selectAll("line").attr("stroke-dasharray", "2,2").attr("opacity", 0.5);
+        const xScale = d3.scaleLinear().domain([65, 90]).range([m.left, w - m.right]);
+        const yScale = d3.scaleBand().domain(conditions).range([m.top, plotBottom]);
+        const cy = c => yScale(c) + rowH / 2;
 
-        svg.selectAll(".bar-axis path").attr("display", "none");
-
-        // Avg line
-        svg.append("line")
+        svg.append("g").selectAll("line")
+            .data(conditions).join("line")
+            .attr("class", "jx-row")
             .attr("x1", m.left).attr("x2", w - m.right)
-            .attr("y1", yScale(overallMean)).attr("y2", yScale(overallMean))
-            .attr("stroke", css('--highlight-color'))
-            .attr("stroke-dasharray", "5,3")
-            .attr("stroke-width", 1.5);
+            .attr("y1", cy).attr("y2", cy);
 
-        svg.append("text")
-            .attr("x", w - m.right).attr("y", yScale(overallMean) - 5)
-            .attr("text-anchor", "end")
-            .attr("font-size", "9px")
-            .attr("fill", css('--highlight-color'))
-            .text("2025 avg: 78.15");
+        refLine(svg, xScale(overallMean), m.top, plotBottom, "2025 avg 78.15");
 
-        // Bars
-        conditions.forEach(cond => {
-            const data = conditionAvg.filter(d => d.condition === cond);
-            svg.selectAll(`.bar-${cond.replace(/\s/g, '')}`)
-                .data(data)
-                .join("rect")
-                .attr("x", d => x0(cond) + x1(d.model))
-                .attr("y", d => yScale(d.score))
-                .attr("width", x1.bandwidth())
-                .attr("height", d => h - m.bottom - yScale(d.score))
-                .attr("rx", 3)
-                .attr("fill", d => d.model === "GPT-4" ? css('--gpt4-color') : css('--gemini-color'))
-                .attr("opacity", 0.85);
-
-            // Score labels
-            svg.selectAll(`.val-${cond.replace(/\s/g, '')}`)
-                .data(data)
-                .join("text")
-                .attr("x", d => x0(cond) + x1(d.model) + x1.bandwidth() / 2)
-                .attr("y", d => yScale(d.score) - 4)
-                .attr("text-anchor", "middle")
-                .attr("font-size", "10px")
-                .attr("font-weight", "bold")
-                .attr("fill", css('--primary-color'))
-                .text(d => d.score);
+        const rowLabels = svg.append("g").selectAll("text")
+            .data(conditions).join("text")
+            .attr("class", "jx-label jx-label-lg")
+            .attr("x", m.left - 12).attr("y", cy)
+            .attr("text-anchor", "end");
+        rowLabels.each(function(c) {
+            const t = d3.select(this);
+            const only = conditionAvg.filter(d => d.condition === c);
+            if (only.length === 1) {
+                t.append("tspan").attr("x", m.left - 12).attr("dy", "-0.25em").text(c);
+                t.append("tspan").attr("class", "jx-sub").attr("x", m.left - 12).attr("dy", "1.3em").text(`${only[0].model} only`);
+            } else {
+                t.attr("dy", "0.35em").text(c);
+            }
         });
 
-        // X axis labels
-        svg.append("g")
-            .attr("transform", `translate(0,${h - m.bottom})`)
-            .call(d3.axisBottom(x0).tickSize(0))
-            .attr("class", "bar-axis")
-            .selectAll("text")
-            .attr("fill", css('--secondary-color'))
-            .attr("font-size", "11px");
+        // Connector between the two models in each condition.
+        conditions.forEach(c => {
+            const pair = conditionAvg.filter(d => d.condition === c);
+            if (pair.length < 2) return;
+            const [a, b] = d3.extent(pair, d => d.score);
+            svg.append("line").attr("class", "jx-link")
+                .attr("x1", xScale(a)).attr("x2", xScale(b))
+                .attr("y1", cy(c)).attr("y2", cy(c));
+        });
 
-        // Legend
-        const leg = container.append("div").attr("class", "viz-legend");
-        leg.append("span").html(`<span class="swatch" style="background:${css('--gpt4-color')}"></span> GPT-4 (avg 80.8)`);
-        leg.append("span").html(`<span class="swatch" style="background:${css('--gemini-color')}"></span> Gemini (avg 76.0)`);
+        svg.append("g").selectAll("circle")
+            .data(conditionAvg).join("circle")
+            .attr("cx", d => xScale(d.score)).attr("cy", d => cy(d.condition))
+            .attr("r", 6)
+            .attr("fill", d => modelColour(d.model))
+            .attr("stroke", css('--bg-2'))
+            .attr("stroke-width", 2);
+
+        // Value labels sit outward from each pair: the lower score to the left of its
+        // dot, the higher to the right. Labels never sit on the reference line.
+        svg.append("g").selectAll("text")
+            .data(conditionAvg).join("text")
+            .attr("class", "jx-value")
+            .each(function(d) {
+                const pair = conditionAvg.filter(q => q.condition === d.condition);
+                const left = pair.length > 1 && d.score === d3.min(pair, q => q.score);
+                d3.select(this)
+                    .attr("x", xScale(d.score) + (left ? -11 : 11))
+                    .attr("text-anchor", left ? "end" : "start");
+            })
+            .attr("y", d => cy(d.condition)).attr("dy", "0.35em")
+            .text(d => f1(d.score));
+
+        xAxis(svg, xScale, plotBottom + 4, [65, 70, 75, 80, 85, 90]);
+        svg.append("text")
+            .attr("class", "jx-axis-title")
+            .attr("x", (m.left + w - m.right) / 2).attr("y", h - 8)
+            .attr("text-anchor", "middle")
+            .text("Average total score");
+
+        const count = (mod, c) => memorials.filter(q => q.model === mod && q.condition === c).length;
+        const hits = svg.append("g").selectAll("circle")
+            .data(conditionAvg).join("circle")
+            .attr("class", "jx-hit")
+            .attr("cx", d => xScale(d.score)).attr("cy", d => cy(d.condition))
+            .attr("r", 14);
+        bindTip(hits, d => `<b>${d.model} &middot; ${d.condition}</b>Average total score <span class="v">${f1(d.score)}</span><br>${count(d.model, d.condition)} memorials`);
+
+        legend(container, [
+            { label: "GPT-4 (avg 80.8)", colour: modelColour("GPT-4") },
+            { label: "Gemini (avg 76.0)", colour: modelColour("Gemini") }
+        ]);
     }
 
     /* ── CATEGORY SCORES ──────────────────────────────── */
+    /* Horizontal bar with a 2px rounded data end and a square base. */
+    function hbar(x0, y, x1, h, r) {
+        r = Math.min(r, (x1 - x0) / 2, h / 2);
+        return `M${x0},${y}H${x1 - r}Q${x1},${y} ${x1},${y + r}V${y + h - r}Q${x1},${y + h} ${x1 - r},${y + h}H${x0}Z`;
+    }
+
     function drawCategories() {
         const container = d3.select("#viz-categories");
         container.selectAll("*").remove();
         const w = container.node().getBoundingClientRect().width;
         const narrow = isNarrow();
-        /* On mobile the long category labels can't share the row with the bars,
-           so they move to their own line ABOVE each bar group (left margin
-           collapses) and the figure grows taller to fit them in flow. */
-        const h = narrow ? Math.max(360, w * 1.05) : Math.min(300, w * 0.5);
-        const m = narrow
-            ? { top: 20, right: 34, bottom: 50, left: 12 }
-            : { top: 20, right: 20, bottom: 60, left: 160 };
+        const barH = narrow ? 10 : 11, gap = 2;
+        const labelPad = narrow ? 18 : 0;
+        const groupH = labelPad + barH * 2 + gap;
+        const rowH = groupH + (narrow ? 16 : 22);
+        const m = narrow ? { top: 8, right: 36, bottom: 40, left: 8 } : { top: 12, right: 40, bottom: 44, left: 170 };
+        const plotBottom = m.top + categoryScores.length * rowH;
+        const h = plotBottom + m.bottom;
+        const svg = makeSvg(container, w, h,
+            "Paired bars of average category scores out of 20 for GPT-4 and Gemini. Both models score highest on Clarity and Organization and lowest on Extent and Use of Research.");
 
-        const svg = container.append("svg")
-            .attr("width", w).attr("height", h)
-            .attr("viewBox", `0 0 ${w} ${h}`);
-
-        const cats = categoryScores.map(d => d.cat.replace(/\n/g, ' '));
-        const y0 = d3.scaleBand().domain(cats).range([m.top, h - m.bottom]).padding(0.25);
-        // On mobile, reserve the top of each band for an above-the-bars label.
-        const labelPad = narrow ? 16 : 0;
-        const y1 = d3.scaleBand().domain(["GPT-4", "Gemini"])
-            .range([labelPad, y0.bandwidth()]).padding(0.1);
         const xScale = d3.scaleLinear().domain([0, 20]).range([m.left, w - m.right]);
+        const rows = categoryScores.map((d, i) => ({ ...d, name: d.cat.replace(/\n/g, ' '), top: m.top + i * rowH + (rowH - groupH) / 2 }));
 
-        // Grid lines
-        svg.selectAll(".grid-line")
-            .data([5, 10, 15, 20])
-            .join("line")
+        svg.append("g").selectAll("line")
+            .data([5, 10, 15, 20]).join("line")
+            .attr("class", "jx-grid")
             .attr("x1", d => xScale(d)).attr("x2", d => xScale(d))
-            .attr("y1", m.top).attr("y2", h - m.bottom)
-            .attr("stroke", css('--border-color'))
-            .attr("stroke-dasharray", "2,2")
-            .attr("opacity", 0.5);
+            .attr("y1", m.top).attr("y2", plotBottom);
 
-        // Bars
-        categoryScores.forEach((cat, i) => {
-            const catName = cat.cat.replace(/\n/g, ' ');
-            [{ model: "GPT-4", val: cat.gpt4 }, { model: "Gemini", val: cat.gemini }].forEach(d => {
-                svg.append("rect")
-                    .attr("x", m.left)
-                    .attr("y", y0(catName) + y1(d.model))
-                    .attr("width", xScale(d.val) - m.left)
-                    .attr("height", y1.bandwidth())
-                    .attr("rx", 2)
-                    .attr("fill", d.model === "GPT-4" ? css('--gpt4-color') : css('--gemini-color'))
-                    .attr("opacity", 0.85);
-
-                // Keep the value label inside the chart on narrow widths so it
-                // never overflows past the right edge.
-                const rawX = xScale(d.val) + 4;
-                const inside = narrow && rawX > (w - m.right - 12);
-                svg.append("text")
-                    .attr("x", inside ? xScale(d.val) - 4 : rawX)
-                    .attr("y", y0(catName) + y1(d.model) + y1.bandwidth() / 2)
-                    .attr("dy", "0.35em")
-                    .attr("text-anchor", inside ? "end" : "start")
-                    .attr("font-size", "10px")
-                    .attr("font-weight", "bold")
-                    .attr("fill", inside ? css('--background-color') : css('--primary-color'))
-                    .text(d.val);
+        rows.forEach(row => {
+            const g = svg.append("g");
+            [["GPT-4", row.gpt4], ["Gemini", row.gemini]].forEach(([mod, val], j) => {
+                const y = row.top + labelPad + j * (barH + gap);
+                g.append("path")
+                    .attr("d", hbar(xScale(0), y, xScale(val), barH, 2))
+                    .attr("fill", modelColour(mod));
+                g.append("text")
+                    .attr("class", "jx-value jx-value-sm")
+                    .attr("x", xScale(val) + 5).attr("y", y + barH / 2).attr("dy", "0.35em")
+                    .text(f1(val));
             });
+            const lab = g.append("text").attr("class", "jx-label");
+            if (narrow) {
+                lab.attr("x", m.left).attr("y", row.top + 9).attr("dy", "0.35em").text(row.name);
+            } else {
+                const parts = row.cat.split('\n');
+                lab.attr("x", m.left - 12).attr("y", row.top + groupH / 2).attr("text-anchor", "end");
+                parts.forEach((p, k) => lab.append("tspan").attr("x", m.left - 12)
+                    .attr("dy", k === 0 ? `${0.35 - (parts.length - 1) * 0.7}em` : "1.4em").text(p));
+            }
         });
 
-        // Y axis labels — to the left on desktop, stacked above each group on mobile.
-        svg.selectAll(".cat-label")
-            .data(cats)
-            .join("text")
-            .attr("x", narrow ? m.left : m.left - 8)
-            .attr("y", d => narrow ? y0(d) + 10 : y0(d) + y0.bandwidth() / 2)
-            .attr("dy", "0.35em")
-            .attr("text-anchor", narrow ? "start" : "end")
-            .attr("font-size", "10px")
-            .attr("fill", css('--secondary-color'))
-            .each(function(d) {
-                const parts = d.split(' ');
-                const el = d3.select(this);
-                if (narrow) { el.text(d); return; }
-                if (parts.length <= 3) {
-                    el.text(d);
-                } else {
-                    const mid = Math.ceil(parts.length / 2);
-                    el.text('');
-                    el.append("tspan").attr("x", m.left - 8).attr("dy", "-0.5em").text(parts.slice(0, mid).join(' '));
-                    el.append("tspan").attr("x", m.left - 8).attr("dy", "1.1em").text(parts.slice(mid).join(' '));
-                }
-            });
-
-        // X axis
-        svg.append("g")
-            .attr("transform", `translate(0,${h - m.bottom})`)
-            .call(d3.axisBottom(xScale).ticks(4).tickSize(3))
-            .attr("class", "bar-axis")
-            .selectAll("text").attr("fill", css('--secondary-color'));
-
+        xAxis(svg, xScale, plotBottom + 2, [0, 5, 10, 15, 20]);
         svg.append("text")
-            .attr("x", (m.left + w - m.right) / 2).attr("y", h - 8)
+            .attr("class", "jx-axis-title")
+            .attr("x", (xScale(0) + xScale(20)) / 2).attr("y", h - 6)
             .attr("text-anchor", "middle")
-            .attr("font-size", "10px")
-            .attr("fill", css('--secondary-color'))
-            .text("Score (out of 20)");
+            .text("Average score (out of 20)");
 
-        // Legend
-        const leg = container.append("div").attr("class", "viz-legend");
-        leg.append("span").html(`<span class="swatch" style="background:${css('--gpt4-color')}"></span> GPT-4`);
-        leg.append("span").html(`<span class="swatch" style="background:${css('--gemini-color')}"></span> Gemini`);
+        const hits = svg.append("g").selectAll("rect")
+            .data(rows).join("rect")
+            .attr("class", "jx-hit")
+            .attr("x", 0).attr("y", d => d.top - (rowH - groupH) / 2)
+            .attr("width", w).attr("height", rowH);
+        bindTip(hits, d => `<b>${d.name}</b>GPT-4 <span class="v">${f1(d.gpt4)}</span><br>Gemini <span class="v">${f1(d.gemini)}</span><br><span class="k">out of 20</span>`);
+
+        legend(container, MODELS.map(mod => ({ label: mod, colour: modelColour(mod) })));
     }
 
     /* ── JUDGE DETECTION ──────────────────────────────── */
+    const judges = { total: 13, suspected: 2 };
+
     function drawDetection() {
         const container = d3.select("#viz-detection");
         container.selectAll("*").remove();
+        const wrap = container.append("div").attr("class", "jx-detect");
+        wrap.append("div").attr("class", "jx-big").text(`${judges.suspected} / ${judges.total}`);
+        wrap.append("div").attr("class", "jx-big-l").text("judges suspected AI use");
 
-        const wrapper = container.append("div").style("text-align", "center").style("padding", "1rem 0");
+        const w = container.node().getBoundingClientRect().width;
+        const n = judges.total;
+        const pitch = Math.min(34, (w - 16) / n);
+        const r = Math.min(10, pitch / 2 - 3);
+        const rowW = pitch * n;
+        const x0 = (w - rowW) / 2 + pitch / 2;
+        const cy = r + 4;
+        const h = cy + r + 30;
+        const data = d3.range(n).map(i => ({ i, spotted: i < judges.suspected }));
+        const svg = makeSvg(wrap, w, h,
+            "Thirteen dots, one per judge who graded an AI memorial: two filled for the judges who suspected AI use, eleven hollow for those who did not.");
 
-        // Big number
-        wrapper.append("div")
-            .style("font-size", "3.5rem")
-            .style("font-weight", "700")
-            .style("color", css('--stat-color'))
-            .style("line-height", "1.1")
-            .text("2 / 13");
+        svg.append("g").selectAll("circle")
+            .data(data).join("circle")
+            .attr("cx", d => x0 + d.i * pitch).attr("cy", cy)
+            .attr("r", r)
+            .attr("class", d => d.spotted ? "jx-judge on" : "jx-judge");
 
-        wrapper.append("div")
-            .style("font-size", "0.9rem")
-            .style("color", css('--secondary-color'))
-            .style("margin-bottom", "1.2rem")
-            .text("judges suspected AI use");
+        // Direct labels under each group, aligned to the group's outer edge.
+        svg.append("text").attr("class", "jx-label jx-label-on")
+            .attr("x", x0 - r).attr("y", h - 6)
+            .attr("text-anchor", "start").text(`${judges.suspected} suspected`);
+        svg.append("text").attr("class", "jx-label")
+            .attr("x", x0 + (n - 1) * pitch + r).attr("y", h - 6)
+            .attr("text-anchor", "end").text(`${n - judges.suspected} did not`);
 
-        // Dot grid
-        const grid = wrapper.append("div").attr("class", "detection-grid");
-        for (let i = 0; i < 13; i++) {
-            grid.append("div")
-                .attr("class", `judge-dot ${i < 2 ? 'spotted' : 'missed'}`)
-                .attr("title", i < 2 ? "Suspected AI" : "Did not suspect AI")
-                .text(i < 2 ? '!' : '?');
-        }
+        const hits = svg.append("g").selectAll("rect")
+            .data(data).join("rect")
+            .attr("class", "jx-hit")
+            .attr("x", d => x0 + d.i * pitch - pitch / 2).attr("y", 0)
+            .attr("width", pitch).attr("height", cy + r + 8);
+        bindTip(hits, d => d.spotted
+            ? `<b>Suspected AI use</b><span class="v">${judges.suspected}</span> of ${judges.total} judges who graded an AI memorial`
+            : `<b>Did not suspect AI use</b><span class="v">${judges.total - judges.suspected}</span> of ${judges.total} judges who graded an AI memorial`);
+    }
 
-        // Legend
-        const leg = container.append("div").attr("class", "viz-legend");
-        leg.append("span").html(`<span class="swatch" style="background:${css('--stat-color')}"></span> Suspected AI`);
-        leg.append("span").html(`<span class="swatch" style="background:${css('--border-color')}"></span> Did not suspect`);
+    /* ── TABLE VIEWS (built once; the data does not change on redraw) ── */
+    function buildTables() {
+        EP.table('viz-distribution', ['Memorial', 'Model', 'Condition', 'Aggregate score'],
+            [...memorials].sort((a, b) => a.score - b.score).map(d => [d.id, d.model, d.condition, f1(d.score)])
+                .concat([['All 2025 memorials (curve)', '', '', 'mean 78.15, SD 7.4']]),
+            { summary: 'Table', numeric: [3] });
+        EP.table('viz-memorials', ['Rank', 'Memorial', 'Model', 'Condition', 'Aggregate score'],
+            [...memorials].sort((a, b) => b.score - a.score).map((d, i) => [i + 1, d.id, d.model, d.condition, f1(d.score)])
+                .concat([['', '2025 cohort average', '', '', overallMean.toFixed(2)]]),
+            { summary: 'Table', numeric: [0, 4] });
+        EP.table('viz-models', ['Condition', 'Model', 'Average total score', 'Memorials'],
+            conditionAvg.map(d => [d.condition, d.model, f1(d.score), memorials.filter(q => q.model === d.model && q.condition === d.condition).length])
+                .concat([['Informed', 'GPT-4', 'no memorial', 0],
+                         ['All conditions', 'GPT-4', f1(modelAvg["GPT-4"]), memorials.filter(q => q.model === "GPT-4").length],
+                         ['All conditions', 'Gemini', f1(modelAvg["Gemini"]), memorials.filter(q => q.model === "Gemini").length]]),
+            { summary: 'Table', numeric: [2, 3] });
+        EP.table('viz-categories', ['Category (out of 20)', 'GPT-4', 'Gemini'],
+            categoryScores.map(d => [d.cat.replace(/\n/g, ' '), f1(d.gpt4), f1(d.gemini)]),
+            { summary: 'Table', numeric: [1, 2] });
+        EP.table('viz-detection', ['Judges who graded an AI memorial', 'Count'],
+            [['Suspected AI use', judges.suspected], ['Did not suspect AI use', judges.total - judges.suspected], ['Total', judges.total]],
+            { summary: 'Table', numeric: [1] });
     }
 
     /* ── RENDER ALL ────────────────────────────────────── */
     function renderAll() {
+        if (window.EP) EP.hide();
         drawDistribution();
         drawMemorials();
         drawModels();
@@ -1134,13 +1211,17 @@
     }
 
     renderAll();
+    buildTables();
 
-    let resizeTimer;
+    let resizeTimer, lastW = window.innerWidth;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(renderAll, 200);
+        resizeTimer = setTimeout(() => {
+            if (window.innerWidth === lastW) return;   // ignore mobile toolbar height changes
+            lastW = window.innerWidth;
+            renderAll();
+        }, 200);
     });
-
     /* ── SCROLL REVEAL ────────────────────────────────── */
     const reveals = document.querySelectorAll('.viz-reveal');
     const revealObs = new IntersectionObserver((entries, obs) => {

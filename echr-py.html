@@ -493,8 +493,50 @@
             #net-controls { width: 150px; }
         }
     </style>
+    <link rel="stylesheet" href="essay-plates.css">
+    <script src="essay-plates.js"></script>
+    <style>
+        /* page-specific additions to the plated kit */
+        .ep-section-head.no-num h2 { grid-column: 1 / -1; }
+        /* the drawer title is an h3 inside .essay-body; keep it out of the kit's italic serif h3 */
+        .ep #net-sidebar-header h3 { font-style: normal; letter-spacing: 0; font-variation-settings: normal; }
+        /* terminal blocks: never justified or hyphenated; long lines scroll inside the block */
+        .ep .essay-body .terminal, .ep .essay-body .terminal * { text-align: left; -webkit-hyphens: none; hyphens: none;
+            font-variant-numeric: normal; font-style: normal; }
+        .ep .essay-body .terminal { display: grid; grid-template-columns: minmax(max-content, 1fr); }
+        .ep .essay-body .term-out { white-space: pre; }
+        /* inline code in justified prose: keep its own spaces from stretching */
+        .ep .essay-body p code { white-space: nowrap; display: inline-block; line-height: 1.3; }
+        /* the boxed aside, set like a small plate */
+        .ep .essay-body > .note { max-width: calc(var(--measure) + 6rem); margin: 2.4rem auto; padding: 1.3rem 1.6rem 1.4rem;
+            border: 1px solid var(--line); border-left: 2px solid var(--gold); border-radius: 0; background: var(--bg-2); box-sizing: border-box; }
+        .ep .essay-body > .note .note-head { font-family: var(--ep-mono); font-size: 0.62rem; letter-spacing: 0.18em; margin-bottom: 0.9rem; }
+        .ep .essay-body .note p { font-size: 0.98rem; line-height: 1.58; margin: 0 0 0.9rem; max-width: none; }
+        .ep .essay-body .note p:last-child { margin-bottom: 0; }
+        .ep .essay-body .note .terminal { margin: 1rem 0 1.1rem; }
+        /* data tables sit a little wider than the prose */
+        .ep .essay-body > .table-wrap { max-width: calc(var(--measure) + 6rem); margin-top: 1.8rem; margin-bottom: 1.8rem; }
+        .ep .viz-block svg { overflow: visible; }
+        /* table views: several per caption, kept inside the caption on phones */
+        .ep .ep-plate-caption .echr-tables { flex: 0 1 auto; min-width: 0; max-width: 100%; display: flex; flex-direction: column; gap: 0.45rem; }
+        .ep .ep-plate-caption .echr-tables details { max-width: 100%; min-width: 0; }
+        .ep .ep-plate-caption .echr-tables .tbl { max-width: 100%; }
+        #dissent-svg rect[tabindex]:focus-visible { outline: none; stroke: var(--gold); stroke-width: 1px; }
+        /* phones: the cluster legend folds to its title so it does not sit over a third of the network */
+        @media (max-width: 600px) {
+            #net-legend h5 { cursor: pointer; margin-bottom: 0; }
+            #net-legend h5::after { content: ' \25BE'; color: var(--muted); }
+            #net-legend.expanded h5 { margin-bottom: 7px; }
+            #net-legend.expanded h5::after { content: ' \25B4'; }
+            #net-legend:not(.expanded) #net-legend-items { display: none; }
+        }
+        @media (max-width: 768px) {
+            .ep .essay-body > .note { margin-left: clamp(0.8rem, 3vw, 2rem); margin-right: clamp(0.8rem, 3vw, 2rem); padding: 1.1rem 1.1rem 1.2rem; }
+            .ep .essay-body > .terminal { padding-left: 1.1rem; padding-right: 1.1rem; }
+        }
+    </style>
 </head>
-<body>
+<body class="ep">
 
     <header class="main-header">
         <a href="index.html" style="color:var(--fg)"><b style="color:var(--gold)">◆</b> NICCOLÒ RIDI</a>
@@ -507,12 +549,14 @@
             <a href="index.html#data" class="back-link">&larr; Back to Data</a>
 
             <header class="essay-header">
-                <h1>echr-py</h1>
+                <p class="ep-kicker">A data essay</p>
+                <h1>echr<em>-py</em></h1>
+                <p class="ep-dek">A Python toolkit for empirical research on the European Court of Human Rights</p>
                 <div class="essay-meta">
-                    <span class="authors">Niccolò Ridi</span><br>
-                    A Python toolkit for empirical research on the European Court of Human Rights (2026)<br>
+                    <span class="authors">Niccolò Ridi</span> &middot; 2026<br>
                     524 Grand Chamber judgments &middot; 4,416 citations &middot; 1994&ndash;2026
                 </div>
+                <div class="ep-rule"></div>
             </header>
 
             <div class="essay-body">
@@ -521,7 +565,7 @@
 
                 <p>This page describes the data and the problems it poses, shows the toolkit's core commands with each one copyable, and uses both to replicate the central finding of Voeten and Lupu's 2011 study of precedent in international courts. The replication covers every Grand Chamber judgment the Court has issued from 1994 to 2026.</p>
 
-                <h2>I. The Data and the Question</h2>
+                <div class="ep-section-head"><span class="num">I</span><h2>The Data and the Question</h2></div>
 
                 <p>HUDOC publishes every judgment, decision, and order the Court issues, and each record is structured. A record carries the application number, case name, respondent state, the Convention articles at issue, the judgment date, an importance rating from 1 to 4, whether any judge wrote separately, and whether a Committee, a Chamber, or the Grand Chamber decided it. That structure is what makes automated analysis possible.</p>
 
@@ -552,7 +596,7 @@
 
                 <p>All of these are manageable, and all of them shape what the numbers below can support.</p>
 
-                <h2>II. The Core Functions</h2>
+                <div class="ep-section-head"><span class="num">II</span><h2>The Core Functions</h2></div>
 
                 <p>Three commands handle most of the workflow, and you can copy each line separately. The package is on <a href="https://pypi.org/project/echr-py/" target="_blank" rel="noopener">PyPI</a>, and the source, issue tracker and full README are on <a href="https://github.com/niccoloridi/echr-py" target="_blank" rel="noopener">GitHub</a>.</p>
 
@@ -605,7 +649,7 @@
                     <div class="term-out">525 4426 0.0161</div>
                 </div>
 
-                <h2>III. Replicating Voeten &amp; Lupu</h2>
+                <div class="ep-section-head"><span class="num">III</span><h2>Replicating Voeten &amp; Lupu</h2></div>
 
                 <p>The replication measures <strong>in-degree centrality</strong>, meaning how many other judgments cite a given one. High in-degree marks a hub, a judgment the Court keeps returning to when it grounds a new holding.</p>
 
@@ -627,47 +671,54 @@
 
                 <p>The Grand Chamber is where the Court sends what it means to settle, and it is the bench that cites itself. The population is closed, so no citation falls off the edge of a window. It is small enough that its members genuinely refer to one another, and old enough, at thirty-two years, that the early judgments have had time to be picked up. This is the Court's own canon, and it behaves like one.</p>
 
-                <div class="viz-full-network" id="viz-network">
-                    <div class="network-wrapper" id="network-wrapper">
-                        <div class="net-tooltip" id="net-tooltip"></div>
-                        <div class="net-hint">scroll to zoom &middot; drag to pan &middot; click a node for details</div>
+                <section class="ep-plate ep-reveal" data-plate="I · Network">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate I</span><h3>The Grand Chamber citation network</h3><span class="sub">513 judgments &middot; 4,416 citations</span></div>
+                        <div class="ep-plate-body flush">
+                            <div class="viz-full-network" id="viz-network">
+                                <div class="network-wrapper" id="network-wrapper">
+                                    <div class="net-tooltip" id="net-tooltip"></div>
+                                    <div class="net-hint">scroll to zoom &middot; drag to pan &middot; click a node for details</div>
 
-                        <div id="net-legend">
-                            <h5>Doctrinal clusters</h5>
-                            <div id="net-legend-items"></div>
-                        </div>
+                                    <div id="net-legend">
+                                        <h5>Doctrinal clusters</h5>
+                                        <div id="net-legend-items"></div>
+                                    </div>
 
-                        <div id="net-controls">
-                            <button class="net-controls-toggle" onclick="document.getElementById('net-controls').classList.toggle('expanded')">
-                                <span>Controls <span style="color:var(--muted);text-transform:none;letter-spacing:0">&middot; <span id="node-count">&ndash;</span>n / <span id="edge-count">&ndash;</span>e</span></span>
-                                <span class="arw">&#9660;</span>
-                            </button>
-                            <div class="net-controls-body">
-                                <label>Node size</label>
-                                <select id="size-metric">
-                                    <option value="inDeg">Cited by (in-degree)</option>
-                                    <option value="deg">Connections (degree)</option>
-                                    <option value="outDeg">Cites (out-degree)</option>
-                                </select>
-                                <label>Node scale: <span id="node-scale-val">1.0</span>&times;</label>
-                                <input type="range" id="node-scale" min="0.4" max="2.6" step="0.1" value="1">
-                                <label>Link opacity</label>
-                                <input type="range" id="link-opacity" min="0.02" max="0.6" step="0.02" value="0.26">
+                                    <div id="net-controls">
+                                        <button class="net-controls-toggle" onclick="document.getElementById('net-controls').classList.toggle('expanded')">
+                                            <span>Controls <span style="color:var(--muted);text-transform:none;letter-spacing:0">&middot; <span id="node-count">&ndash;</span>n / <span id="edge-count">&ndash;</span>e</span></span>
+                                            <span class="arw">&#9660;</span>
+                                        </button>
+                                        <div class="net-controls-body">
+                                            <label>Node size</label>
+                                            <select id="size-metric">
+                                                <option value="inDeg">Cited by (in-degree)</option>
+                                                <option value="deg">Connections (degree)</option>
+                                                <option value="outDeg">Cites (out-degree)</option>
+                                            </select>
+                                            <label>Node scale: <span id="node-scale-val">1.0</span>&times;</label>
+                                            <input type="range" id="node-scale" min="0.4" max="2.6" step="0.1" value="1">
+                                            <label>Link opacity</label>
+                                            <input type="range" id="link-opacity" min="0.02" max="0.6" step="0.02" value="0.26">
+                                        </div>
+                                    </div>
+
+                                    <div id="net-sidebar">
+                                        <div id="net-sidebar-header">
+                                            <h3 id="net-sidebar-title"></h3>
+                                            <div class="subtitle" id="net-sidebar-subtitle"></div>
+                                            <button class="close-btn" id="close-net-sidebar" aria-label="Close">&times;</button>
+                                        </div>
+                                        <div id="net-sidebar-stats"></div>
+                                        <div id="net-sidebar-cites"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <div id="net-sidebar">
-                            <div id="net-sidebar-header">
-                                <h3 id="net-sidebar-title"></h3>
-                                <div class="subtitle" id="net-sidebar-subtitle"></div>
-                                <button class="close-btn" id="close-net-sidebar" aria-label="Close">&times;</button>
-                            </div>
-                            <div id="net-sidebar-stats"></div>
-                            <div id="net-sidebar-cites"></div>
-                        </div>
+                        <div class="ep-plate-caption"><div class="cap">Figure 1 shows the complete Grand Chamber citation network, with 513 judgments and all 4,416 citations between them. The colours come from community detection rather than from Convention articles, using Louvain modularity on the citation graph, and node size scales with in-degree. You can scroll to zoom, drag to pan, hover over a node to see its neighbours, and click for the full record. Clicking a cluster in the legend mutes it. (Eleven judgments that neither cite nor are cited within the corpus are omitted, together with the one non-judgment node described in Part II.)</div></div>
                     </div>
-                </div>
-                <p class="viz-caption">Figure 1 shows the complete Grand Chamber citation network, with 513 judgments and all 4,416 citations between them. The colours come from community detection rather than from Convention articles, using Louvain modularity on the citation graph, and node size scales with in-degree. You can scroll to zoom, drag to pan, hover over a node to see its neighbours, and click for the full record. Clicking a cluster in the legend mutes it. (Eleven judgments that neither cite nor are cited within the corpus are omitted, together with the one non-judgment node described in Part II.)</p>
+                </section>
 
                 <h3>The clusters are doctrinal</h3>
 
@@ -729,10 +780,15 @@
 
                 <p><strong>Separate opinions.</strong> 430 of the 524 judgments carry a separate opinion, which is 82%. Disagreement is the normal condition at this bench, and it follows from what gets referred there: the questions that divide.</p>
 
-                <div class="viz-block" id="viz-dissent">
-                    <svg id="dissent-svg" height="300"></svg>
-                </div>
-                <p class="viz-caption">Figure 2: Share of Grand Chamber judgments carrying a separate opinion, by Convention article.</p>
+                <section class="ep-plate narrow ep-reveal" data-plate="II · Dissent">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate II</span><h3>Separate opinions by article</h3><span class="sub">eight articles</span></div>
+                        <div class="ep-plate-body"><div class="viz-block" id="viz-dissent">
+                            <svg id="dissent-svg" height="300"></svg>
+                        </div></div>
+                        <div class="ep-plate-caption"><div class="cap">Share of Grand Chamber judgments carrying a separate opinion, by Convention article.</div></div>
+                    </div>
+                </section>
 
                 <p>Article 14, discrimination, draws separate opinions in 90% of the Grand Chamber cases where it is in issue, which is the highest of any article, and Article 6, fair trial, draws them in 79%, the lowest. Discrimination turns on contested judgments about comparators and justification, while fair-trial questions at this level are more often technical. The bench agrees about procedure more readily than it agrees about equality.</p>
 
@@ -740,10 +796,15 @@
 
                 <p>Grand Chamber judgments run from 1994 to 2026, and the curve differs from the Court's overall docket. There is a spike in 1999, with 63 judgments, when Protocol 11 stood up the permanent Court and a backlog of Commission cases came through. After that the count settles into a fluctuating band of roughly ten to thirty a year, thinning to single figures since 2024. Referral is rare by design, and the bench has not grown with the caseload.</p>
 
-                <div class="viz-block" id="viz-timeline">
-                    <svg id="timeline-svg" height="300"></svg>
-                </div>
-                <p class="viz-caption">Figure 3: Grand Chamber judgments per year, 1994&ndash;2026. The 2026 bar is a partial year.</p>
+                <section class="ep-plate narrow ep-reveal" data-plate="III · By year">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate III</span><h3>Grand Chamber judgments by year</h3><span class="sub">1994&ndash;2026</span></div>
+                        <div class="ep-plate-body"><div class="viz-block" id="viz-timeline">
+                            <svg id="timeline-svg" height="300"></svg>
+                        </div></div>
+                        <div class="ep-plate-caption"><div class="cap">Grand Chamber judgments per year, 1994&ndash;2026. The 2026 bar is a partial year.</div></div>
+                    </div>
+                </section>
 
                 <h3>Respondent states</h3>
 
@@ -769,7 +830,7 @@
 
                 <p><strong>Articles.</strong> Article 41, just satisfaction, appears in 307 judgments, for the mechanical reason that it is engaged whenever a violation is found. Among the substantive provisions Article 6 leads with 205, followed by Article 35 (admissibility) with 186, Article 8 with 123, Article 14 with 87, and Article 10 with 83.</p>
 
-                <h2>IV. All the interesting things you can do with this</h2>
+                <div class="ep-section-head"><span class="num">IV</span><h2>All the interesting things you can do with this</h2></div>
 
                 <p><strong>Temporal trajectories of doctrine.</strong> Does Article 6 jurisprudence follow a straight line, or does it reverse direction? When does a case move from obscure to central? Track a single decision's in-degree year by year and you get a curve rather than a single number.</p>
 
@@ -787,7 +848,7 @@
 
                 <p>The toolkit supplies the pipeline and HUDOC supplies the documents. The questions are yours.</p>
 
-                <h2>Coda</h2>
+                <div class="ep-section-head no-num"><h2>Coda</h2></div>
 
                 <p>Everything above came out of the package in a handful of commands: a search against HUDOC, a citation resolution against the Court's own reference concordance, and a graph export to NetworkX. The pipeline covers the parts that are tedious and easy to get wrong, including pinning the language so that nothing is counted twice, resolving a printed citation to an exact document with a paragraph pinpoint where the text supplies one, and keeping provenance attached to every row.</p>
 
@@ -880,9 +941,13 @@
         document.getElementById('node-count').textContent = gcNodes.length;
         document.getElementById('edge-count').textContent = gcLinks.length.toLocaleString();
 
-        const svg = d3.select(wrap).append('svg').attr('viewBox', '0 0 ' + W + ' ' + H);
+        const svg = d3.select(wrap).append('svg').attr('viewBox', '0 0 ' + W + ' ' + H)
+            .attr('role', 'img')
+            .attr('aria-label', 'Citation network of the Grand Chamber: ' + gcNodes.length + ' nodes and ' +
+                  gcLinks.length.toLocaleString('en-GB') + ' citations, coloured by eight Louvain clusters and sized by in-degree. The tables under this plate list the clusters and the most-cited judgments.');
         const g = svg.append('g');
-        svg.call(d3.zoom().scaleExtent([0.25, 14]).on('zoom', ev => g.attr('transform', ev.transform)));
+        const zoom = d3.zoom().scaleExtent([0.25, 14]).on('zoom', ev => g.attr('transform', ev.transform));
+        svg.call(zoom);
 
         // scale the baked layout into the viewport
         const xs = gcNodes.map(n => n.px), ys = gcNodes.map(n => n.py);
@@ -949,7 +1014,7 @@
         const labelled = gcNodes.filter(n => n.inDeg >= hubCut)
             .sort((a, b) => b.inDeg - a.inDeg)
             .filter(n => {
-                const w = Math.min(n.label.length, 30) * 4.6, h = 11;
+                const w = Math.min(n.label.length, 30) * 5.6 + 4, h = 12; // 9px mono advances about 5.4px
                 const bx = n.x - w / 2, by = n.y - radius(n) - 14;
                 const hit = placed.some(p =>
                     bx < p.x + p.w && bx + w > p.x && by < p.y + p.h && by + h > p.y);
@@ -964,6 +1029,23 @@
             .style('font-family', 'var(--mono)').style('font-size', '9px')
             .style('fill', 'var(--fg)').style('pointer-events', 'none')
             .style('paint-order', 'stroke').style('stroke', 'var(--bg)').style('stroke-width', '2.5px');
+
+        // the overlap relaxation can push discs past the padding; if it does, start zoomed out to fit
+        {
+            const m = 14;
+            let ex0 = d3.min(gcNodes, n => n.x - radius(n)), ex1 = d3.max(gcNodes, n => n.x + radius(n));
+            let ey0 = d3.min(gcNodes, n => n.y - radius(n)), ey1 = d3.max(gcNodes, n => n.y + radius(n));
+            label.each(function () {
+                const b = this.getBBox();
+                ex0 = Math.min(ex0, b.x); ex1 = Math.max(ex1, b.x + b.width);
+                ey0 = Math.min(ey0, b.y); ey1 = Math.max(ey1, b.y + b.height);
+            });
+            if (ex0 < m || ey0 < m || ex1 > W - m || ey1 > H - m) {
+                const s = Math.min(1, (W - 2 * m) / (ex1 - ex0), (H - 2 * m) / (ey1 - ey0));
+                svg.call(zoom.transform, d3.zoomIdentity
+                    .translate(W / 2 - s * (ex0 + ex1) / 2, H / 2 - s * (ey0 + ey1) / 2).scale(s));
+            }
+        }
 
         const tip = d3.select('#net-tooltip');
         node.on('mouseenter', function (ev, d) {
@@ -1090,31 +1172,97 @@
         [2022,9],[2023,13],[2024,5],[2025,6],[2026,4]
     ].map(([year, count]) => ({ year, count }));
 
+    /* bar with only its data end rounded (r = 2): vertical bars round the top, horizontal bars the right */
+    function barPath(x, y, w, h, dir) {
+        const r = Math.max(0, Math.min(2, w / 2, h / 2));
+        if (dir === 'h') {
+            return 'M' + x + ',' + y + 'H' + (x + w - r) + 'Q' + (x + w) + ',' + y + ' ' + (x + w) + ',' + (y + r) +
+                   'V' + (y + h - r) + 'Q' + (x + w) + ',' + (y + h) + ' ' + (x + w - r) + ',' + (y + h) + 'H' + x + 'Z';
+        }
+        return 'M' + x + ',' + (y + h) + 'V' + (y + r) + 'Q' + x + ',' + y + ' ' + (x + r) + ',' + y +
+               'H' + (x + w - r) + 'Q' + (x + w) + ',' + y + ' ' + (x + w) + ',' + (y + r) + 'V' + (y + h) + 'Z';
+    }
+    /* a synthetic pointer event at an element's centre, so keyboard focus can show the same tooltip */
+    function centreOf(el) {
+        const r = el.getBoundingClientRect();
+        return { clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 };
+    }
+
     function renderTimeline() {
         const svg = d3.select('#timeline-svg');
         svg.selectAll('*').remove();
         const w = svgWidth('#timeline-svg');
-        const h = +svg.attr('height');
-        const m = { top: 12, right: 8, bottom: 30, left: 40 };
+        const narrow = w < 520;
+        const h = narrow ? 260 : 300;
+        svg.attr('height', h).attr('viewBox', '0 0 ' + w + ' ' + h)
+            .attr('role', 'img')
+            .attr('aria-label', 'Bar chart of Grand Chamber judgments per year from 1994 to 2026, peaking at ' +
+                  d3.max(yearData, d => d.count) + ' in 1999; the 2026 bar is a partial year.');
+        const m = { top: 26, right: narrow ? 14 : 10, bottom: 26, left: 30 };
 
         const x = d3.scaleBand().domain(yearData.map(d => d.year)).range([m.left, w - m.right]).padding(0.25);
         const y = d3.scaleLinear().domain([0, 70]).nice().range([h - m.bottom, m.top]);
+        const bw = Math.min(24, x.bandwidth());
+        const bx = d => x(d.year) + (x.bandwidth() - bw) / 2;
 
+        // hairline gridlines and y ticks, no axis spine
+        const yt = y.ticks(narrow ? 4 : 7);
+        svg.append('g').selectAll('line').data(yt).enter().append('line')
+            .attr('x1', m.left).attr('x2', w - m.right)
+            .attr('y1', d => y(d) + 0.5).attr('y2', d => y(d) + 0.5)
+            .style('stroke', 'var(--line)').style('stroke-width', 1);
+        svg.append('g').selectAll('text').data(yt.filter(d => d > 0)).enter().append('text')
+            .attr('x', m.left - 6).attr('y', d => y(d)).attr('dy', '0.32em').attr('text-anchor', 'end')
+            .style('font-size', '10px').style('fill', 'var(--muted)').text(d => d);
+        svg.append('text').attr('x', 0).attr('y', 10)
+            .style('font-size', '9px').style('letter-spacing', '0.08em').style('fill', 'var(--muted)')
+            .text('JUDGMENTS');
+
+        // x axis: baseline and year ticks (every 4 years, every 8 on phones)
+        const step = narrow ? 8 : 4;
         svg.append('g').attr('transform', `translate(0,${h - m.bottom})`)
-            .call(d3.axisBottom(x).tickValues(yearData.map(d => d.year).filter((_, i) => i % 4 === 0)))
-            .call(g => g.selectAll('text').attr('font-family', 'var(--mono)').attr('font-size', 9).attr('fill', 'var(--muted)'))
-            .call(g => g.selectAll('line, path').attr('stroke', 'var(--line)'));
+            .call(d3.axisBottom(x).tickSize(4).tickSizeOuter(0)
+                .tickValues(yearData.map(d => d.year).filter((_, i) => i % step === 0)))
+            .call(g => g.selectAll('text').style('font-size', '10px').style('fill', 'var(--muted)'))
+            .call(g => g.selectAll('line, path').style('stroke', 'var(--line)'));
 
-        svg.append('g').attr('transform', `translate(${m.left},0)`)
-            .call(d3.axisLeft(y).ticks(5))
-            .call(g => g.selectAll('text').attr('font-family', 'var(--mono)').attr('font-size', 9).attr('fill', 'var(--muted)'))
-            .call(g => g.selectAll('line, path').attr('stroke', 'var(--line)'));
+        const hover = svg.append('rect').attr('class', 'tl-hover')
+            .attr('y', m.top).attr('height', h - m.bottom - m.top).attr('width', x.step())
+            .style('fill', 'var(--gold-soft)').style('opacity', 0).style('pointer-events', 'none');
 
-        svg.append('g').selectAll('rect').data(yearData).enter().append('rect')
-            .attr('x', d => x(d.year)).attr('y', d => y(d.count))
-            .attr('width', x.bandwidth()).attr('height', d => h - m.bottom - y(d.count))
-            .attr('fill', d => d.year === 2026 ? 'var(--muted)' : 'var(--gold)')
-            .attr('opacity', 0.85);
+        const bars = svg.append('g').selectAll('path').data(yearData).enter().append('path').attr('class', 'tl-bar')
+            .attr('d', d => barPath(bx(d), y(d.count), bw, h - m.bottom - y(d.count), 'v'))
+            .style('fill', d => d.year === 2026 ? 'var(--muted)' : 'var(--gold)');
+
+        // direct labels: the 1999 peak, and a key for the partial year
+        const peak = yearData.reduce((a, d) => d.count > a.count ? d : a);
+        svg.append('text').attr('x', bx(peak) + bw / 2).attr('y', y(peak.count) - 6).attr('text-anchor', 'middle')
+            .style('font-size', '10px').style('fill', 'var(--fg)').text(peak.year + ': ' + peak.count);
+        const key = svg.append('g').attr('transform', `translate(${w - m.right},6)`);
+        key.append('text').attr('x', 0).attr('y', 4).attr('dy', '0.32em').attr('text-anchor', 'end')
+            .style('font-size', '9px').style('letter-spacing', '0.04em').style('fill', 'var(--muted)').text('2026, partial year');
+        const kt = key.select('text').node().getComputedTextLength();
+        key.append('rect').attr('x', -kt - 14).attr('y', 0).attr('width', 8).attr('height', 8).attr('rx', 1)
+            .style('fill', 'var(--muted)');
+
+        // nearest-year hover over the whole plot, so narrow bars are easy to hit
+        function at(ev) {
+            const [mx] = d3.pointer(ev, svg.node());
+            let best = yearData[0], bd = Infinity;
+            yearData.forEach(d => { const c = x(d.year) + x.bandwidth() / 2, dd = Math.abs(c - mx); if (dd < bd) { bd = dd; best = d; } });
+            return best;
+        }
+        function show(ev, d) {
+            hover.attr('x', x(d.year) - x.step() * x.paddingInner() / 2).style('opacity', 1);
+            bars.style('opacity', b => b === d ? 1 : 0.55);
+            EP.tip(ev, '<b>' + d.year + (d.year === 2026 ? ' (partial year)' : '') + '</b>' +
+                'Grand Chamber judgments <span class="v">' + d.count + '</span>');
+        }
+        svg.append('rect').attr('x', m.left).attr('y', m.top)
+            .attr('width', w - m.left - m.right).attr('height', h - m.bottom - m.top + m.bottom - 4)
+            .style('fill', 'transparent').style('cursor', 'crosshair')
+            .on('mouseenter mousemove', ev => { show(ev, at(ev)); EP.move(ev); })
+            .on('mouseleave', () => { hover.style('opacity', 0); bars.style('opacity', 1); EP.hide(); });
     }
 
     /* ── Figure 3: dissent by article ─────────────────── */
@@ -1126,26 +1274,82 @@
         const svg = d3.select('#dissent-svg');
         svg.selectAll('*').remove();
         const w = svgWidth('#dissent-svg');
-        const h = +svg.attr('height');
-        const m = { top: 12, right: 8, bottom: 34, left: 40 };
+        const narrow = w < 520;
+        const rowH = 32, bh = 14;
+        const m = { top: 4, right: 44, bottom: 26, left: 62 };
+        const h = m.top + dissentData.length * rowH + m.bottom;
+        const fmt = d3.format('.0%');
+        svg.attr('height', h).attr('viewBox', '0 0 ' + w + ' ' + h)
+            .attr('role', 'img')
+            .attr('aria-label', 'Horizontal bar chart of the share of Grand Chamber judgments with a separate opinion, by Convention article: ' +
+                  dissentData.map(d => 'Article ' + d.article + ' ' + fmt(d.rate)).join(', ') + '.');
 
-        const x = d3.scaleBand().domain(dissentData.map(d => d.article)).range([m.left, w - m.right]).padding(0.35);
-        const y = d3.scaleLinear().domain([0, 1]).nice().range([h - m.bottom, m.top]);
+        const x = d3.scaleLinear().domain([0, 1]).range([m.left, w - m.right]);
+        const yAt = i => m.top + i * rowH;
 
-        svg.append('g').attr('transform', `translate(0,${h - m.bottom})`)
-            .call(d3.axisBottom(x).tickFormat(d => 'Art. ' + d))
-            .call(g => g.selectAll('text').attr('font-family', 'var(--mono)').attr('font-size', 9).attr('fill', 'var(--muted)'))
-            .call(g => g.selectAll('line, path').attr('stroke', 'var(--line)'));
+        // hairline vertical gridlines with percentage ticks along the bottom
+        const xt = narrow ? [0, 0.5, 1] : [0, 0.25, 0.5, 0.75, 1];
+        svg.append('g').selectAll('line').data(xt).enter().append('line')
+            .attr('x1', d => x(d) + 0.5).attr('x2', d => x(d) + 0.5)
+            .attr('y1', m.top).attr('y2', h - m.bottom)
+            .style('stroke', 'var(--line)').style('stroke-width', 1);
+        svg.append('g').selectAll('text').data(xt).enter().append('text')
+            .attr('x', d => x(d)).attr('y', h - m.bottom + 14).attr('text-anchor', 'middle')
+            .style('font-size', '10px').style('fill', 'var(--muted)').text(fmt);
 
-        svg.append('g').attr('transform', `translate(${m.left},0)`)
-            .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format('.0%')))
-            .call(g => g.selectAll('text').attr('font-family', 'var(--mono)').attr('font-size', 9).attr('fill', 'var(--muted)'))
-            .call(g => g.selectAll('line, path').attr('stroke', 'var(--line)'));
+        const row = svg.append('g').selectAll('g').data(dissentData).enter().append('g')
+            .attr('transform', (d, i) => `translate(0,${yAt(i)})`);
+        const hit = row.append('rect').attr('x', 0).attr('y', 0).attr('width', w).attr('height', rowH)
+            .attr('tabindex', 0).attr('aria-label', d => 'Article ' + d.article + ': ' + fmt(d.rate))
+            .style('fill', 'var(--gold-soft)').style('fill-opacity', 0).style('cursor', 'default').style('outline', 'none');
+        row.append('text').attr('x', m.left - 10).attr('y', rowH / 2).attr('dy', '0.32em').attr('text-anchor', 'end')
+            .style('font-size', '10.5px').style('fill', 'var(--fg)').style('pointer-events', 'none')
+            .text(d => 'Art. ' + d.article);
+        row.append('path')
+            .attr('d', d => barPath(x(0), (rowH - bh) / 2, x(d.rate) - x(0), bh, 'h'))
+            .style('fill', 'var(--gold)').style('pointer-events', 'none');
+        row.append('text').attr('x', d => x(d.rate) + 7).attr('y', rowH / 2).attr('dy', '0.32em')
+            .style('font-size', '10.5px').style('fill', 'var(--fg)').style('pointer-events', 'none')
+            .text(d => fmt(d.rate));
 
-        svg.append('g').selectAll('rect').data(dissentData).enter().append('rect')
-            .attr('x', d => x(d.article)).attr('y', d => y(d.rate))
-            .attr('width', x.bandwidth()).attr('height', d => h - m.bottom - y(d.rate))
-            .attr('fill', 'var(--bar-danger)').attr('opacity', 0.85);
+        const tipHtml = d => '<b>Article ' + esc(d.article) + '</b>Grand Chamber judgments with a separate opinion ' +
+            '<span class="v">' + fmt(d.rate) + '</span>';
+        hit.on('mouseenter', function (ev, d) { d3.select(this).style('fill-opacity', 1); EP.tip(ev, tipHtml(d)); })
+            .on('mousemove', ev => EP.move(ev))
+            .on('mouseleave', function () { d3.select(this).style('fill-opacity', 0); EP.hide(); })
+            .on('focus', function (ev, d) { d3.select(this).style('fill-opacity', 1); EP.tip(centreOf(this), tipHtml(d)); })
+            .on('blur', function () { d3.select(this).style('fill-opacity', 0); EP.hide(); });
+    }
+
+    /* ── Table views (built once; the data do not depend on the width) ── */
+    function addTable(container, head, rows, opts) {
+        // EP.table writes one <details> per caption; build each in a scratch caption and move it in,
+        // so a plate can carry more than one table
+        const cap = document.getElementById(container).closest('.ep-plate').querySelector('.ep-plate-caption');
+        let box = cap.querySelector('.echr-tables');
+        if (!box) { box = document.createElement('div'); box.className = 'echr-tables'; cap.appendChild(box); }
+        const scratch = document.createElement('div');
+        scratch.innerHTML = '<div class="ep-plate-caption"></div>';
+        EP.table(scratch, head, rows, opts);
+        box.appendChild(scratch.querySelector('details.ep-table'));
+    }
+    function buildTables() {
+        // Plate I: clusters, sized from the embedded nodes
+        addTable('viz-network', ['Cluster', 'Articles', 'Size'],
+            COMM_NAMES.map((nm, i) => [nm, COMM_ARTS[i], gcNodes.filter(n => n.comm === i).length]),
+            { summary: 'Table: clusters', numeric: [2] });
+        // Plate I: the most-cited judgments by in-degree (the 20th place is tied, so every tie is listed)
+        const byIn = gcNodes.slice().sort((a, b) => b.inDeg - a.inDeg || d3.ascending(a.label, b.label));
+        const cut = byIn[19].inDeg;
+        addTable('viz-network', ['Judgment', 'Year', 'Cited by'],
+            byIn.filter(n => n.inDeg >= cut).map(n => [n.label.trim(), n.date.slice(0, 4), n.inDeg]),
+            { summary: 'Table: most cited', numeric: [1, 2] });
+        addTable('viz-dissent', ['Article', 'With a separate opinion'],
+            dissentData.map(d => ['Art. ' + d.article, d3.format('.0%')(d.rate)]),
+            { summary: 'Table', numeric: [1] });
+        addTable('viz-timeline', ['Year', 'Judgments'],
+            yearData.map(d => [d.year + (d.year === 2026 ? ' (partial)' : ''), d.count]),
+            { summary: 'Table', numeric: [1] });
     }
 
     function renderAll() {
@@ -1175,6 +1379,15 @@
     function toggleTheme() { applyTheme(theme === 'light' ? 'dark' : 'light', true); }
     applyTheme(theme, false);
 
+    (function () {
+        // the legend title toggles the folded legend on phones (no effect on wider screens)
+        const h = document.querySelector('#net-legend h5'), lg = document.getElementById('net-legend');
+        h.setAttribute('role', 'button'); h.setAttribute('tabindex', '0');
+        const flip = () => { lg.classList.toggle('expanded'); h.setAttribute('aria-expanded', lg.classList.contains('expanded')); };
+        h.addEventListener('click', flip);
+        h.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
+    })();
+    buildTables();
     renderAll();
     </script>
 

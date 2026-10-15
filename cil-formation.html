@@ -323,22 +323,6 @@
             font-style: italic;
         }
 
-        .viz-tooltip {
-            position: absolute;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            padding: 6px 10px;
-            font-size: 0.78rem;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.15s;
-            z-index: 10;
-            color: var(--fg);
-            font-family: 'JetBrains Mono', monospace;
-            max-width: 250px;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.5);
-        }
 
         /* Legend */
         .viz-legend {
@@ -382,8 +366,6 @@
         .bar-axis line, .bar-axis path { stroke: var(--border-color); }
 
         /* Heatmap cells */
-        .heat-cell { cursor: crosshair; }
-        .heat-cell:hover { stroke: var(--primary-color); stroke-width: 2; }
 
         /* Mini network containers — Olympic circles: 3 over 2 */
         .topo-grid {
@@ -580,8 +562,41 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+    <link rel="stylesheet" href="essay-plates.css">
+    <script src="essay-plates.js"></script>
+    <style>
+        /* page-specific additions to the plate kit */
+        .ep-section-head.no-num { grid-template-columns: 1fr; }
+        .ep .essay-body > .ep-stats.pair { --cols: 2; max-width: 40rem !important; width: calc(100% - 2 * var(--gut));
+            margin-left: auto !important; margin-right: auto !important; }
+        @media (max-width: 700px) { .ep .essay-body > .ep-stats.pair { grid-template-columns: repeat(2, 1fr); } }
+        .ep-stat .n.val-high { color: var(--bar-tertiary); }
+        .ep-stat .n.val-low { color: var(--bar-danger); }
+        .ep .ep-plate-body .viz-legend { font-family: var(--ep-sans); }
+        .ep .ep-plate-body .topo-card { border-radius: 0; }
+        @media (max-width: 480px) {
+            .ep .ep-plate-body .topo-grid { grid-template-columns: repeat(2, 1fr); }
+            .ep .ep-plate-body .topo-card:nth-child(5) { grid-column: 1 / -1; max-width: 50%; margin: 0 auto; }
+            .ep .ep-plate-body .topo-card svg { width: 100%; max-width: 130px; }
+        }
+        .ep .essay-body > .pullquote { max-width: 50rem !important; font-size: clamp(1.15rem, 2.1vw, 1.5rem); }
+        /* chart marks and text */
+        .ep .ep-plate-body svg .tk { fill: var(--muted); font-size: 10px; }
+        .ep .ep-plate-body svg .k { fill: var(--fg); font-size: 11px; }
+        .ep .ep-plate-body svg .val { fill: var(--fg); font-size: 10px; }
+        .ep .ep-plate-body svg .ptitle { fill: var(--muted); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+        .ep .ep-plate-body svg .dl { fill: var(--fg); font-size: 10px; font-weight: 500; paint-order: stroke; stroke: var(--bg-2); stroke-width: 3px; stroke-linejoin: round; pointer-events: none; }
+        .ep .ep-plate-body svg .hit { fill: transparent; cursor: default; }
+        .ep .ep-plate-body svg .hit.hot { fill: var(--gold-soft); }
+        .ep .ep-plate-body svg .hrow.hot .hit { fill: var(--gold-soft); }
+        .ep .ep-plate-body svg .bar, .ep .ep-plate-body svg .mark, .ep .ep-plate-body svg .ref, .ep .ep-plate-body svg .cell-l { pointer-events: none; }
+        .ep .ep-plate-body svg .heat-cell.hot { stroke: var(--fg); stroke-width: 1.5; }
+        .ep .ep-plate-body .topo-card { transition: border-color .15s; }
+        .ep .ep-plate-body .topo-card.hot { border-color: var(--gold); }
+        .ep .ep-plate-body .viz-legend .swatch { border-radius: 2px; }
+    </style>
 </head>
-<body>
+<body class="ep">
 
         <header class="page-header">
         <a class="home" href="index.html"><b>&#9670;</b> NICCOLÒ RIDI</a>
@@ -594,11 +609,13 @@
             <a href="index.html#data" class="back-link">&larr; Back to Data</a>
 
             <header class="essay-header">
-                <h1>Custom in the Making</h1>
+                <p class="ep-kicker">A data essay</p>
+                <h1>Custom in the <em>Making</em></h1>
+                <p class="ep-dek">An Agent-Based Model of Customary International Law Formation</p>
                 <div class="essay-meta">
-                    <span class="authors">Niccolò Ridi</span><br>
-                    An Agent-Based Model of Customary International Law Formation (2026)
+                    <span class="authors">Niccolò Ridi</span> &middot; 2026
                 </div>
+                <div class="ep-rule"></div>
             </header>
 
             <div class="essay-body">
@@ -611,64 +628,72 @@
 
                 <p>The payoff is a set of findings that challenge conventional wisdom in ways that purely doctrinal reasoning could not. The idealised "international community" turns out to be the worst environment for norm formation. Hypocrisy facilitates the emergence of genuine legal conviction. Treaties catalyse custom among non-parties. And the entire system operates near a critical phase boundary &ndash; borrowed from physics &ndash; where small structural factors tip outcomes between crystallisation and failure.</p>
 
-                <h2>Why Simulate?</h2>
+                <div class="ep-section-head no-num"><h2>Why Simulate?</h2></div>
 
                 <p>Agent-based modelling offers three advantages for studying CIL formation that no amount of case-law analysis can replicate. First, it captures <strong>emergence</strong>: the way macro-level legal order arises from micro-level state interactions without central coordination. Traditional doctrinal analysis treats CIL as a binary status &ndash; either a norm exists or it does not &ndash; rather than as a dynamic process with tipping points, feedback loops, and path dependence. Second, ABM permits <strong>systematic experimentation</strong>. Questions that cannot be answered through case studies &ndash; such as whether the persistent objector rule destabilises norm formation, or whether treaties crowd out or catalyse custom &ndash; can be tested by toggling mechanisms on and off across thousands of simulated runs. Third, the method forces <strong>theoretical precision</strong>. Translating doctrinal concepts into code requires specifying exactly what "widespread" means, how belief updates, and when a norm counts as established.</p>
 
                 <p>The model operationalises the ILC's two-element test as computational thresholds: widespread practice (&ge;60% of states), representative across regions and power tiers, consistent over 10 timesteps, and accompanied by <em>opinio juris</em> (&ge;60% mean belief among non-treaty states). Each agent possesses heterogeneous attributes &ndash; power drawn from a Pareto distribution, intrinsic preference, conformity weight, inertia &ndash; and updates beliefs through an evidence signal combining observed practice, observed statements, and duration.</p>
 
-                <h2>I. The Phase Boundary</h2>
+                <div class="ep-section-head"><span class="num">I</span><h2>The Phase Boundary</h2></div>
 
                 <p>Before testing specific mechanisms, the model requires calibration. A sensitivity analysis varied two key parameters &ndash; intrinsic preference mean (&mu;<sub>IP</sub>) and conformity weight mean (&mu;<sub>CW</sub>) &ndash; across 63 combinations. The results reveal a sharp <strong>phase transition</strong>: a narrow parameter band where crystallisation is uncertain and structural factors become decisive.</p>
 
                 <p>When intrinsic preference is high (&mu;<sub>IP</sub> &ge; 0.40), crystallisation occurs in 100% of simulations regardless of conformity weight. When it is low (&mu;<sub>IP</sub> &le; 0.25), it never occurs. Between these extremes lies the <strong>boundary region</strong> where outcomes are probabilistic.</p>
 
-                <!-- HEATMAP -->
-                <div class="viz-block viz-reveal" id="viz-heatmap"></div>
-                <p class="viz-caption">Figure 1: Crystallisation rate by intrinsic preference (&mu;<sub>IP</sub>) and conformity weight (&mu;<sub>CW</sub>). Each cell represents 8 simulation runs. Hover for details.</p>
+                <section class="ep-plate narrow ep-reveal" data-plate="I · Phase boundary">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate I</span><h3>The phase boundary</h3><span class="sub">63 parameter combinations</span></div>
+                        <div class="ep-plate-body"><div class="viz-block" id="viz-heatmap"></div></div>
+                        <div class="ep-plate-caption"><div class="cap">Crystallisation rate by intrinsic preference (&mu;<sub>IP</sub>) and conformity weight (&mu;<sub>CW</sub>). Each cell represents 8 simulation runs. Hover for details.</div></div>
+                    </div>
+                </section>
 
                 <p>At the boundary parameters (&mu;<sub>IP</sub> = 0.30, &mu;<sub>CW</sub> = 0.45), crystallisation occurs in approximately 50% of simulations &ndash; the region of maximum uncertainty. All subsequent experiments operate at or near this boundary, where structural factors have bite.</p>
 
-                <h2>II. Observation Structure</h2>
+                <div class="ep-section-head"><span class="num">II</span><h2>Observation Structure</h2></div>
 
                 <p>Current doctrine implicitly assumes that state practice is observable by all &ndash; the "international community" monitors and responds to what states do. But observation in practice is structured: states attend more closely to neighbours, trading partners, and major powers. Does this structure matter?</p>
 
                 <p>Five network topologies were compared, each representing a different assumption about how states observe one another. The results are counterintuitive: the idealised "international community" where all observe all equally &ndash; the <strong>complete network</strong> &ndash; performs worst.</p>
 
-                <!-- NETWORK TOPOLOGY MINI-VIZ -->
-                <div class="viz-block viz-reveal" id="viz-topologies"></div>
-                <p class="viz-caption">Figure 2: Crystallisation rates across five observation structures. Each topology was run 100 times at boundary parameters. Mini-networks illustrate each structure.</p>
+                <section class="ep-plate narrow ep-reveal" data-plate="II · Topologies">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate II</span><h3>Five observation structures</h3><span class="sub">100 runs each</span></div>
+                        <div class="ep-plate-body"><div class="viz-block" id="viz-topologies"></div></div>
+                        <div class="ep-plate-caption"><div class="cap">Crystallisation rates across five observation structures. Each topology was run 100 times at boundary parameters. Mini-networks illustrate each structure.</div></div>
+                    </div>
+                </section>
 
                 <p>The mechanism is signal aggregation. On a complete network, each state's evidence signal averages across 99 equally weighted neighbours. Local momentum &ndash; a cluster of states beginning to practise and reinforce each other &ndash; is diluted by the global average. A European state developing conviction observes not just its practising neighbours but also the 80 non-practising states elsewhere, dampening the signal. Structured networks permit local cascades to build before encountering global resistance. <strong>Small-world networks</strong> perform best (58%) because bridging ties allow successful local cascades to jump between clusters without requiring universal diffusion first.</p>
 
                 <p>This reveals observation as a <strong>hidden variable</strong> in CIL doctrine. Crystallisation rates vary by 25 percentage points depending solely on who observes whom &ndash; yet current doctrine says nothing about observation structure. The ILC's requirement that practice be "representative" (Conclusion 8) takes on new significance: representative practice may matter not only because it demonstrates breadth of acceptance, but because it ensures the practice is <em>visible</em> across different network segments, enabling the bridging dynamics that facilitate global crystallisation.</p>
 
-                <!-- TOPOLOGY BAR CHART -->
-                <div class="viz-block viz-reveal" id="viz-topo-bars"></div>
-                <p class="viz-caption">Figure 3: Network topology comparison across five outcome measures. 100 runs per topology, boundary parameters.</p>
+                <section class="ep-plate narrow ep-reveal" data-plate="III · By topology">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate III</span><h3>Crystallisation by topology</h3><span class="sub">boundary parameters</span></div>
+                        <div class="ep-plate-body"><div class="viz-block" id="viz-topo-bars"></div></div>
+                        <div class="ep-plate-caption"><div class="cap">Network topology comparison across five outcome measures. 100 runs per topology, boundary parameters.</div></div>
+                    </div>
+                </section>
 
-                <h2>III. The Bootstrapping Paradox</h2>
+                <div class="ep-section-head"><span class="num">III</span><h2>The Bootstrapping Paradox</h2></div>
 
                 <p>Can "cheap talk" &ndash; states publicly affirming legality while privately doubting it &ndash; bootstrap genuine belief? The model varied sincerity (the probability that public statements reflect private conviction) from 0.2 to 1.0. The results are paradoxical.</p>
 
-                <div class="compare-row">
-                    <div class="compare-item">
-                        <div class="compare-label">Low sincerity (0.2)</div>
-                        <div class="compare-val val-high">44%</div>
-                        <div class="compare-sub">crystallisation rate</div>
-                    </div>
-                    <div class="compare-item">
-                        <div class="compare-label">Full sincerity (1.0)</div>
-                        <div class="compare-val val-low">6%</div>
-                        <div class="compare-sub">crystallisation rate</div>
-                    </div>
+                <div class="ep-stats pair">
+                    <div class="ep-stat"><div class="n val-high">44%</div><div class="l">Low sincerity (0.2)<br>crystallisation rate</div></div>
+                    <div class="ep-stat"><div class="n val-low">6%</div><div class="l">Full sincerity (1.0)<br>crystallisation rate</div></div>
                 </div>
 
                 <p>Low sincerity <em>facilitates</em> norm formation. High sincerity <em>prevents</em> it. When states make strategic statements &ndash; affirming legality when practising, regardless of private belief &ndash; the inflated statement environment creates a feedback loop. Other states observe widespread affirmation, update their beliefs accordingly, and genuine conviction emerges. By the time crystallisation occurs, the cheap talk has produced the belief it initially lacked.</p>
 
-                <!-- SINCERITY CHART -->
-                <div class="viz-block viz-reveal" id="viz-sincerity"></div>
-                <p class="viz-caption">Figure 4: Crystallisation rate and mean <em>opinio juris</em> by sincerity level. 50 runs per condition, boundary parameters.</p>
+                <section class="ep-plate narrow ep-reveal" data-plate="IV · Sincerity">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate IV</span><h3>Sincerity and conviction</h3><span class="sub">50 runs per condition</span></div>
+                        <div class="ep-plate-body"><div class="viz-block" id="viz-sincerity"></div></div>
+                        <div class="ep-plate-caption"><div class="cap">Crystallisation rate and mean <em>opinio juris</em> by sincerity level. 50 runs per condition, boundary parameters.</div></div>
+                    </div>
+                </section>
 
                 <p>At full sincerity, states honestly report their doubts. The candid acknowledgment that practice lacks legal status prevents the feedback loop from gaining traction. And here is the deepest paradox: the 6% of norms that <em>do</em> form under full sincerity have the highest hollow practitioner rates (37.7%) &ndash; states practising without genuine conviction. The honest-communication condition produces the fewest and the <em>least genuine</em> customs.</p>
 
@@ -678,17 +703,21 @@
                     The ILC's Conclusion 3(2) requires that practice and <em>opinio juris</em> be "separately ascertained." But the process that generates custom requires a phase where statements outrun conviction. Demanding strict correspondence throughout the formation process would prevent custom from emerging in the first place. The two-element test describes the <em>endpoint</em> of a dynamic process, not constraints that must hold throughout.
                 </div>
 
-                <h2>IV. Speed, Stability, and the Consistency Requirement</h2>
+                <div class="ep-section-head"><span class="num">IV</span><h2>Speed, Stability, and the Consistency Requirement</h2></div>
 
                 <p>Is there a trade-off between the speed of norm formation and the stability of the resulting norm? The model varied conformity weight while holding intrinsic preference at the boundary, then administered a "shock" &ndash; randomly forcing 30% of practising states to defect &ndash; to test whether crystallised norms survive.</p>
 
-                <!-- SPEED-STABILITY CHART -->
-                <div class="viz-block viz-reveal" id="viz-speed"></div>
-                <p class="viz-caption">Figure 5: Speed-stability trade-off. Higher conformity weight produces faster crystallisation but also deeper conviction, making norms more resilient. 50 runs per condition.</p>
+                <section class="ep-plate narrow ep-reveal" data-plate="V · Speed">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate V</span><h3>Speed and stability</h3><span class="sub">after a 30% defection shock</span></div>
+                        <div class="ep-plate-body"><div class="viz-block" id="viz-speed"></div></div>
+                        <div class="ep-plate-caption"><div class="cap">Speed-stability trade-off. Higher conformity weight produces faster crystallisation but also deeper conviction, making norms more resilient. 50 runs per condition.</div></div>
+                    </div>
+                </section>
 
-                <p>A clear pattern emerges: norms that form quickly under high conformity weight also build deeper <em>opinio juris</em>, making them <strong>more</strong> resilient to shocks. At low conformity weight (0.40), only 7 of 50 simulations crystallise, with mean time of 194 steps and 86% survival. Above 0.50, all crystallised norms survive the shock &ndash; faster formation correlates with greater stability, not less. The ILC's consistency requirement (Conclusion 8) functions as a quality filter: norms that maintain practice long enough to satisfy it have, by definition, built the deep conviction needed to persist.</p>
+                <p>A clear pattern emerges: norms that form quickly under high conformity weight also build deeper <em>opinio juris</em>, making them <strong>more</strong> resilient to shocks. At low conformity weight (0.40), only 7 of 50 simulations crystallise, with mean time of 194 steps and 86% survival. From 0.50, all crystallised norms survive the shock &ndash; faster formation correlates with greater stability, not less. The ILC's consistency requirement (Conclusion 8) functions as a quality filter: norms that maintain practice long enough to satisfy it have, by definition, built the deep conviction needed to persist.</p>
 
-                <h2>V. Power and Structure at the Boundary</h2>
+                <div class="ep-section-head"><span class="num">V</span><h2>Power and Structure at the Boundary</h2></div>
 
                 <p>The remaining experiments test three structural mechanisms: the preferences of powerful states, the persistent objector rule, and the treaty channel. Each operates most dramatically at the boundary &ndash; where norms are contested and outcomes uncertain.</p>
 
@@ -703,11 +732,15 @@
                 <h3>Treaties</h3>
                 <p>Introducing a treaty channel at the boundary increases crystallisation from 38% to <strong>100%</strong> &ndash; the largest facilitation effect observed in any experiment. The mechanism is indirect: treaty signatories are locked into consistent practice and affirmation, creating a stable bloc whose behaviour is no longer subject to stochastic fluctuation. The remaining ~37 non-signatories observe this elevated practice environment, and their <em>opinio juris</em> rises in response. Crucially, the crystallisation check excludes signatories' beliefs &ndash; it requires genuine customary conviction among non-parties. The treaty functions as a stepping stone, not a substitute: it does not replace customary obligation but creates the conditions under which customary obligation emerges among those not bound by the treaty.</p>
 
-                <!-- STRUCTURAL FACTORS CHART -->
-                <div class="viz-block viz-reveal" id="viz-structural"></div>
-                <p class="viz-caption">Figure 6: Effect of structural mechanisms on crystallisation rate. Each mechanism tested at boundary parameters. Baseline (no mechanism) shown for comparison.</p>
+                <section class="ep-plate narrow ep-reveal" data-plate="VI · Mechanisms">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate VI</span><h3>Structural mechanisms</h3><span class="sub">boundary parameters</span></div>
+                        <div class="ep-plate-body"><div class="viz-block" id="viz-structural"></div></div>
+                        <div class="ep-plate-caption"><div class="cap">Effect of structural mechanisms on crystallisation rate. Each mechanism tested at boundary parameters. Baseline (no mechanism) shown for comparison.</div></div>
+                    </div>
+                </section>
 
-                <h2>VI. The Phase Boundary Framework</h2>
+                <div class="ep-section-head"><span class="num">VI</span><h2>The Phase Boundary Framework</h2></div>
 
                 <p>The central claim is that CIL formation operates near a phase boundary. When preferences strongly favour a practice, norms crystallise reliably regardless of institutional design. When preferences strongly oppose it, nothing works. In the contested middle &ndash; where most interesting norms reside &ndash; small factors tip outcomes.</p>
 
@@ -723,10 +756,8 @@
 
                 <p>Custom is not merely found; it is <em>made</em> &ndash; through observation, feedback, and the accumulation of practice and belief across a decentralised system of states. Understanding how it is made requires understanding the boundary dynamics where structural factors determine whether emerging practices crystallise into binding law or dissipate into mere behaviour.</p>
 
-                <p style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.88rem; color: var(--secondary-color);">
-                    <strong>Full paper:</strong> Niccolò Ridi, 'Custom in the Making: An Agent-Based Model of Customary International Law Formation' (2026).
-                    <strong>Code:</strong> <a href="https://github.com/niccoloridi/PraxisBeliefABM" target="_blank">github.com/niccoloridi/PraxisBeliefABM</a>.
-                </p>
+                <div class="ep-colophon"><p><strong>Full paper:</strong> Niccolò Ridi, 'Custom in the Making: An Agent-Based Model of Customary International Law Formation' (2026).
+                    <strong>Code:</strong> <a href="https://github.com/niccoloridi/PraxisBeliefABM" target="_blank">github.com/niccoloridi/PraxisBeliefABM</a>.</p></div>
 
             </div>
 
@@ -831,8 +862,7 @@
 
     function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
 
-    /* Narrow-viewport helpers: desktop output is unchanged because every
-       call site only diverges when innerWidth ≤ 768 (or ≤ 480). */
+    /* Narrow-viewport helpers */
     function isMobile() { return window.innerWidth <= 768; }
     function isNarrow() { return window.innerWidth <= 480; }
 
@@ -850,202 +880,260 @@
     }
     function toggleTheme() { applyTheme(theme === 'light' ? 'dark' : 'light', true); }
 
-    /* ── HEATMAP ─────────────────────────────────── */
+    /* ── SHARED CHART HELPERS ────────────────────── */
+    const esc = s => EP.esc(s);
+    function tokens() {
+        return { fg: css('--fg'), muted: css('--muted'), gold: css('--gold'), line: css('--line'), bg2: css('--bg-2'), bg3: getComputedStyle(document.body).getPropertyValue('--bg-3').trim() || css('--bg-2') };
+    }
+    function newSvg(container, w, h, label) {
+        return container.append('svg').attr('width', w).attr('height', h)
+            .attr('viewBox', `0 0 ${w} ${h}`).attr('role', 'img').attr('aria-label', label);
+    }
+    /* tooltip on a d3 selection; html(d) builds the content */
+    let tipOwner = null;   // the element whose tooltip is showing; a late mouseleave from another element must not hide it
+    function withTip(sel, html) {
+        function enter(ev, d) { tipOwner = this; EP.tip(ev, html(d)); d3.select(this).classed('hot', true); }
+        return sel.on('mouseenter', enter)
+            // a pointer already inside the mark after a scroll gets no mouseenter; claim the tip on the first move
+            .on('mousemove', function (ev, d) { if (tipOwner !== this || !document.querySelector('.ep-tip.on')) enter.call(this, ev, d); else EP.move(ev); })
+            .on('mouseleave', function () { if (tipOwner === this) { EP.hide(); tipOwner = null; } d3.select(this).classed('hot', false); });
+    }
+    const row = (k, v) => `${k} <span class="v">${v}</span><br>`;
+    function fmtPct(v) { return v + '%'; }
+
+    /* Horizontal bar list (Plates III and VI). rows: {label, v, color} */
+    function hbars(container, rows, o) {
+        const t = tokens();
+        const w = container.node().getBoundingClientRect().width;
+        const mob = w < 560;
+        const fs = mob ? 10 : 11;
+        const padL = o.padL(mob), padR = 42, top = 34, rowH = mob ? 30 : 32, bh = mob ? 14 : 16;
+        const H = top + rows.length * rowH + 40;
+        const svg = newSvg(container, w, H, o.aria);
+        const x = d3.scaleLinear().domain([0, o.max]).range([padL, w - padR]);
+        const yEnd = top + rows.length * rowH;
+        o.ticks.forEach(v => {
+            svg.append('line').attr('x1', x(v)).attr('x2', x(v)).attr('y1', top - 4).attr('y2', yEnd).attr('stroke', t.line).attr('stroke-width', 1);
+            svg.append('text').attr('class', 'tk').attr('x', x(v)).attr('y', yEnd + 14).attr('text-anchor', 'middle').text(v + '%');
+        });
+        svg.append('text').attr('class', 'tk').attr('x', (padL + w - padR) / 2).attr('y', H - 6).attr('text-anchor', 'middle').text(o.xTitle);
+        const g = svg.selectAll('g.hrow').data(rows).join('g').attr('class', 'hrow')
+            .attr('transform', (d, i) => `translate(0,${top + i * rowH})`);
+        g.append('rect').attr('class', 'hit').attr('x', 0).attr('y', 0).attr('width', w).attr('height', rowH);
+        g.append('text').attr('class', 'k').style('font-size', fs + 'px').attr('x', padL - 10).attr('y', rowH / 2).attr('dy', '0.32em').attr('text-anchor', 'end').text(d => d.label);
+        g.append('rect').attr('class', 'bar').attr('x', padL).attr('y', (rowH - bh) / 2).attr('height', bh)
+            .attr('width', d => Math.max(1.5, x(d.v) - padL)).attr('rx', 2).attr('fill', d => d.color);
+        g.append('text').attr('class', 'val').attr('x', d => x(d.v) + 6).attr('y', rowH / 2).attr('dy', '0.32em').text(d => d.v + '%');
+        // reference line drawn over the bars, labelled above the plot
+        if (o.ref) {
+            svg.append('line').attr('class', 'ref').attr('x1', x(o.ref.v)).attr('x2', x(o.ref.v)).attr('y1', top - 10).attr('y2', yEnd)
+                .attr('stroke', t.muted).attr('stroke-width', 1);
+            svg.append('text').attr('class', 'tk').attr('x', x(o.ref.v)).attr('y', top - 15).attr('text-anchor', 'middle').text(o.ref.label);
+        }
+        withTip(g, o.tip);
+        return svg;
+    }
+
+    /* One small-multiple panel (Plates IV and V): bars or a dot-line over ordered x */
+    function panel(svg, ox, oy, pw, ph, o) {
+        const t = tokens();
+        const m = { top: 30, right: 14, bottom: 40, left: 46 };
+        const g = svg.append('g').attr('transform', `translate(${ox},${oy})`);
+        const x = d3.scaleBand().domain(o.data.map(o.x)).range([m.left, pw - m.right]).paddingInner(0.3).paddingOuter(0.2);
+        const y = d3.scaleLinear().domain(o.yDomain).range([ph - m.bottom, m.top]);
+        const cx = d => x(o.x(d)) + x.bandwidth() / 2;
+        g.append('text').attr('class', 'ptitle').attr('x', 0).attr('y', 12).text(o.title);
+        o.yTicks.forEach(v => {
+            g.append('line').attr('x1', m.left).attr('x2', pw - m.right).attr('y1', y(v)).attr('y2', y(v)).attr('stroke', t.line).attr('stroke-width', 1);
+            g.append('text').attr('class', 'tk').attr('x', m.left - 6).attr('y', y(v)).attr('dy', '0.32em').attr('text-anchor', 'end').text(o.yFmt(v));
+        });
+        o.data.forEach(d => g.append('text').attr('class', 'tk').attr('x', cx(d)).attr('y', ph - m.bottom + 15).attr('text-anchor', 'middle').text(o.xFmt(o.x(d))));
+        g.append('text').attr('class', 'tk').attr('x', (m.left + pw - m.right) / 2).attr('y', ph - 6).attr('text-anchor', 'middle').text(o.xTitle);
+        // hit columns first so the marks sit on top
+        const hit = g.selectAll('rect.hit').data(o.data).join('rect').attr('class', 'hit')
+            .attr('x', d => cx(d) - x.step() / 2).attr('width', x.step())
+            .attr('y', m.top - 8).attr('height', ph - m.bottom - m.top + 8);
+        withTip(hit, o.tip);
+        if (o.kind === 'bar') {
+            const bw = Math.min(24, x.bandwidth());
+            g.selectAll('rect.bar').data(o.data).join('rect').attr('class', 'bar')
+                .attr('x', d => cx(d) - bw / 2).attr('width', bw)
+                .attr('y', d => y(o.y(d))).attr('height', d => y(o.yDomain[0]) - y(o.y(d)))
+                .attr('rx', 2).attr('fill', t.gold);
+        } else {
+            g.append('path').datum(o.data).attr('class', 'mark')
+                .attr('d', d3.line().x(cx).y(d => y(o.y(d))))
+                .attr('fill', 'none').attr('stroke', t.gold).attr('stroke-width', 2);
+            g.selectAll('circle.dot').data(o.data).join('circle').attr('class', 'dot mark')
+                .attr('cx', cx).attr('cy', d => y(o.y(d))).attr('r', 4)
+                .attr('fill', t.gold).attr('stroke', t.bg2).attr('stroke-width', 2);
+        }
+        (o.labels || []).forEach(([i, pos]) => {
+            const d = o.data[i];
+            const yy = y(o.y(d));
+            const off = o.kind === 'bar' ? -6 : (pos === 'above' ? -10 : pos === 'br' ? 15 : 17);
+            g.append('text').attr('class', 'dl').attr('x', cx(d) + (pos === 'br' ? 7 : 0)).attr('y', yy + off)
+                .attr('text-anchor', pos === 'br' ? 'start' : 'middle').text(o.lfmt(o.y(d)));
+        });
+        return g;
+    }
+
+    /* Two panels side by side, stacked on narrow screens */
+    function twoPanels(container, aria, a, b) {
+        const w = container.node().getBoundingClientRect().width;
+        const stacked = w < 560;
+        const gap = stacked ? 22 : 36;
+        const pw = stacked ? w : (w - gap) / 2;
+        const ph = stacked ? 210 : 270;
+        const H = stacked ? ph * 2 + gap : ph;
+        const svg = newSvg(container, w, H, aria);
+        panel(svg, 0, 0, pw, ph, a);
+        panel(svg, stacked ? 0 : pw + gap, stacked ? ph + gap : 0, pw, ph, b);
+        return svg;
+    }
+
+    /* ── PLATE I: HEATMAP ────────────────────────── */
     function drawHeatmap() {
         const container = d3.select("#viz-heatmap");
         container.selectAll("*").remove();
         const w = container.node().getBoundingClientRect().width;
         const mob = isMobile();
-        // On mobile, shrink the desktop-tuned margins and grow the aspect
-        // ratio so the 9×7 grid cells stay large enough to hold their labels
-        // (otherwise the in-cell text collides / overflows onto the prose).
         const h = mob ? Math.max(300, w * 1.05) : Math.min(400, w * 0.65);
         const m = mob
-            ? { top: 22, right: 30, bottom: 48, left: 40 }
-            : { top: 30, right: 60, bottom: 55, left: 70 };
+            ? { top: 22, right: 30, bottom: 48, left: 52 }
+            : { top: 30, right: 66, bottom: 55, left: 70 };
+        const t = tokens();
 
-        const svg = container.append("svg")
-            .attr("width", w).attr("height", h)
-            .attr("viewBox", `0 0 ${w} ${h}`);
+        const svg = newSvg(container, w, h, 'Heatmap of crystallisation rate across 63 combinations of intrinsic preference mean (rows, 0.15 to 0.45) and conformity weight mean (columns, 0.20 to 0.60). Rates are 0% for low intrinsic preference, 100% from 0.40 upward, and between the two only in a narrow boundary band.');
 
         const ip = heatmapData.ipValues;
         const cw = heatmapData.cwValues;
-
         const cellW = (w - m.left - m.right) / cw.length;
         const cellH = (h - m.top - m.bottom) / ip.length;
 
-        // Color scale — theme-aware sequential.
-        // Dark: inferno (dark → magenta → gold → bright). Light: magma reads better on paper.
-        // The CSS token --heat-scheme selects the scheme; the empty/low end is blended
-        // toward the page background so near-zero cells melt into the paper/ground.
-        const isLight = document.documentElement.classList.contains('light-mode');
-        const scheme = css('--heat-scheme');
-        let baseInterp;
-        if (scheme === 'magma' && typeof d3.interpolateMagma === 'function') baseInterp = d3.interpolateMagma;
-        else if (typeof d3.interpolateInferno === 'function') baseInterp = d3.interpolateInferno;
-        else {
-            const ramp = d3.scaleLinear()
-                .domain([0, 0.5, 1])
-                .range([css('--heat-low'), css('--heat-mid'), css('--heat-high')])
-                .interpolate(d3.interpolateRgb);
-            baseInterp = t => ramp(t);
-        }
-        // On light: invert magma so the low end is light (blends into the bg) and the
-        // high end is dark/saturated; also fade the very low end into the page bg.
-        const bg = css('--bg');
-        const heatInterp = t => isLight
-            ? d3.interpolateRgb(bg, baseInterp(1 - (0.05 + t * 0.9)))(Math.min(1, 0.25 + t * 0.9))
-            : baseInterp(0.05 + t * 0.9);
-        const colorScale = d3.scaleSequential()
-            .domain([0, 1])
-            .interpolator(heatInterp);
+        // Single-hue sequential ramp in the essay's gold: recessive surface (0%) to gold (100%).
+        const colorScale = d3.scaleLinear().domain([0, 1]).range([t.bg3, t.gold])
+            .interpolate(d3.interpolateLab).clamp(true);
+        // label colour: whichever of the two text tokens contrasts more with the cell
+        const bgTok = css('--bg');
+        const inkOn = fill => { const L = d3.lab(fill).l; return Math.abs(L - d3.lab(t.fg).l) >= Math.abs(L - d3.lab(bgTok).l) ? t.fg : bgTok; };
 
-        // Tooltip
-        const tooltip = container.append("div").attr("class", "viz-tooltip");
+        const cells = [];
+        ip.forEach((ipVal, i) => cw.forEach((cwVal, j) => cells.push({ i, j, ip: ipVal, cw: cwVal, rate: heatmapData.rates[i][j], time: heatmapTime.rates[i][j] })));
 
-        // Cells
-        ip.forEach((ipVal, i) => {
-            cw.forEach((cwVal, j) => {
-                const rate = heatmapData.rates[i][j];
-                const time = heatmapTime.rates[i][j];
-                svg.append("rect")
-                    .attr("class", "heat-cell")
-                    .attr("x", m.left + j * cellW)
-                    .attr("y", m.top + i * cellH)
-                    .attr("width", cellW - 1)
-                    .attr("height", cellH - 1)
-                    .attr("fill", colorScale(rate))
-                    .attr("rx", 2)
-                    .on("mousemove", function(event) {
-                        let txt = `µ_IP = ${ipVal}, µ_CW = ${cwVal}<br>Crystallisation: <strong>${Math.round(rate * 100)}%</strong>`;
-                        if (time !== null) txt += `<br>Mean time: ${time} steps`;
-                        tooltip.html(txt)
-                            .style("left", (event.offsetX + 12) + "px")
-                            .style("top", (event.offsetY - 10) + "px")
-                            .style("opacity", 1);
-                    })
-                    .on("mouseleave", () => tooltip.style("opacity", 0));
+        const cg = svg.selectAll('rect.heat-cell').data(cells).join('rect')
+            .attr('class', 'heat-cell')
+            .attr('x', d => m.left + d.j * cellW + 1)
+            .attr('y', d => m.top + d.i * cellH + 1)
+            .attr('width', cellW - 2)
+            .attr('height', cellH - 2)
+            .attr('fill', d => colorScale(d.rate))
+            .attr('rx', 2);
+        withTip(cg, d => `<b>µ<sub>IP</sub> ${d.ip.toFixed(2)} · µ<sub>CW</sub> ${d.cw.toFixed(2)}</b>`
+            + row('Crystallisation', Math.round(d.rate * 100) + '%')
+            + (d.time !== null ? row('Mean time', d.time + ' steps') : '')
+            + '<span class="k">8 runs</span>');
 
-                // Cell label
-                svg.append("text")
-                    .attr("x", m.left + j * cellW + cellW / 2)
-                    .attr("y", m.top + i * cellH + cellH / 2)
-                    .attr("dy", "0.35em")
-                    .attr("text-anchor", "middle")
-                    .attr("font-size", cellW > 50 ? "11px" : "9px")
-                    .attr("font-weight", "600")
-                    .attr("fill", rate > 0.55 ? css('--bg') : css('--fg'))
-                    .attr("pointer-events", "none")
-                    .text(Math.round(rate * 100) + "%");
-            });
-        });
+        // Direct labels only on the boundary cells (neither 0% nor 100%); the legend carries the rest
+        svg.selectAll('text.cell-l').data(cells.filter(d => d.rate > 0 && d.rate < 1)).join('text')
+            .attr('class', 'cell-l')
+            .attr('x', d => m.left + d.j * cellW + cellW / 2)
+            .attr('y', d => m.top + d.i * cellH + cellH / 2)
+            .attr('dy', '0.35em').attr('text-anchor', 'middle')
+            .attr('font-size', cellW > 50 ? '11px' : '9px').attr('font-weight', '500')
+            .attr('fill', d => inkOn(colorScale(d.rate)))
+            .attr('pointer-events', 'none')
+            .text(d => Math.round(d.rate * 100) + '%');
 
         // Y axis labels (IP)
         ip.forEach((val, i) => {
-            svg.append("text")
-                .attr("x", m.left - 8)
-                .attr("y", m.top + i * cellH + cellH / 2)
-                .attr("dy", "0.35em")
-                .attr("text-anchor", "end")
-                .attr("font-size", "10px")
-                .attr("fill", css('--secondary-color'))
-                .text(val.toFixed(2));
+            svg.append("text").attr('class', 'tk')
+                .attr("x", m.left - 8).attr("y", m.top + i * cellH + cellH / 2)
+                .attr("dy", "0.35em").attr("text-anchor", "end").text(val.toFixed(2));
         });
-
         // X axis labels (CW)
         cw.forEach((val, j) => {
-            svg.append("text")
-                .attr("x", m.left + j * cellW + cellW / 2)
-                .attr("y", h - m.bottom + 16)
-                .attr("text-anchor", "middle")
-                .attr("font-size", "10px")
-                .attr("fill", css('--secondary-color'))
-                .text(val.toFixed(2));
+            svg.append("text").attr('class', 'tk')
+                .attr("x", m.left + j * cellW + cellW / 2).attr("y", h - m.bottom + 16)
+                .attr("text-anchor", "middle").text(val.toFixed(2));
         });
-
         // Axis titles
-        svg.append("text")
-            .attr("x", (m.left + w - m.right) / 2)
-            .attr("y", h - 8)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "11px")
-            .attr("fill", css('--secondary-color'))
+        svg.append("text").attr('class', 'tk')
+            .attr("x", (m.left + w - m.right) / 2).attr("y", h - 8)
+            .attr("text-anchor", "middle").style('font-size', '11px')
             .text("Conformity Weight Mean (µ_CW)");
-
-        svg.append("text")
+        svg.append("text").attr('class', 'tk')
             .attr("transform", `rotate(-90)`)
-            .attr("x", -(m.top + h - m.bottom) / 2)
-            .attr("y", 14)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "11px")
-            .attr("fill", css('--secondary-color'))
+            .attr("x", -(m.top + h - m.bottom) / 2).attr("y", 14)
+            .attr("text-anchor", "middle").style('font-size', '11px')
             .text("Intrinsic Preference Mean (µ_IP)");
 
-        // Color legend
+        // Colour legend
         const defs = svg.append("defs");
         if (mob) {
-            // Mobile: a compact horizontal gradient bar appended BELOW the plot
-            // (the desktop right-edge legend would overflow the narrow SVG).
             const grad = defs.append("linearGradient").attr("id", "heat-grad").attr("x1", "0").attr("y1", "0").attr("x2", "1").attr("y2", "0");
-            d3.range(0, 1.0001, 0.1).forEach(t => {
-                grad.append("stop").attr("offset", (t * 100) + "%").attr("stop-color", colorScale(t));
-            });
+            d3.range(0, 1.0001, 0.1).forEach(v => grad.append("stop").attr("offset", (v * 100) + "%").attr("stop-color", colorScale(v)));
             const lw = Math.min(160, w - m.left - m.right);
             const lx = (w - lw) / 2;
             const ly = h - 2;
-            // extend the svg a touch so the legend never clips
             svg.attr("height", h + 26).attr("viewBox", `0 0 ${w} ${h + 26}`);
             svg.append("rect").attr("x", lx).attr("y", ly).attr("width", lw).attr("height", 10).attr("fill", "url(#heat-grad)").attr("rx", 2);
             [0, 0.5, 1.0].forEach(v => {
-                svg.append("text")
-                    .attr("x", lx + lw * v)
-                    .attr("y", ly + 22)
+                svg.append("text").attr('class', 'tk')
+                    .attr("x", lx + lw * v).attr("y", ly + 22)
                     .attr("text-anchor", v === 0 ? "start" : v === 1 ? "end" : "middle")
-                    .attr("font-size", "9px")
-                    .attr("fill", css('--secondary-color'))
-                    .text(Math.round(v * 100) + "%");
+                    .style("font-size", "9px").text(Math.round(v * 100) + "%");
             });
         } else {
-            const legendW = 15;
+            const legendW = 12;
             const legendH = h - m.top - m.bottom;
             const legendX = w - m.right + 20;
             const grad = defs.append("linearGradient").attr("id", "heat-grad").attr("x1", "0").attr("y1", "1").attr("x2", "0").attr("y2", "0");
-            d3.range(0, 1.0001, 0.1).forEach(t => {
-                grad.append("stop").attr("offset", (t * 100) + "%").attr("stop-color", colorScale(t));
-            });
+            d3.range(0, 1.0001, 0.1).forEach(v => grad.append("stop").attr("offset", (v * 100) + "%").attr("stop-color", colorScale(v)));
             svg.append("rect").attr("x", legendX).attr("y", m.top).attr("width", legendW).attr("height", legendH).attr("fill", "url(#heat-grad)").attr("rx", 2);
             [0, 0.25, 0.5, 0.75, 1.0].forEach(v => {
-                svg.append("text")
-                    .attr("x", legendX + legendW + 5)
-                    .attr("y", m.top + legendH * (1 - v))
-                    .attr("dy", "0.35em")
-                    .attr("font-size", "9px")
-                    .attr("fill", css('--secondary-color'))
-                    .text(Math.round(v * 100) + "%");
+                svg.append("text").attr('class', 'tk')
+                    .attr("x", legendX + legendW + 5).attr("y", m.top + legendH * (1 - v))
+                    .attr("dy", "0.35em").style("font-size", "9px").text(Math.round(v * 100) + "%");
             });
         }
+
+        EP.table('viz-heatmap', ['µ_IP', 'µ_CW', 'Crystallisation', 'Mean time (steps)'],
+            cells.map(d => [d.ip.toFixed(2), d.cw.toFixed(2), Math.round(d.rate * 100) + '%', d.time === null ? '' : d.time]),
+            { summary: 'Table', numeric: [0, 1, 2, 3] });
     }
 
-    /* ── MINI NETWORK TOPOLOGIES ─────────────────── */
+    /* ── PLATE II: MINI NETWORK TOPOLOGIES ───────── */
+    // Seeded PRNG so the illustrative drawings are identical on every load and redraw.
+    function mulberry32(a) {
+        return function () {
+            a |= 0; a = a + 0x6D2B79F5 | 0;
+            let t = Math.imul(a ^ a >>> 15, 1 | a);
+            t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+            return ((t ^ t >>> 14) >>> 0) / 4294967296;
+        };
+    }
     function drawTopologies() {
         const container = d3.select("#viz-topologies");
         container.selectAll("*").remove();
         const grid = container.append("div").attr("class", "topo-grid");
 
-        topoData.forEach(topo => {
+        topoData.forEach((topo, ti) => {
+            const rand = mulberry32(20260 + ti * 101);
             const card = grid.append("div").attr("class", "topo-card");
             card.append("div").attr("class", "topo-label").text(topo.name);
 
             const size = 130;
-            const svg = card.append("svg").attr("width", size).attr("height", size).attr("viewBox", `0 0 ${size} ${size}`);
+            const svg = card.append("svg").attr("width", size).attr("height", size).attr("viewBox", `0 0 ${size} ${size}`)
+                .attr('role', 'img').attr('aria-label', `Illustrative drawing of a ${topo.name.toLowerCase()} network with 20 nodes: ${topo.desc.toLowerCase()}`);
 
-            // Generate mini network
+            // Generate mini network (illustration only; the model uses 100 states)
             const N = 20;
             const nodes = d3.range(N).map(i => ({
                 id: i,
                 region: Math.floor(i / 4),
-                x: size / 2 + (Math.random() - 0.5) * size * 0.6,
-                y: size / 2 + (Math.random() - 0.5) * size * 0.6
+                x: size / 2 + (rand() - 0.5) * size * 0.6,
+                y: size / 2 + (rand() - 0.5) * size * 0.6
             }));
             const links = [];
 
@@ -1056,15 +1144,15 @@
             } else if (topo.name === "Regional Clusters") {
                 for (let i = 0; i < N; i++)
                     for (let j = i + 1; j < N; j++) {
-                        if (nodes[i].region === nodes[j].region && Math.random() < 0.6) links.push({ source: i, target: j });
-                        else if (Math.random() < 0.03) links.push({ source: i, target: j });
+                        if (nodes[i].region === nodes[j].region && rand() < 0.6) links.push({ source: i, target: j });
+                        else if (rand() < 0.03) links.push({ source: i, target: j });
                     }
             } else if (topo.name === "Small World") {
                 for (let i = 0; i < N; i++) {
                     for (let k = 1; k <= 2; k++) {
                         links.push({ source: i, target: (i + k) % N });
                     }
-                    if (Math.random() < 0.15) links.push({ source: i, target: Math.floor(Math.random() * N) });
+                    if (rand() < 0.15) links.push({ source: i, target: Math.floor(rand() * N) });
                 }
             } else if (topo.name === "Scale-Free") {
                 const degree = new Array(N).fill(0);
@@ -1072,7 +1160,7 @@
                     const targets = new Set();
                     while (targets.size < Math.min(2, i)) {
                         const totalDeg = degree.reduce((a, b) => a + b, 0) || 1;
-                        let r = Math.random() * totalDeg;
+                        let r = rand() * totalDeg;
                         for (let j = 0; j < i; j++) {
                             r -= (degree[j] || 1);
                             if (r <= 0) { targets.add(j); break; }
@@ -1090,22 +1178,22 @@
                     for (let j = i + 1; j < N; j++) {
                         const pi = 1 / (i + 1);
                         const pj = 1 / (j + 1);
-                        if (Math.random() < pi * pj * 8) links.push({ source: i, target: j });
+                        if (rand() < pi * pj * 8) links.push({ source: i, target: j });
                     }
             }
 
             const col = css(topo.color);
 
-            // Force simulation (static)
+            // Force simulation (static; d3-force is deterministic once positions are given)
             const sim = d3.forceSimulation(nodes)
                 .force("link", d3.forceLink(links).id(d => d.id).distance(20))
                 .force("charge", d3.forceManyBody().strength(-15))
                 .force("center", d3.forceCenter(size / 2, size / 2))
                 .force("collision", d3.forceCollide(6))
+                .force("x", d3.forceX(size / 2).strength(0.12))
+                .force("y", d3.forceY(size / 2).strength(0.12))
                 .stop();
-
             for (let i = 0; i < 80; i++) sim.tick();
-
             nodes.forEach(d => {
                 d.x = Math.max(8, Math.min(size - 8, d.x));
                 d.y = Math.max(8, Math.min(size - 8, d.y));
@@ -1127,522 +1215,130 @@
 
             card.append("div").attr("class", "topo-rate").text(topo.rate + "%");
             card.append("div").attr("class", "topo-sub").text("crystallisation");
+
+            withTip(card.datum(topo), d => `<b>${esc(d.name)}</b>${esc(d.desc)}<br>`
+                + row('Crystallisation', d.rate + '%')
+                + '<span class="k">Drawing is illustrative, 20 nodes</span>');
         });
+
+        EP.table('viz-topologies', ['Topology', 'Structure', 'Crystallisation'],
+            topoData.map(d => [d.name, d.desc, d.rate + '%']), { summary: 'Table', numeric: [2] });
     }
 
-    /* ── TOPOLOGY BAR CHART ──────────────────────── */
+    /* ── PLATE III: CRYSTALLISATION BY TOPOLOGY ─── */
     function drawTopoBars() {
         const container = d3.select("#viz-topo-bars");
         container.selectAll("*").remove();
-        const w = container.node().getBoundingClientRect().width;
-        const h = isMobile() ? Math.max(220, w * 0.75) : Math.min(300, w * 0.5);
-        const m = { top: 20, right: 30, bottom: 60, left: 50 };
-
-        const svg = container.append("svg")
-            .attr("width", w).attr("height", h)
-            .attr("viewBox", `0 0 ${w} ${h}`);
-
-        const x = d3.scaleBand()
-            .domain(topoData.map(d => d.name))
-            .range([m.left, w - m.right])
-            .padding(0.25);
-
-        const y = d3.scaleLinear()
-            .domain([0, 70])
-            .range([h - m.bottom, m.top]);
-
-        // Grid lines
-        [10, 20, 30, 40, 50, 60].forEach(v => {
-            svg.append("line")
-                .attr("x1", m.left).attr("x2", w - m.right)
-                .attr("y1", y(v)).attr("y2", y(v))
-                .attr("stroke", css('--border-color'))
-                .attr("stroke-dasharray", "2,2")
-                .attr("opacity", 0.5);
+        const complete = topoData.find(d => d.name === 'Complete');
+        const rows = topoData.slice().sort((a, b) => b.rate - a.rate)
+            .map(d => ({ label: d.name, v: d.rate, color: css(d.color), d }));
+        hbars(container, rows, {
+            aria: 'Bar chart of crystallisation rate by network topology, 100 runs each: ' + rows.map(r => r.label + ' ' + r.v + '%').join(', ') + '.',
+            padL: mob => mob ? 118 : 150, max: 60, ticks: [0, 20, 40, 60],
+            xTitle: 'Crystallisation rate',
+            ref: { v: complete.rate, label: 'complete ' + complete.rate + '%' },
+            tip: r => `<b>${esc(r.d.name)}</b>`
+                + row('Crystallisation', r.d.rate + '%')
+                + row('Mean time', r.d.time + ' steps')
+                + row('Final practice', r.d.practice.toFixed(3))
+                + row('Final opinio juris', r.d.oj.toFixed(3))
+                + row('Regional spread', r.d.spread.toFixed(3)).replace(/<br>$/, '')
         });
-
-        // Baseline line
-        svg.append("line")
-            .attr("x1", m.left).attr("x2", w - m.right)
-            .attr("y1", y(33)).attr("y2", y(33))
-            .attr("stroke", css('--stat-color'))
-            .attr("stroke-dasharray", "6,3")
-            .attr("stroke-width", 1.5)
-            .attr("opacity", 0.6);
-
-        svg.append("text")
-            .attr("x", w - m.right + 3).attr("y", y(33))
-            .attr("dy", "0.35em")
-            .attr("font-size", "9px")
-            .attr("fill", css('--stat-color'))
-            .text("baseline");
-
-        // Bars
-        const tooltip = container.append("div").attr("class", "viz-tooltip");
-
-        svg.selectAll(".bar")
-            .data(topoData)
-            .join("rect")
-            .attr("x", d => x(d.name))
-            .attr("y", d => y(d.rate))
-            .attr("width", x.bandwidth())
-            .attr("height", d => y(0) - y(d.rate))
-            .attr("fill", d => css(d.color))
-            .attr("rx", 3)
-            .attr("opacity", 0.85)
-            .on("mousemove", function(event, d) {
-                tooltip.html(`<strong>${d.name}</strong><br>Rate: ${d.rate}%<br>Time: ${d.time} steps<br>Final OJ: ${d.oj}<br>Spread: ${d.spread}`)
-                    .style("left", (event.offsetX + 12) + "px")
-                    .style("top", (event.offsetY - 10) + "px")
-                    .style("opacity", 1);
-            })
-            .on("mouseleave", () => tooltip.style("opacity", 0));
-
-        // Value labels
-        svg.selectAll(".bar-val")
-            .data(topoData)
-            .join("text")
-            .attr("x", d => x(d.name) + x.bandwidth() / 2)
-            .attr("y", d => y(d.rate) - 6)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "11px")
-            .attr("font-weight", "700")
-            .attr("fill", css('--primary-color'))
-            .text(d => d.rate + "%");
-
-        // X axis
-        svg.append("g")
-            .attr("transform", `translate(0,${h - m.bottom})`)
-            .call(d3.axisBottom(x).tickSize(0))
-            .attr("class", "bar-axis")
-            .selectAll("text")
-            .attr("fill", css('--secondary-color'))
-            .attr("font-size", "9px")
-            .attr("transform", "rotate(-25)")
-            .attr("text-anchor", "end")
-            .attr("dx", "-0.3em")
-            .attr("dy", "0.8em");
-
-        svg.select(".bar-axis path").attr("stroke", css('--border-color'));
-
-        // Y axis
-        svg.append("g")
-            .attr("transform", `translate(${m.left},0)`)
-            .call(d3.axisLeft(y).ticks(4).tickFormat(d => d + "%").tickSize(-w + m.left + m.right))
-            .attr("class", "bar-axis")
-            .selectAll("line").attr("stroke", "none");
-
-        svg.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("x", -(m.top + h - m.bottom) / 2)
-            .attr("y", 12)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "10px")
-            .attr("fill", css('--secondary-color'))
-            .text("Crystallisation Rate");
+        EP.table('viz-topo-bars', ['Topology', 'Crystallisation', 'Mean time (steps)', 'Final practice', 'Final opinio juris', 'Regional spread'],
+            topoData.map(d => [d.name, d.rate + '%', d.time, d.practice.toFixed(3), d.oj.toFixed(3), d.spread.toFixed(3)]),
+            { summary: 'Table', numeric: [1, 2, 3, 4, 5] });
     }
 
-    /* ── SINCERITY CHART ─────────────────────────── */
+    /* ── PLATE IV: SINCERITY ─────────────────────── */
     function drawSincerity() {
         const container = d3.select("#viz-sincerity");
         container.selectAll("*").remove();
-        const w = container.node().getBoundingClientRect().width;
-        const h = isMobile() ? Math.max(240, w * 0.8) : Math.min(320, w * 0.55);
-        const m = { top: 25, right: 50, bottom: 50, left: 50 };
-
-        const svg = container.append("svg")
-            .attr("width", w).attr("height", h)
-            .attr("viewBox", `0 0 ${w} ${h}`);
-
-        const x = d3.scaleBand()
-            .domain(sincerityData.map(d => d.sincerity))
-            .range([m.left, w - m.right])
-            .padding(0.2);
-
-        const yRate = d3.scaleLinear().domain([0, 55]).range([h - m.bottom, m.top]);
-        const yOJ = d3.scaleLinear().domain([0.4, 0.85]).range([h - m.bottom, m.top]);
-
-        const tooltip = container.append("div").attr("class", "viz-tooltip");
-
-        // Grid
-        [10, 20, 30, 40, 50].forEach(v => {
-            svg.append("line")
-                .attr("x1", m.left).attr("x2", w - m.right)
-                .attr("y1", yRate(v)).attr("y2", yRate(v))
-                .attr("stroke", css('--border-color'))
-                .attr("stroke-dasharray", "2,2")
-                .attr("opacity", 0.4);
-        });
-
-        // Bars (crystallisation rate)
-        svg.selectAll(".sinc-bar")
-            .data(sincerityData)
-            .join("rect")
-            .attr("x", d => x(d.sincerity))
-            .attr("y", d => yRate(d.crystRate))
-            .attr("width", x.bandwidth() * 0.6)
-            .attr("height", d => yRate(0) - yRate(d.crystRate))
-            .attr("fill", css('--bar-primary'))
-            .attr("rx", 3)
-            .attr("opacity", 0.85)
-            .on("mousemove", function(event, d) {
-                tooltip.html(`<strong>Sincerity = ${d.sincerity}</strong><br>Crystallisation: ${d.crystRate}%<br>Mean OJ: ${d.meanOJ}<br>Stmt-OJ gap: ${d.stmtOJGap > 0 ? '+' : ''}${d.stmtOJGap.toFixed(3)}<br>Hollow practitioners: ${(d.hollowPract * 100).toFixed(1)}%`)
-                    .style("left", (event.offsetX + 12) + "px")
-                    .style("top", (event.offsetY - 10) + "px")
-                    .style("opacity", 1);
-            })
-            .on("mouseleave", () => tooltip.style("opacity", 0));
-
-        // Rate labels
-        svg.selectAll(".sinc-label")
-            .data(sincerityData)
-            .join("text")
-            .attr("x", d => x(d.sincerity) + x.bandwidth() * 0.3)
-            .attr("y", d => yRate(d.crystRate) - 6)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "11px")
-            .attr("font-weight", "700")
-            .attr("fill", css('--primary-color'))
-            .text(d => d.crystRate + "%");
-
-        // OJ line
-        const ojLine = d3.line()
-            .x(d => x(d.sincerity) + x.bandwidth() * 0.6 + x.bandwidth() * 0.15)
-            .y(d => yOJ(d.meanOJ))
-            .curve(d3.curveMonotoneX);
-
-        svg.append("path")
-            .datum(sincerityData)
-            .attr("d", ojLine)
-            .attr("fill", "none")
-            .attr("stroke", css('--bar-secondary'))
-            .attr("stroke-width", 2.5)
-            .attr("stroke-dasharray", "6,3");
-
-        svg.selectAll(".oj-dot")
-            .data(sincerityData)
-            .join("circle")
-            .attr("cx", d => x(d.sincerity) + x.bandwidth() * 0.6 + x.bandwidth() * 0.15)
-            .attr("cy", d => yOJ(d.meanOJ))
-            .attr("r", 4)
-            .attr("fill", css('--bar-secondary'));
-
-        // X axis
-        svg.append("g")
-            .attr("transform", `translate(0,${h - m.bottom})`)
-            .call(d3.axisBottom(x).tickSize(0))
-            .attr("class", "bar-axis");
-
-        svg.append("text")
-            .attr("x", (m.left + w - m.right) / 2)
-            .attr("y", h - 8)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "11px")
-            .attr("fill", css('--secondary-color'))
-            .text("Sincerity Parameter");
-
-        // Y axis left
-        svg.append("g")
-            .attr("transform", `translate(${m.left},0)`)
-            .call(d3.axisLeft(yRate).ticks(5).tickFormat(d => d + "%").tickSize(3))
-            .attr("class", "bar-axis");
-
-        svg.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("x", -(m.top + h - m.bottom) / 2)
-            .attr("y", 10)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "10px")
-            .attr("fill", css('--bar-primary'))
-            .text("Crystallisation Rate");
-
-        // Y axis right
-        svg.append("g")
-            .attr("transform", `translate(${w - m.right},0)`)
-            .call(d3.axisRight(yOJ).ticks(4).tickSize(3))
-            .attr("class", "bar-axis");
-
-        svg.append("text")
-            .attr("transform", "rotate(90)")
-            .attr("x", (m.top + h - m.bottom) / 2)
-            .attr("y", -w + m.right - 12)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "10px")
-            .attr("fill", css('--bar-secondary'))
-            .text("Mean Opinio Juris");
-
-        // Legend
-        const leg = container.append("div").attr("class", "viz-legend");
-        leg.append("span").html(`<span class="swatch" style="background:${css('--bar-primary')}"></span> Crystallisation rate`);
-        leg.append("span").html(`<span class="swatch" style="background:${css('--bar-secondary')}"></span> Mean opinio juris`);
+        const tip = d => `<b>Sincerity ${d.sincerity.toFixed(1)}</b>`
+            + row('Crystallisation', d.crystRate + '%')
+            + row('Mean opinio juris', d.meanOJ.toFixed(3))
+            + row('Statement-OJ gap', (d.stmtOJGap > 0 ? '+' : '') + d.stmtOJGap.toFixed(3))
+            + row('Hollow practitioners', (d.hollowPract * 100).toFixed(1) + '%').replace(/<br>$/, '');
+        const last = sincerityData.length - 1;
+        const common = { data: sincerityData, x: d => d.sincerity, xFmt: v => v.toFixed(1), xTitle: 'Sincerity', tip };
+        twoPanels(container,
+            'Two panels by sincerity level, 0.2 to 1.0, 50 runs each. Crystallisation rate: ' + sincerityData.map(d => d.crystRate + '%').join(', ')
+            + '. Mean opinio juris: ' + sincerityData.map(d => d.meanOJ.toFixed(3)).join(', ') + '.',
+            Object.assign({}, common, { kind: 'bar', title: 'Crystallisation rate', y: d => d.crystRate,
+                yDomain: [0, 60], yTicks: [0, 20, 40, 60], yFmt: fmtPct, lfmt: fmtPct, labels: [[0], [last]] }),
+            Object.assign({}, common, { kind: 'line', title: 'Mean opinio juris', y: d => d.meanOJ,
+                yDomain: [0.4, 0.8], yTicks: [0.4, 0.5, 0.6, 0.7, 0.8], yFmt: v => v.toFixed(1), lfmt: v => v.toFixed(3),
+                labels: [[0, 'above'], [last, 'below']] }));
+        EP.table('viz-sincerity', ['Sincerity', 'Crystallisation', 'Mean opinio juris', 'Statement-OJ gap', 'False affirmers', 'Hollow practitioners'],
+            sincerityData.map(d => [d.sincerity.toFixed(1), d.crystRate + '%', d.meanOJ.toFixed(3), (d.stmtOJGap > 0 ? '+' : '') + d.stmtOJGap.toFixed(3),
+                (d.falseAffirm * 100).toFixed(1) + '%', (d.hollowPract * 100).toFixed(1) + '%']),
+            { summary: 'Table', numeric: [0, 1, 2, 3, 4, 5] });
     }
 
-    /* ── STRUCTURAL FACTORS ──────────────────────── */
-    function drawStructural() {
-        const container = d3.select("#viz-structural");
-        container.selectAll("*").remove();
-        const w = container.node().getBoundingClientRect().width;
-        const h = isMobile() ? Math.max(260, w * 0.85) : Math.min(350, w * 0.55);
-        const m = { top: 25, right: 20, bottom: 80, left: 50 };
-
-        const svg = container.append("svg")
-            .attr("width", w).attr("height", h)
-            .attr("viewBox", `0 0 ${w} ${h}`);
-
-        // Show boundary values as bars
-        const data = [
-            { label: "Baseline", val: 38, cat: "base" },
-            { label: "Small World\nnetwork", val: 58, cat: "positive" },
-            { label: "Power\npro-aligned", val: 80, cat: "positive" },
-            { label: "Treaty\nchannel", val: 100, cat: "positive" },
-            { label: "Persistent\nobjection", val: 4, cat: "negative" },
-            { label: "Power\nanti-aligned", val: 2, cat: "negative" }
-        ];
-
-        const x = d3.scaleBand()
-            .domain(data.map(d => d.label))
-            .range([m.left, w - m.right])
-            .padding(0.2);
-
-        const y = d3.scaleLinear().domain([0, 105]).range([h - m.bottom, m.top]);
-
-        const tooltip = container.append("div").attr("class", "viz-tooltip");
-
-        // Grid
-        [20, 40, 60, 80, 100].forEach(v => {
-            svg.append("line")
-                .attr("x1", m.left).attr("x2", w - m.right)
-                .attr("y1", y(v)).attr("y2", y(v))
-                .attr("stroke", css('--border-color'))
-                .attr("stroke-dasharray", "2,2")
-                .attr("opacity", 0.4);
-        });
-
-        // Baseline reference
-        svg.append("line")
-            .attr("x1", m.left).attr("x2", w - m.right)
-            .attr("y1", y(38)).attr("y2", y(38))
-            .attr("stroke", css('--stat-color'))
-            .attr("stroke-dasharray", "6,3")
-            .attr("stroke-width", 1.5)
-            .attr("opacity", 0.5);
-
-        // Bars
-        const barColor = d => {
-            if (d.cat === "base") return css('--secondary-color');
-            if (d.cat === "positive") return css('--bar-tertiary');
-            return css('--bar-danger');
-        };
-
-        svg.selectAll(".struct-bar")
-            .data(data)
-            .join("rect")
-            .attr("x", d => x(d.label))
-            .attr("y", d => y(d.val))
-            .attr("width", x.bandwidth())
-            .attr("height", d => y(0) - y(d.val))
-            .attr("fill", barColor)
-            .attr("rx", 3)
-            .attr("opacity", 0.85);
-
-        // Value labels
-        svg.selectAll(".struct-val")
-            .data(data)
-            .join("text")
-            .attr("x", d => x(d.label) + x.bandwidth() / 2)
-            .attr("y", d => y(d.val) - 6)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "12px")
-            .attr("font-weight", "700")
-            .attr("fill", css('--primary-color'))
-            .text(d => d.val + "%");
-
-        // X axis labels (multiline)
-        data.forEach(d => {
-            const lines = d.label.split("\n");
-            const xPos = x(d.label) + x.bandwidth() / 2;
-            lines.forEach((line, i) => {
-                svg.append("text")
-                    .attr("x", xPos)
-                    .attr("y", h - m.bottom + 16 + i * 13)
-                    .attr("text-anchor", "middle")
-                    .attr("font-size", "9px")
-                    .attr("fill", css('--secondary-color'))
-                    .text(line);
-            });
-        });
-
-        // Y axis
-        svg.append("g")
-            .attr("transform", `translate(${m.left},0)`)
-            .call(d3.axisLeft(y).ticks(5).tickFormat(d => d + "%").tickSize(3))
-            .attr("class", "bar-axis");
-
-        svg.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("x", -(m.top + h - m.bottom) / 2)
-            .attr("y", 10)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "10px")
-            .attr("fill", css('--secondary-color'))
-            .text("Crystallisation Rate (boundary)");
-
-        // Legend
-        const leg = container.append("div").attr("class", "viz-legend");
-        leg.append("span").html(`<span class="swatch" style="background:${css('--bar-tertiary')}"></span> Facilitating`);
-        leg.append("span").html(`<span class="swatch" style="background:${css('--bar-danger')}"></span> Inhibiting`);
-        leg.append("span").html(`<span class="swatch" style="background:${css('--secondary-color')}"></span> Baseline (no mechanism)`);
-    }
-
-    /* ── SPEED-STABILITY TRADE-OFF ───────────────── */
+    /* ── PLATE V: SPEED AND STABILITY ────────────── */
     function drawSpeed() {
         const container = d3.select("#viz-speed");
         container.selectAll("*").remove();
-        const w = container.node().getBoundingClientRect().width;
-        const h = isMobile() ? Math.max(240, w * 0.78) : Math.min(300, w * 0.5);
-        const m = { top: 25, right: 55, bottom: 50, left: 55 };
+        const tip = d => `<b>Conformity weight ${d.cw.toFixed(2)}</b>`
+            + row('Crystallised', d.nCryst + ' of 50')
+            + row('Mean time', d.time + ' steps')
+            + row('Pre-shock opinio juris', d.preShockOJ.toFixed(3))
+            + row('Survival after shock', d.survival + '%').replace(/<br>$/, '');
+        const last = speedData.length - 1;
+        const common = { data: speedData, kind: 'line', x: d => d.cw, xFmt: v => v.toFixed(2), xTitle: 'Conformity weight', tip };
+        twoPanels(container,
+            'Two panels by conformity weight, 0.40 to 0.60, 50 runs each. Mean crystallisation time: ' + speedData.map(d => d.time).join(', ')
+            + ' steps. Survival after a 30% defection shock: ' + speedData.map(d => d.survival + '%').join(', ') + '.',
+            Object.assign({}, common, { title: 'Mean time to crystallise (steps)', y: d => d.time,
+                yDomain: [100, 200], yTicks: [100, 125, 150, 175, 200], yFmt: v => v, lfmt: v => v,
+                labels: [[0, 'below'], [last, 'below']] }),
+            Object.assign({}, common, { title: 'Survival after the shock', y: d => d.survival,
+                yDomain: [80, 100], yTicks: [80, 85, 90, 95, 100], yFmt: fmtPct, lfmt: fmtPct,
+                labels: [[0, 'below'], [1, 'br']] }));
+        EP.table('viz-speed', ['Conformity weight', 'Crystallised (of 50)', 'Mean time (steps)', 'Pre-shock opinio juris', 'Survival after shock'],
+            speedData.map(d => [d.cw.toFixed(2), d.nCryst, d.time, d.preShockOJ.toFixed(3), d.survival + '%']),
+            { summary: 'Table', numeric: [0, 1, 2, 3, 4] });
+    }
 
-        const svg = container.append("svg")
-            .attr("width", w).attr("height", h)
-            .attr("viewBox", `0 0 ${w} ${h}`);
-
-        const x = d3.scaleBand()
-            .domain(speedData.map(d => d.cw))
-            .range([m.left, w - m.right])
-            .padding(0.2);
-
-        const yTime = d3.scaleLinear().domain([100, 200]).range([h - m.bottom, m.top]);
-        const ySurv = d3.scaleLinear().domain([80, 102]).range([h - m.bottom, m.top]);
-
-        const tooltip = container.append("div").attr("class", "viz-tooltip");
-
-        // Grid
-        [120, 140, 160, 180, 200].forEach(v => {
-            svg.append("line")
-                .attr("x1", m.left).attr("x2", w - m.right)
-                .attr("y1", yTime(v)).attr("y2", yTime(v))
-                .attr("stroke", css('--border-color'))
-                .attr("stroke-dasharray", "2,2")
-                .attr("opacity", 0.4);
+    /* ── PLATE VI: STRUCTURAL MECHANISMS ─────────── */
+    function drawStructural() {
+        const container = d3.select("#viz-structural");
+        container.selectAll("*").remove();
+        const byMech = Object.fromEntries(structuralData.map(d => [d.mechanism, d]));
+        // display order and labels; values come from structuralData
+        const spec = [
+            ["Baseline", "Baseline", "base"],
+            ["Network\n(Small World)", "Small World network", "positive"],
+            ["Power\n(pro-aligned)", "Power pro-aligned", "positive"],
+            ["Treaty", "Treaty channel", "positive"],
+            ["Objection", "Persistent objection", "negative"],
+            ["Power\n(anti-aligned)", "Power anti-aligned", "negative"]
+        ];
+        const colour = { base: css('--muted'), positive: css('--bar-tertiary'), negative: css('--bar-danger') };
+        const rows = spec.map(([key, label, cat]) => ({ label, cat, v: byMech[key].boundary, fav: byMech[key].favourable, color: colour[cat] }));
+        const base = rows[0].v;
+        hbars(container, rows, {
+            aria: 'Bar chart of crystallisation rate at boundary parameters by structural mechanism: ' + rows.map(r => r.label + ' ' + r.v + '%').join(', ') + '.',
+            padL: mob => mob ? 132 : 160, max: 100, ticks: [0, 25, 50, 75, 100],
+            xTitle: 'Crystallisation rate (boundary)',
+            ref: { v: base, label: 'baseline ' + base + '%' },
+            tip: r => `<b>${esc(r.label)}</b>`
+                + row('Boundary', r.v + '%')
+                + (r.fav !== null ? row('Favourable parameters', r.fav + '%') : '')
+                + (r.label === 'Small World network' ? '<span class="k">From the topology runs (Plate III)</span>'
+                    : r.cat === 'base' ? '<span class="k">No mechanism</span>' : '').replace(/<br>$/, '')
         });
-
-        // Bars (crystallisation time)
-        svg.selectAll(".speed-bar")
-            .data(speedData)
-            .join("rect")
-            .attr("x", d => x(d.cw))
-            .attr("y", d => yTime(d.time))
-            .attr("width", x.bandwidth() * 0.6)
-            .attr("height", d => yTime(100) - yTime(d.time))
-            .attr("fill", css('--bar-primary'))
-            .attr("rx", 3)
-            .attr("opacity", 0.85)
-            .on("mousemove", function(event, d) {
-                tooltip.html(`<strong>CW = ${d.cw}</strong><br>Crystallised: ${d.nCryst}/50<br>Mean time: ${d.time} steps<br>Pre-shock OJ: ${d.preShockOJ}<br>Survival: ${d.survival}%`)
-                    .style("left", (event.offsetX + 12) + "px")
-                    .style("top", (event.offsetY - 10) + "px")
-                    .style("opacity", 1);
-            })
-            .on("mouseleave", () => tooltip.style("opacity", 0));
-
-        // Time labels
-        svg.selectAll(".speed-label")
-            .data(speedData)
-            .join("text")
-            .attr("x", d => x(d.cw) + x.bandwidth() * 0.3)
-            .attr("y", d => yTime(d.time) - 6)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "10px")
-            .attr("font-weight", "700")
-            .attr("fill", css('--primary-color'))
-            .text(d => d.time);
-
-        // Survival rate line
-        const survLine = d3.line()
-            .x(d => x(d.cw) + x.bandwidth() * 0.6 + x.bandwidth() * 0.15)
-            .y(d => ySurv(d.survival))
-            .curve(d3.curveMonotoneX);
-
-        svg.append("path")
-            .datum(speedData)
-            .attr("d", survLine)
-            .attr("fill", "none")
-            .attr("stroke", css('--bar-tertiary'))
-            .attr("stroke-width", 2.5)
-            .attr("stroke-dasharray", "6,3");
-
-        svg.selectAll(".surv-dot")
-            .data(speedData)
-            .join("circle")
-            .attr("cx", d => x(d.cw) + x.bandwidth() * 0.6 + x.bandwidth() * 0.15)
-            .attr("cy", d => ySurv(d.survival))
-            .attr("r", 4)
-            .attr("fill", css('--bar-tertiary'));
-
-        // Survival labels
-        svg.selectAll(".surv-label")
-            .data(speedData)
-            .join("text")
-            .attr("x", d => x(d.cw) + x.bandwidth() * 0.6 + x.bandwidth() * 0.15)
-            .attr("y", d => ySurv(d.survival) - 8)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "9px")
-            .attr("font-weight", "600")
-            .attr("fill", css('--bar-tertiary'))
-            .text(d => d.survival + "%");
-
-        // X axis
-        svg.append("g")
-            .attr("transform", `translate(0,${h - m.bottom})`)
-            .call(d3.axisBottom(x).tickSize(0))
-            .attr("class", "bar-axis");
-
-        svg.append("text")
-            .attr("x", (m.left + w - m.right) / 2)
-            .attr("y", h - 8)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "11px")
-            .attr("fill", css('--secondary-color'))
-            .text("Conformity Weight");
-
-        // Y axis left (time)
-        svg.append("g")
-            .attr("transform", `translate(${m.left},0)`)
-            .call(d3.axisLeft(yTime).ticks(5).tickSize(3))
-            .attr("class", "bar-axis");
-
-        svg.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("x", -(m.top + h - m.bottom) / 2)
-            .attr("y", 12)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "10px")
-            .attr("fill", css('--bar-primary'))
-            .text("Mean Cryst. Time (steps)");
-
-        // Y axis right (survival)
-        svg.append("g")
-            .attr("transform", `translate(${w - m.right},0)`)
-            .call(d3.axisRight(ySurv).ticks(4).tickFormat(d => d + "%").tickSize(3))
-            .attr("class", "bar-axis");
-
-        svg.append("text")
-            .attr("transform", "rotate(90)")
-            .attr("x", (m.top + h - m.bottom) / 2)
-            .attr("y", -w + m.right - 12)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "10px")
-            .attr("fill", css('--bar-tertiary'))
-            .text("Survival Rate After Shock");
-
-        // Legend
         const leg = container.append("div").attr("class", "viz-legend");
-        leg.append("span").html(`<span class="swatch" style="background:${css('--bar-primary')}"></span> Mean crystallisation time`);
-        leg.append("span").html(`<span class="swatch" style="background:${css('--bar-tertiary')}"></span> Norm survival rate`);
+        leg.append("span").html(`<span class="swatch" style="background:${colour.positive}"></span> Facilitating`);
+        leg.append("span").html(`<span class="swatch" style="background:${colour.negative}"></span> Inhibiting`);
+        leg.append("span").html(`<span class="swatch" style="background:${colour.base}"></span> Baseline (no mechanism)`);
+        EP.table('viz-structural', ['Mechanism', 'Boundary', 'Favourable'],
+            rows.map(r => [r.label, r.v + '%', r.fav === null ? 'not reported' : r.fav + '%']),
+            { summary: 'Table', numeric: [1, 2] });
     }
 
     /* ── RENDER ALL ────────────────────────────────── */
     function renderAll() {
+        EP.hide();
         drawHeatmap();
         drawTopologies();
         drawTopoBars();
@@ -1654,10 +1350,11 @@
     // Initial paint: set the toggle label + class state, then render the figures once.
     applyTheme(theme, false);
 
-    let resizeTimer;
+    // Redraw on width changes only (phone address bars fire height-only resizes while scrolling)
+    let resizeTimer, lastW = window.innerWidth;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(renderAll, 200);
+        resizeTimer = setTimeout(() => { if (window.innerWidth !== lastW) { lastW = window.innerWidth; renderAll(); } }, 200);
     });
 
     /* ── SCROLL REVEAL ────────────────────────────── */

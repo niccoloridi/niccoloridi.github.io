@@ -719,8 +719,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+    <link rel="stylesheet" href="essay-plates.css">
+    <script src="essay-plates.js"></script>
+    <style>
+        /* Page-specific additions to the plate kit for this essay */
+        .ep .ep-plate-body .viz-bridge { margin: 0; }
+        .ep .ep-plate-body .network-wrapper { background: var(--bg); }
+        /* a halo in the plate colour keeps labels legible where they cross links or sit on segments */
+        .ep #viz-bridge-1325 text, .ep #viz-functions text { paint-order: stroke; stroke: var(--bg-2); stroke-width: 3px; stroke-linejoin: round; }
+        .ep #viz-functions text { stroke-width: 2.5px; }
+        /* table views: keep wide tables inside the caption and let them scroll */
+        .ep .ep-plate-caption details.ep-table { max-width: 100%; min-width: 0; }
+        .ep .ep-plate-caption details.ep-table .tbl { max-width: 100%; }
+        .ep .essay-body .ep-plate-caption p.uc-note { margin: 0.6rem 0 0.4rem; font-family: var(--ep-sans); font-size: 0.7rem; line-height: 1.5; color: var(--muted); white-space: normal; max-width: 40rem; text-align: left; }
+        .ep .essay-body .ep-plate-caption p.uc-note:first-child { margin-top: 0; }
+        .ep .ep-plate-caption code { font-family: var(--ep-mono); font-size: 0.64rem; color: var(--fg); }
+        .ep #viz-topics text.uc-peak { paint-order: stroke; stroke: var(--bg-2); stroke-width: 3px; stroke-linejoin: round; }
+    </style>
 </head>
-<body>
+<body class="ep">
 
         <header class="page-header">
         <a class="home" href="index.html"><b>&#9670;</b> NICCOLÒ RIDI</a>
@@ -733,11 +750,13 @@
             <a href="index.html#data" class="back-link">&larr; Back to Data</a>
 
             <header class="essay-header">
-                <h1>The Citation Network of the UN Security Council</h1>
+                <p class="ep-kicker">A data essay</p>
+                <h1>The Citation <em>Network</em> of the UN Security Council</h1>
+                <p class="ep-dek">An interactive network of 2,488 UN Security Council resolutions and 12,399 citations, revealing the Council's internal patterns of authority.</p>
                 <div class="essay-meta">
-                    <span class="authors">Niccolò Ridi &amp; Lorenzo Gasbarri</span><br>
-                    Based on the article published in (2023) 61(3) <em>Columbia Journal of Transnational Law</em> 571
+                    <span class="authors">Niccolò Ridi &amp; Lorenzo Gasbarri</span> &middot; Based on the article published in (2023) 61(3) <em>Columbia Journal of Transnational Law</em> 571
                 </div>
+                <div class="ep-rule"></div>
             </header>
 
             <div class="essay-body">
@@ -746,7 +765,7 @@
 
                 <p>This data essay presents the key findings from our large-scale computational analysis of citation patterns across all 2,489 resolutions adopted by the Security Council from 1946 to 2019. Using text-as-data methods and social network analysis, we extracted 21,274 unique references between resolutions, constructing what is, to our knowledge, the first comprehensive citation network of the Council's institutional practice.</p>
 
-                <h2>I. Why Citations Matter</h2>
+                <div class="ep-section-head"><span class="num">I</span><h2>Why Citations Matter</h2></div>
 
                 <p>Do states actually care which resolutions are cited? To answer this, we compared the citations included in draft resolutions circulated as official documents with those in the final adopted text. If references were purely formulaic, we would expect near-perfect alignment between drafts and adopted versions.</p>
 
@@ -759,22 +778,29 @@
 
                 <p>The 2003 Iraq crisis provides a powerful anecdote. The controversy surrounding Resolution 1441 (2002) famously hinged, in part, on whether to include a preambular reference to Resolution 678 (1990) &ndash; which had authorized the use of "all necessary means." The inclusion or exclusion of a single citation carried the weight of a legal basis for war.</p>
 
-                <h2>II. The Rise of Citations</h2>
+                <div class="ep-section-head"><span class="num">II</span><h2>The Rise of Citations</h2></div>
 
                 <p>The Security Council's citation practice has grown dramatically over time. While the number of resolutions adopted per year has risen modestly, the number of citations has surged exponentially. The average number of references per resolution climbed from 8.5 in 2005 to 27.5 in 2017 &ndash; a threefold increase in just twelve years.</p>
 
-                <!-- Bar chart: citations over time -->
-                <div class="viz-block viz-reveal" id="viz-timeline"></div>
-                <p class="viz-caption">Figure 1: Average citations per resolution by five-year period. The sharp post-2000 rise reflects the Council's expanding thematic agenda.</p>
+                <section class="ep-plate narrow ep-reveal" data-plate="I · Timeline">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate I</span><h3>Citations per resolution</h3><span class="sub">by year, 1946&ndash;2019</span></div>
+                        <div class="ep-plate-body"><div class="viz-block" id="viz-timeline"></div></div>
+                        <div class="ep-plate-caption"><div class="cap">Average citations per citing resolution, by year. The sharp post-2000 rise reflects the Council's expanding thematic agenda. Computed from the published network data, which gives 8.5 for 2005 and 28.1 for 2017; the article, on its 2023 version of the dataset, reports 27.5 for 2017.</div></div>
+                    </div>
+                </section>
 
                 <p>When the Council cites, it cites recent resolutions. The average age of a cited resolution in the 2015&ndash;2019 period was just four years, with a median of three. The Council's memory is short and situational &ndash; anchored to active crises and ongoing mandates. Older resolutions surface only when a long-running conflict demands continuity, as with Resolution 242 (1967) on the Middle East ceasefire, still recalled decades later.</p>
 
-                <h2>III. The Network</h2>
+                <div class="ep-section-head"><span class="num">III</span><h2>The Network</h2></div>
 
                 <p>The citation data, once extracted, reveals a network with remarkable structural properties. It is not random. Its degree distribution follows a power law: a small number of resolutions attract a disproportionate share of incoming citations, while the majority remain at the periphery. This signature is characteristic of purposeful, human-made networks &ndash; from the World Wide Web to academic citation graphs.</p>
 
-                <!-- Full interactive GEXF network -->
-                <div class="viz-full-network viz-reveal" id="viz-network-section">
+                <section class="ep-plate ep-reveal" data-plate="II · Network">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate II</span><h3>The full citation network</h3><span class="sub">2,488 resolutions, 12,399 citations</span></div>
+                        <div class="ep-plate-body flush">
+                <div class="viz-full-network" id="viz-network-section">
                     <div class="network-wrapper" id="network-wrapper">
                         <div class="network-loading" id="network-loading">
                             <div class="loading-bar"><div class="loading-fill" id="loading-fill"></div></div>
@@ -814,7 +840,10 @@
                         </div>
                     </div>
                 </div>
-                <p class="viz-caption">Figure 2: The full UNSC citation network &ndash; 2,488 resolutions, 12,399 citations. Zoom, pan, hover for details, click nodes to explore citation chains.</p>
+                        </div>
+                        <div class="ep-plate-caption"><div class="cap">The full UNSC citation network &ndash; 2,488 resolutions, 12,399 citations. Zoom, pan, hover for details, click nodes to explore citation chains.</div></div>
+                    </div>
+                </section>
 
                 <p>The network exhibits strong modularity: resolutions cluster tightly into thematic communities that map closely onto the Council's agenda items. Sanctions regimes, peacekeeping missions, counterterrorism measures, and the protection of civilians each form recognisable sub-graphs, connected by inter-cluster bridges where the Council's thematic and country-specific mandates intersect.</p>
 
@@ -828,16 +857,25 @@
 
                 <p><strong>Broad sponsorship.</strong> Highly cited resolutions tend to enjoy wide co-sponsorship across regional groups and are overwhelmingly adopted by unanimity, lending them a form of institutional authority that encourages future reference.</p>
 
-                <div class="viz-bridge viz-reveal" id="viz-bridge-1325"></div>
-                <p class="viz-caption">Figure 2b: How Resolution 1325 (2000) bridges the network &ndash; a single thematic resolution cited across seven country-specific clusters.</p>
+                <section class="ep-plate narrow ep-reveal" data-plate="III · Resolution 1325">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate III</span><h3>Resolution 1325 as a bridge</h3><span class="sub">seven clusters</span></div>
+                        <div class="ep-plate-body"><div class="viz-bridge" id="viz-bridge-1325"></div></div>
+                        <div class="ep-plate-caption"><div class="cap">How Resolution 1325 (2000) bridges the network &ndash; a single thematic resolution cited across six country situations and by the later women, peace and security resolutions. Each resolution shown cites 1325 in the network data; lines within a cluster are citations between its resolutions.</div></div>
+                    </div>
+                </section>
 
-                <h2>IV. How Citations Are Used</h2>
+                <div class="ep-section-head"><span class="num">IV</span><h2>How Citations Are Used</h2></div>
 
                 <p>Not all citations serve the same function. Using automated text classification trained on a manually coded sample, we categorised each citing paragraph into one of three functional classes:</p>
 
-                <!-- Donut chart of citation functions -->
-                <div class="viz-block viz-reveal" id="viz-functions"></div>
-                <p class="viz-caption">Figure 3: Classification of citation functions across the full corpus.</p>
+                <section class="ep-plate narrow ep-reveal" data-plate="IV · Functions">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate IV</span><h3>Citation functions</h3><span class="sub">three classes</span></div>
+                        <div class="ep-plate-body"><div class="viz-block" id="viz-functions"></div></div>
+                        <div class="ep-plate-caption"><div class="cap">Classification of citation functions across the full corpus.</div></div>
+                    </div>
+                </section>
 
                 <p><strong>Continuity</strong> citations (roughly 64%) use expressions such as "recalling," "reaffirming," and "reminding." They establish a temporal link to the past, signalling that the current resolution operates within an existing framework.</p>
 
@@ -847,15 +885,19 @@
 
                 <p>A significant finding is that references are not confined to preambular paragraphs. A substantial minority appear in operative paragraphs &ndash; the legally binding portion of a resolution &ndash; providing specific normative support for the Council's demands.</p>
 
-                <h2>V. Norm Diffusion Through the Network</h2>
+                <div class="ep-section-head"><span class="num">V</span><h2>Norm Diffusion Through the Network</h2></div>
 
                 <p>Perhaps the most consequential implication of citation practice is its role as a channel for <em>norm diffusion</em> &ndash; the process by which collectively held ideas about appropriate behaviour are promoted and spread across institutional practice.</p>
 
                 <p>Topic modelling of citing paragraphs reveals a striking pattern. The number and variety of topics addressed in paragraphs containing citations has increased far beyond what would be explained by the mere growth in citation volume. This reflects the Council's expanding mandate into thematic areas &ndash; human rights, the protection of civilians, women's participation in peace processes &ndash; that were once at the periphery of its concern.</p>
 
-                <!-- Area chart: thematic evolution -->
-                <div class="viz-block viz-reveal" id="viz-topics"></div>
-                <p class="viz-caption">Figure 4: Rise of thematic agendas in citation paragraphs, showing the humanitarian turn in Security Council practice.</p>
+                <section class="ep-plate narrow ep-reveal" data-plate="V · Themes">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate V</span><h3>The humanitarian turn</h3><span class="sub">citing paragraphs, 1990&ndash;2019</span></div>
+                        <div class="ep-plate-body"><div class="viz-block" id="viz-topics"></div></div>
+                        <div class="ep-plate-caption"><div class="cap">Rise of thematic agendas in citation paragraphs, showing the humanitarian turn in Security Council practice. The first five panels give the share of each year&rsquo;s citing paragraphs whose text mentions the theme and the last gives the number of citing paragraphs, computed from the 11,022 citations made from 1990 to 2019 among the network&rsquo;s 12,399; the keyword rules are listed in the table. The network is incomplete for 2019, holding 38 of the 52 resolutions adopted that year. The article's Figure 9 traced the same agendas with a forty-topic model; the keyword counts here are a transparent stand-in computed from the published data.</div></div>
+                    </div>
+                </section>
 
                 <h3>The Expansion of Competences</h3>
 
@@ -874,18 +916,16 @@
 
                 <p>The density of these citation chains suggests that, once a normative commitment is woven into the network with sufficient thickness, departing from it becomes institutionally costly. The Council, in effect, binds itself to its own past through the accumulation of self-referential practice.</p>
 
-                <h2>VI. Conclusion</h2>
+                <div class="ep-section-head"><span class="num">VI</span><h2>Conclusion</h2></div>
 
                 <p>The practice of citing previous resolutions is far more than a drafting convention. It is an essential mechanism of institutional governance &ndash; a means by which the Security Council interprets its own mandate, expands its competences, diffuses norms across its practice, and constrains its future action. The citation network reveals a body of institutional law that exists not in any single resolution, but in the aggregate pattern of references between them.</p>
 
                 <p>Our computational analysis of 21,274 citations across 2,489 resolutions provides the first large-scale empirical evidence that this practice is intentional, growing, structurally non-random, and normatively consequential. The network is, in a very real sense, the law of the Security Council &ndash; not as written in the Charter, but as practiced in the accumulation of seventy-five years of self-referential institutional memory.</p>
 
-                <p style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.88rem; color: var(--secondary-color);">
-                    <strong>Full article:</strong> Niccolò Ridi &amp; Lorenzo Gasbarri, 'The Role of Previous Resolutions in the Practice of the Security Council' (2023) 61(3) <em>Columbia Journal of Transnational Law</em> 571.
-                    <a href="https://www.jtl.columbia.edu/volume-61/the-role-of-previous-resolutions-in-the-practice-of-the-security-council" target="_blank">Columbia JTFL</a> ·
+                <div class="ep-colophon"><h4>Sources</h4><p><strong>Full article:</strong> Niccolò Ridi &amp; Lorenzo Gasbarri, 'The Role of Previous Resolutions in the Practice of the Security Council' (2023) 61(3) <em>Columbia Journal of Transnational Law</em> 571.
+                    <a href="https://www.jtl.columbia.edu/volume-61/the-role-of-previous-resolutions-in-the-practice-of-the-security-council" target="_blank">Columbia JTL</a> ·
                     <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=2290991" target="_blank">Preprint on SSRN</a>.
-                    <br><strong>Dataset:</strong> Seán Fobbe, Lorenzo Gasbarri &amp; Niccolò Ridi, 'Corpus of Resolutions: UN Security Council (CR-UNSC)' (2024) <a href="https://doi.org/10.5281/zenodo.7319783" target="_blank">Zenodo</a>.
-                </p>
+                    <br><strong>Dataset:</strong> Seán Fobbe, Lorenzo Gasbarri &amp; Niccolò Ridi, 'Corpus of Resolutions: UN Security Council (CR-UNSC)' (2024) <a href="https://doi.org/10.5281/zenodo.7319783" target="_blank">Zenodo</a>.</p></div>
 
             </div>
         </article>
@@ -927,46 +967,83 @@
         // ─── Utility ───
         function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
 
-        // ─── Figure 1: Citations Over Time (bar chart) ───
+        // ─── Shared chart helpers ───
+        // A bar path with its data end rounded (2px) and its base square.
+        function barUp(x, y, w, h, r) {
+            if (h <= 0) return '';
+            r = Math.min(r, h, w / 2);
+            return 'M' + x + ',' + (y + h) + 'V' + (y + r) + 'Q' + x + ',' + y + ' ' + (x + r) + ',' + y +
+                'H' + (x + w - r) + 'Q' + (x + w) + ',' + y + ' ' + (x + w) + ',' + (y + r) + 'V' + (y + h) + 'Z';
+        }
+        function barRight(x, y, w, h, r) {
+            if (w <= 0) return '';
+            r = Math.min(r, w, h / 2);
+            return 'M' + x + ',' + y + 'H' + (x + w - r) + 'Q' + (x + w) + ',' + y + ' ' + (x + w) + ',' + (y + r) +
+                'V' + (y + h - r) + 'Q' + (x + w) + ',' + (y + h) + ' ' + (x + w - r) + ',' + (y + h) + 'H' + x + 'Z';
+        }
+        function tipOn(sel, html) {
+            sel.on('mouseover', function(event, d) { EP.tip(event, html(d)); })
+               .on('mousemove', function(event) { EP.move(event); })
+               .on('mouseleave', function() { EP.hide(); });
+        }
+
+        // ─── Figure 1: Citations per citing resolution, by year ───
+        // Computed from the network file (edge weights summed per citing year, divided by the
+        // number of distinct citing resolutions that year), the measure of the article's Figure 4.
+        var TIMELINE = [[1946,1.0,2,2],[1947,1.57,7,11],[1948,2.44,16,39],[1949,6.0,2,12],[1950,1.67,3,5],[1951,3.6,5,18],[1952,2.0,1,2],[1953,4.0,1,4],[1954,null,0,0],[1955,4.0,2,8],[1956,6.33,3,19],[1957,2.67,3,8],[1958,null,0,0],[1959,null,0,0],[1960,4.0,2,8],[1961,3.67,3,11],[1962,null,0,0],[1963,2.0,4,8],[1964,6.0,6,36],[1965,5.42,12,65],[1966,8.2,5,41],[1967,3.83,6,23],[1968,7.4,10,74],[1969,6.89,9,62],[1970,9.6,10,96],[1971,11.67,6,70],[1972,9.25,12,111],[1973,7.4,15,111],[1974,8.2,15,123],[1975,5.25,8,42],[1976,7.4,5,37],[1977,3.75,16,60],[1978,4.0,18,72],[1979,4.62,16,74],[1980,4.47,17,76],[1981,6.67,6,40],[1982,4.83,23,111],[1983,5.38,13,70],[1984,3.89,9,35],[1985,5.93,15,89],[1986,5.0,10,50],[1987,4.73,11,52],[1988,2.93,15,44],[1989,4.78,18,86],[1990,5.21,33,172],[1991,6.74,31,209],[1992,6.92,60,415],[1993,5.66,79,447],[1994,5.6,70,392],[1995,5.84,56,327],[1996,4.37,46,201],[1997,5.64,42,237],[1998,6.5,58,377],[1999,6.43,49,315],[2000,8.58,43,369],[2001,7.67,49,376],[2002,7.94,62,492],[2003,6.02,59,355],[2004,6.59,51,336],[2005,8.5,50,425],[2006,7.31,74,541],[2007,10.36,50,518],[2008,13.11,61,800],[2009,14.26,46,656],[2010,15.16,56,849],[2011,16.53,62,1025],[2012,17.63,49,864],[2013,23.17,47,1089],[2014,20.98,61,1280],[2015,24.16,62,1498],[2016,21.49,73,1569],[2017,28.14,56,1576],[2018,21.2,50,1060],[2019,20.57,37,761]];
         function renderTimeline() {
             var el = document.getElementById('viz-timeline');
             el.innerHTML = '';
-            var data = [
-                { period: '1946–50', avg: 0.2 }, { period: '1951–55', avg: 0.3 },
-                { period: '1956–60', avg: 0.5 }, { period: '1961–65', avg: 1.2 },
-                { period: '1966–70', avg: 2.1 }, { period: '1971–75', avg: 2.8 },
-                { period: '1976–80', avg: 3.1 }, { period: '1981–85', avg: 3.5 },
-                { period: '1986–90', avg: 4.2 }, { period: '1991–95', avg: 5.8 },
-                { period: '1996–00', avg: 7.2 }, { period: '2001–05', avg: 8.5 },
-                { period: '2006–10', avg: 14.3 }, { period: '2011–15', avg: 21.6 },
-                { period: '2016–19', avg: 27.5 }
-            ];
-            var w = el.clientWidth || 680, h = 280;
-            var margin = { top: 20, right: 20, bottom: 50, left: 50 };
+            var data = TIMELINE.map(function(r) { return { year: r[0], avg: r[1], res: r[2], cites: r[3] }; });
+            var w = el.clientWidth || 680, narrow = w < 520, h = narrow ? 250 : 290;
+            var margin = { top: 30, right: 14, bottom: 30, left: 30 };
             var iw = w - margin.left - margin.right, ih = h - margin.top - margin.bottom;
-            var svg = d3.select(el).append('svg').attr('width', w).attr('height', h);
+            var svg = d3.select(el).append('svg').attr('width', w).attr('height', h)
+                .attr('role', 'img')
+                .attr('aria-label', 'Line chart of the average number of citations per citing Security Council resolution, by year from 1946 to 2019. It stays below 10 until the mid-2000s, rises from 8.5 in 2005 to 28.1 in 2017, and falls to about 21 by 2019.');
             var g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-            var x = d3.scaleBand().domain(data.map(function(d) { return d.period; })).range([0, iw]).padding(0.25);
+            var x = d3.scaleLinear().domain([1946, 2019]).range([0, iw]);
             var y = d3.scaleLinear().domain([0, 30]).range([ih, 0]);
-
-            g.selectAll('rect').data(data).join('rect')
-                .attr('x', function(d) { return x(d.period); })
-                .attr('y', function(d) { return y(d.avg); })
-                .attr('width', x.bandwidth())
-                .attr('height', function(d) { return ih - y(d.avg); })
-                .attr('fill', css('--stat-color'))
-                .attr('opacity', 0.75)
-                .attr('rx', 2);
-
+            g.append('g').selectAll('line').data(y.ticks(narrow ? 3 : 6)).join('line')
+                .attr('x1', 0).attr('x2', iw).attr('y1', function(t) { return y(t); }).attr('y2', function(t) { return y(t); })
+                .attr('stroke', css('--line')).attr('stroke-width', 1).attr('shape-rendering', 'crispEdges');
+            g.append('g').attr('class', 'bar-axis uc-noline').call(d3.axisLeft(y).ticks(narrow ? 3 : 6).tickSize(0).tickPadding(6))
+                .call(function(a) { a.select('.domain').remove(); });
             g.append('g').attr('class', 'bar-axis').attr('transform', 'translate(0,' + ih + ')')
-                .call(d3.axisBottom(x)).selectAll('text')
-                .attr('transform', 'rotate(-40)').style('text-anchor', 'end').attr('dx', '-0.5em').attr('dy', '0.3em');
-
-            g.append('g').attr('class', 'bar-axis').call(d3.axisLeft(y).ticks(6));
-
-            g.append('text').attr('x', iw / 2).attr('y', -6).attr('text-anchor', 'middle')
-                .attr('fill', css('--secondary-color')).attr('font-size', '11px')
-                .text('Average citations per resolution');
+                .call(d3.axisBottom(x).tickValues(narrow ? [1950, 1970, 1990, 2010] : d3.range(1950, 2020, 10)).tickFormat(d3.format('d')).tickSize(0).tickPadding(8))
+                .call(function(a) { a.select('.domain').attr('stroke', css('--line')); });
+            var def = data.filter(function(d) { return d.avg != null; });
+            var area = d3.area().defined(function(d) { return d.avg != null; }).x(function(d) { return x(d.year); }).y0(ih).y1(function(d) { return y(d.avg); }).curve(d3.curveMonotoneX);
+            var line = d3.line().defined(function(d) { return d.avg != null; }).x(function(d) { return x(d.year); }).y(function(d) { return y(d.avg); }).curve(d3.curveMonotoneX);
+            g.append('path').datum(data).attr('d', area).attr('fill', css('--gold')).attr('opacity', 0.1);
+            g.append('path').datum(data).attr('d', line).attr('fill', 'none').attr('stroke', css('--gold')).attr('stroke-width', 2).attr('stroke-linejoin', 'round');
+            var marks = def.filter(function(d) { return d.year === 2005 || d.year === 2017; });
+            g.append('g').selectAll('circle').data(marks).join('circle')
+                .attr('cx', function(d) { return x(d.year); }).attr('cy', function(d) { return y(d.avg); }).attr('r', 4)
+                .attr('fill', css('--gold')).attr('stroke', css('--bg-2')).attr('stroke-width', 2);
+            g.append('g').selectAll('text').data(marks).join('text')
+                .attr('x', function(d) { return x(d.year) - 8; })
+                .attr('y', function(d) { return y(d.avg) - 9; })
+                .attr('text-anchor', 'end').attr('font-size', '10px').attr('fill', css('--fg'))
+                .text(function(d) { return d.year + ': ' + d.avg.toFixed(1); });
+            g.append('text').attr('x', -margin.left).attr('y', -16).attr('fill', css('--muted')).attr('font-size', '10px')
+                .text('Average citations per citing resolution');
+            var focus = g.append('circle').attr('r', 4).attr('fill', css('--gold')).attr('stroke', css('--bg-2')).attr('stroke-width', 2).style('opacity', 0);
+            var hit = g.append('rect').attr('width', iw).attr('height', ih).attr('fill', 'transparent');
+            function nearest(event) {
+                var yr = Math.round(x.invert(d3.pointer(event, hit.node())[0]));
+                var best = null; def.forEach(function(d) { if (!best || Math.abs(d.year - yr) < Math.abs(best.year - yr)) best = d; });
+                return best;
+            }
+            hit.on('mousemove', function(event) {
+                    var d = nearest(event); if (!d) return;
+                    focus.attr('cx', x(d.year)).attr('cy', y(d.avg)).style('opacity', 1);
+                    EP.tip(event, '<b>' + d.year + '</b>Average per citing resolution <span class="v">' + d.avg.toFixed(1) + '</span><br>'
+                        + d.res + ' citing resolutions, ' + d.cites.toLocaleString('en-GB') + ' citations');
+                })
+               .on('mouseleave', function() { focus.style('opacity', 0); EP.hide(); });
+            EP.table('viz-timeline', ['Year', 'Citations', 'Citing resolutions', 'Average'],
+                def.map(function(d) { return [d.year, d.cites, d.res, d.avg.toFixed(2)]; }), { summary: 'Table', numeric: [1, 2, 3] });
         }
 
         // ─── Figure 2: Full GEXF Network ───
@@ -1070,12 +1147,22 @@
             document.getElementById('node-count').textContent = nodes.length.toLocaleString();
             document.getElementById('edge-count').textContent = edges.length.toLocaleString();
 
+            // Table view: the 20 most-cited resolutions in the loaded graph.
+            var topCited = nodes.slice().sort(function(a, b) {
+                return (b.inDegree - a.inDegree) || (parseInt(a.id, 10) - parseInt(b.id, 10));
+            }).slice(0, 20);
+            EP.table('network-wrapper', ['Resolution', 'Year', 'Topic', 'Cited by (in-degree)'],
+                topCited.map(function(n) { return [String(n.id).split(' ')[0], n.year || '', n.topicshort || n.concerns || '', n.inDegree]; }),
+                { summary: 'Table: 20 most-cited', numeric: [1, 3] });
+
             var container = document.getElementById('network-wrapper');
             var width = container.clientWidth;
             var height = container.clientHeight;
 
             var svg = d3.select('#network-wrapper').append('svg')
                 .attr('viewBox', '0 0 ' + width + ' ' + height)
+                .attr('role', 'img')
+                .attr('aria-label', 'Network of ' + nodes.length.toLocaleString() + ' Security Council resolutions joined by ' + edges.length.toLocaleString() + ' citations; each dot is a resolution, sized by its connections, and each line a citation.')
                 .call(d3.zoom().scaleExtent([0.05, 12]).on('zoom', function(event) {
                     gNet.attr('transform', event.transform);
                 }));
@@ -1260,111 +1347,202 @@
             });
         }
 
-        // ─── Figure 3: Citation Functions (donut) ───
+        // ─── Figure 3: Citation Functions (bar list of shares) ───
         function renderFunctions() {
             var el = document.getElementById('viz-functions');
             el.innerHTML = '';
             var data = [
-                { label: 'Continuity', value: 64.5 },
-                { label: 'Basis', value: 17.2 },
-                { label: 'Aim', value: 18.3 }
+                { label: 'Continuity', value: 64.5, cue: 'recalling, reaffirming, reminding' },
+                { label: 'Basis', value: 17.2, cue: 'acting under, pursuant to, established by' },
+                { label: 'Aim', value: 18.3, cue: 'calls upon all parties to implement' }
             ];
-            var colors = [css('--viz-cluster1'), css('--viz-cluster2'), css('--viz-cluster5')];
-            var w = Math.min(el.clientWidth || 400, 400), h = 300;
-            var radius = Math.min(w, h) / 2 - 30;
+            var w = el.clientWidth || 600, narrow = w < 520;
+            var labelW = narrow ? 86 : 110, rowH = 46, bh = 18;
+            var margin = { top: 8, right: 52, bottom: 26, left: labelW };
+            var iw = w - margin.left - margin.right, ih = data.length * rowH;
+            var h = margin.top + ih + margin.bottom;
             var svg = d3.select(el).append('svg').attr('width', w).attr('height', h)
-                .style('display', 'block').style('margin', '0 auto')
-                .append('g').attr('transform', 'translate(' + w / 2 + ',' + h / 2 + ')');
+                .attr('role', 'img')
+                .attr('aria-label', 'Bar chart of the share of citations in each functional class: continuity 64.5 per cent, basis 17.2 per cent, aim 18.3 per cent.');
+            var g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+            var x = d3.scaleLinear().domain([0, 100]).range([0, iw]);
+            var yc = function(i) { return i * rowH + rowH / 2; };
 
-            var pie = d3.pie().value(function(d) { return d.value; }).sort(null);
-            var arc = d3.arc().innerRadius(radius * 0.55).outerRadius(radius);
-            var labelArc = d3.arc().innerRadius(radius * 0.75).outerRadius(radius * 0.75);
+            var ticks = narrow ? [0, 50, 100] : [0, 25, 50, 75, 100];
+            g.append('g').selectAll('line').data(ticks).join('line')
+                .attr('x1', function(t) { return x(t); }).attr('x2', function(t) { return x(t); })
+                .attr('y1', 0).attr('y2', ih)
+                .attr('stroke', css('--line')).attr('stroke-width', 1).attr('shape-rendering', 'crispEdges');
+            g.append('g').selectAll('text').data(ticks).join('text')
+                .attr('x', function(t) { return x(t); }).attr('y', ih + 16)
+                .attr('text-anchor', function(t, i) { return i === 0 ? 'start' : i === ticks.length - 1 ? 'end' : 'middle'; })
+                .attr('font-size', '10px').attr('fill', css('--muted'))
+                .text(function(t) { return t + '%'; });
 
-            svg.selectAll('path').data(pie(data)).join('path')
-                .attr('d', arc)
-                .attr('fill', function(d, i) { return colors[i]; })
-                .attr('opacity', 0.8)
-                .attr('stroke', css('--background-color'))
-                .attr('stroke-width', 2);
+            var bars = g.append('g').selectAll('path').data(data).join('path')
+                .attr('d', function(d, i) { return barRight(0, yc(i) - bh / 2, x(d.value), bh, 2); })
+                .attr('fill', css('--gold'));
+            g.append('g').selectAll('text').data(data).join('text')
+                .attr('x', -10).attr('y', function(d, i) { return yc(i); }).attr('dy', '0.35em')
+                .attr('text-anchor', 'end').attr('font-size', '11px').attr('fill', css('--fg'))
+                .text(function(d) { return d.label; });
+            g.append('g').selectAll('text').data(data).join('text')
+                .attr('x', function(d) { return x(d.value) + 6; }).attr('y', function(d, i) { return yc(i); }).attr('dy', '0.35em')
+                .attr('font-size', '11px').attr('fill', css('--fg'))
+                .text(function(d) { return d.value + '%'; });
 
-            svg.selectAll('text.fn-label').data(pie(data)).join('text')
-                .attr('class', 'fn-label')
-                .attr('transform', function(d) { return 'translate(' + labelArc.centroid(d) + ')'; })
-                .attr('text-anchor', 'middle')
-                .attr('fill', css('--primary-color'))
-                .attr('font-size', '12px')
-                .attr('font-weight', '600')
-                .text(function(d) { return d.data.label; });
+            var hit = g.append('g').selectAll('rect').data(data).join('rect')
+                .attr('x', -margin.left).attr('width', w).attr('y', function(d, i) { return i * rowH; }).attr('height', rowH)
+                .attr('fill', 'transparent');
+            tipOn(hit, function(d) { return '<b>' + d.label + '</b>' + d.cue + '<br>Share of citations <span class="v">' + d.value + '%</span>'; });
+            hit.on('mouseenter.hl', function(event, d) { bars.attr('opacity', function(b) { return b === d ? 1 : 0.55; }); })
+               .on('mouseleave.hl', function() { bars.attr('opacity', 1); });
 
-            svg.selectAll('text.fn-pct').data(pie(data)).join('text')
-                .attr('class', 'fn-pct')
-                .attr('transform', function(d) { return 'translate(' + labelArc.centroid(d).map(function(v, i) { return i === 1 ? v + 16 : v; }) + ')'; })
-                .attr('text-anchor', 'middle')
-                .attr('fill', css('--secondary-color'))
-                .attr('font-size', '11px')
-                .text(function(d) { return d.data.value + '%'; });
+            EP.table('viz-functions', ['Function', 'Share of citations (%)'],
+                data.map(function(d) { return [d.label, d.value]; }), { summary: 'Table', numeric: [1] });
         }
 
-        // ─── Figure 4: Thematic Topics (stacked area) ───
+        // ─── Figure 4: Thematic Topics (small multiples) ───
+        // Citing paragraphs (edges of the network, by yearciting) whose text matches each
+        // theme's keyword rule, 1990 to 2019, from the 12,399 edges of the network GEXF.
+        var THEMES = {
+            years: [1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019],
+            rules: {
+                'Civilians': '\\bcivilian',
+                'Women, peace and security': '\\bwomen\\b|\\bgender\\b|\\bsexual violence\\b',
+                'Human rights': '\\bhuman rights\\b',
+                'Counterterrorism': '\\bterroris',
+                'Children': '\\bchild(ren)?\\b'
+            },
+            series: {
+                'Civilians': [5,2,1,0,1,2,1,3,2,3,6,3,12,5,32,20,15,31,54,70,88,123,134,204,242,178,117,112,41,17],
+                'Women, peace and security': [0,0,0,0,0,0,0,0,0,0,5,0,2,9,31,18,19,42,66,81,104,170,155,232,287,217,162,128,65,27],
+                'Human rights': [0,0,0,0,0,1,0,1,0,0,0,2,0,1,0,2,2,4,14,14,27,15,9,30,33,31,48,44,9,6],
+                'Counterterrorism': [0,0,1,0,0,0,0,0,2,0,0,8,13,14,15,20,6,9,9,4,5,15,19,15,30,41,22,37,14,7],
+                'Children': [0,0,0,0,1,0,0,0,0,2,0,2,2,15,31,19,14,26,57,68,90,132,128,191,251,199,119,87,29,3]
+            },
+            total: [103,101,252,282,275,226,133,128,192,181,201,223,279,205,199,211,314,288,437,385,493,566,508,580,775,846,790,731,627,491]
+        };
+
         function renderTopics() {
             var el = document.getElementById('viz-topics');
             el.innerHTML = '';
-            var years = [];
-            for (var y = 1990; y <= 2019; y++) years.push(y);
-            var topics = ['Civilians', 'WPS', 'Human Rights', 'Counterterrorism', 'Children'];
-            var colors = [css('--viz-cluster4'), css('--viz-cluster2'), css('--viz-cluster1'), css('--viz-cluster3'), css('--viz-cluster7')];
+            var Y = THEMES.years, T = THEMES.total;
+            var names = Object.keys(THEMES.series);
+            var pct = d3.format('.1f');
+            var panels = names.map(function(n) {
+                var c = THEMES.series[n];
+                return { name: n, share: true, vals: c.map(function(v, i) { return 100 * v / T[i]; }), counts: c };
+            });
+            panels.push({ name: 'All citing paragraphs', share: false, vals: T.slice(), counts: T });
 
-            // Simulated data reflecting the humanitarian turn
-            function gen(base, growth, noise) {
-                return years.map(function(y, i) {
-                    var t = (y - 1990) / 29;
-                    return Math.max(0, base + growth * t * t + (Math.random() - 0.5) * noise);
+            var w = el.clientWidth || 680;
+            var cols = w >= 540 ? 3 : 2, rows = Math.ceil(panels.length / cols);
+            var gapX = cols === 3 ? 22 : 16, gapY = 22;
+            var pw = (w - gapX * (cols - 1)) / cols;
+            var pm = { left: 30, right: 6, bottom: 18 };
+            var plotH = cols === 3 ? 96 : 88;
+
+            var svg = d3.select(el).append('svg').attr('width', w)
+                .attr('role', 'img')
+                .attr('aria-label', 'Five small line charts of the share of citing paragraphs each year from 1990 to 2019 that mention civilians, women, peace and security, human rights, counterterrorism and children, and a sixth of the total number of citing paragraphs per year.');
+
+            // titles wrap to the panel width; every panel gets the same title band
+            var probe = svg.append('text').attr('font-size', '11px');
+            function wrap(s) {
+                var words = s.split(' '), lines = [''];
+                words.forEach(function(wd) {
+                    var cur = lines[lines.length - 1], next = cur ? cur + ' ' + wd : wd;
+                    probe.text(next);
+                    if (cur && probe.node().getComputedTextLength() > pw - 4) lines.push(wd); else lines[lines.length - 1] = next;
                 });
+                return lines;
             }
-            var series = [
-                gen(1, 28, 3), gen(0, 22, 2.5), gen(2, 18, 3), gen(0, 15, 2), gen(0, 12, 2)
-            ];
+            panels.forEach(function(p) { p.lines = wrap(p.name); });
+            probe.remove();
+            var titleH = 6 + 13 * d3.max(panels, function(p) { return p.lines.length; }) + 10;
+            var ph = titleH + plotH + pm.bottom;
+            svg.attr('height', rows * ph + (rows - 1) * gapY);
 
-            var stackData = years.map(function(y, i) {
-                var d = { year: y };
-                topics.forEach(function(t, j) { d[t] = series[j][i]; });
-                return d;
-            });
-
-            var w = el.clientWidth || 680, h = 280;
-            var margin = { top: 20, right: 20, bottom: 35, left: 45 };
-            var iw = w - margin.left - margin.right, ih = h - margin.top - margin.bottom;
-            var svg = d3.select(el).append('svg').attr('width', w).attr('height', h);
-            var g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
+            var iw = pw - pm.left - pm.right;
             var x = d3.scaleLinear().domain([1990, 2019]).range([0, iw]);
-            var stack = d3.stack().keys(topics);
-            var stacked = stack(stackData);
-            var yMax = d3.max(stacked[stacked.length - 1], function(d) { return d[1]; });
-            var y = d3.scaleLinear().domain([0, yMax]).range([ih, 0]);
+            var yShare = d3.scaleLinear().domain([0, 45]).range([plotH, 0]);
+            var yTotal = d3.scaleLinear().domain([0, 900]).range([plotH, 0]);
+            var gold = css('--gold'), muted = css('--muted'), line = css('--line'), fg = css('--fg'), bg2 = css('--bg-2');
 
-            var area = d3.area()
-                .x(function(d) { return x(d.data.year); })
-                .y0(function(d) { return y(d[0]); })
-                .y1(function(d) { return y(d[1]); })
-                .curve(d3.curveBasis);
+            var foci = [];
+            panels.forEach(function(p, k) {
+                var col = k % cols, row = Math.floor(k / cols);
+                var G = svg.append('g').attr('transform', 'translate(' + (col * (pw + gapX)) + ',' + (row * (ph + gapY)) + ')');
+                p.lines.forEach(function(l, i) {
+                    G.append('text').attr('x', 0).attr('y', 11 + i * 13).attr('font-size', '11px').attr('fill', fg).text(l);
+                });
+                var g = G.append('g').attr('transform', 'translate(' + pm.left + ',' + titleH + ')');
+                var y = p.share ? yShare : yTotal;
+                var ticks = p.share ? [0, 20, 40] : [0, 400, 800];
+                g.append('g').selectAll('line').data(ticks).join('line')
+                    .attr('x1', 0).attr('x2', iw).attr('y1', function(t) { return y(t); }).attr('y2', function(t) { return y(t); })
+                    .attr('stroke', line).attr('stroke-width', 1).attr('shape-rendering', 'crispEdges');
+                g.append('g').selectAll('text').data(ticks).join('text')
+                    .attr('x', -5).attr('y', function(t) { return y(t); }).attr('dy', '0.35em').attr('text-anchor', 'end')
+                    .attr('font-size', '9px').attr('fill', muted)
+                    .text(function(t, i) { return p.share && i === ticks.length - 1 ? t + '%' : t; });
+                var xt = [1990, 2000, 2010];
+                g.append('g').selectAll('text').data(xt).join('text')
+                    .attr('x', function(t) { return x(t); }).attr('y', plotH + 13)
+                    .attr('text-anchor', function(t, i) { return i === 0 ? 'start' : 'middle'; })
+                    .attr('font-size', '9px').attr('fill', muted).text(function(t) { return t; });
 
-            g.selectAll('path').data(stacked).join('path')
-                .attr('d', area)
-                .attr('fill', function(d, i) { return colors[i]; })
-                .attr('opacity', 0.6);
+                var col1 = p.share ? gold : muted;
+                g.append('path').datum(p.vals)
+                    .attr('d', d3.area().x(function(v, i) { return x(Y[i]); }).y0(plotH).y1(function(v) { return y(v); }))
+                    .attr('fill', col1).attr('opacity', 0.12);
+                g.append('path').datum(p.vals)
+                    .attr('d', d3.line().x(function(v, i) { return x(Y[i]); }).y(function(v) { return y(v); }))
+                    .attr('fill', 'none').attr('stroke', col1).attr('stroke-width', 2).attr('stroke-linejoin', 'round');
 
-            g.append('g').attr('class', 'bar-axis').attr('transform', 'translate(0,' + ih + ')')
-                .call(d3.axisBottom(x).ticks(6).tickFormat(d3.format('d')));
-            g.append('g').attr('class', 'bar-axis').call(d3.axisLeft(y).ticks(5));
+                // label the peak
+                var pk = d3.maxIndex(p.vals), px = x(Y[pk]), py = y(p.vals[pk]);
+                g.append('circle').attr('cx', px).attr('cy', py).attr('r', 3).attr('fill', col1).attr('stroke', bg2).attr('stroke-width', 1.5);
+                var lab = (p.share ? pct(p.vals[pk]) + '%' : p.vals[pk]) + ' in ' + Y[pk];
+                var high = py < 14;
+                g.append('text').attr('class', 'uc-peak')
+                    .attr('x', high ? px - 7 : px).attr('y', high ? py : py - 7).attr('dy', high ? '0.35em' : 0)
+                    .attr('text-anchor', 'end').attr('font-size', '9.5px').attr('fill', fg).text(lab);
 
-            // Legend below
-            var leg = g.append('g').attr('transform', 'translate(' + (iw / 2 - 140) + ',' + (ih + 28) + ')');
-            topics.forEach(function(t, i) {
-                var lx = i * 95;
-                leg.append('rect').attr('x', lx).attr('y', -2).attr('width', 8).attr('height', 8).attr('rx', 2).attr('fill', colors[i]).attr('opacity', 0.7);
-                leg.append('text').attr('x', lx + 12).attr('y', 6).attr('font-size', '9px').attr('fill', css('--secondary-color')).text(t);
+                var focus = g.append('g').style('display', 'none');
+                focus.append('line').attr('y1', 0).attr('y2', plotH).attr('stroke', muted).attr('stroke-width', 1);
+                focus.append('circle').attr('r', 3).attr('fill', col1).attr('stroke', bg2).attr('stroke-width', 1.5);
+                foci.push({ g: focus, y: y, p: p });
+
+                g.append('rect').attr('x', -4).attr('y', -6).attr('width', iw + 8).attr('height', plotH + 12)
+                    .attr('fill', 'transparent')
+                    .on('mousemove', function(event) {
+                        var mx = d3.pointer(event, this)[0] - 4;
+                        var i = Math.max(0, Math.min(Y.length - 1, Math.round(x.invert(mx) - 1990)));
+                        foci.forEach(function(f) {
+                            f.g.style('display', null);
+                            f.g.select('line').attr('x1', x(Y[i])).attr('x2', x(Y[i]));
+                            f.g.select('circle').attr('cx', x(Y[i])).attr('cy', f.y(f.p.vals[i]));
+                        });
+                        var html = p.share
+                            ? '<b>' + p.name + ', ' + Y[i] + '</b>' + p.counts[i] + ' of ' + T[i] + ' citing paragraphs <span class="v">' + pct(p.vals[i]) + '%</span>'
+                            : '<b>All citing paragraphs, ' + Y[i] + '</b>Citations made that year <span class="v">' + T[i] + '</span>';
+                        EP.tip(event, html);
+                    })
+                    .on('mouseleave', function() { EP.hide(); foci.forEach(function(f) { f.g.style('display', 'none'); }); });
             });
+
+            EP.table('viz-topics', ['Year'].concat(names, ['All citing paragraphs']),
+                Y.map(function(yr, i) {
+                    return [yr].concat(names.map(function(n) { var c = THEMES.series[n][i]; return c + ' (' + pct(100 * c / T[i]) + '%)'; }), [T[i]]);
+                }), { summary: 'Table', numeric: [1, 2, 3, 4, 5, 6] });
+            var tbl = el.closest('.ep-plate').querySelector('details.ep-table .tbl');
+            if (tbl) {
+                tbl.insertAdjacentHTML('afterbegin', '<p class="uc-note">Citing paragraphs per year that match each theme, with their share of all citing paragraphs that year.</p>');
+                tbl.insertAdjacentHTML('beforeend', '<p class="uc-note">Keyword rules (regular expressions matched against the text of each citing paragraph):</p><table><tr><th>Theme</th><th>Rule</th></tr>' +
+                    names.map(function(n) { return '<tr><td>' + EP.esc(n) + '</td><td><code>' + EP.esc(THEMES.rules[n]) + '</code></td></tr>'; }).join('') + '</table>');
+            }
         }
 
         // ─── Figure 2b: Res 1325 Bridge Animation ───
@@ -1372,24 +1550,30 @@
             var el = document.getElementById('viz-bridge-1325');
             el.querySelectorAll('svg').forEach(function(s) { s.remove(); });
 
-            var w = el.clientWidth || 700, h = 520;
+            // Narrow screens draw on a 420-unit canvas scaled down to fit, so the outer cluster labels stay in view.
+            var w = Math.max(el.clientWidth || 700, 420), h = Math.min(520, w);
             var cx = w / 2, cy = h / 2;
             var svg = d3.select(el).append('svg')
                 .attr('viewBox', '0 0 ' + w + ' ' + h)
-                .attr('preserveAspectRatio', 'xMidYMid meet');
+                .attr('preserveAspectRatio', 'xMidYMid meet')
+                .attr('role', 'img')
+                .attr('aria-label', 'Diagram of Resolution 1325 (2000) at the centre, linked to 29 resolutions in seven clusters: Somalia, Afghanistan, Haiti, C\u00f4te d\u2019Ivoire, DRC, Sudan and Darfur, and the thematic women, peace and security resolutions.');
 
-            // Cluster data — real resolutions that cite Res 1325
+            // Cluster data: resolutions that cite Res 1325 in the network file; `cites` lists the citations between them
             var clusters = [
-                { name: 'Somalia',        color: css('--viz-cluster1'), nodes: ['1814', '2093', '2232', '2431'] },
-                { name: 'Afghanistan',    color: css('--viz-cluster2'), nodes: ['1386', '1917', '2210', '2405'] },
+                { name: 'Somalia',        color: css('--viz-cluster1'), nodes: ['1772', '1814', '2093', '2158'] },
+                { name: 'Afghanistan',    color: css('--viz-cluster2'), nodes: ['1746', '1917', '2210', '2405'] },
                 { name: 'Haiti',          color: css('--viz-cluster3'), nodes: ['1542', '1608', '1780', '2070'] },
-                { name: "Côte d'Ivoire",  color: css('--viz-cluster5'), nodes: ['1528', '1739', '1933', '2112'] },
+                { name: "Côte d'Ivoire",  color: css('--viz-cluster5'), nodes: ['1528', '1765', '1933', '2112'] },
                 { name: 'DRC',            color: css('--viz-cluster6'), nodes: ['1493', '1756', '1906', '2098'] },
                 { name: 'Sudan / Darfur', color: css('--viz-cluster7'), nodes: ['1590', '1769', '1996', '2155'] },
                 { name: 'WPS (thematic)', color: css('--viz-cluster4'), nodes: ['1820', '1888', '1889', '2122', '2242'] }
             ];
 
-            var ringR = Math.min(w, h) * 0.36;
+            var INTRA = {"Somalia": [["1814", "1772"], ["2093", "1772"], ["2158", "2093"]], "Afghanistan": [["1917", "1746"], ["2210", "1746"], ["2405", "1746"], ["2405", "1917"], ["2405", "2210"]], "Haiti": [["1608", "1542"], ["1780", "1542"], ["1780", "1608"], ["2070", "1542"], ["2070", "1608"], ["2070", "1780"]], "Côte d'Ivoire": [["2112", "1933"]], "DRC": [["1756", "1493"]], "Sudan / Darfur": [["1769", "1590"], ["2155", "1996"]], "WPS (thematic)": [["1888", "1820"], ["1889", "1820"], ["1889", "1888"], ["2122", "1820"], ["2122", "1888"], ["2122", "1889"], ["2242", "1820"], ["2242", "1888"], ["2242", "1889"], ["2242", "2122"]]};
+            clusters.forEach(function(c) { c.cites = INTRA[c.name] || []; });
+
+            var ringR = Math.min(Math.min(w, h) * 0.36, (w / 2 - 52) / 0.98 - 55);
             var hubR = 14;
             var nodeR = 5;
 
@@ -1459,20 +1643,19 @@
                     clusterG.links.push(l);
                 });
 
-                // Intra-cluster links (connect neighbours within)
-                for (var i = 0; i < c.nodeData.length; i++) {
-                    for (var j = i + 1; j < c.nodeData.length; j++) {
-                        if (j === i + 1 || (i === 0 && j === c.nodeData.length - 1)) {
-                            var il = gClusterLinks.append('line')
-                                .attr('x1', c.nodeData[i].x).attr('y1', c.nodeData[i].y)
-                                .attr('x2', c.nodeData[j].x).attr('y2', c.nodeData[j].y)
-                                .attr('stroke', c.color)
-                                .attr('stroke-width', 0.7)
-                                .attr('stroke-opacity', animate ? 0 : 0.25);
-                            clusterG.intraLinks.push(il);
-                        }
-                    }
-                }
+                // Intra-cluster links: only citations that exist in the network
+                var byId = {}; c.nodeData.forEach(function(nd) { byId[nd.id] = nd; });
+                c.cites.forEach(function(pair) {
+                    var a = byId[pair[0]], b = byId[pair[1]];
+                    if (!a || !b) return;
+                    var il = gClusterLinks.append('line')
+                        .attr('x1', a.x).attr('y1', a.y)
+                        .attr('x2', b.x).attr('y2', b.y)
+                        .attr('stroke', c.color)
+                        .attr('stroke-width', 0.7)
+                        .attr('stroke-opacity', animate ? 0 : 0.25);
+                    clusterG.intraLinks.push(il);
+                });
 
                 // Cluster nodes
                 c.nodeData.forEach(function(nd) {
@@ -1481,15 +1664,8 @@
                         .attr('r', nodeR)
                         .attr('fill', c.color)
                         .attr('opacity', animate ? 0 : 0.75)
-                        .attr('stroke', css('--background-color'))
-                        .attr('stroke-width', 1)
-                        .style('cursor', 'pointer');
-
-                    circle.on('mouseover', function() {
-                        d3.select(this).attr('r', nodeR * 1.6).attr('opacity', 1);
-                    }).on('mouseout', function() {
-                        d3.select(this).attr('r', nodeR).attr('opacity', 0.75);
-                    });
+                        .attr('stroke', css('--bg-2'))
+                        .attr('stroke-width', 1.5);
 
                     // Node label
                     var nl = gLabels.append('text')
@@ -1506,6 +1682,8 @@
                 var labelR = ringR + 55;
                 var lx = cx + Math.cos(c.angle) * labelR;
                 var ly = cy + Math.sin(c.angle) * labelR;
+                // Clusters level with the hub get their label beneath them, clear of their own node labels.
+                if (Math.abs(Math.sin(c.angle)) < 0.5) { lx = c.cx; ly = c.cy + 54; }
                 var cl = gLabels.append('text')
                     .attr('class', 'bridge-cluster-label')
                     .attr('x', lx).attr('y', ly)
@@ -1515,6 +1693,35 @@
 
                 allClusterEls.push(clusterG);
             });
+
+            // Hover: transparent 24px hit circles over every node and the hub, on top of the labels.
+            var gHit = svg.append('g');
+            var nodeCircles = [];
+            allClusterEls.forEach(function(cg) { nodeCircles = nodeCircles.concat(cg.nodes); });
+            var hitData = [];
+            clusters.forEach(function(c, ci) { c.nodeData.forEach(function(nd) { hitData.push({ nd: nd, c: c }); }); });
+            gHit.selectAll('circle.uc-hit').data(hitData).join('circle').attr('class', 'uc-hit')
+                .attr('cx', function(d) { return d.nd.x; }).attr('cy', function(d) { return d.nd.y; }).attr('r', 12)
+                .attr('fill', 'transparent').style('cursor', 'default')
+                .on('mouseover', function(event, d) {
+                    var i = hitData.indexOf(d);
+                    nodeCircles[i].attr('r', nodeR * 1.6).attr('opacity', 1);
+                    EP.tip(event, '<b>Resolution ' + d.nd.label + '</b>' + d.c.name + ' cluster');
+                })
+                .on('mousemove', function(event) { EP.move(event); })
+                .on('mouseleave', function(event, d) {
+                    var i = hitData.indexOf(d);
+                    nodeCircles[i].attr('r', nodeR).attr('opacity', 0.75);
+                    EP.hide();
+                });
+            gHit.append('circle').attr('cx', cx).attr('cy', cy).attr('r', Math.max(hubR, 12))
+                .attr('fill', 'transparent')
+                .on('mouseover', function(event) { EP.tip(event, '<b>Resolution 1325 (2000)</b>Women, peace and security<br>Drawn here with <span class="v">29</span> resolutions in seven clusters'); })
+                .on('mousemove', function(event) { EP.move(event); })
+                .on('mouseleave', function() { EP.hide(); });
+
+            EP.table('viz-bridge-1325', ['Cluster', 'Resolutions shown'],
+                clusters.map(function(c) { return [c.name, c.nodes.join(', ')]; }), { summary: 'Table' });
 
             // Animation
             if (animate) {

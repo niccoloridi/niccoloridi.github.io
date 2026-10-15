@@ -356,8 +356,25 @@
 
         }
     </style>
+    <link rel="stylesheet" href="essay-plates.css">
+    <script src="essay-plates.js"></script>
+    <style>
+        /* chart marks for this essay's plates */
+        .ep .cj-svg { display: block; width: 100%; overflow: visible; }
+        .ep .cj-hit { fill: transparent; cursor: default; outline: none; }
+        .ep .cj-hit:hover, .ep .cj-hit:focus-visible { fill: var(--gold-soft); }
+        .ep .cj-stage { cursor: default; outline: none; }
+        .ep .cj-stage .box { fill: var(--bg-2); stroke: var(--line); stroke-width: 1; transition: stroke .15s, fill .15s; }
+        .ep .cj-stage:hover .box, .ep .cj-stage:focus-visible .box { stroke: var(--gold); fill: var(--gold-soft); }
+        .ep .cj-svg .lbl { font-family: var(--ep-sans); }
+        /* an open table takes the caption's full width and scrolls inside it */
+        .ep .ep-plate-caption details.ep-table { min-width: 0; max-width: 100%; }
+        .ep .ep-plate-caption details.ep-table[open] { flex: 1 1 100%; }
+        .ep .ep-plate-caption details.ep-table .tbl { max-width: 100%; }
+        .ep .ep-plate-caption td.wrap { white-space: normal; min-width: 14rem; text-align: left; }
+    </style>
 </head>
-<body>
+<body class="ep">
 
     <header class="main-header">
         <a href="index.html" style="color:var(--fg)"><b style="color:var(--gold)">◆</b> NICCOLÒ RIDI</a>
@@ -370,12 +387,13 @@
             <a href="index.html#data" class="back-link">&larr; Back to Data</a>
 
             <header class="essay-header">
-                <h1>cjeu-py</h1>
+                <p class="ep-kicker">A data essay</p>
+                <h1>cjeu<em>-py</em></h1>
+                <p class="ep-dek">A Python toolkit for empirical research on the Court of Justice of the European Union</p>
                 <div class="essay-meta">
-                    <span class="authors">Niccolò Ridi</span><br>
-                    A Python toolkit for empirical research on the Court of Justice of the European Union (2026)<br>
-                    Updated for v0.6.0, August 2026
+                    <span class="authors">Niccolò Ridi</span> &middot; 2026 &middot; updated for v0.6.0, August 2026
                 </div>
+                <div class="ep-rule"></div>
             </header>
 
             <div class="essay-body">
@@ -384,13 +402,17 @@
 
                 <p>The tool queries the EU Publications Office's CELLAR endpoint directly &ndash; the authoritative source for EU legal data &ndash; downloads full judgment texts, and extracts citations with a four-phase, footnote-aware extractor that resolves each reference to a CELEX identifier with an explicit confidence tier. Since v0.6.0 it also speaks to the Court's new InfoCuria portal: live search with facets, pending cases, procedural histories, hearing calendars, and the doctrine attached to each case. The result is a complete data pipeline that takes a researcher from zero to interactive network visualisation in a few commands.</p>
 
-                <h2>I. The Pipeline</h2>
+                <div class="ep-section-head"><span class="num">I</span><h2>The Pipeline</h2></div>
 
                 <p>cjeu-py organises CJEU research into seven stages. Each stage produces inspectable intermediate output &ndash; Parquet tables, JSONL files, HTML visualisations &ndash; and can be run independently. The pipeline is resumable: interrupted downloads pick up where they left off, and classification checkpoints prevent re-processing.</p>
 
-                <!-- PIPELINE DIAGRAM -->
-                <div class="viz-block viz-reveal" id="viz-pipeline"></div>
-                <p class="viz-caption">Figure 1: The cjeu-py data pipeline. Seven stages from SPARQL query to interactive network.</p>
+                <section class="ep-plate ep-reveal" data-plate="I · Pipeline">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate I</span><h3>From SPARQL to network</h3><span class="sub">seven stages</span></div>
+                        <div class="ep-plate-body"><div class="viz-block" id="viz-pipeline"></div></div>
+                        <div class="ep-plate-caption"><div class="cap">The cjeu-py data pipeline. Seven stages from SPARQL query to interactive network.</div></div>
+                    </div>
+                </section>
 
                 <p>The design philosophy is pragmatic. Data comes from official sources (CELLAR SPARQL and REST, and the InfoCuria API), not fragile page scraping. Downloads are cached to disk and resumable. The tool is pip-installable (<code>pip install cjeu-py</code>) and runs entirely from the command line, with a browser GUI (<code>cjeu-py gui</code>) for those who prefer one. An LLM layer is optional; the collection, extraction, and network stages work without any API key.</p>
 
@@ -402,43 +424,55 @@ cjeu-py extract-citations --report
 cjeu-py case C-311/18
 cjeu-py export-network --format html --max-nodes 500</div>
 
-                <h2>II. What It Collects</h2>
+                <div class="ep-section-head"><span class="num">II</span><h2>What It Collects</h2></div>
 
-                <p>For the Grand Chamber alone &ndash; the CJEU's most authoritative formation &ndash; the tool collects 1,020 decisions spanning 2004 to 2025. Each decision carries rich metadata: CELEX and ECLI identifiers, date, court formation, judge-rapporteur, advocate general, procedure type, subject matter, and the full text of the judgment.</p>
+                <p>For the Grand Chamber alone &ndash; the CJEU's most authoritative formation &ndash; the tool collects 1,020 decisions, from 2004 to early 2026. Each decision carries rich metadata: CELEX and ECLI identifiers, date, court formation, judge-rapporteur, advocate general, procedure type, subject matter, and the full text of the judgment.</p>
 
-                <!-- CASES BY YEAR -->
-                <div class="viz-block viz-reveal" id="viz-yearly"></div>
-                <p class="viz-caption">Figure 2: Grand Chamber decisions by year, 2004&ndash;2025. Colour indicates the dominant procedure type each year.</p>
+                <section class="ep-plate ep-reveal" data-plate="II · By year">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate II</span><h3>Grand Chamber decisions by year</h3><span class="sub">2004&ndash;2025</span></div>
+                        <div class="ep-plate-body"><div class="viz-block" id="viz-yearly"></div></div>
+                        <div class="ep-plate-caption"><div class="cap">Grand Chamber decisions by year, 2004&ndash;2025.</div></div>
+                    </div>
+                </section>
 
                 <p>Preliminary references dominate the Grand Chamber docket (64%), followed by annulment actions (10%) and consultations (8%). But the procedure mix tells only part of the story. The subject-matter distribution reveals which areas of EU law the Grand Chamber considers important enough for its attention.</p>
 
-                <!-- SUBJECT MATTER -->
-                <div class="viz-block viz-reveal" id="viz-subjects"></div>
-                <p class="viz-caption">Figure 3: Top 10 subject-matter categories across Grand Chamber decisions. Cases may be assigned multiple subjects.</p>
+                <section class="ep-plate narrow ep-reveal" data-plate="III · Subjects">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate III</span><h3>What the Grand Chamber hears</h3><span class="sub">top ten subjects</span></div>
+                        <div class="ep-plate-body"><div class="viz-block" id="viz-subjects"></div></div>
+                        <div class="ep-plate-caption"><div class="cap">Top 10 subject-matter categories across Grand Chamber decisions. Cases may be assigned multiple subjects.</div></div>
+                    </div>
+                </section>
 
-                <h2>III. Citation Extraction</h2>
+                <div class="ep-section-head"><span class="num">III</span><h2>Citation Extraction</h2></div>
 
                 <p>The heart of the pipeline is citation extraction, and v0.6.0 rebuilt it around a simple observation: the Court's own XHTML already links most case references to their targets. Four phases run in order of confidence. First, <strong>CourtLink hyperlinks</strong> are read directly from the markup, each carrying an exact ECLI. Second, a <strong>catalogue-guided search</strong> looks for every case the CELLAR citation graph says the document should cite. Third, a <strong>13-pattern regex safety net</strong> catches formal references the structural layers missed. Fourth, an optional <strong>party-name enrichment</strong> hunts for informal mentions. Every citation is resolved to a CELEX identifier with an explicit confidence tier, from A (exact identifier) to U (honestly unresolved), and each document's recall is scored against the Court's own citation graph.</p>
 
                 <p>Two details matter for anyone studying the Advocates General. Extraction is footnote-aware &ndash; AG opinions place the overwhelming majority of their citations in footnotes, which naive parsers silently discard &ndash; and textual pinpoints (&ldquo;point 26&rdquo;, &ldquo;paragraphs 9 and 10&rdquo;) are attached to the citations they qualify. Each citation is anchored to its source paragraph or footnote, preserving the context needed for downstream analysis. For the Grand Chamber corpus, CELLAR's own citation graph records 12,673 case-to-case citation edges &ndash; roughly 12 per decision, though the distribution is heavily right-skewed &ndash; and the extractor's per-document recall is scored against exactly that graph.</p>
 
-                <h2>IV. The New CURIA Portal</h2>
+                <div class="ep-section-head"><span class="num">IV</span><h2>The New CURIA Portal</h2></div>
 
                 <p>In January 2026 the Court replaced its long-standing InfoCuria search with a new portal, to loud complaints from practitioners. Whatever its merits as a website, the new portal exposes something researchers never had: a clean JSON backend. cjeu-py 0.6.0 ships what is, to our knowledge, the first dedicated Python client for the new InfoCuria search API. It offers live full-text search with facets (document type, jurisdiction, dates), procedural records including <em>pending</em> cases, hearing calendars, judge-rapporteur and advocate general assignments, and the academic doctrine notes the Court curates for each case &ndash; none of which the traditional bulk sources expose.</p>
 
                 <p>A single command, <code>cjeu-py case C-311/18</code>, merges the CELLAR and CURIA records for any case into one card: identifiers, dates, state, formation, rapporteur, advocate general, referring court, hearings, and doctrine. The client is polite by design &ndash; one request per second, an identifying user agent, and payloads pinned against captured fixtures so that silent API drift breaks a test rather than a dataset.</p>
 
-                <h2>V. How the Court Uses Precedent</h2>
+                <div class="ep-section-head"><span class="num">V</span><h2>How the Court Uses Precedent</h2></div>
 
                 <p>Raw citation counts reveal who cites whom, but not <em>how</em>. A companion research programme uses LLMs to classify every citation &ndash; stance towards the cited case, depth of engagement, argumentative function &ndash; along dimensions drawn from Marc Jacob's <em>Precedents and Case-Based Reasoning in the European Court of Justice</em> (Cambridge, 2014), applied to the datasets cjeu-py produces. That study compares how the Court and its Advocates General construct the case law, across hundreds of matched judgment&ndash;opinion pairs. The classification module and the findings ship together with the forthcoming paper; this page will be updated when it is out.</p>
 
-                <h2>VI. The Citation Network</h2>
+                <div class="ep-section-head"><span class="num">VI</span><h2>The Citation Network</h2></div>
 
                 <p>The extracted citations form a directed graph: each node is a decision, each edge a citation from one case to another. Network analysis reveals structure invisible to close reading.</p>
 
-                <!-- MOST CITED CASES -->
-                <div class="viz-block viz-reveal" id="viz-topcases"></div>
-                <p class="viz-caption">Figure 5: The ten most-cited Grand Chamber decisions by in-degree (number of times cited by other Grand Chamber cases).</p>
+                <section class="ep-plate narrow ep-reveal" data-plate="IV · Most cited">
+                    <div class="ep-plate-frame">
+                        <div class="ep-plate-head"><span class="pn">Plate IV</span><h3>The most-cited decisions</h3><span class="sub">citations from Grand Chamber decisions</span></div>
+                        <div class="ep-plate-body"><div class="viz-block" id="viz-topcases"></div></div>
+                        <div class="ep-plate-caption"><div class="cap">The ten decisions most cited by the Grand Chamber, by in-degree (the number of Grand Chamber decisions citing each). Bosman, Grzelczyk and Simmenthal predate the Grand Chamber itself.</div></div>
+                    </div>
+                </section>
 
                 <p><em>Kadi</em> (2008) leads with 33 citations &ndash; the Court's landmark judgment on fundamental rights review of Security Council sanctions has become a touchstone across EU law. Opinion 2/13 (2014), on the EU's accession to the ECHR, follows with 32. <em>&Aring;kerberg Fransson</em> (2013), which defined the scope of the Charter of Fundamental Rights, comes third with 28.</p>
 
@@ -448,7 +482,7 @@ cjeu-py export-network --format html --max-nodes 500</div>
 
                 <p style="text-align: center; margin: 2rem 0;"><a class="cta-btn" href="https://github.com/niccoloridi/cjeu-py/blob/main/examples/grand_chamber_network.html" target="_blank">View Interactive Grand Chamber Network &rarr;</a></p>
 
-                <h2>VII. What It Enables</h2>
+                <div class="ep-section-head"><span class="num">VII</span><h2>What It Enables</h2></div>
 
                 <p>cjeu-py is not a finished analysis &ndash; it is infrastructure for analyses. The data it produces enables questions that were previously intractable at scale:</p>
 
@@ -456,12 +490,10 @@ cjeu-py export-network --format html --max-nodes 500</div>
 
                 <p>The tool is open source and designed for researchers who may not be programmers. A five-command pipeline from zero to interactive network. Parquet tables that open in any data tool. CSV and Excel export with codebooks. Interactive HTML visualisations that run in any browser with no server. And for those working with AI assistants, a read-only MCP server (<code>cjeu-py mcp</code>) lets Claude and other agents query a local corpus &ndash; and look up live procedural records &ndash; without being able to modify any of it.</p>
 
-                <p class="essay-footnote">
-                    <strong>Install:</strong> <code>pip install cjeu-py</code><br>
+                <div class="ep-colophon"><h4>Get it</h4><p><strong>Install:</strong> <code>pip install cjeu-py</code><br>
                     <strong>Code:</strong> <a href="https://github.com/niccoloridi/cjeu-py" target="_blank">github.com/niccoloridi/cjeu-py</a><br>
                     <strong>PyPI:</strong> <a href="https://pypi.org/project/cjeu-py/" target="_blank">pypi.org/project/cjeu-py</a><br>
-                    <strong>Sample data:</strong> <a href="https://github.com/niccoloridi/cjeu-py/tree/main/examples/sample_data" target="_blank">a frozen 14-document corpus with provenance manifest</a>
-                </p>
+                    <strong>Sample data:</strong> <a href="https://github.com/niccoloridi/cjeu-py/tree/main/examples/sample_data" target="_blank">a frozen 14-document corpus with provenance manifest</a></p></div>
 
             </div>
 
@@ -525,97 +557,111 @@ cjeu-py export-network --format html --max-nodes 500</div>
     ];
 
     const pipelineStages = [
-        { label: "Collect", sub: "CELLAR + CURIA", color: "--cjeu-collect" },
-        { label: "Download", sub: "CELLAR XHTML", color: "--cjeu-download" },
-        { label: "Parse", sub: "Headers & metadata", color: "--cjeu-parse" },
-        { label: "Extract", sub: "4-phase, footnotes", color: "--cjeu-extract" },
-        { label: "Resolve", sub: "CELEX + tiers", color: "--cjeu-classify" },
-        { label: "Search", sub: "Local + live", color: "--cjeu-search" },
-        { label: "Visualize", sub: "D3.js networks", color: "--cjeu-visualize" }
+        { label: "Collect", sub: "CELLAR + CURIA", color: "--cjeu-collect",
+          desc: "Queries the EU Publications Office's CELLAR SPARQL endpoint for decisions and their metadata. Since v0.6.0 it also reads the Court's InfoCuria API: pending cases, procedural histories, hearing calendars and doctrine." },
+        { label: "Download", sub: "CELLAR XHTML", color: "--cjeu-download",
+          desc: "Fetches the full text of each judgment from CELLAR as XHTML. Downloads are cached to disk and resume where they left off." },
+        { label: "Parse", sub: "Headers & metadata", color: "--cjeu-parse",
+          desc: "Reads each judgment's header and metadata (identifiers, date, formation, judge-rapporteur, advocate general, procedure type, subject matter) and keeps its paragraphs and footnotes apart." },
+        { label: "Extract", sub: "4-phase, footnotes", color: "--cjeu-extract",
+          desc: "Finds case references in four phases, in order of confidence: CourtLink hyperlinks, a catalogue-guided search, a 13-pattern regex safety net and optional party-name enrichment. Footnotes are read and pinpoints such as “point 26” are kept." },
+        { label: "Resolve", sub: "CELEX + tiers", color: "--cjeu-classify",
+          desc: "Resolves every citation to a CELEX identifier with a confidence tier, from A (exact identifier) to U (unresolved), and scores each document's recall against CELLAR's own citation graph." },
+        { label: "Search", sub: "Local + live", color: "--cjeu-search",
+          desc: "Searches the local corpus, or the live InfoCuria API with facets for document type, jurisdiction and dates. cjeu-py case merges the CELLAR and CURIA records for a case into one card." },
+        { label: "Visualize", sub: "D3.js networks", color: "--cjeu-visualize",
+          desc: "Exports the citation network as an interactive D3.js page that runs in any browser with no server, alongside Parquet, CSV and Excel tables." }
     ];
 
     function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+    const esc = s => EP.esc(s);
+    const SANS = "'Space Grotesk', system-ui, sans-serif";
+
+    /* hover, focus and tap all show the same tooltip */
+    function bindTip(sel, html) {
+        sel.attr("tabindex", 0)
+            .on("mouseenter", (ev, d) => EP.tip(ev, html(d)))
+            .on("mousemove", ev => EP.move(ev))
+            .on("mouseleave", () => EP.hide())
+            .on("click", (ev, d) => EP.tip(ev, html(d)))
+            .on("focus", function (ev, d) { const r = this.getBoundingClientRect(); EP.tip({ clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 }, html(d)); })
+            .on("blur", () => EP.hide());
+    }
+    /* bar shapes with only the data end rounded */
+    function barUp(x, y, w, h, r) { r = Math.min(r, h, w / 2); return `M${x},${y + h}V${y + r}Q${x},${y} ${x + r},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h}Z`; }
+    function barRight(x, y, w, h, r) { r = Math.min(r, w, h / 2); return `M${x},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h - r}Q${x + w},${y + h} ${x + w - r},${y + h}H${x}Z`; }
+    function textWidth(svg, strings, size, family) {
+        const t = svg.append("text").attr("font-size", size).style("font-family", family).attr("visibility", "hidden");
+        let m = 0; strings.forEach(s => { t.text(s); m = Math.max(m, t.node().getComputedTextLength()); });
+        t.remove(); return m;
+    }
 
     /* ── PIPELINE ─────────────────────────────────── */
     function drawPipeline() {
         const container = d3.select("#viz-pipeline");
         container.selectAll("*").remove();
         const w = container.node().getBoundingClientRect().width;
-        const isMobile = w < 500;
-        const boxW = isMobile ? w * 0.65 : 100;
-        const boxH = isMobile ? 52 : 60;
-        const gap = isMobile ? 8 : 16;
-        const arrowLen = isMobile ? 16 : 24;
-        const totalW = isMobile ? w : pipelineStages.length * (boxW + arrowLen) - arrowLen;
-        const totalH = isMobile ? pipelineStages.length * (boxH + gap + arrowLen) : boxH + 40;
+        const n = pipelineStages.length, arrow = 22;
+        // seven in a row when each box gets 120px, four then three on tablets, a column on phones
+        const cols = (w - (n - 1) * arrow) / n >= 120 ? n : (w >= 560 ? 4 : 1);
+        const rows = Math.ceil(n / cols);
+        const vertical = cols === 1;
+        const boxW = vertical ? Math.min(w, 420) : Math.min(170, (w - (cols - 1) * arrow) / cols);
+        const boxH = vertical ? 40 : 64;
+        const rowGap = vertical ? 18 : 34;
+        const rowW = vertical ? boxW : cols * boxW + (cols - 1) * arrow;
+        const x0 = (w - rowW) / 2;
+        const H = rows * boxH + (rows - 1) * rowGap + 2;
+        const muted = css("--muted"), fg = css("--fg"), gold = css("--gold"), line = css("--line");
 
-        const wrapper = container.append("div").attr("class", "pipeline-wrapper");
-        const svg = wrapper.append("svg")
-            .attr("width", isMobile ? w : Math.max(totalW + 40, w))
-            .attr("height", totalH + 10)
-            .attr("viewBox", `0 0 ${isMobile ? w : Math.max(totalW + 40, w)} ${totalH + 10}`);
+        const svg = container.append("svg").attr("class", "cj-svg")
+            .attr("viewBox", `0 0 ${w} ${H}`).attr("height", H)
+            .attr("role", "img")
+            .attr("aria-label", "Diagram of the seven cjeu-py pipeline stages in order: " + pipelineStages.map(s => s.label).join(", ") + ".");
 
-        const startX = isMobile ? w / 2 : (Math.max(totalW + 40, w) - totalW) / 2;
-
-        pipelineStages.forEach((stage, i) => {
-            const col = css(stage.color);
-            let x, y;
-            if (isMobile) {
-                x = startX - boxW / 2;
-                y = i * (boxH + gap + arrowLen);
-            } else {
-                x = startX + i * (boxW + arrowLen);
-                y = 10;
-            }
-
-            const g = svg.append("g");
-
-            g.append("rect")
-                .attr("x", x).attr("y", y)
-                .attr("width", boxW).attr("height", boxH)
-                .attr("rx", 8)
-                .attr("fill", col).attr("fill-opacity", 0.15)
-                .attr("stroke", col).attr("stroke-width", 1.5);
-
-            g.append("text")
-                .attr("x", x + boxW / 2).attr("y", y + boxH * 0.4)
-                .attr("text-anchor", "middle")
-                .attr("font-size", "12px").attr("font-weight", "700")
-                .attr("fill", col)
-                .text(stage.label);
-
-            g.append("text")
-                .attr("x", x + boxW / 2).attr("y", y + boxH * 0.72)
-                .attr("text-anchor", "middle")
-                .attr("font-size", "9px")
-                .attr("fill", css("--secondary-color"))
-                .text(stage.sub);
-
-            // Arrow
-            if (i < pipelineStages.length - 1) {
-                if (isMobile) {
-                    const ax = w / 2;
-                    const ay = y + boxH + 2;
-                    svg.append("line")
-                        .attr("x1", ax).attr("y1", ay)
-                        .attr("x2", ax).attr("y2", ay + arrowLen - 4)
-                        .attr("stroke", css("--secondary-color")).attr("stroke-width", 1.5);
-                    svg.append("polygon")
-                        .attr("points", `${ax - 4},${ay + arrowLen - 8} ${ax + 4},${ay + arrowLen - 8} ${ax},${ay + arrowLen - 2}`)
-                        .attr("fill", css("--secondary-color"));
-                } else {
-                    const ax = x + boxW + 2;
-                    const ay = y + boxH / 2;
-                    svg.append("line")
-                        .attr("x1", ax).attr("y1", ay)
-                        .attr("x2", ax + arrowLen - 6).attr("y2", ay)
-                        .attr("stroke", css("--secondary-color")).attr("stroke-width", 1.5);
-                    svg.append("polygon")
-                        .attr("points", `${ax + arrowLen - 10},${ay - 4} ${ax + arrowLen - 10},${ay + 4} ${ax + arrowLen - 2},${ay}`)
-                        .attr("fill", css("--secondary-color"));
-                }
-            }
+        const pos = pipelineStages.map((s, i) => {
+            const r = Math.floor(i / cols), c = i % cols;
+            return { x: x0 + c * (boxW + arrow), y: 1 + r * (boxH + rowGap), r, c };
         });
+
+        // connectors
+        const head = (x, y, dir) => {
+            const p = dir === "right" ? `${x - 6},${y - 3.5} ${x - 6},${y + 3.5} ${x},${y}` : `${x - 3.5},${y - 6} ${x + 3.5},${y - 6} ${x},${y}`;
+            svg.append("polygon").attr("points", p).attr("fill", muted);
+        };
+        for (let i = 0; i < n - 1; i++) {
+            const a = pos[i], b = pos[i + 1];
+            if (vertical) {
+                const cx = a.x + 22;
+                svg.append("line").attr("x1", cx).attr("x2", cx).attr("y1", a.y + boxH + 2).attr("y2", b.y - 3).attr("stroke", muted).attr("stroke-width", 1);
+                head(cx, b.y - 2, "down");
+            } else if (a.r === b.r) {
+                const cy = a.y + boxH / 2;
+                svg.append("line").attr("x1", a.x + boxW + 3).attr("x2", b.x - 4).attr("y1", cy).attr("y2", cy).attr("stroke", muted).attr("stroke-width", 1);
+                head(b.x - 3, cy, "right");
+            } else {
+                // elbow from the end of one row back to the start of the next
+                const sx = a.x + boxW / 2, ex = b.x + boxW / 2, my = a.y + boxH + rowGap / 2;
+                svg.append("path").attr("d", `M${sx},${a.y + boxH + 2}V${my}H${ex}V${b.y - 3}`).attr("fill", "none").attr("stroke", muted).attr("stroke-width", 1);
+                head(ex, b.y - 2, "down");
+            }
+        }
+
+        const g = svg.selectAll("g.cj-stage").data(pipelineStages).join("g")
+            .attr("class", "cj-stage")
+            .attr("aria-label", (s, i) => `Stage ${i + 1}, ${s.label}: ${s.desc}`)
+            .attr("transform", (s, i) => `translate(${pos[i].x},${pos[i].y})`);
+        g.append("rect").attr("class", "box").attr("width", boxW).attr("height", boxH).attr("rx", 3);
+        if (vertical) {
+            g.append("text").attr("x", 12).attr("y", boxH / 2).attr("dy", "0.34em").attr("font-size", "10px").attr("fill", gold).text((s, i) => String(i + 1).padStart(2, "0"));
+            g.append("text").attr("class", "lbl").attr("x", 38).attr("y", boxH / 2).attr("dy", "0.34em").attr("font-size", "13px").attr("font-weight", 500).attr("fill", fg).text(s => s.label);
+            g.append("text").attr("x", boxW - 12).attr("y", boxH / 2).attr("dy", "0.34em").attr("text-anchor", "end").attr("font-size", "9.5px").attr("fill", muted).text(s => s.sub);
+        } else {
+            g.append("text").attr("x", 10).attr("y", 15).attr("font-size", "9px").attr("fill", gold).text((s, i) => String(i + 1).padStart(2, "0"));
+            g.append("text").attr("class", "lbl").attr("x", boxW / 2).attr("y", boxH / 2 + 3).attr("text-anchor", "middle").attr("font-size", "13.5px").attr("font-weight", 500).attr("fill", fg).text(s => s.label);
+            g.append("text").attr("x", boxW / 2).attr("y", boxH / 2 + 19).attr("text-anchor", "middle").attr("font-size", "9px").attr("fill", muted).text(s => s.sub);
+        }
+        bindTip(g, s => `<b>${pipelineStages.indexOf(s) + 1} · ${esc(s.label)}</b>${esc(s.desc)}`);
     }
 
     /* ── YEARLY BAR CHART ─────────────────────────── */
@@ -623,180 +669,137 @@ cjeu-py export-network --format html --max-nodes 500</div>
         const container = d3.select("#viz-yearly");
         container.selectAll("*").remove();
         const w = container.node().getBoundingClientRect().width;
-        const h = Math.min(300, w * 0.45);
-        const m = { top: 20, right: 20, bottom: 45, left: 45 };
+        const narrow = w < 560;
+        const h = narrow ? 230 : 290;
+        const m = { top: 26, right: 6, bottom: 26, left: 30 };
+        const muted = css("--muted"), fg = css("--fg"), gold = css("--gold"), line = css("--line");
+        const maxD = yearlyData.reduce((a, d) => d.count > a.count ? d : a);
+        const minD = yearlyData.reduce((a, d) => d.count < a.count ? d : a);
 
-        const svg = container.append("svg")
-            .attr("width", w).attr("height", h)
-            .attr("viewBox", `0 0 ${w} ${h}`);
+        const svg = container.append("svg").attr("class", "cj-svg")
+            .attr("viewBox", `0 0 ${w} ${h}`).attr("height", h)
+            .attr("role", "img")
+            .attr("aria-label", `Bar chart of Grand Chamber decisions per year, 2004 to 2025. Lowest ${minD.count} in ${minD.year}, highest ${maxD.count} in ${maxD.year}.`);
 
-        const x = d3.scaleBand()
-            .domain(yearlyData.map(d => d.year))
-            .range([m.left, w - m.right])
-            .padding(0.2);
+        const x = d3.scaleBand().domain(yearlyData.map(d => d.year)).range([m.left, w - m.right]).paddingInner(0).paddingOuter(0.1);
+        const y = d3.scaleLinear().domain([0, d3.max(yearlyData, d => d.count)]).nice().range([h - m.bottom, m.top]);
+        const bw = Math.min(24, x.bandwidth() * 0.7);
 
-        const y = d3.scaleLinear()
-            .domain([0, d3.max(yearlyData, d => d.count) * 1.1])
-            .range([h - m.bottom, m.top]);
+        // gridlines and y ticks
+        const yt = y.ticks(narrow ? 4 : 5);
+        svg.append("g").selectAll("line").data(yt).join("line")
+            .attr("x1", m.left).attr("x2", w - m.right).attr("y1", d => y(d)).attr("y2", d => y(d))
+            .attr("stroke", line).attr("stroke-width", 1).attr("shape-rendering", "crispEdges");
+        svg.append("g").selectAll("text").data(yt).join("text")
+            .attr("x", m.left - 6).attr("y", d => y(d)).attr("dy", "0.32em").attr("text-anchor", "end")
+            .attr("font-size", "10px").attr("fill", muted).text(d => d);
+        svg.append("text").attr("x", m.left - 6).attr("y", 10).attr("font-size", "9px").attr("fill", muted)
+            .attr("letter-spacing", "0.08em").text("DECISIONS");
 
-        const g = svg.append("g");
+        // x ticks: thin out so labels keep about 44px apart
+        const step = x.step();
+        const every = [1, 2, 5].find(k => k * step >= 44) || 5;
+        const xt = yearlyData.map(d => d.year).filter(yr => every === 1 || yr % every === 0);
+        svg.append("g").selectAll("text").data(xt).join("text")
+            .attr("x", d => x(d) + x.bandwidth() / 2).attr("y", h - m.bottom + 16).attr("text-anchor", "middle")
+            .attr("font-size", "10px").attr("fill", muted).text(d => d);
 
-        // Bars
-        g.selectAll("rect").data(yearlyData).join("rect")
-            .attr("x", d => x(d.year))
-            .attr("y", d => y(d.count))
-            .attr("width", x.bandwidth())
-            .attr("height", d => y(0) - y(d.count))
-            .attr("fill", css("--bar-primary"))
-            .attr("rx", 2)
-            .attr("opacity", 0.85);
+        // hit columns, one per year, full plot height, under the bars
+        const hit = svg.append("g").selectAll("rect").data(yearlyData).join("rect")
+            .attr("class", "cj-hit")
+            .attr("x", d => x(d.year)).attr("width", x.bandwidth())
+            .attr("y", m.top).attr("height", y(0) - m.top)
+            .attr("aria-label", d => `${d.year}: ${d.count} decisions`);
 
-        // Count labels on bars
-        g.selectAll(".bar-label").data(yearlyData).join("text")
-            .attr("class", "bar-label")
-            .attr("x", d => x(d.year) + x.bandwidth() / 2)
-            .attr("y", d => y(d.count) - 4)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "9px")
-            .attr("fill", css("--secondary-color"))
-            .text(d => d.count);
+        // bars
+        svg.append("g").attr("pointer-events", "none").selectAll("path").data(yearlyData).join("path")
+            .attr("d", d => barUp(x(d.year) + (x.bandwidth() - bw) / 2, y(d.count), bw, y(0) - y(d.count), 2))
+            .attr("fill", gold);
+        // baseline
+        svg.append("line").attr("x1", m.left).attr("x2", w - m.right).attr("y1", y(0)).attr("y2", y(0))
+            .attr("stroke", muted).attr("stroke-opacity", 0.6).attr("stroke-width", 1).attr("shape-rendering", "crispEdges");
 
-        // X axis
-        svg.append("g")
-            .attr("transform", `translate(0,${h - m.bottom})`)
-            .call(d3.axisBottom(x).tickValues(yearlyData.filter((_, i) => i % 2 === 0).map(d => d.year)))
-            .selectAll("text")
-            .attr("font-size", "10px")
-            .attr("fill", css("--secondary-color"))
-            .attr("transform", "rotate(-45)")
-            .attr("text-anchor", "end");
+        // direct labels: the low and the peak
+        svg.append("g").attr("pointer-events", "none").selectAll("text").data([minD, maxD]).join("text")
+            .attr("x", d => x(d.year) + x.bandwidth() / 2).attr("y", d => y(d.count) - 6).attr("text-anchor", "middle")
+            .attr("font-size", "10px").attr("fill", fg).text(d => d.count);
 
-        svg.selectAll(".domain, .tick line").attr("stroke", css("--border-color"));
-
-        // Y axis
-        svg.append("g")
-            .attr("transform", `translate(${m.left},0)`)
-            .call(d3.axisLeft(y).ticks(5))
-            .selectAll("text")
-            .attr("font-size", "10px")
-            .attr("fill", css("--secondary-color"));
+        bindTip(hit, d => `<b>${d.year}</b>Grand Chamber decisions <span class="v">${d.count}</span>`);
     }
 
-    /* ── SUBJECTS HORIZONTAL BAR ──────────────────── */
+    /* ── RANKED HORIZONTAL BARS (Plates III and IV) ── */
+    function hbars(sel, rows, opts) {
+        const container = d3.select(sel);
+        container.selectAll("*").remove();
+        const w = container.node().getBoundingClientRect().width;
+        const fg = css("--fg"), gold = css("--gold");
+        const probe = container.append("svg").attr("width", 0).attr("height", 0);
+        const labW = textWidth(probe, rows.map(opts.label), "12px", SANS);
+        probe.remove();
+        const padR = 34;
+        // labels beside the bars when they leave at least 45% of the width for bars, otherwise above them
+        const beside = labW + 14 <= w * 0.55;
+        const padL = beside ? Math.ceil(labW) + 14 : 0;
+        const rowH = beside ? 30 : 42;
+        const barH = beside ? 14 : 12;
+        const H = rows.length * rowH;
+        const x = d3.scaleLinear().domain([0, d3.max(rows, opts.value)]).range([0, w - padL - padR]);
+
+        const svg = container.append("svg").attr("class", "cj-svg")
+            .attr("viewBox", `0 0 ${w} ${H}`).attr("height", H)
+            .attr("role", "img").attr("aria-label", opts.aria);
+        const row = svg.selectAll("g").data(rows).join("g").attr("transform", (d, i) => `translate(0,${i * rowH})`);
+        const hit = row.append("rect").attr("class", "cj-hit").attr("x", 0).attr("y", 0).attr("width", w).attr("height", rowH)
+            .attr("aria-label", d => `${opts.label(d)}: ${opts.value(d)}`);
+        const by = beside ? (rowH - barH) / 2 : rowH - barH - 7;
+        row.append("text").attr("class", "lbl")
+            .attr("x", beside ? padL - 12 : 0).attr("y", beside ? rowH / 2 : by - 6).attr("dy", beside ? "0.34em" : 0)
+            .attr("text-anchor", beside ? "end" : "start").attr("font-size", "12px").attr("fill", fg)
+            .attr("pointer-events", "none").text(opts.label);
+        row.append("path").attr("d", d => barRight(padL, by, x(opts.value(d)), barH, 2)).attr("fill", gold).attr("pointer-events", "none");
+        row.append("text").attr("x", d => padL + x(opts.value(d)) + 6).attr("y", by + barH / 2).attr("dy", "0.34em")
+            .attr("font-size", "10.5px").attr("fill", fg).attr("pointer-events", "none").text(opts.value);
+        bindTip(hit, opts.tip);
+    }
+
     function drawSubjects() {
-        const container = d3.select("#viz-subjects");
-        container.selectAll("*").remove();
-        const w = container.node().getBoundingClientRect().width;
-        const h = Math.min(380, w * 0.6);
-        const m = { top: 10, right: 40, bottom: 20, left: 180 };
-
-        if (w < 500) m.left = 130;
-
-        const svg = container.append("svg")
-            .attr("width", w).attr("height", h)
-            .attr("viewBox", `0 0 ${w} ${h}`);
-
-        const y = d3.scaleBand()
-            .domain(subjectData.map(d => d.label))
-            .range([m.top, h - m.bottom])
-            .padding(0.25);
-
-        const x = d3.scaleLinear()
-            .domain([0, d3.max(subjectData, d => d.count) * 1.1])
-            .range([m.left, w - m.right]);
-
-        // Bars
-        svg.selectAll("rect").data(subjectData).join("rect")
-            .attr("x", m.left)
-            .attr("y", d => y(d.label))
-            .attr("width", d => x(d.count) - m.left)
-            .attr("height", y.bandwidth())
-            .attr("fill", css("--bar-primary"))
-            .attr("rx", 3)
-            .attr("opacity", 0.85);
-
-        // Labels
-        svg.selectAll(".subj-label").data(subjectData).join("text")
-            .attr("x", m.left - 8)
-            .attr("y", d => y(d.label) + y.bandwidth() / 2)
-            .attr("text-anchor", "end")
-            .attr("dominant-baseline", "central")
-            .attr("font-size", w < 500 ? "9px" : "11px")
-            .attr("fill", css("--text-color"))
-            .text(d => d.label);
-
-        // Counts
-        svg.selectAll(".subj-count").data(subjectData).join("text")
-            .attr("x", d => x(d.count) + 5)
-            .attr("y", d => y(d.label) + y.bandwidth() / 2)
-            .attr("dominant-baseline", "central")
-            .attr("font-size", "10px")
-            .attr("font-weight", "600")
-            .attr("fill", css("--stat-color"))
-            .text(d => d.count);
+        hbars("#viz-subjects", subjectData, {
+            label: d => d.label, value: d => d.count,
+            aria: "Ranked bar chart of the ten most frequent subject-matter categories in Grand Chamber decisions, led by approximation of laws with 159.",
+            tip: d => `<b>${esc(d.label)}</b>Grand Chamber decisions with this subject <span class="v">${d.count}</span>`
+        });
     }
 
-    /* ── TOP CASES ────────────────────────────────── */
     function drawTopCases() {
-        const container = d3.select("#viz-topcases");
-        container.selectAll("*").remove();
-        const w = container.node().getBoundingClientRect().width;
-        const h = Math.min(380, w * 0.55);
-        const m = { top: 10, right: 40, bottom: 20, left: 200 };
+        hbars("#viz-topcases", topCases, {
+            label: d => d.name, value: d => d.count,
+            aria: "Ranked bar chart of the ten decisions most cited by Grand Chamber decisions, led by Kadi with 33 citations, Opinion 2/13 with 32 and Åkerberg Fransson with 28.",
+            tip: d => `<b>${esc(d.name)}</b><span class="k">CELEX ${esc(d.celex)}</span><br>Cited by Grand Chamber decisions <span class="v">${d.count}</span>`
+        });
+    }
 
-        if (w < 500) m.left = 155;
-
-        const svg = container.append("svg")
-            .attr("width", w).attr("height", h)
-            .attr("viewBox", `0 0 ${w} ${h}`);
-
-        const y = d3.scaleBand()
-            .domain(topCases.map(d => d.name))
-            .range([m.top, h - m.bottom])
-            .padding(0.2);
-
-        const x = d3.scaleLinear()
-            .domain([0, d3.max(topCases, d => d.count) * 1.15])
-            .range([m.left, w - m.right]);
-
-        // Bars
-        svg.selectAll("rect").data(topCases).join("rect")
-            .attr("x", m.left)
-            .attr("y", d => y(d.name))
-            .attr("width", d => x(d.count) - m.left)
-            .attr("height", y.bandwidth())
-            .attr("fill", css("--stat-color"))
-            .attr("rx", 3)
-            .attr("opacity", 0.8);
-
-        // Labels
-        svg.selectAll(".case-label").data(topCases).join("text")
-            .attr("x", m.left - 8)
-            .attr("y", d => y(d.name) + y.bandwidth() / 2)
-            .attr("text-anchor", "end")
-            .attr("dominant-baseline", "central")
-            .attr("font-size", w < 500 ? "9px" : "11px")
-            .attr("fill", css("--text-color"))
-            .text(d => d.name);
-
-        // Counts
-        svg.selectAll(".case-count").data(topCases).join("text")
-            .attr("x", d => x(d.count) + 5)
-            .attr("y", d => y(d.name) + y.bandwidth() / 2)
-            .attr("dominant-baseline", "central")
-            .attr("font-size", "11px")
-            .attr("font-weight", "700")
-            .attr("fill", css("--stat-color"))
-            .text(d => d.count);
+    /* ── TABLE VIEWS ──────────────────────────────── */
+    function buildTables() {
+        EP.table("viz-pipeline", ["#", "Stage", "Covers", "What it does"],
+            pipelineStages.map((s, i) => [i + 1, s.label, s.sub, s.desc]), { summary: "Table", numeric: [0] });
+        EP.table("viz-yearly", ["Year", "Decisions"], yearlyData.map(d => [d.year, d.count]), { summary: "Table", numeric: [1] });
+        EP.table("viz-subjects", ["Subject", "Decisions"], subjectData.map(d => [d.label, d.count]), { summary: "Table", numeric: [1] });
+        EP.table("viz-topcases", ["Decision", "CELEX", "Citations"], topCases.map(d => [d.name, d.celex, d.count]), { summary: "Table", numeric: [2] });
+        // the stage descriptions are long: let that column wrap
+        const t = document.querySelector("#viz-pipeline").closest(".ep-plate").querySelector(".ep-table table");
+        if (t) t.querySelectorAll("td:last-child").forEach(td => td.classList.add("wrap"));
     }
 
     /* ── RENDER ────────────────────────────────────── */
     function renderAll() {
+        EP.hide();
         drawPipeline();
         drawYearly();
         drawSubjects();
         drawTopCases();
     }
+
+    buildTables();
 
     renderAll();
     window._vizReady = true;
@@ -807,6 +810,8 @@ cjeu-py export-network --format html --max-nodes 500</div>
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(renderAll, 200);
     });
+    // label widths are measured, so redraw once the web fonts have loaded
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(renderAll);
 
     // Re-render on theme change
     function reRenderVisible() { renderAll(); }
