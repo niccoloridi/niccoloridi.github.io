@@ -23,6 +23,10 @@
         };
     };
 
+    /* light theme: ink and gold on parchment; mixes toward the deeper golds of the light palette */
+    const mixRGB = (a, b, t) => a.map((v, k) => Math.round(v + (b[k] - v) * t));
+    const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+
     function surface(canvas) {
         const rect = canvas.getBoundingClientRect();
         const dpr = Math.min(devicePixelRatio || 1, 2);
@@ -42,27 +46,81 @@
         ctx.fillRect(0, 0, w, h);
     }
 
+    /* edges dissolve into the ground colour (destination-in on partial rects cleared the whole canvas) */
     function fadeEdges(ctx, w, h) {
+        const bg = palette().bg.join(',');
         const fx = Math.max(18, w * .14), fy = Math.max(14, h * .2);
-        const edge = (x0, y0, x1, y1, rect, reverse = false) => {
+        const edge = (x0, y0, x1, y1, rect) => {
             const gradient = ctx.createLinearGradient(x0, y0, x1, y1);
-            gradient.addColorStop(0, reverse ? 'rgba(0,0,0,1)' : 'rgba(0,0,0,0)');
-            gradient.addColorStop(1, reverse ? 'rgba(0,0,0,0)' : 'rgba(0,0,0,1)');
+            gradient.addColorStop(0, `rgba(${bg},1)`);
+            gradient.addColorStop(1, `rgba(${bg},0)`);
             ctx.fillStyle = gradient;
             ctx.fillRect(...rect);
         };
-        ctx.save();
-        ctx.globalCompositeOperation = 'destination-in';
         edge(0, 0, fx, 0, [0, 0, fx, h]);
-        edge(w - fx, 0, w, 0, [w - fx, 0, fx, h], true);
+        edge(w, 0, w - fx, 0, [w - fx, 0, fx, h]);
         edge(0, 0, 0, fy, [0, 0, w, fy]);
-        edge(0, h - fy, 0, h, [0, h - fy, w, fy], true);
-        ctx.restore();
+        edge(0, h, 0, h - fy, [0, h - fy, w, fy]);
+    }
+
+    /* light: trails fade by the same faint wash of the ground as in the dark plate, followed by a three-level step
+       towards the ground capped at the ground colour. On parchment the wash alone stalls a few levels short of the
+       ground (8-bit rounding) and leaves a tinted haze over the whole plate; the step clears that residue, so old
+       trails pale along their own hue and then vanish exactly into the parchment. */
+    function flowLight(canvas, time, ctx, w, h, p) {
+        let s = state.get(canvas);
+        if (!s) {
+            const count = Math.max(180, Math.min(520, Math.round(w * h / 260)));
+            s = { particles: Array.from({ length: count }, () => ({
+                x: Math.random() * w, y: Math.random() * h, life: 18 + Math.random() * 70
+            })), fresh: true };
+            state.set(canvas, s);
+            wash(ctx, w, h);
+        }
+        const ground = `rgb(${p.bg.join(',')})`;
+        const fade = () => {
+            wash(ctx, w, h, .05);
+            ctx.globalCompositeOperation = 'lighter';
+            ctx.fillStyle = 'rgb(3,3,3)';
+            ctx.fillRect(0, 0, w, h);
+            ctx.globalCompositeOperation = 'darken';
+            ctx.fillStyle = ground;
+            ctx.fillRect(0, 0, w, h);
+            ctx.globalCompositeOperation = 'source-over';
+        };
+        ctx.lineCap = 'round';
+        ctx.lineWidth = Math.max(1.9, w / 560);
+        /* three inks: deep gold for most strands, the page gold and a brown-black for a few */
+        const inks = [mixRGB(p.gold, [92, 74, 40], .45), p.gold, mixRGB(p.ink, p.gold, .3)];
+        const speed = Math.max(.65, w / 430), fadeZone = Math.max(16, Math.min(w, h) * .16);
+        const drawPass = (at, strength = 1) => {
+            for (let i = 0; i < s.particles.length; i++) {
+                const q = s.particles[i], ox = q.x, oy = q.y;
+                const angle = Math.sin(q.x * .011 + at * .00022 + seed) + Math.cos(q.y * .014 - at * .00017) * 1.4;
+                q.x += Math.cos(angle) * speed;
+                q.y += Math.sin(angle) * speed;
+                q.life--;
+                const edgeFade = Math.max(0, Math.min(1, Math.min(q.x, q.y, w - q.x, h - q.y) / fadeZone));
+                const ink = i % 7 === 0;
+                ctx.strokeStyle = rgba(inks[ink ? 2 : i % 3 === 0 ? 1 : 0], ((ink ? .62 : .86) + (i % 9) * .015) * strength * edgeFade);
+                ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(q.x, q.y); ctx.stroke();
+                if (q.x < 0 || q.x > w || q.y < 0 || q.y > h || q.life < 0) {
+                    q.x = Math.random() * w; q.y = Math.random() * h; q.life = 24 + Math.random() * 70;
+                }
+            }
+        };
+        if (s.fresh) {
+            for (let warm = 40; warm > 0; warm--) { fade(); drawPass(time - warm * 16); }
+            s.fresh = false;
+        }
+        fade();
+        drawPass(time);
     }
 
     function flow(canvas, time) {
         const { ctx, w, h } = surface(canvas);
         const p = palette();
+        if (p.light) return flowLight(canvas, time, ctx, w, h, p);
         let s = state.get(canvas);
         if (!s) {
             const count = Math.max(180, Math.min(520, Math.round(w * h / 260)));
@@ -103,9 +161,10 @@
     function moire(canvas, time) {
         const { ctx, w, h } = surface(canvas), p = palette(), m = pointer.get(canvas);
         wash(ctx, w, h);
-        ctx.lineWidth = Math.max(.6, w / 1100);
+        ctx.lineWidth = p.light ? Math.max(1.1, w / 1000) : Math.max(.6, w / 1100);
         for (let set = 0; set < 2; set++) {
-            ctx.strokeStyle = set ? `rgba(${p.gold.join(',')},${p.light ? .72 : .82})` : `rgba(${p.ink.join(',')},${p.light ? .3 : .38})`;
+            ctx.strokeStyle = p.light ? (set ? rgba(mixRGB(p.gold, [126, 94, 22], .5), .9) : rgba(p.ink, .42))
+                : set ? `rgba(${p.gold.join(',')},.82)` : `rgba(${p.ink.join(',')},.38)`;
             for (let j = -15; j < 24; j++) {
                 ctx.beginPath();
                 for (let x = -8; x <= w + 8; x += 4) {
@@ -125,9 +184,10 @@
         ctx.save();
         ctx.translate(w * (.5 + (m.x - .5) * .06), h * (.5 + (m.y - .5) * .06));
         ctx.rotate(time * .000028);
-        ctx.lineWidth = Math.max(.7, w / 900);
+        ctx.lineWidth = p.light ? Math.max(1.1, w / 640) : Math.max(.7, w / 900);
         for (let k = 0; k < 11; k++) {
-            ctx.strokeStyle = `rgba(${(k % 4 ? p.gold : p.ink).join(',')},${.1 + k * .024})`;
+            ctx.strokeStyle = p.light ? rgba(k % 4 ? mixRGB(p.gold, [92, 74, 40], .3) : p.ink, .26 + k * .05)
+                : `rgba(${(k % 4 ? p.gold : p.ink).join(',')},${.1 + k * .024})`;
             ctx.beginPath();
             for (let i = 0; i <= 300; i++) {
                 const a = i / 300 * tau, drift = time * .0001 + k * .14;
@@ -153,10 +213,17 @@
                     + (q - .5) * h * .4 * (.28 + envelope) + (m.y - .5) * h * .07 * envelope;
                 i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
             }
-            const hue = (28 + q * 175 + time * .004) % 360;
-            const lightness = p.light ? 30 + q * 27 : 47 + q * 40;
-            ctx.strokeStyle = `hsla(${hue},${p.light ? 78 : 86}%,${lightness}%,${(p.light ? .17 : .14) + q * .24})`;
-            ctx.lineWidth = 1 + q * 2.1;
+            if (p.light) {
+                /* light: the spectrum becomes a slow sheen from deep gold through gold to ink-brown */
+                const f = .5 + .5 * Math.sin(q * 5.2 - time * .0007 + seed);
+                const c = f < .5 ? mixRGB([92, 74, 40], p.gold, f * 2) : mixRGB(p.gold, p.ink, (f - .5) * .9);
+                ctx.strokeStyle = rgba(c, .3 + q * .45);
+                ctx.lineWidth = 1.3 + q * 2.4;
+            } else {
+                const hue = (28 + q * 175 + time * .004) % 360;
+                ctx.strokeStyle = `hsla(${hue},86%,${47 + q * 40}%,${.14 + q * .24})`;
+                ctx.lineWidth = 1 + q * 2.1;
+            }
             ctx.stroke();
         }
     }
@@ -177,12 +244,19 @@
                 const u = x / w, v = y / h;
                 const wave = (Math.sin(u * 12 + animationTime * .0011) + Math.cos(v * 15 - animationTime * .0008) + Math.sin((u + v) * 9 - animationTime * .0004)) / 3;
                 const pull = Math.max(0, 1 - Math.hypot(u - m.x, v - m.y) * 3.2);
-                const size = step * (strongLight ? .18 + .42 * (wave * .5 + .5) + pull * .18 : .11 + .35 * (wave * .5 + .5) + pull * .2);
-                const hue = (hueBase + hueSpan * (wave * .5 + .5) + animationTime * .008) % 360;
-                const lightness = glow ? 58 + wave * 17 : strongLight ? 33 + wave * 15 : p.light ? 27 + wave * 13 : 54 + wave * 18;
-                const saturation = glow ? 92 : strongLight ? 88 : p.light ? 72 : 82;
-                const alpha = (glow ? .48 : strongLight ? .62 : p.light ? .35 : .32) + pull * (strongLight ? .26 : .35);
-                ctx.fillStyle = `hsla(${hue},${saturation}%,${lightness}%,${alpha})`;
+                const size = step * (strongLight ? .18 + .42 * (wave * .5 + .5) + pull * .18
+                    : p.light ? .15 + .4 * (wave * .5 + .5) + pull * .2 : .11 + .35 * (wave * .5 + .5) + pull * .2);
+                if (p.light) {
+                    /* light: printed in gold and ink, the crests darkening towards ink-brown */
+                    const f = (wave * .5 + .5 + .25 * Math.sin(u * 5 - v * 3 + animationTime * .0005)) / 1.25;
+                    const c = f < .55 ? mixRGB(p.gold, [126, 94, 22], f / .55) : mixRGB([126, 94, 22], [92, 74, 40], Math.min(.7, (f - .55) / .45));
+                    ctx.fillStyle = rgba(c, Math.min(1, (strongLight ? .76 : .6) + .25 * f + pull * .2));
+                } else {
+                    const hue = (hueBase + hueSpan * (wave * .5 + .5) + animationTime * .008) % 360;
+                    const lightness = glow ? 58 + wave * 17 : 54 + wave * 18;
+                    const alpha = (glow ? .48 : .32) + pull * .35;
+                    ctx.fillStyle = `hsla(${hue},${glow ? 92 : 82}%,${lightness}%,${alpha})`;
+                }
                 ctx.fillRect(Math.round(x - size / 2), Math.round(y - size / 2), Math.max(1, Math.round(size)), Math.max(1, Math.round(size)));
             }
         }
@@ -202,9 +276,15 @@
                         + (m.y - .5) * h * .06;
                     i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
                 }
-                const hue = (set ? 38 : 190) + k * 3 + time * .003;
-                ctx.strokeStyle = `hsla(${hue},${p.light ? 82 : 90}%,${p.light ? 31 + k * .8 : 58 + k}%,${p.light ? .38 : .32})`;
-                ctx.lineWidth = Math.max(1.1, w / 760) + k * .055;
+                if (p.light) {
+                    /* light: one set of threads in gold, the other in ink */
+                    ctx.strokeStyle = set ? rgba(mixRGB(p.gold, [92, 74, 40], k / 34), .5 + k * .015) : rgba(p.ink, .2 + k * .012);
+                    ctx.lineWidth = Math.max(1.4, w / 600) + k * .06;
+                } else {
+                    const hue = (set ? 38 : 190) + k * 3 + time * .003;
+                    ctx.strokeStyle = `hsla(${hue},90%,${58 + k}%,.32)`;
+                    ctx.lineWidth = Math.max(1.1, w / 760) + k * .055;
+                }
                 ctx.stroke();
             }
         }

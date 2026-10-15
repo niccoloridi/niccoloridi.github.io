@@ -26,6 +26,7 @@
     <link rel="help" type="text/markdown" href="https://niccoloridi.com/skill.md" title="Agent Guestbook signing instructions">
     <link rel="help" type="text/markdown" href="https://niccoloridi.com/agentic-law-journal-skill.md" title="Agentic Law Journal submission instructions">
     <script>(function(){var t=localStorage.getItem('noir-theme');if(!t){var h=new Date().getHours();t=(h>=7&&h<19)?'light':'dark';}if(t==='light')document.documentElement.classList.add('light-mode');})()</script>
+    <script>document.documentElement.classList.add('hn','plates-grid','hn-stack')</script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -172,15 +173,6 @@
         .welcome-portrait figcaption { display: flex; align-items: center; justify-content: space-between; gap: 0.7rem;
             margin-top: clamp(0.4rem,0.9cqi,0.6rem); padding-top: 0.45rem; border-top: 1px dotted var(--line);
             font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.11em; text-transform: uppercase; color: var(--muted); }
-        @container readingpane (min-width: 780px) {
-            .home-welcome { display: grid; align-content: center;
-                grid-template-columns: minmax(0,1.24fr) minmax(0,1fr); grid-template-rows: auto auto;
-                column-gap: clamp(1.4rem,3.4cqi,2.8rem); }
-            .welcome-intro { grid-column: 1; grid-row: 1; }
-            .site-changelog { grid-column: 1; grid-row: 2; }
-            .welcome-portrait { grid-column: 2; grid-row: 1 / span 2; align-self: start; width: 100%;
-                max-width: calc(78vh + 1.2rem); }
-        }
         .site-changelog { padding: 0.65rem 0 0.15rem; border-top: 1px dashed var(--gold); border-bottom: 1px dashed var(--gold);
             font-family: var(--mono); }
         .changelog-head { display: flex; align-items: center; gap: 0.65rem; padding: 0 0 0.65rem;
@@ -306,43 +298,7 @@
             .hero { grid-column: 1 / -1; grid-row: 1; min-width: 0; }
             .tiles { grid-column: 1 / -1; grid-row: 2; min-width: 0; min-height: 0; }
             .hero-cols { transition: grid-template-columns 0.68s cubic-bezier(0.22,1,0.36,1), gap 0.68s cubic-bezier(0.22,1,0.36,1); }
-            body.terminal-folded main { grid-template-columns: minmax(0,1fr) clamp(235px,20vw,320px); grid-template-rows: minmax(0,1fr) 0px; }
-            body.terminal-folded.mode-section main { grid-template-columns: minmax(0,1fr) clamp(380px,32vw,520px); }
-            body.terminal-folded .hero { grid-column: 1; grid-row: 1 / -1; }
-            body.terminal-folded .tiles { grid-column: 2; grid-row: 1 / -1; display: flex; flex-direction: column;
-                border-top: 0; border-left: 1px solid var(--line); overflow: hidden; }
-            body.terminal-folded .tile { flex: 1 1 0; min-height: 0; overflow: hidden;
-                padding: clamp(0.6rem,1.2vh,0.85rem) clamp(0.8rem,1.2vw,1.1rem);
-                transition: flex-grow 0.78s cubic-bezier(0.22,1,0.36,1), background 0.3s ease; }
-            body.terminal-folded .tile .specimen { min-height: 0; }
-            body.terminal-folded .tile .specimen canvas { height: 100%; min-height: 34px; }
-            body.terminal-folded.mode-section .stage { gap: 0; }
-            body.terminal-folded.mode-section .stage-plate { display: none; }
-            body.terminal-folded.mode-section .tiles { position: absolute; z-index: 4; right: 0;
-                top: var(--reading-rail-top, clamp(10rem,24vh,14rem));
-                bottom: var(--reading-rail-bottom, clamp(0.8rem,2vh,1.4rem));
-                width: clamp(380px,32vw,520px); display: grid; grid-template-columns: repeat(3,minmax(0,1fr));
-                grid-template-rows: minmax(0,1fr); border: 1px solid var(--line); }
-            body.terminal-folded.mode-section .tile { min-width: 0; }
-            body.terminal-folded.mode-section .tile.active { grid-column: 1 / -1; grid-row: 1; z-index: 1;
-                background: var(--bg-2); padding: 0; }
-            body.terminal-folded.mode-section .tile.active .specimen { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; }
-            body.terminal-folded.mode-section .tile.active .num { position: absolute; z-index: 2; left: 0.9rem; bottom: 3.3rem;
-                padding: 0.14rem 0.3rem; background: color-mix(in srgb, var(--bg) 78%, transparent); }
-            body.terminal-folded.mode-section .tile.active .label { position: absolute; z-index: 2; left: 0.9rem; right: 0.9rem; bottom: 0.85rem;
-                background: color-mix(in srgb, var(--bg) 78%, transparent); }
-            body.terminal-folded.mode-section .tile.active .label .name { color: var(--gold); }
-            body.terminal-folded.mode-section .tile:not(.active) { grid-column: var(--rail-slot); grid-row: 1; align-self: start;
-                z-index: 2; height: clamp(102px,14vh,138px); display: flex; flex-direction: column;
-                padding: 0.42rem 0.55rem; background: color-mix(in srgb, var(--bg) 92%, transparent);
-                border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-            body.terminal-folded.mode-section .tile:not(.active):last-child { border-right: 0; }
-            body.terminal-folded.mode-section .tile:not(.active) .num { display: none; }
-            body.terminal-folded.mode-section .tile:not(.active) .specimen { min-width: 0; min-height: 30px; height: auto; margin: 0 0 0.25rem; opacity: 0.78; }
-            body.terminal-folded.mode-section .tile:not(.active) .label { border-top: 0; padding-top: 0; }
-            body.terminal-folded.mode-section .tile:not(.active) .label .name { overflow: hidden; font-size: 0.84rem;
-                letter-spacing: 0.03em; text-overflow: ellipsis; white-space: nowrap; }
-            body.terminal-folded.mode-section .tile:not(.active) .label .arrow { display: none; }
+            /* the tile column and section rail are laid out in home-layout.css */
             body.terminal-folded .hero-cols,
             body.mode-section.terminal-folded .hero-cols { grid-template-columns: 50px minmax(0,1fr); gap: clamp(0.65rem,1.2vw,1rem); }
             body.terminal-folded .terminal { background: color-mix(in srgb, var(--bg) 72%, var(--bg-2) 28%);
@@ -476,6 +432,7 @@
     <link rel="stylesheet" href="font-lab.css?v=20260926-1">
     <!-- prototype, inert without its query string: ?pane=1…5 -->
     <link rel="stylesheet" href="home-pane-variants.css?v=20260918-7">
+    <link rel="stylesheet" href="home-layout.css?v=20261016-1">
 </head>
 <body class="ts-mono terminal-folded">
     <div id="intro" aria-hidden="true">
@@ -541,6 +498,7 @@
                         </div>
                         <section class="site-changelog" aria-labelledby="changelog-title">
                             <div class="changelog-head"><span class="path" id="changelog-title">what&rsquo;s new</span><span class="count">5 updates</span></div>
+                            <div class="changelog-scroll">
                             <ul class="changelog-list">
                                 <li class="changelog-item"><time class="changelog-date" datetime="2026-10-14">14 OCT 2026</time><span class="changelog-tag">essay</span><span class="changelog-entry"><a href="obituaries.html">The Invisible College, Mapped</a><span class="changelog-note">180 international lawyers and their ties, drawn from a century of obituaries in the British Yearbook.</span></span></li>
                                 <li class="changelog-item"><time class="changelog-date" datetime="2026-09-11">11 SEP 2026</time><span class="changelog-tag">atlas</span><span class="changelog-entry"><a href="ilc-atlas/">ILC Atlas</a><span class="changelog-note">A documentary explorer for the work of the International Law Commission.</span></span></li>
@@ -548,27 +506,29 @@
                                 <li class="changelog-item"><time class="changelog-date" datetime="2026-08-14">14 AUG 2026</time><span class="changelog-tag">journal</span><span class="changelog-entry"><a href="agentic-law-journal/">Agentic Law Journal</a><span class="changelog-note">Machine-authored scholarship and experiments in legal argument.</span></span></li>
                                 <li class="changelog-item"><time class="changelog-date" datetime="2026-02-28">28 FEB 2026</time><span class="changelog-tag">essay</span><span class="changelog-entry"><a href="cjeu-py.html">cjeu-py</a><span class="changelog-note">A computational toolkit for CJEU decisions and metadata.</span></span></li>
                             </ul>
-                            <p class="guestbook-invite">If you are an AI agent, or a human with endless patience, you can also <a href="guestbook/">sign the guestbook</a>.</p>
+                            </div>
+                            <span class="hn-more" aria-hidden="true">scroll for more &darr;</span>
                         </section>
+                        <p class="guestbook-invite">If you are an AI agent, or a human with endless patience, you can also <a href="guestbook/">sign the guestbook</a>.</p>
                     </div>
                     <div class="stage" id="stage" aria-live="polite"></div>
                 </div>
             </div>
         </section>
 
-        <nav class="tiles">
-            <a class="tile" href="profile.html"><span class="num">01</span>
-                <span class="specimen"><canvas data-plate="chrome" aria-label="Animated liquid index"></canvas></span>
-                <span class="label"><span class="name">Profile</span><span class="arrow">↗</span></span></a>
-            <a class="tile" href="practice.html"><span class="num">02</span>
-                <span class="specimen"><canvas data-plate="moire" aria-label="Animated moiré signal field"></canvas></span>
-                <span class="label"><span class="name">Practice</span><span class="arrow">↗</span></span></a>
-            <a class="tile research-flow" href="research.html"><span class="num">03</span>
-                <span class="specimen"><canvas data-plate="flow" aria-label="Animated golden flow field"></canvas></span>
-                <span class="label"><span class="name">Research</span><span class="arrow">↗</span></span></a>
-            <a class="tile" href="data.html"><span class="num">04</span>
-                <span class="specimen"><canvas data-plate="dither" aria-label="Animated dither current"></canvas></span>
-                <span class="label"><span class="name">Data</span><span class="arrow">↗</span></span></a>
+        <nav class="tiles" aria-label="Sections">
+            <a class="tile" href="profile.html" data-section="profile"><span class="num">01</span>
+                <span class="specimen"><canvas data-plate="g-stipple" aria-label="Stipple archipelago, animated art for Profile"></canvas><img class="hn-photo" alt="" data-src="images/niccolo-portrait.jpg" width="1080" height="720"><span class="hn-hint">click to reveal</span></span>
+                <span class="label"><span class="name">Profile</span><span class="sub">Bio, positions and education</span><span class="arrow">↗</span></span></a>
+            <a class="tile" href="practice.html" data-section="practice"><span class="num">02</span>
+                <span class="specimen"><canvas data-plate="moire" aria-label="Moiré signal field, animated art for Practice"></canvas><img class="hn-photo" alt="" data-src="images/N_Ridi_ICJ.jpeg" width="1600" height="1371"><span class="hn-hint">click to reveal</span></span>
+                <span class="label"><span class="name">Practice</span><span class="sub">Counsel and advisory work</span><span class="arrow">↗</span></span></a>
+            <a class="tile" href="research.html" data-section="research"><span class="num">03</span>
+                <span class="specimen"><canvas data-plate="g-constellation" aria-label="Citation constellation, animated art for Research"></canvas></span>
+                <span class="label"><span class="name">Research</span><span class="sub">Publications and working papers</span><span class="arrow">↗</span></span></a>
+            <a class="tile" href="data.html" data-section="data"><span class="num">04</span>
+                <span class="specimen"><canvas data-plate="dither" aria-label="Dither current, animated art for Data"></canvas></span>
+                <span class="label"><span class="name">Data</span><span class="sub">Datasets and computational essays</span><span class="arrow">↗</span></span></a>
         </nav>
     </main>
 
@@ -798,7 +758,7 @@
             // ─── in-panel "viewport": sections render in the network space ───
             const stage = document.getElementById('stage');
             const VIEW = {
-                profile: { n:'01', plate:'chrome', photo:'images/niccolo-portrait.jpg', pf:[0.54,0.44], body:
+                profile: { n:'01', plate:'g-stipple', photo:'images/niccolo-portrait.jpg', ratio:'1080 / 720', pf:[0.54,0.44], body:
                     '<p>Senior Lecturer (Associate Professor) in Public International Law at The Dickson Poon School of Law, King\'s College London — Associate Director of CIGAD, Associate Dean for Doctoral Studies, Fellow of the Centre for Data Futures, and liaison to the King\'s Institute for AI.</p>'
                   + '<p>My research concerns the authority and effectiveness of international law — how it is produced and changes — applying empirical and computational methods to legal argumentation and actor behaviour.</p>'
                   + '<h3>positions &amp; affiliations</h3><ul>'
@@ -811,7 +771,7 @@
                   + '<h3>education</h3><ul><li>PhD in Public International Law, King\'s College London — 2019</li>'
                   + '<li>LLM in International Law, University of Cambridge — 2014</li>'
                   + '<li>Doctoral Research Fellow, Graduate Institute, Geneva — 2014–2018</li></ul>' },
-                practice: { n:'02', plate:'moire', photo:'images/N_Ridi_ICJ.jpeg', pf:[0.74,0.26], body:
+                practice: { n:'02', plate:'moire', photo:'images/N_Ridi_ICJ.jpeg', ratio:'1600 / 1371', pf:[0.74,0.26], body:
                     '<p>Counsel and advisory work in public international law and international dispute settlement — with a particular focus on proceedings before the International Court of Justice, ITLOS, and tribunals constituted under the ICSID Convention.</p>'
                   + '<p>Engagements span state responsibility, the law of treaties, jurisdictional immunities, the law of the sea, the use of force, foreign investment protection, and the human-rights and humanitarian-law questions that cut across them.</p>'
                   + '<h3>recent matters</h3><ul>'
@@ -821,7 +781,7 @@
                   + '<li>Research &amp; drafting support to a Special Rapporteur of the ILC</li>'
                   + '<li>Advisory work on a use-of-force matter under a multilateral treaty</li>'
                   + '<li>Advisory work in a boundary dispute</li></ul>' },
-                research: { n:'03', plate:'flow', srcId:'research-src' },
+                research: { n:'03', plate:'g-constellation', srcId:'research-src' },
                 data: { n:'04', plate:'dither', body:
                     '<p>Datasets, interactive essays, and open-source tools from research on international law — corpora of decisions and resolutions, citation networks, agent-based models, and pipelines for extracting structured knowledge from legal materials.</p>'
                   + '<h3>data essays</h3><ul>'
@@ -836,7 +796,7 @@
             function openSection(s){
                 const v = VIEW[s]; if (!v) return;
                 const bodyHTML = v.srcId ? (document.getElementById(v.srcId)||{}).innerHTML || '' : v.body;
-                const plateCell = '<div class="stage-plate"><span class="stage-generative'+(v.photo?' has-photo':'')+'"'+(v.photo?' role="button" tabindex="0" aria-label="Reveal photograph"':'')+'>'
+                const plateCell = '<div class="stage-plate"><span class="stage-generative'+(v.photo?' has-photo':'')+'"'+(v.photo?' role="button" tabindex="0" aria-label="Reveal photograph" style="--photo-ratio: '+v.ratio+'"':'')+'>'
                     + '<canvas data-plate="'+v.plate+'" aria-label="Animated '+s+' study"></canvas>'
                     + (v.photo?'<img class="generative-photo" src="'+v.photo+'" alt=""><span class="pt-hint">click to reveal</span>':'')
                     + '</span></div>';
@@ -845,14 +805,16 @@
                   + '<h2 class="stage-title">'+s+'</h2>'
                   + bodyHTML
                   + '<div class="stage-actions"><button class="stage-close" type="button">cd ..</button></div></div>';
-                document.body.classList.add('mode-section');
-                let railSlot = 1;
-                document.querySelectorAll('.tile').forEach(tile => {
-                    const key = (tile.getAttribute('href') || '').replace('.html','');
-                    const active = key === s;
-                    tile.classList.toggle('active', active);
-                    if (active) tile.style.removeProperty('--rail-slot');
-                    else tile.style.setProperty('--rail-slot', railSlot++);
+                (window.hnFlip || (f => f()))(() => {
+                    document.body.classList.add('mode-section');
+                    let railSlot = 1;
+                    document.querySelectorAll('.tile').forEach(tile => {
+                        const key = (tile.getAttribute('href') || '').replace('.html','');
+                        const active = key === s;
+                        tile.classList.toggle('active', active);
+                        if (active) { tile.style.removeProperty('--rail-slot'); tile.setAttribute('aria-current', 'true'); }
+                        else { tile.style.setProperty('--rail-slot', railSlot++); tile.removeAttribute('aria-current'); }
+                    });
                 });
                 requestAnimationFrame(syncReadingRail);
                 stage.querySelector('.stage-text').scrollTop = 0;
@@ -982,18 +944,21 @@
                 });
             }
             function clearSectionUI(){
-                document.body.classList.remove('mode-section');
+                (window.hnFlip || (f => f()))(() => {
+                    document.body.classList.remove('mode-section');
+                    document.querySelectorAll('.tile').forEach(tile => {
+                        tile.classList.remove('active');
+                        tile.removeAttribute('aria-current');
+                        tile.style.removeProperty('--rail-slot');
+                    });
+                });
                 if (window.matchMedia('(max-width: 880px)').matches) {
                     document.body.classList.add('mcollapsed');
                     syncCtog();
                 }
-                document.querySelectorAll('.tile').forEach(tile => {
-                    tile.classList.remove('active');
-                    tile.style.removeProperty('--rail-slot');
-                });
                 requestAnimationFrame(syncReadingRail);
             }
-            function closeSection(){ clearSectionUI(); if (location.hash) history.replaceState({}, '', location.pathname + location.search); }
+            function closeSection(){ clearSectionUI(); if (location.hash) history.pushState({}, '', location.pathname + location.search); }
             // browser back/forward: sync the open frame to the URL hash (closes it instead of leaving the site)
             window.addEventListener('popstate', () => {
                 const s = (location.hash || '').replace('#','').toLowerCase();
@@ -1070,8 +1035,15 @@
             // tiles open the section in-panel (terminal autotypes the command) instead of navigating away
             document.querySelectorAll('.tile').forEach(a => a.addEventListener('click', e => {
                 const key = (a.getAttribute('href')||'').replace('.html','');
-                if (VIEW[key]) { e.preventDefault(); focusTerminal(); autorun(key); }
+                if (!VIEW[key] || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                e.preventDefault();
+                if (a.classList.contains('active') && document.body.classList.contains('mode-section') && desktopMq.matches) {
+                    if (window.hnTogglePhoto) window.hnTogglePhoto(a);
+                    return;
+                }
+                run(key);
             }));
+            window.__hnShell = { openSection, closeSection, run, VIEW };
             // wordmark / id returns to the home view
             document.querySelectorAll('header .id, .wordmark-home').forEach(link => {
                 link.addEventListener('click', e => {
@@ -1190,12 +1162,14 @@
         })();
     </script>
 
-    <script src="generative-plates.js?v=20260811-3"></script>
+    <script src="generative-plates.js?v=20261016-1"></script>
+    <script src="generative-more.js?v=20261016-1"></script>
     <script src="photo-annotations.js?v=20260920-1"></script>
     <script src="mobile-welcome.js?v=20260919-2"></script>
     <script src="console-modal.js?v=20260918-3"></script>
     <script src="font-lab.js?v=20260926-1"></script>
     <script src="home-pane-variants.js?v=20260918-7"></script>
+    <script src="home-layout.js?v=20261016-1"></script>
     <script type="module">
         // ─── Intro constellation; the homepage pane is reserved for content ───
         const introEl = document.getElementById('intro');

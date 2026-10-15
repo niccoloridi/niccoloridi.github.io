@@ -1,0 +1,204 @@
+/* home-next: a prototype of the homepage that keeps index.html's design and changes how the
+   four section plates are shown and switched.
+   Landing view: the four plates, in the framed style of the four-plates study, stacked in a
+   right-hand column as wide as the live tile column. Each plate's art is drawn at the
+   proportions and scale of a large 2 x 2 plate and cropped to its strip (home-next.js).
+   Section view: the open section's plate fills a right-hand area as wide as the live section
+   view, with the other three as a rail of thumbnails above it.
+   Reading pane: the live page's arrangement, fitted to the screen so nothing scrolls the page.
+   Desktop (881px and up) is one screen with no page scroll. Below that the original's stacked
+   mobile layout is kept. */
+
+/* the publication list draws its own rules; the bullet meant for the short lists sat on top of its first letters */
+html.hn .stage .pub-list li::before { content: none; }
+
+/* ─── pieces of the tile markup that only the desktop view uses ─── */
+.tile .sub, .tile .hn-photo, .tile .hn-hint { display: none; }
+/* the labels carry the section's name only, on desktop and on mobile */
+html.hn .tile .num { display: none; }
+.hn-more { display: none; }
+
+@media (min-width: 881px) {
+    html.hn { --hn-ease: cubic-bezier(0.22, 1, 0.36, 1);
+        /* one width for the plate column on every view: the live page's section width */
+        --hn-rail-w: clamp(380px, 32vw, 520px); --hn-rail-stack: var(--hn-rail-w); }
+
+    /* one screen: header, main and footer share the viewport and nothing spills */
+    html.hn body { height: 100vh; height: 100dvh; overflow: hidden; }
+    html.hn main { display: grid; grid-template-columns: minmax(0, 1fr) var(--hn-rail-w);
+        grid-template-rows: minmax(0, 1fr); transition: none; overflow: hidden; }
+    html.hn body:not(.mode-section) main { grid-template-columns: minmax(0, 1fr) var(--hn-rail-stack); }
+    html.hn .hero { grid-column: 1; grid-row: 1; min-width: 0; min-height: 0; position: relative;
+        padding-top: clamp(0.6rem, 1.6vh, 1.25rem); padding-bottom: clamp(0.6rem, 1.6vh, 1.1rem); }
+    html.hn main > .mobile-welcome { display: none; }
+
+    /* the wordmark scales with the height as well as the width, so short laptop screens keep room for the pane */
+    html.hn .wordmark { font-size: clamp(2.2rem, min(7vw, 10.4vh), 5.2rem); }
+    html.hn .hero-cols { margin-top: clamp(0.6rem, 1.9vh, 1.4rem); }
+
+    /* the console control sits at the right of the wordmark row, clear of the pane's contents */
+    html.hn body.console-modal .hero > .console-launch { top: calc(clamp(0.6rem, 1.6vh, 1.25rem) + 0.35rem); right: var(--gutter); }
+
+    /* ─── the reading pane: the live page's arrangement ───
+       Below a 780px pane the photograph, the welcome and the changelog stack in that order; from 780px
+       the photograph stands beside the text. Sizes, gaps and padding are the live values. The two
+       differences: the pane always fits (the changelog scrolls in the height that remains, and the
+       welcome is never clipped), and the guestbook line sits below the changelog box, always visible. */
+    html.hn .home-welcome { display: flex; flex-direction: column; justify-content: safe center; overflow: hidden;
+        gap: clamp(1.8rem, 4vh, 3rem); padding: clamp(1.35rem, 3.4vw, 3.4rem); }
+    html.hn .home-welcome > * { flex: none; }
+    html.hn .home-welcome > .site-changelog { flex: 0 1 auto; min-height: 0; }
+    html.hn .home-welcome .welcome-intro, html.hn .home-welcome > .site-changelog,
+    html.hn .home-welcome > .guestbook-invite { width: min(100%, 72ch); }
+    html.hn .home-welcome > .guestbook-invite { border-top: 0; padding: 0; }
+    html.hn .home-welcome .welcome-portrait { width: min(100%, 72ch); max-width: var(--hn-fig-max, none); min-width: 0; }
+    /* stacked on a laptop-height screen the live gaps and padding would leave the photograph no room,
+       so there they tighten with the height; the frame's caption row is set a little tighter to stay on one line */
+    @container readingpane (max-width: 779.98px) {
+        html.hn .home-welcome { gap: clamp(0.8rem, 2.2vh, 3rem); padding: clamp(1rem, min(3.4vw, 3.4vh), 3.4rem); }
+        html.hn .home-welcome .welcome-portrait figcaption { font-size: 0.52rem; letter-spacing: 0.06em; column-gap: 0.5rem; }
+        html.hn .home-welcome .welcome-portrait .pa-explore { padding: 0.2rem 0.4rem; gap: 0.3rem; }
+    }
+    @container readingpane (min-width: 780px) {
+        html.hn .home-welcome { display: grid; align-content: stretch;
+            grid-template-columns: minmax(0, 1.24fr) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto;
+            column-gap: clamp(1.4rem, 3.4cqi, 2.8rem); }
+        html.hn .home-welcome.hn-fits { grid-template-rows: auto auto auto; align-content: center; }
+        html.hn .home-welcome .welcome-intro { grid-column: 1; grid-row: 1; }
+        html.hn .home-welcome > .site-changelog { grid-column: 1; grid-row: 2; align-self: start; }
+        html.hn .home-welcome > .guestbook-invite { grid-column: 1; grid-row: 3; }
+        html.hn .home-welcome .welcome-portrait { grid-column: 2; grid-row: 1 / -1; align-self: start; width: 100%;
+            max-width: var(--hn-fig-max, calc(78vh + 1.2rem)); }
+    }
+
+    /* The photograph: the live rules. The picture fills the frame's width at 3:2 above a height floor of
+       clamp(190px, 32vh, 310px); when the frame is too narrow for 3:2 at that floor, the floor holds and
+       the sides are cut away. home-next.js lowers the frame's width cap and the floor only as far as the
+       screen needs to keep the welcome, the changelog's heading and the guestbook line in view. */
+    html.hn .home-welcome .welcome-portrait figcaption { flex-wrap: wrap; row-gap: 0.35rem; }
+    html.hn .home-welcome .welcome-portrait .wp-caption { white-space: nowrap; }
+    html.hn .home-welcome .welcome-portrait.hn-cap-one figcaption { flex-wrap: nowrap; }
+    html.hn .home-welcome .welcome-portrait.hn-lift { padding-top: calc(clamp(0.4rem, 0.9cqi, 0.6rem) + var(--hn-lift, 0px)); }
+    html.hn .home-welcome .welcome-portrait img { width: 100%; height: auto; aspect-ratio: 3 / 2; max-height: none;
+        min-height: var(--hn-floor, clamp(190px, 32vh, 310px)); object-fit: cover; object-position: 50% 50%; }
+
+    /* the changelog keeps its heading and scrolls its entries inside its own box */
+    html.hn .home-welcome .site-changelog { position: relative; display: flex; flex-direction: column; min-height: 0; max-height: 100%; }
+    html.hn .changelog-head { flex: none; }
+    /* in a narrow box the date and tag share a line above each entry */
+    html.hn .home-welcome .site-changelog { container-type: inline-size; }
+    @container (max-width: 460px) {
+        html.hn .changelog-item { grid-template-columns: auto minmax(0, 1fr); gap: 0.2rem 0.7rem; }
+        html.hn .changelog-date { grid-column: 1; grid-row: 1; }
+        html.hn .changelog-tag { grid-column: 2; grid-row: 1; }
+        html.hn .changelog-entry { grid-column: 1 / -1; grid-row: 2; }
+    }
+    html.hn .changelog-scroll { flex: 0 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+        scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+
+    /* ─── the section stage ─── */
+    html.hn body.mode-section .stage { gap: 0; }
+    html.hn body.mode-section .stage-plate { display: none; }
+    html.hn .stage-text { overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+    html.hn .stage-text { animation: hn-in 0.38s var(--hn-ease) both; }
+    @keyframes hn-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    /* a scroll area that has more below fades out at the bottom and says so */
+    html.hn .hn-scrolls.hn-more-below { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 3.2rem), transparent);
+        mask-image: linear-gradient(to bottom, #000 calc(100% - 3.2rem), transparent); }
+    html.hn .hn-more { display: block; position: absolute; z-index: 4; right: 0; bottom: 0.15rem; padding: 0.15rem 0.4rem;
+        font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold);
+        background: var(--bg); cursor: pointer; pointer-events: none;
+        opacity: 0; transform: translateY(3px); transition: opacity 0.25s, transform 0.25s; }
+    html.hn .hn-has-more > .hn-more { opacity: 0.9; transform: none; pointer-events: auto; }
+    html.hn .stage > .hn-more { right: clamp(1rem, 2.4vw, 1.8rem); bottom: clamp(0.5rem, 1.2vw, 0.9rem); }
+    /* in the changelog the hint sits on the dashed rule that closes the box */
+    html.hn .site-changelog > .hn-more { right: 0.4rem; bottom: 0; padding: 0 0.45rem; line-height: 1.5; transform: translateY(50%); }
+    html.hn .site-changelog.hn-has-more > .hn-more { transform: translateY(50%); }
+
+    /* ─── plates: shared ─── */
+    html.hn main > .tiles { grid-column: 2; grid-row: 1; position: relative; min-width: 0; min-height: 0; overflow: hidden;
+        border-top: 0; border-left: 1px solid var(--line); background: var(--bg); gap: 0; }
+    html.hn .tile { min-width: 0; min-height: 0; overflow: hidden; transition: background 0.3s ease, border-color 0.25s ease; }
+    html.hn .tile .specimen { position: relative; display: block; min-height: 0; overflow: hidden; background: var(--bg); }
+    html.hn .tile .specimen canvas { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 0; transform: none;
+        transition: opacity 0.6s var(--hn-ease); }
+    html.hn .tile:hover .specimen canvas { transform: none; }
+    html.hn .tile .label { min-width: 0; }
+    html.hn .tile:focus-visible { outline: 1px solid var(--gold); outline-offset: -1px; }
+    html.hn .tile .name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 0 0 auto; max-width: 100%; }
+    html.hn .tile .sub { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.05em; color: var(--muted);
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 0 1 auto; margin-left: auto; }
+    html.hn .tile .sub + .arrow { margin-left: 0.5rem; }
+    html.hn .tile.active .name { color: var(--gold); }
+
+    /* the photograph behind the open plate: shown whole, at its own proportion, on the plate's ground */
+    html.hn .tile .specimen img.hn-photo { display: block; position: absolute; inset: 0; width: 100%; height: 100%;
+        max-width: none; max-height: none; object-fit: contain; object-position: 50% 50%;
+        filter: none; mix-blend-mode: normal; transform: none; opacity: 0; pointer-events: none;
+        transition: opacity 0.65s cubic-bezier(0.2, 0.7, 0.2, 1); }
+    html.hn:not(.light-mode) .tile .specimen img.hn-photo { filter: saturate(0.86) brightness(0.92); }
+    html.hn .tile.photo-visible .specimen img.hn-photo { opacity: 1; }
+    html.hn .tile.photo-visible .specimen canvas { opacity: 0; }
+    html.hn body.mode-section .tile.active.has-photo .hn-hint { display: block; position: absolute; z-index: 2; left: 50%; bottom: 0.6rem;
+        transform: translateX(-50%); padding: 0.2rem 0.45rem; background: color-mix(in srgb, var(--bg) 76%, transparent);
+        font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase;
+        color: var(--muted); white-space: nowrap; pointer-events: none; transition: color 0.2s; }
+    html.hn body.mode-section .tile.active.has-photo:hover .hn-hint { color: var(--gold); }
+    html.hn body.mode-section .tile.active.has-photo { cursor: pointer; }
+
+    /* ═══ the plates: framed, in the style of the four-plates study ═══ */
+    html.hn.plates-grid { --hn-pg: clamp(0.5rem, min(1vw, 1.4vh), 1rem); --hn-thumb-h: clamp(78px, 14.5vh, 142px); }
+    html.hn.plates-grid main > .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: repeat(2, minmax(0, 1fr)); gap: var(--hn-pg); padding: var(--hn-pg); }
+    html.hn.plates-grid .tile { display: flex; flex-direction: column; padding: 0; border: 1px solid var(--line);
+        background: var(--bg-2); container-type: inline-size; }
+    html.hn.plates-grid .tile::before { content: ''; position: absolute; inset: 6px; z-index: 3; border: 1px solid var(--line);
+        opacity: 0.6; pointer-events: none; transition: border-color 0.25s, opacity 0.25s; }
+    html.hn.plates-grid .tile:hover { background: var(--bg-2); border-color: color-mix(in srgb, var(--gold) 55%, var(--line)); }
+    html.hn.plates-grid .tile .specimen { flex: 1 1 auto; margin: 10px 10px 0; }
+    html.hn.plates-grid .tile .label { flex: none; display: flex; align-items: baseline; justify-content: flex-start; gap: 0.7rem;
+        border-top: 0; padding: clamp(0.45rem, 1.1vh, 0.7rem) 0.95rem clamp(0.55rem, 1.3vh, 0.85rem); }
+    html.hn.plates-grid .tile .name { font-size: clamp(1rem, min(1.35vw, 2.2vh), 1.45rem); letter-spacing: 0.01em; }
+    html.hn.plates-grid .tile .sub { display: inline; }
+    html.hn.plates-grid .tile .arrow { flex: none; margin-left: auto; }
+    @container (max-width: 340px) { html.hn.plates-grid .tile .sub { display: none; } }
+
+    /* landing: the four plates stacked in the tile column */
+    html.hn.plates-grid body:not(.mode-section) main > .tiles { grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: repeat(4, minmax(0, 1fr)); }
+    html.hn.plates-grid body:not(.mode-section) .tile .label { padding: clamp(0.35rem, 0.9vh, 0.6rem) 0.8rem clamp(0.4rem, 1vh, 0.65rem); }
+    html.hn.plates-grid body:not(.mode-section) .tile .name { font-size: clamp(0.95rem, min(1.25vw, 2.1vh), 1.3rem); }
+
+    /* open: the section's plate fills the area, the other three form a rail of thumbnails above it */
+    html.hn.plates-grid body.mode-section main > .tiles { grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-rows: var(--hn-thumb-h) minmax(0, 1fr); }
+    html.hn.plates-grid body.mode-section .tile.active { grid-column: 1 / -1; grid-row: 2;
+        border-color: color-mix(in srgb, var(--gold) 62%, var(--line)); }
+    html.hn.plates-grid body.mode-section .tile.active::before { border-color: color-mix(in srgb, var(--gold) 40%, var(--line)); }
+    html.hn.plates-grid body.mode-section .tile:not(.active) { grid-column: var(--rail-slot); grid-row: 1; }
+    html.hn.plates-grid body.mode-section .tile:not(.active)::before { inset: 4px; }
+    html.hn.plates-grid body.mode-section .tile:not(.active) .specimen { margin: 7px 7px 0; opacity: 0.82; transition: opacity 0.25s; }
+    html.hn.plates-grid body.mode-section .tile:not(.active):hover .specimen { opacity: 1; }
+    html.hn.plates-grid body.mode-section .tile:not(.active) .label { padding: 0.32rem 0.6rem 0.42rem; gap: 0.45rem; }
+    html.hn.plates-grid body.mode-section .tile:not(.active) .sub { display: none; }
+    html.hn.plates-grid body.mode-section .tile:not(.active) .name { font-size: clamp(0.72rem, 0.9vw, 0.86rem); letter-spacing: 0.04em; }
+    html.hn.plates-grid body.mode-section .tile:not(.active) .arrow { font-size: 0.7rem; }
+}
+
+/* ─── mobile: the original stacked layout, with the new art ─── */
+@media (max-width: 880px) {
+    html.hn .tile.active .label .name { color: var(--gold); }
+    html.hn .tile .specimen canvas { transform: none !important; }
+    /* the art is drawn at the scale of a large plate and cropped to the tile (home-next.js sets its size) */
+    html.hn .tile .specimen { position: relative; display: block; min-height: clamp(70px, 13vh, 150px); }
+    html.hn .tile .specimen canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+    /* the stage plate takes the photograph's own proportions, so the reveal shows the whole picture */
+    html.hn .stage-generative.has-photo { height: auto; aspect-ratio: var(--photo-ratio, 3 / 2); }
+    html.hn .stage-plate .stage-generative .generative-photo { object-fit: contain; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html.hn .stage-text { animation: none; }
+    html.hn .tile .specimen img.hn-photo, html.hn .tile .specimen canvas { transition: none; }
+}
