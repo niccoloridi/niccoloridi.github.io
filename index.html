@@ -216,6 +216,8 @@
         #intro .intro-name { position: relative; z-index: 2; padding: 0.15em 0.35em;
             background: radial-gradient(closest-side, color-mix(in srgb, var(--bg) 82%, transparent), transparent); }
         #intro.opening .intro-name { transition: opacity 0.35s ease, transform 0.35s ease; }
+        .light-mode #intro .intro-name { padding: 0.3em 0.8em;
+            background: radial-gradient(closest-side, color-mix(in srgb, var(--bg) 96%, transparent) 55%, transparent); }
         .intro-center { text-align: center; }
         .intro-name { font-family: var(--grotesk); font-weight: 700; text-transform: uppercase; font-size: clamp(2.2rem, 8vw, 6rem);
             line-height: 0.92; letter-spacing: -0.02em; margin-top: clamp(0.7rem, 2vh, 1.2rem);
@@ -442,7 +444,7 @@
 </head>
 <body class="ts-mono terminal-folded">
     <div id="intro" aria-hidden="true">
-        <div class="intro-plate"><div class="intro-plate-in"><canvas data-plate="dither" data-hue="222" data-hue-span="62" aria-hidden="true"></canvas></div></div>
+        <div class="intro-plate"><div class="intro-plate-in"><canvas data-plate="dither" data-hue="222" data-hue-span="62" data-soft="true" aria-hidden="true"></canvas></div></div>
         <h1 class="intro-name"><span class="l1">Niccolò</span> <span class="l2">Ridi</span></h1>
         <button class="intro-skip" type="button">skip intro ↓</button>
     </div>
@@ -1164,7 +1166,7 @@
         })();
     </script>
 
-    <script src="generative-plates.js?v=20261016-1"></script>
+    <script src="generative-plates.js?v=20261016-2"></script>
     <script src="generative-more.js?v=20261016-1"></script>
     <script src="photo-annotations.js?v=20260920-1"></script>
     <script src="mobile-welcome.js?v=20260919-2"></script>
@@ -1194,8 +1196,9 @@
                 const k = Math.min(1, (now - t0) / D), e = k * k * (3 - 2 * k);
                 dataTile.dataset.hue = (HUE0 + (HUE1 - HUE0) * e).toFixed(1);
                 dataTile.dataset.hueSpan = (SPAN0 + (SPAN1 - SPAN0) * e).toFixed(1);
+                dataTile.dataset.tint = (1 - e).toFixed(3);   /* light theme: the ink tint fades back to gold */
                 if (k < 1) requestAnimationFrame(step);
-                else { delete dataTile.dataset.hue; delete dataTile.dataset.hueSpan; }
+                else { delete dataTile.dataset.hue; delete dataTile.dataset.hueSpan; delete dataTile.dataset.tint; }
             })(t0);
         }
         let __introDone = false;

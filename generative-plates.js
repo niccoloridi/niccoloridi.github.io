@@ -237,6 +237,12 @@
         const hueSpan = Number.isFinite(customSpan) ? customSpan : 120;
         const glow = canvas.dataset.glow === 'true' && !p.light;
         const strongLight = p.light && canvas.dataset.lightContrast === 'strong';
+        /* light theme only: a hue on the canvas tints the gold toward an ink of that hue (data-tint, 0 to 1,
+           default 1), and data-soft prints smaller, lighter dots; the dark theme ignores both */
+        const tintRaw = Number.parseFloat(canvas.dataset.tint);
+        const tint = p.light && Number.isFinite(customHue) ? (Number.isFinite(tintRaw) ? Math.max(0, Math.min(1, tintRaw)) : 1) : 0;
+        const soft = p.light && canvas.dataset.soft === 'true';
+        const hsl = (hh, ss, ll) => { const a = ss * Math.min(ll, 1 - ll), f = n => { const k = (n + hh / 30) % 12; return Math.round(255 * (ll - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)))); }; return [f(0), f(8), f(4)]; };
         const animationTime = strongLight ? time * 1.18 : time;
         const step = Math.max(5, Math.round(w / 54));
         for (let y = step / 2; y < h; y += step) {
@@ -245,12 +251,14 @@
                 const wave = (Math.sin(u * 12 + animationTime * .0011) + Math.cos(v * 15 - animationTime * .0008) + Math.sin((u + v) * 9 - animationTime * .0004)) / 3;
                 const pull = Math.max(0, 1 - Math.hypot(u - m.x, v - m.y) * 3.2);
                 const size = step * (strongLight ? .18 + .42 * (wave * .5 + .5) + pull * .18
+                    : soft ? .1 + .3 * (wave * .5 + .5) + pull * .15
                     : p.light ? .15 + .4 * (wave * .5 + .5) + pull * .2 : .11 + .35 * (wave * .5 + .5) + pull * .2);
                 if (p.light) {
                     /* light: printed in gold and ink, the crests darkening towards ink-brown */
                     const f = (wave * .5 + .5 + .25 * Math.sin(u * 5 - v * 3 + animationTime * .0005)) / 1.25;
-                    const c = f < .55 ? mixRGB(p.gold, [126, 94, 22], f / .55) : mixRGB([126, 94, 22], [92, 74, 40], Math.min(.7, (f - .55) / .45));
-                    ctx.fillStyle = rgba(c, Math.min(1, (strongLight ? .76 : .6) + .25 * f + pull * .2));
+                    let c = f < .55 ? mixRGB(p.gold, [126, 94, 22], f / .55) : mixRGB([126, 94, 22], [92, 74, 40], Math.min(.7, (f - .55) / .45));
+                    if (tint > 0) c = mixRGB(c, hsl((hueBase + hueSpan * (wave * .5 + .5) + animationTime * .008) % 360, .46, .3 + .06 * wave), tint);
+                    ctx.fillStyle = rgba(c, Math.min(1, (soft ? .42 : strongLight ? .76 : .6) + .25 * f + pull * .2));
                 } else {
                     const hue = (hueBase + hueSpan * (wave * .5 + .5) + animationTime * .008) % 360;
                     const lightness = glow ? 58 + wave * 17 : 54 + wave * 18;
