@@ -329,7 +329,11 @@
        photograph covers it. A plate rests by having its data-plate renamed, which neither script draws. */
     const OWN = /^(chrome|moire|flow|dither|orbit|weave)$/;
     const onScreen = new WeakMap();
-    const covered = c => !!c.closest('.tile.photo-visible, .stage-generative.photo-visible');
+    const covered = c => !c.closest('#intro') && (document.documentElement.classList.contains('intro-cover')
+        || !!c.closest('.tile.photo-visible, .stage-generative.photo-visible'));
+    const tracked = new Set();
+    /* the intro covers the page for its first second: the page's plates rest until it opens */
+    window.addEventListener('intro:cover-change', () => tracked.forEach(apply));
     function apply(c) {
         const id = c.dataset.hnArt;
         if (!id) return;
@@ -345,6 +349,7 @@
         const id = c.dataset.plate || '';
         if (c.dataset.hnArt || !id || id.indexOf('rest-') === 0) return;
         c.dataset.hnArt = id;
+        tracked.add(c);
         if (io && OWN.test(id)) io.observe(c);
     }
     document.querySelectorAll('canvas[data-plate]').forEach(track);

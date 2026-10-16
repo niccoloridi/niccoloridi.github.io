@@ -210,7 +210,9 @@
         #intro { transition: opacity 0.7s ease, background-color 0.5s ease; }
         #intro.opening { background: transparent; pointer-events: none; transition: background-color 0.6s ease 0.25s; }
         #intro.opening .intro-skip { opacity: 0; transition: opacity 0.2s ease; }
-        #intro .intro-plate { position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; opacity: 0; transition: opacity 0.45s ease; }
+        #intro .intro-plate { position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; opacity: 0; transition: opacity 0.45s ease;
+            overflow: hidden; transform-origin: 0 0; will-change: transform; contain: strict; }
+        #intro .intro-plate-in { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
         #intro.lit .intro-plate { opacity: 1; }
         #intro .intro-plate canvas { display: block; width: 100%; height: 100%; }
         #intro .intro-name { position: relative; z-index: 2; padding: 0.15em 0.35em;
@@ -446,7 +448,7 @@
 </head>
 <body class="ts-mono terminal-folded">
     <div id="intro" aria-hidden="true">
-        <div class="intro-plate"><canvas data-plate="dither" data-hue="222" data-hue-span="62" aria-hidden="true"></canvas></div>
+        <div class="intro-plate"><div class="intro-plate-in"><canvas data-plate="dither" data-hue="222" data-hue-span="62" aria-hidden="true"></canvas></div></div>
         <h1 class="intro-name"><span class="l1">Niccolò</span> <span class="l2">Ridi</span></h1>
         <button class="intro-skip" type="button">skip intro ↓</button>
     </div>
@@ -1176,7 +1178,7 @@
     <script src="console-modal.js?v=20260918-3"></script>
     <script src="font-lab.js?v=20260926-1"></script>
     <script src="home-pane-variants.js?v=20260918-7"></script>
-    <script src="home-layout.js?v=20261016-1"></script>
+    <script src="home-layout.js?v=20261016-2"></script>
     <script type="module">
         // ─── Intro: the Data plate fills the screen, then shrinks into its own tile ───
         const introEl = document.getElementById('intro');
@@ -1185,6 +1187,24 @@
         const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
         let seen = false; try { seen = sessionStorage.getItem('intro-seen') === '1'; } catch (e) {}
         const playIntro = introEl && !deepLink && !reducedMotion && (forced || !seen);
+        function cover(on){ document.documentElement.classList.toggle('intro-cover', on); window.dispatchEvent(new Event('intro:cover-change')); }
+        if (playIntro) cover(true);
+        /* the Data tile starts in the intro's blue and violet, so the plate lands on the same colours,
+           then drifts through blue and teal to its usual palette over a few seconds */
+        const dataTile = document.querySelector('.tiles .tile:nth-child(4) canvas');
+        const HUE0 = 222, SPAN0 = 62, HUE1 = 28, SPAN1 = 120;
+        if (playIntro && dataTile) { dataTile.dataset.hue = HUE0; dataTile.dataset.hueSpan = SPAN0; }
+        function releaseTileColour(){
+            if (!dataTile || dataTile.dataset.hue === undefined) return;
+            const t0 = performance.now(), D = 7000;
+            (function step(now){
+                const k = Math.min(1, (now - t0) / D), e = k * k * (3 - 2 * k);
+                dataTile.dataset.hue = (HUE0 + (HUE1 - HUE0) * e).toFixed(1);
+                dataTile.dataset.hueSpan = (SPAN0 + (SPAN1 - SPAN0) * e).toFixed(1);
+                if (k < 1) requestAnimationFrame(step);
+                else { delete dataTile.dataset.hue; delete dataTile.dataset.hueSpan; }
+            })(t0);
+        }
         window.__net = null;
         let __introDone = false;
         function revealPage(){
@@ -1192,11 +1212,12 @@
         }
         function finishIntro(){
             if (__introDone) return; __introDone = true;
+            cover(false);
             revealPage();
             introEl.classList.add('done');
-            window.dispatchEvent(new Event('intro:done'));
             try { sessionStorage.setItem('intro-seen', '1'); } catch (e) {}
-            setTimeout(() => { introEl.style.display = 'none'; }, 760);
+            /* the console starts typing once the crossfade has finished, so the two never compete */
+            setTimeout(() => { introEl.style.display = 'none'; window.dispatchEvent(new Event('intro:done')); releaseTileColour(); }, 760);
         }
         if (playIntro) {
             const skip = introEl.querySelector('.intro-skip');
@@ -1224,24 +1245,31 @@
             const sr = spec && spec.getBoundingClientRect();
             const visible = cr && sr && sr.width > 20 && sr.height > 20 && sr.top >= 0 && sr.bottom <= innerHeight && sr.left >= 0 && sr.right <= innerWidth;
             introEl.classList.add('opening');
+            cover(false);
             setTimeout(revealPage, 260);
             if (nameEl) nameEl.classList.remove('show');
             if (!visible) { await wait(450); finishIntro(); return; }
-            const W = innerWidth, H = innerHeight, D = 900, t0 = performance.now();
-            await new Promise(done => {
-                function step(now){
-                    if (__introDone) return done();
-                    const k = ease(Math.min(1, (now - t0) / D));
-                    const x = cr.left * k, y = cr.top * k, w = W + (cr.width - W) * k, h = H + (cr.height - H) * k;
-                    box.style.left = x + 'px'; box.style.top = y + 'px'; box.style.width = w + 'px'; box.style.height = h + 'px';
-                    /* the clip closes from the full screen to the tile's window */
-                    const ct = (sr.top - cr.top) * k, cl = (sr.left - cr.left) * k;
-                    const cb = (cr.bottom - sr.bottom) * k, crr = (cr.right - sr.right) * k;
-                    box.style.clipPath = `inset(${ct}px ${crr}px ${cb}px ${cl}px)`;
-                    if (k < 1) requestAnimationFrame(step); else done();
-                }
-                requestAnimationFrame(step);
-            });
+            const W = innerWidth, H = innerHeight;
+            /* freeze the plate for the flight: its canvas keeps its last frame at full-screen size,
+               so the flight is pure transforms the compositor can run without redrawing anything */
+            const canvas = box.querySelector('canvas');
+            canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+            canvas.dataset.plate = 'rest-dither';
+            if (canvas.dataset.hnArt) canvas.dataset.hnArt = 'rest-dither';
+            /* outer box: full screen to the tile's window (it clips); inner box: counter-scaled so the
+               plate shrinks uniformly and stays centred on the tile, like object-fit: cover */
+            const s = Math.max(sr.width / W, sr.height / H), N = 24, outer = [], inner = [];
+            for (let i = 0; i <= N; i++) {
+                const k = i / N;
+                const ol = sr.left * k, ot = sr.top * k, ow = W + (sr.width - W) * k, oh = H + (sr.height - H) * k;
+                const ox = ow / W, oy = oh / H, c = 1 + (s - 1) * k;
+                const cx = ol + ow / 2 - c * W / 2, cy = ot + oh / 2 - c * H / 2;
+                outer.push({ offset: k, transform: `translate(${ol}px, ${ot}px) scale(${ox}, ${oy})` });
+                inner.push({ offset: k, transform: `translate(${(cx - ol) / ox}px, ${(cy - ot) / oy}px) scale(${c / ox}, ${c / oy})` });
+            }
+            const timing = { duration: 950, easing: 'cubic-bezier(0.65, 0, 0.25, 1)', fill: 'forwards' };
+            const a1 = box.animate(outer, timing), a2 = box.firstElementChild.animate(inner, timing);
+            await Promise.all([a1.finished, a2.finished]).catch(() => {});
             finishIntro();
         }
 
