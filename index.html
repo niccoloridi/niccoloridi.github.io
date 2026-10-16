@@ -27,11 +27,9 @@
     <link rel="help" type="text/markdown" href="https://niccoloridi.com/agentic-law-journal-skill.md" title="Agentic Law Journal submission instructions">
     <script>(function(){var t=localStorage.getItem('noir-theme');if(!t){var h=new Date().getHours();t=(h>=7&&h<19)?'light':'dark';}if(t==='light')document.documentElement.classList.add('light-mode');})()</script>
     <script>document.documentElement.classList.add('hn','plates-grid','hn-stack')</script>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
-    <script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }</script>
     <style>
         :root {
             --bg: #0a0a0c; --bg-2: #111114; --fg: #ece8df; --muted: #7d786d;
@@ -219,15 +217,11 @@
             background: radial-gradient(closest-side, color-mix(in srgb, var(--bg) 82%, transparent), transparent); }
         #intro.opening .intro-name { transition: opacity 0.35s ease, transform 0.35s ease; }
         .intro-center { text-align: center; }
-        .intro-type { font-family: var(--mono); font-size: clamp(0.7rem, 1.4vw, 0.95rem); color: var(--muted); min-height: 1.5em; letter-spacing: 0.02em; }
         .intro-name { font-family: var(--grotesk); font-weight: 700; text-transform: uppercase; font-size: clamp(2.2rem, 8vw, 6rem);
             line-height: 0.92; letter-spacing: -0.02em; margin-top: clamp(0.7rem, 2vh, 1.2rem);
             opacity: 0; transform: translateY(12px); transition: opacity 0.9s ease, transform 0.9s ease; }
         .intro-name.show { opacity: 1; transform: none; }
         .intro-name .l2 { color: transparent; -webkit-text-stroke: 1.4px var(--fg); }
-        #intro-net { position: relative; width: min(680px, 82vw); height: min(40vh, 360px); opacity: 0; transition: opacity 0.8s ease; }
-        #intro.lit #intro-net { opacity: 1; }
-        #intro-net canvas { display: block; width: 100%; height: 100%; }
         .intro-skip { position: absolute; bottom: clamp(1.2rem, 4vh, 2.4rem); left: 50%; transform: translateX(-50%);
             background: none; border: 1px solid var(--line); color: var(--muted); cursor: pointer;
             font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase;
@@ -542,7 +536,7 @@
     </main>
 
     <footer>
-        <div class="seg"><span class="gold">© 2025 niccolò ridi</span><a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a></div>
+        <div class="seg"><span class="gold">© 2026 niccolò ridi</span><a href="mailto:niccolo.ridi@kcl.ac.uk">niccolo.ridi@kcl.ac.uk</a></div>
         <div class="seg">
             <a href="https://www.linkedin.com/in/niccoloridi/" target="_blank" rel="noopener">linkedin</a>
             <a href="https://scholar.google.com/citations?user=cxXS2JIAAAAJ" target="_blank" rel="noopener">scholar</a>
@@ -640,7 +634,6 @@
             document.getElementById('tlabel').textContent = t === 'light' ? 'dark' : 'light';
             if (persist) localStorage.setItem('noir-theme', t);
             theme = t;
-            window.__net && window.__net.retheme && window.__net.retheme();
         }
         function toggleTheme(){ applyTheme(theme === 'light' ? 'dark' : 'light', true); }
         applyTheme(theme, false);
@@ -1205,7 +1198,6 @@
                 else { delete dataTile.dataset.hue; delete dataTile.dataset.hueSpan; }
             })(t0);
         }
-        window.__net = null;
         let __introDone = false;
         function revealPage(){
             document.body.classList.add('networks-revealed', 'home-content-ready');
@@ -1273,155 +1265,6 @@
             finishIntro();
         }
 
-        function createCalmNetwork(THREE, container){
-            const rect = container.getBoundingClientRect();
-            let W = Math.max(120, Math.floor(rect.width)), H = Math.max(120, Math.floor(rect.height));
-            const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true, powerPreference:'low-power' });
-            renderer.setPixelRatio(Math.min(2, window.devicePixelRatio||1));
-            renderer.setSize(W, H, false);                  // false → never write inline canvas style (CSS owns layout)
-            renderer.setClearColor(0x000000,0); container.appendChild(renderer.domElement);
-            const scene = new THREE.Scene();
-            const camera = new THREE.OrthographicCamera(-W/2,W/2,H/2,-H/2,-1000,1000);
-
-            function readColors(){
-                const s = getComputedStyle(document.documentElement);
-                const parse = (k,fb)=>{ const v=s.getPropertyValue(k).trim(); const c=new THREE.Color(); try{c.setStyle(v);}catch(e){c.setHex(fb);} return c; };
-                return { node:parse('--net-node',0xd7a13b), hub:parse('--net-node-hub',0xece8df), link:parse('--net-link',0xd7a13b), pulse:parse('--net-pulse',0xece8df) };
-            }
-            let theme = readColors();
-
-            const N = 48, N_HUBS = 5; const nodes = [];
-            for (let i=0;i<N;i++){ const isHub=i<N_HUBS;
-                nodes.push({ id:i, hub:isHub, r:isHub?4+Math.random()*2:1.8+Math.random()*1.8,
-                    baseSize:isHub?13+Math.random()*5:5+Math.random()*4,
-                    x:(Math.random()-0.5)*W*0.95, y:(Math.random()-0.5)*H*0.95,
-                    phase:Math.random()*Math.PI*2, wob:0.9+Math.random()*1.4,
-                    flashStart:0, flashDur:0, entranceDelay:120+i*20+Math.random()*180, entranceDur:720 }); }
-            const edges=[]; const seen=new Set(); const ek=(a,b)=>a<b?a+'_'+b:b+'_'+a;
-            function addEdge(a,b){ if(a===b)return; const k=ek(a,b); if(seen.has(k))return; seen.add(k); edges.push({s:a,t:b,boostStart:0,boostDur:0}); }
-            // nearest-neighbour backbone
-            for (let i=0;i<N;i++){ const d=[]; for(let j=0;j<N;j++){ if(i===j)continue; const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y; d.push({j,d2:dx*dx+dy*dy}); }
-                d.sort((p,q)=>p.d2-q.d2); addEdge(i,d[0].j); if(d[1])addEdge(i,d[1].j); }
-            // dense random scatter + hub spokes → reads busy, like v1
-            for (let i=0;i<N;i++) for(let j=i+1;j<N;j++){ if(Math.random()<0.06) addEdge(i,j); }
-            for (let i=N_HUBS;i<N;i++){ if(Math.random()<0.45) addEdge(i, Math.floor(Math.random()*N_HUBS)); }
-            (function fix(){ const deg=new Array(N).fill(0); edges.forEach(e=>{deg[e.s]++;deg[e.t]++;}); for(let i=0;i<N;i++) if(deg[i]===0) addEdge(i,(i===0)?1:0); })();
-            edges.forEach((e,i)=>{ e.entranceDelay=220+i*12+Math.random()*180; e.entranceDur=680; });
-
-            const simLinks = edges.map(e=>({source:e.s,target:e.t}));
-            const sim = d3.forceSimulation(nodes)
-                .force('link', d3.forceLink(simLinks).distance(Math.min(W,H)*0.17).strength(0.09))
-                .force('charge', d3.forceManyBody().strength(-Math.min(W,H)*0.13))
-                .force('center', d3.forceCenter(0,0).strength(0.025))
-                .force('collision', d3.forceCollide().radius(d=>d.r+2))
-                .force('x', d3.forceX(0).strength(0.02)).force('y', d3.forceY(0).strength(0.02))
-                .alpha(0.9).alphaDecay(0.018).stop();
-            const dispX=new Float32Array(N), dispY=new Float32Array(N);
-
-            const nodeGeom=new THREE.BufferGeometry();
-            const nodePos=new Float32Array(N*3), nodeSize=new Float32Array(N), nodeColor=new Float32Array(N*3), nodeFlash=new Float32Array(N), nodeOpacity=new Float32Array(N);
-            for (let i=0;i<N;i++){ nodePos[i*3]=nodes[i].x; nodePos[i*3+1]=nodes[i].y; nodeSize[i]=nodes[i].baseSize;
-                const col=nodes[i].hub?theme.hub:theme.node; nodeColor[i*3]=col.r;nodeColor[i*3+1]=col.g;nodeColor[i*3+2]=col.b; nodeOpacity[i]=0; }
-            nodeGeom.setAttribute('position',new THREE.BufferAttribute(nodePos,3));
-            nodeGeom.setAttribute('aSize',new THREE.BufferAttribute(nodeSize,1));
-            nodeGeom.setAttribute('aColor',new THREE.BufferAttribute(nodeColor,3));
-            nodeGeom.setAttribute('aFlash',new THREE.BufferAttribute(nodeFlash,1));
-            nodeGeom.setAttribute('aOpacity',new THREE.BufferAttribute(nodeOpacity,1));
-            const nodeMat=new THREE.ShaderMaterial({ uniforms:{ uPulse:{value:theme.pulse.clone()}, uPxRatio:{value:renderer.getPixelRatio()} },
-                vertexShader:`attribute float aSize; attribute vec3 aColor; attribute float aFlash; attribute float aOpacity;
-                    varying vec3 vColor; varying float vFlash; varying float vOpacity; uniform float uPxRatio;
-                    void main(){ vColor=aColor; vFlash=aFlash; vOpacity=aOpacity; gl_PointSize=aSize*(1.0+aFlash*0.45)*uPxRatio;
-                    gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
-                fragmentShader:`varying vec3 vColor; varying float vFlash; varying float vOpacity; uniform vec3 uPulse;
-                    void main(){ if(vOpacity<0.01) discard; vec2 p=gl_PointCoord-0.5; float d=length(p); if(d>0.5) discard;
-                    float core=smoothstep(0.40,0.0,d); float halo=smoothstep(0.50,0.20,d)*0.55; vec3 c=mix(vColor,uPulse,vFlash);
-                    gl_FragColor=vec4(c,(core+halo)*vOpacity); }`,
-                transparent:true, depthWrite:false, blending:THREE.NormalBlending });
-            scene.add(new THREE.Points(nodeGeom,nodeMat));
-
-            const edgeGeom=new THREE.BufferGeometry();
-            const edgePos=new Float32Array(edges.length*6), edgeBoost=new Float32Array(edges.length*2), edgeOpacity=new Float32Array(edges.length*2);
-            for (let i=0;i<edges.length;i++){ const a=nodes[edges[i].s],b=nodes[edges[i].t]; edgePos[i*6]=a.x;edgePos[i*6+1]=a.y; edgePos[i*6+3]=b.x;edgePos[i*6+4]=b.y; }
-            edgeGeom.setAttribute('position',new THREE.BufferAttribute(edgePos,3));
-            edgeGeom.setAttribute('aBoost',new THREE.BufferAttribute(edgeBoost,1));
-            edgeGeom.setAttribute('aOpacity',new THREE.BufferAttribute(edgeOpacity,1));
-            const edgeMat=new THREE.ShaderMaterial({ uniforms:{ uColor:{value:theme.link.clone()}, uPulse:{value:theme.pulse.clone()} },
-                vertexShader:`attribute float aBoost; attribute float aOpacity; varying float vB; varying float vO;
-                    void main(){ vB=aBoost; vO=aOpacity; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
-                fragmentShader:`uniform vec3 uColor; uniform vec3 uPulse; varying float vB; varying float vO;
-                    void main(){ vec3 c=mix(uColor,uPulse,vB); gl_FragColor=vec4(c,(0.5+vB*0.4)*vO); }`,
-                transparent:true, depthWrite:false, blending:THREE.NormalBlending });
-            scene.add(new THREE.LineSegments(edgeGeom,edgeMat));
-
-            // ─── shine particle pool: sparks travel along boosted edges (v1 flavour) ───
-            const PPOOL = 7; const pStates = [];
-            const pGeom = new THREE.BufferGeometry();
-            const pPos = new Float32Array(PPOOL*3), pAlpha = new Float32Array(PPOOL);
-            pGeom.setAttribute('position', new THREE.BufferAttribute(pPos,3));
-            pGeom.setAttribute('aAlpha', new THREE.BufferAttribute(pAlpha,1));
-            const pMat = new THREE.ShaderMaterial({ uniforms:{ uColor:{value:theme.pulse.clone()}, uPxRatio:{value:renderer.getPixelRatio()} },
-                vertexShader:`attribute float aAlpha; varying float vA; uniform float uPxRatio;
-                    void main(){ vA=aAlpha; gl_PointSize=(12.0*aAlpha+4.0)*uPxRatio; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
-                fragmentShader:`uniform vec3 uColor; varying float vA; void main(){ if(vA<0.01) discard; vec2 p=gl_PointCoord-0.5; float d=length(p); if(d>0.5) discard;
-                    float core=smoothstep(0.45,0.0,d); float halo=smoothstep(0.5,0.1,d)*0.55; gl_FragColor=vec4(uColor,(core+halo)*vA); }`,
-                transparent:true, depthWrite:false, blending:THREE.NormalBlending });
-            scene.add(new THREE.Points(pGeom,pMat));
-            function spawnShine(ei){ if(pStates.length>=PPOOL) return; pStates.push({ ei, start:performance.now(), dur:720 }); }
-
-            function retheme(){ theme=readColors(); nodeMat.uniforms.uPulse.value.copy(theme.pulse);
-                edgeMat.uniforms.uColor.value.copy(theme.link); edgeMat.uniforms.uPulse.value.copy(theme.pulse);
-                pMat.uniforms.uColor.value.copy(theme.pulse);
-                const a=nodeGeom.getAttribute('aColor'); for(let i=0;i<N;i++){ const c=nodes[i].hub?theme.hub:theme.node; a.array[i*3]=c.r;a.array[i*3+1]=c.g;a.array[i*3+2]=c.b; } a.needsUpdate=true; }
-
-            const ro=new ResizeObserver(()=>{ const r=container.getBoundingClientRect(); const w=Math.max(120,Math.floor(r.width)),h=Math.max(120,Math.floor(r.height));
-                if(w===W&&h===H)return; W=w;H=h; renderer.setSize(W,H,false); camera.left=-W/2;camera.right=W/2;camera.top=H/2;camera.bottom=-H/2; camera.updateProjectionMatrix(); sim.alpha(0.3); });
-            ro.observe(container);
-
-            let paused=false, disposed=false, pulseTimer=null; const period=850+Math.random()*750;
-            function pulse(){ if(disposed) return; const now=performance.now();
-                const nf=1+Math.floor(Math.random()*2);
-                for(let f=0;f<nf;f++){ const ni=Math.floor(Math.random()*N); nodes[ni].flashStart=now; nodes[ni].flashDur=1500+Math.random()*900; }
-                if(edges.length){ const ne=1+Math.floor(Math.random()*2);
-                    for(let f=0;f<ne;f++){ const ei=Math.floor(Math.random()*edges.length); edges[ei].boostStart=now; edges[ei].boostDur=1100+Math.random()*700; spawnShine(ei); } } }
-            function startP(){ if(!pulseTimer) pulseTimer=setInterval(pulse, period); } function stopP(){ if(pulseTimer){clearInterval(pulseTimer);pulseTimer=null;} }
-            document.addEventListener('visibilitychange', ()=>{ if(disposed) return; paused=document.hidden; if(document.hidden) stopP(); else startP(); });
-            setTimeout(()=>{ if(!disposed && !document.hidden) startP(); }, 1400);
-
-            let startT=null; const easeOutCubic=t=>1-Math.pow(1-t,3);
-            function tick(now){
-                if(disposed) return;
-                if(paused){ requestAnimationFrame(tick); return; }
-                // hold the constellation until the `welcome-network` command reveals it (so it appears after the line is typed)
-                if(!document.body.classList.contains('networks-revealed')){ requestAnimationFrame(tick); return; }
-                if(startT===null) startT=now; const elapsed=now-startT; sim.tick();
-                for(let i=0;i<N;i++){ const n=nodes[i]; const m=n.hub?6:3;
-                    n.x=Math.max(-W/2+m,Math.min(W/2-m,n.x)); n.y=Math.max(-H/2+m,Math.min(H/2-m,n.y));
-                    if (n.x < -W/2 + 178 && n.y < -H/2 + 30) n.y = -H/2 + 30;   // keep clear of the bottom-left caption
-                    dispX[i]=n.x+Math.sin(now*0.00035+n.phase)*n.wob; dispY[i]=n.y+Math.cos(now*0.0003+n.phase*1.3)*n.wob; }
-                const np=nodeGeom.getAttribute('position'),nf=nodeGeom.getAttribute('aFlash'),no=nodeGeom.getAttribute('aOpacity');
-                for(let i=0;i<N;i++){ const n=nodes[i]; np.array[i*3]=dispX[i];np.array[i*3+1]=dispY[i];
-                    if(n.flashStart){ const k=(now-n.flashStart)/n.flashDur; if(k>=1){nf.array[i]=0;n.flashStart=0;} else nf.array[i]=Math.sin(Math.PI*k)*0.85; }
-                    if(no.array[i]<1){ const t=(elapsed-n.entranceDelay)/n.entranceDur; no.array[i]=(t<=0)?0:(t>=1)?1:easeOutCubic(t); } }
-                np.needsUpdate=true;nf.needsUpdate=true;no.needsUpdate=true;
-                const ep=edgeGeom.getAttribute('position'),eb=edgeGeom.getAttribute('aBoost'),eo=edgeGeom.getAttribute('aOpacity');
-                for(let i=0;i<edges.length;i++){ const e=edges[i]; ep.array[i*6]=dispX[e.s];ep.array[i*6+1]=dispY[e.s]; ep.array[i*6+3]=dispX[e.t];ep.array[i*6+4]=dispY[e.t];
-                    if(e.boostStart){ const k=(now-e.boostStart)/e.boostDur; const v=(k>=1)?0:Math.sin(Math.PI*k)*0.8; if(k>=1)e.boostStart=0; eb.array[i*2]=v;eb.array[i*2+1]=v; }
-                    if(eo.array[i*2]<1){ const t=(elapsed-e.entranceDelay)/e.entranceDur; const o=(t<=0)?0:(t>=1)?1:easeOutCubic(t); eo.array[i*2]=o;eo.array[i*2+1]=o; } }
-                ep.needsUpdate=true;eb.needsUpdate=true;eo.needsUpdate=true;
-                const ppos=pGeom.getAttribute('position'), pa=pGeom.getAttribute('aAlpha');
-                for(let i=0;i<PPOOL;i++){ if(i<pStates.length){ const ps=pStates[i]; const t=Math.max(0,Math.min(1,(now-ps.start)/ps.dur)); const e=edges[ps.ei];
-                    ppos.array[i*3]=dispX[e.s]+(dispX[e.t]-dispX[e.s])*t; ppos.array[i*3+1]=dispY[e.s]+(dispY[e.t]-dispY[e.s])*t; pa.array[i]=Math.sin(Math.PI*t); } else pa.array[i]=0; }
-                for(let i=pStates.length-1;i>=0;i--){ if((now-pStates[i].start)>=pStates[i].dur) pStates.splice(i,1); }
-                ppos.needsUpdate=true; pa.needsUpdate=true;
-                renderer.render(scene,camera); requestAnimationFrame(tick);
-            }
-            requestAnimationFrame(tick);
-            return {
-                retheme,
-                bloom: () => { for (let k = 0; k < 7; k++) setTimeout(pulse, k * 110); },
-                destroy: () => { disposed = true; stopP(); ro.disconnect(); sim.stop(); renderer.dispose(); }
-            };
-        }
     </script>
 </body>
 </html>
