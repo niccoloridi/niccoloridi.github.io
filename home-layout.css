@@ -207,3 +207,103 @@ html.hn .tile .num { display: none; }
     html.hn .stage-text { animation: none; }
     html.hn .tile .specimen img.hn-photo, html.hn .tile .specimen canvas { transition: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════════════════════
+   Sidebar reading pane (html.hn-side, set by index-next.html; inert on pages without the class)
+   The photograph sits above the welcome paragraph at every width. "What's new" is a narrow column
+   down the right of the pane, its entries as running text (date and kind on a mono line, the title,
+   the note), with the guestbook line at its foot. home-layout.js sizes the photograph by the live
+   rules: 3:2 above a height floor of clamp(190px, 32vh, 310px), the sides cut when the frame is too
+   narrow for 3:2 at that floor, never the top or bottom, and the floor lowered (then the frame
+   narrowed at 3:2) only as far as the screen needs.
+   Where the column would be cramped (a reading pane under 720px, as on a 1024px screen) and on
+   phones, "what's new" folds into a row under the welcome that opens in place.
+   ═══════════════════════════════════════════════════════════════════════════════════════════ */
+
+/* the entries, on every width */
+html.hn-side .site-changelog .changelog-item { display: block; padding: 0.62rem 0 0.6rem; font-size: 0.66rem; line-height: 1.4; }
+html.hn-side .site-changelog .changelog-date { display: inline; font-size: 0.6rem; letter-spacing: 0.03em; color: var(--gold); }
+html.hn-side .site-changelog .changelog-tag { display: inline; font-size: 0.6rem; letter-spacing: 0.03em; text-transform: none; color: var(--muted); }
+html.hn-side .site-changelog .changelog-tag::before { content: ' \00B7  '; color: var(--muted); }
+html.hn-side .site-changelog .changelog-tag::after { content: none; }
+html.hn-side .site-changelog .changelog-entry { display: block; margin-top: 0.22rem; }
+html.hn-side .site-changelog .changelog-item a { display: inline; margin: 0; font-family: var(--grotesk); font-size: 0.88rem;
+    font-weight: 500; line-height: 1.3; letter-spacing: -0.003em; color: var(--fg);
+    text-decoration: underline; text-decoration-style: dotted; text-decoration-color: color-mix(in srgb, var(--fg) 40%, transparent);
+    text-underline-offset: 0.22em; }
+html.hn-side .site-changelog .changelog-item a:hover, html.hn-side .site-changelog .changelog-item a:focus-visible { color: var(--gold);
+    text-decoration-color: var(--gold); }
+html.hn-side .site-changelog .changelog-note { display: block; margin-top: 0.28rem; font-family: var(--grotesk); font-size: 0.72rem;
+    line-height: 1.42; color: var(--muted); }
+
+/* the folded row: "★ what's new ★   5 updates  ⌄", a button that opens the entries in place */
+html.hn-side .changelog-toggle { display: flex; align-items: center; gap: 0.65rem; width: 100%; padding: 0; margin: 0;
+    border: 0; background: none; color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; text-align: left; cursor: pointer; }
+html.hn-side .changelog-toggle .count { margin-left: auto; }
+html.hn-side .changelog-toggle .cl-chevron { flex: none; color: var(--gold); font-size: 0.8rem; line-height: 1;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1); }
+html.hn-side .site-changelog.cl-open .changelog-toggle .cl-chevron { transform: rotate(180deg); }
+html.hn-side .changelog-toggle:hover .path { color: var(--fg); }
+html.hn-side .changelog-toggle:focus-visible { outline: 1px solid var(--gold); outline-offset: 4px; }
+html.hn-side .site-changelog.cl-collapsible:not(.cl-open) .changelog-head { border-bottom: 0; padding-bottom: 0.45rem; }
+html.hn-side .site-changelog.cl-collapsible:not(.cl-open) .changelog-scroll,
+html.hn-side .site-changelog.cl-collapsible:not(.cl-open) > .hn-more { display: none; }
+@media (prefers-reduced-motion: reduce) { html.hn-side .changelog-toggle .cl-chevron { transition: none; } }
+
+@media (min-width: 881px) {
+    html.hn-side { --side-nw: clamp(200px, 25cqi, 290px); --side-measure: calc(43 * clamp(0.96rem, 1.22vw, 1.18rem)); }
+    html.hn-side #home-welcome { display: grid; justify-content: space-between; align-content: stretch; overflow: hidden;
+        padding: clamp(1rem, min(2.4vw, 3.4vh), 2.6rem); column-gap: clamp(1.2rem, 3cqi, 2.6rem); row-gap: clamp(0.75rem, 2.1vh, 1.35rem);
+        grid-template-columns: minmax(0, var(--side-measure)) var(--side-nw); grid-template-rows: auto minmax(0, 1fr) auto;
+        grid-template-areas: "p n" "w n" "w g"; }
+    html.hn-side #home-welcome > * { width: auto; max-width: none; min-width: 0; min-height: auto; margin: 0; }
+    html.hn-side #home-welcome > .welcome-portrait { grid-area: p; justify-self: start; align-self: start; width: 100%; max-width: 100%; }
+    html.hn-side #home-welcome > .welcome-intro { grid-area: w; align-self: start; }
+    /* only what's new may be squeezed (it scrolls); the rest keep their height, so a pane that is too full
+       overflows where home-layout.js can measure it */
+    html.hn-side #home-welcome > .site-changelog { grid-area: n; align-self: stretch; contain: size; min-height: 0; max-height: none;
+        display: flex; flex-direction: column; padding: 0.6rem 0 0.1rem; }
+    html.hn-side #home-welcome > .guestbook-invite { grid-area: g; align-self: end; border-top: 0; padding: 0.15rem 0 0;
+        font-size: 0.64rem; line-height: 1.5; }
+    html.hn-side #home-welcome .changelog-head { gap: 0.5rem; padding-bottom: 0.55rem; white-space: nowrap; }
+    html.hn-side #home-welcome .changelog-scroll { flex: 1 1 auto; }
+
+    /* the photograph: the frame's width and the picture's height come from home-layout.js */
+    html.hn-side #home-welcome.side-fitted > .welcome-portrait { width: var(--side-fig-w, 100%); }
+    html.hn-side #home-welcome.side-fitted > .welcome-portrait img { width: 100%; height: var(--side-img-h, auto); aspect-ratio: auto;
+        min-height: 0; max-height: none; object-fit: cover; object-position: 50% 50%; }
+    html.hn-side #home-welcome:not(.side-fitted) > .welcome-portrait img { aspect-ratio: 3 / 2; height: auto;
+        min-height: clamp(190px, 32vh, 310px); object-fit: cover; }
+    html.hn-side #home-welcome .welcome-portrait figcaption,
+    html.hn-side #home-welcome .welcome-portrait.hn-cap-one figcaption { flex-wrap: wrap; row-gap: 0.35rem; }
+
+    /* a narrow pane: one column, with what's new folded under the welcome and the guestbook line below it */
+    html.hn-side #home-welcome.side-folded { grid-template-columns: minmax(0, var(--side-measure)); justify-content: start;
+        grid-template-rows: auto auto auto auto; align-content: start; grid-template-areas: "p" "w" "n" "g"; }
+    html.hn-side #home-welcome.side-folded > .site-changelog { contain: none; min-height: auto; align-self: start; padding-bottom: 0; }
+    html.hn-side #home-welcome.side-folded > .guestbook-invite { align-self: start; }
+    /* opened there, the entries open in place at their full length and the pane scrolls inside its frame;
+       the photograph keeps the size it had (home-layout.js). The pane also scrolls while the captions of
+       "explore this photo" are shown. */
+    html.hn-side #home-welcome.side-open { overflow-y: auto; overscroll-behavior: contain;
+        scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+    html.hn-side #home-welcome.side-folded > .site-changelog.cl-open { padding-bottom: 0.1rem; }
+    html.hn-side #home-welcome.side-folded > .site-changelog.cl-open .changelog-scroll { overflow: visible; -webkit-mask-image: none; mask-image: none; }
+    html.hn-side #home-welcome.side-folded > .site-changelog.cl-open > .hn-more { display: none; }
+}
+
+/* phones: photograph, then the welcome full width, then what's new folded, then the guestbook line */
+@media (max-width: 880px) {
+    html.hn-side .mobile-welcome > .welcome-portrait { order: 1; }
+    html.hn-side .mobile-welcome > .welcome-intro { order: 2; }
+    html.hn-side .mobile-welcome > .site-changelog { order: 3; width: 100%; padding: 0.7rem 0 0.15rem; }
+    html.hn-side .mobile-welcome > .guestbook-invite { order: 4; margin-top: -0.4rem; border-top: 0; padding: 0; }
+    html.hn-side .mobile-welcome .changelog-head { font-size: 0.68rem; }
+    html.hn-side .mobile-welcome .changelog-toggle { min-height: 2rem; }
+    html.hn-side .mobile-welcome .changelog-item:first-child { border-top: 0; }
+    html.hn-side .mobile-welcome .changelog-item a { font-size: 0.95rem; }
+    html.hn-side .mobile-welcome .changelog-note { font-size: 0.8rem; }
+    html.hn-side .mobile-welcome .changelog-date, html.hn-side .mobile-welcome .changelog-tag { font-size: 0.66rem; }
+    /* what's new and the guestbook line have left the pane, so on the landing view it is empty and stays shut */
+    html.hn-side body:not(.mode-section) .net-panel { display: none; }
+}

@@ -384,3 +384,198 @@
     });
     [nav, stage].forEach(root => { if (root) new MutationObserver(reapply).observe(root, { subtree: true, attributes: true, attributeFilter: ['class'] }); });
 })();
+
+/* ═══════════════════════════════════════════════════════════════════════════════════════════
+   Sidebar reading pane (html.hn-side, set by index-next.html; inert on pages without the class)
+   - sizes the photograph above the welcome by the live rules (see home-layout.css)
+   - folds "what's new" into a row that opens in place where its column would be cramped (a reading
+     pane under 720px) and on phones, where it moves with the guestbook line into the strip under
+     the photograph and the welcome (mobile-welcome.js moves those two)
+   ═══════════════════════════════════════════════════════════════════════════════════════════ */
+(function () {
+    'use strict';
+    const html = document.documentElement;
+    if (!html.classList.contains('hn-side')) return;
+
+    const FOLD_BELOW = 720;   // reading-pane width (px) under which the what's new column folds
+    const desktop = window.matchMedia('(min-width: 881px)');
+    const pane = document.getElementById('home-welcome');
+    const panel = document.getElementById('net-panel');
+    if (!pane || !panel) return;
+    const log = pane.querySelector('.site-changelog');
+    const guest = pane.querySelector('.guestbook-invite');
+    const head = log && log.querySelector('.changelog-head');
+    const scroller = log && log.querySelector('.changelog-scroll');
+    if (!log || !head || !scroller) return;
+
+    /* ─── what's new, folded or open ─── */
+    if (!scroller.id) scroller.id = 'changelog-entries';
+    let toggle = null;
+    function setOpen(on) {
+        log.classList.toggle('cl-open', on);
+        pane.classList.toggle('side-open', on && pane.classList.contains('side-folded'));
+        if (toggle) toggle.setAttribute('aria-expanded', String(on));
+        fit();
+        // on a narrow desktop pane the opened list runs on below; the pane scrolls to show its start
+        if (on && desktop.matches && pane.classList.contains('side-folded')) {
+            const top = head.getBoundingClientRect().top - pane.getBoundingClientRect().top + pane.scrollTop - 12;
+            pane.scrollTo({ top: Math.max(0, top), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        } else if (!on) pane.scrollTop = 0;
+    }
+    function setCollapsible(on) {
+        if (on === log.classList.contains('cl-collapsible')) return;
+        log.classList.toggle('cl-collapsible', on);
+        if (on) {
+            toggle = document.createElement('button');
+            toggle.type = 'button';
+            toggle.className = 'changelog-toggle';
+            toggle.setAttribute('aria-controls', scroller.id);
+            toggle.setAttribute('aria-expanded', 'false');
+            while (head.firstChild) toggle.appendChild(head.firstChild);
+            const chev = document.createElement('span');
+            chev.className = 'cl-chevron';
+            chev.setAttribute('aria-hidden', 'true');
+            chev.textContent = '⌄';
+            toggle.appendChild(chev);
+            head.appendChild(toggle);
+            toggle.addEventListener('click', () => setOpen(!log.classList.contains('cl-open')));
+            log.classList.remove('cl-open');
+        } else if (toggle) {
+            const chev = toggle.querySelector('.cl-chevron');
+            if (chev) chev.remove();
+            while (toggle.firstChild) head.insertBefore(toggle.firstChild, toggle);
+            toggle.remove();
+            toggle = null;
+            log.classList.remove('cl-open');
+        }
+    }
+
+    /* ─── phones: what's new and the guestbook line join the strip ───
+       This listener is added before mobile-welcome.js adds its own (that one waits for DOMContentLoaded),
+       so on the way back to the desktop the list is already in the pane when the welcome is put back in
+       front of it. The order inside the strip is set in the stylesheet. */
+    function strip() { return document.querySelector('main > .mobile-welcome'); }
+    function place() {
+        const s = strip();
+        if (!desktop.matches && s) {
+            if (log.parentNode !== s) s.appendChild(log);
+            if (guest && guest.parentNode !== s) s.appendChild(guest);
+        } else if (desktop.matches) {
+            if (log.parentNode !== pane) pane.appendChild(log);
+            if (guest && guest.parentNode !== pane) pane.appendChild(guest);
+        }
+        mode();
+    }
+    desktop.addEventListener('change', place);
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', place, { once: true });
+    else place();
+
+    function mode() {
+        const folded = !desktop.matches || panel.clientWidth < FOLD_BELOW;
+        setCollapsible(folded);
+        pane.classList.toggle('side-folded', desktop.matches && folded);
+        const fig = pane.querySelector(':scope > .welcome-portrait');
+        const exploring = !!fig && fig.classList.contains('pa-exploring');
+        const scrolls = desktop.matches && ((folded && log.classList.contains('cl-open')) || exploring);
+        pane.classList.toggle('side-open', scrolls);
+        if (!scrolls && pane.scrollTop) pane.scrollTop = 0;
+    }
+
+    /* ─── the photograph ─── */
+    const px = v => parseFloat(v) || 0;
+    const clampPx = (lo, v, hi) => Math.min(hi, Math.max(lo, v));
+    const setVar = (k, v) => { if (pane.style.getPropertyValue(k) !== v) pane.style.setProperty(k, v); };
+    function overflow(els, bottom) {
+        return Math.max(...els.filter(el => el && pane.contains(el)).map(el => el.getBoundingClientRect().bottom)) + pane.scrollTop - bottom;
+    }
+    // the picture's box: W wide and H high, H never less than W / 1.5, so only the sides are ever cut
+    function apply(W, H, chromeW) {
+        W = Math.floor(W);
+        H = H - W / 1.5 < 1.5 ? Math.ceil(W / 1.5 - 0.01) : Math.round(H);
+        setVar('--side-fig-w', (W + chromeW) + 'px');
+        setVar('--side-img-h', H + 'px');
+        return { W, H };
+    }
+    let fitting = false, rest = null;
+    function fit() {
+        if (fitting) return;
+        const fig = pane.querySelector(':scope > .welcome-portrait');
+        const intro = pane.querySelector(':scope > .welcome-intro');
+        const img = fig && fig.querySelector('img');
+        if (!desktop.matches || !fig || !intro || !img) {
+            pane.classList.remove('side-fitted');
+            pane.style.removeProperty('--side-fig-w'); pane.style.removeProperty('--side-img-h');
+            return;
+        }
+        fitting = true;
+        try {
+            mode();
+            pane.classList.add('side-fitted');
+            const r = pane.getBoundingClientRect(), cs = getComputedStyle(pane);
+            const bottom = r.bottom - px(cs.paddingBottom);
+            if (pane.clientWidth < 120 || pane.clientHeight < 120) return;
+            const vh = window.innerHeight;
+            const floorLive = clampPx(190, vh * 0.32, 310);
+            const capFrame = vh * 0.78 + 19.2;   // the live cap on the frame, calc(78vh + 1.2rem)
+            setVar('--side-fig-w', '100%');
+            setVar('--side-img-h', Math.round(floorLive) + 'px');
+            const slot = fig.offsetWidth, chromeW = fig.offsetWidth - img.offsetWidth;
+            let W = Math.min(slot, capFrame) - chromeW;
+            let H = Math.max(W / 1.5, floorLive);
+            /* the captions of "explore this photo" stack above the shelf; making room for them by shrinking the
+               picture shrinks the shelf too, until the picture is a thumbnail. So while they are shown the
+               picture keeps its size and the pane scrolls inside its frame. */
+            if (fig.classList.contains('pa-exploring') && rest) {
+                setVar('--side-fig-w', rest.w); setVar('--side-img-h', rest.h);
+                return;
+            }
+            const els = [fig, intro, log, guest];
+            // an opened list on a narrow pane is measured as if shut, so opening it never shrinks the picture
+            const measureShut = pane.classList.contains('side-folded') && log.classList.contains('cl-open');
+            if (measureShut) log.classList.remove('cl-open');
+            for (let k = 0; k < 8; k++) {
+                ({ W, H } = apply(W, H, chromeW));
+                const over = overflow(els, bottom);
+                if (over <= 0.5) break;
+                // 48px is only reached while the captions of "explore this photo" need the room
+                H = Math.max(48, H - over - 0.5);
+                if (H < W / 1.5) W = H * 1.5;
+                if (H <= 48) { apply(W, H, chromeW); break; }
+            }
+            if (measureShut) log.classList.add('cl-open');
+            if (!fig.classList.contains('pa-exploring')) rest = { w: pane.style.getPropertyValue('--side-fig-w'), h: pane.style.getPropertyValue('--side-img-h') };
+        } finally { fitting = false; }
+    }
+    let queued = false;
+    function schedule() {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => { queued = false; fit(); });
+    }
+    if ('ResizeObserver' in window) {
+        new ResizeObserver(schedule).observe(pane);
+        new ResizeObserver(schedule).observe(panel);
+    }
+    window.addEventListener('resize', schedule);
+    desktop.addEventListener('change', schedule);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+    const portrait = pane.querySelector('.welcome-portrait img');
+    if (portrait && !portrait.complete) portrait.addEventListener('load', schedule, { once: true });
+    // the captions of "explore this photo" lift the frame; the picture makes room for them
+    let watched = null;
+    function watchFig() {
+        const fig = document.querySelector('.welcome-portrait');
+        if (!fig || fig === watched) return;
+        watched = fig;
+        new MutationObserver(records => {
+            if (records.some(r => r.attributeName === 'style'
+                || /pa-exploring|hn-lift/.test((r.oldValue || '') + ' ' + r.target.className))) schedule();
+        }).observe(fig, { attributes: true, attributeOldValue: true, attributeFilter: ['class', 'style'] });
+        const cap = fig.querySelector('figcaption');
+        if (cap && 'ResizeObserver' in window) new ResizeObserver(schedule).observe(cap);
+    }
+    watchFig();
+    new MutationObserver(() => { watchFig(); schedule(); }).observe(pane, { childList: true });
+    window.addEventListener('load', schedule, { once: true });
+    fit();
+})();
