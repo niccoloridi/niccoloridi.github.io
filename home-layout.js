@@ -305,6 +305,18 @@
         const text = stage.querySelector(':scope > .stage-text');
         if (!text || text.dataset.hnWatched) return;
         text.dataset.hnWatched = '1';
+        /* the section number and title stay pinned at the top of the text; the Research filters pin just
+           below them, so only the introduction and the content scroll */
+        const num = text.querySelector(':scope > .stage-num'), title = text.querySelector(':scope > .stage-title');
+        if (num && title && !text.querySelector(':scope > .stage-head')) {
+            const head = document.createElement('div');
+            head.className = 'stage-head';
+            text.insertBefore(head, num);
+            head.appendChild(num); head.appendChild(title);
+            const setH = () => text.style.setProperty('--stage-head-h', head.offsetHeight + 'px');
+            if ('ResizeObserver' in window) new ResizeObserver(setH).observe(head);
+            setH();
+        }
         let more = stage.querySelector(':scope > .hn-more');
         if (!more) {
             more = document.createElement('span');
