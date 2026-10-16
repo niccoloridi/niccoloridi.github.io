@@ -101,6 +101,8 @@ html.hn .tile .num { display: none; }
     html.hn body.mode-section .stage-plate { display: none; }
     html.hn .stage-text { overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
     html.hn .stage-text { animation: hn-in 0.38s var(--hn-ease) both; }
+    /* section paragraphs are justified like the welcome paragraph (desktop only, as the welcome is on phones left-aligned) */
+    html.hn .stage-text p { text-align: justify; text-justify: inter-word; -webkit-hyphens: auto; hyphens: auto; }
     html.hn .stage-head { position: sticky; top: 0; z-index: 3; background: var(--bg); padding-bottom: 0.05rem; }
     html.hn .stage-head .stage-title { margin-bottom: 0.6rem; }
     html.hn .stage .filters { top: var(--stage-head-h, 0px); z-index: 2; }
