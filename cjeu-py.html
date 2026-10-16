@@ -17,7 +17,7 @@
     <meta property="og:image:alt" content="Niccolò Ridi — public international law, research, profile, practice, and data.">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://niccoloridi.com/images/niccolo-ridi-social.png?v=20260817">
-    <script>(function(){var t=localStorage.getItem('noir-theme');if(!t){var h=new Date().getHours();t=(h>=7&&h<19)?'light':'dark';}if(t==='light')document.documentElement.classList.add('light-mode');})()</script>
+    <script>(function(){var t=localStorage.getItem('noir-theme');if(!t){t='dark';}if(t==='light')document.documentElement.classList.add('light-mode');})()</script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -829,7 +829,7 @@ cjeu-py export-network --format html --max-nodes 500</div>
     vizBlocks.forEach(b => vizObserver.observe(b));
 
     // Theme toggle - recolours the viz live by re-reading CSS tokens via renderAll()
-    let theme = localStorage.getItem('noir-theme') || ((new Date().getHours() >= 7 && new Date().getHours() < 19) ? 'light' : 'dark');
+    let theme = localStorage.getItem('noir-theme') || 'dark';
     function applyTheme(t, persist) {
         document.documentElement.classList.toggle('light-mode', t === 'light');
         document.body.classList.toggle('light-mode', t === 'light');

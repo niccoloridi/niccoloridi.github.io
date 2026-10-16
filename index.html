@@ -25,7 +25,7 @@
     <link rel="alternate" type="application/json" href="https://niccoloridi.com/treaties/nr-2026-001.json" title="Treaty — JSON authentic text">
     <link rel="help" type="text/markdown" href="https://niccoloridi.com/skill.md" title="Agent Guestbook signing instructions">
     <link rel="help" type="text/markdown" href="https://niccoloridi.com/agentic-law-journal-skill.md" title="Agentic Law Journal submission instructions">
-    <script>(function(){var t=localStorage.getItem('noir-theme');if(!t){var h=new Date().getHours();t=(h>=7&&h<19)?'light':'dark';}if(t==='light')document.documentElement.classList.add('light-mode');})()</script>
+    <script>(function(){var t=localStorage.getItem('noir-theme');if(!t){t='dark';}if(t==='light')document.documentElement.classList.add('light-mode');})()</script>
     <script>document.documentElement.classList.add('hn','plates-grid','hn-stack')</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -628,7 +628,7 @@
 
     <script>
         // default by the viewer's local time (daytime → light), unless they've chosen before
-        function themeDefault(){ const h = new Date().getHours(); return (h >= 7 && h < 19) ? 'light' : 'dark'; }
+        function themeDefault(){ return 'dark'; }
         let theme = localStorage.getItem('noir-theme') || themeDefault();
         function applyTheme(t, persist){
             document.documentElement.classList.toggle('light-mode', t === 'light');
