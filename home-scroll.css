@@ -1,0 +1,57 @@
+/* The homepage as one scrolling page (html.hn-scroll, set by index.html; desktop only).
+   The left column is a real page: the cover (wordmark and reading pane) and then each section in its own
+   frame, all scrolling with the window. The plates column does not scroll: on the cover it sits where it
+   always does; once the page moves it is pinned under the bar and shows the section being read, with the
+   same switch as a click. The bar comes back off the cover, with the small name, the section's name after
+   it, the console and the theme button. The footer stays at the foot of the window.
+   main keeps the height of one screen and the left column runs on below it, so everything that sizes itself
+   from main (the plates' art) is unchanged. */
+
+@media (min-width: 881px) {
+    html.hn-flow { overflow-y: auto; --hn-sec-gap: clamp(0.8rem, 2vh, 1.4rem); }
+    html.hn-flow body { overflow: visible; }
+    /* what's new still scrolls under the pointer, and hands the scroll on to the page at its ends */
+    html.hn-flow .changelog-scroll { overscroll-behavior: auto; }
+    html.hn-flow main { flex: none; height: calc(100vh - var(--hn-foot-h, 36px)); overflow: visible; }
+    html.hn-flow footer { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; background: var(--bg); }
+
+    /* the left column: the cover, then the sections */
+    html.hn-flow main > .hero { align-self: start; height: auto; min-height: 0; }
+    html.hn-flow main > .hero > .hero-cols { flex: none; height: var(--hn-cover-h, 70vh); grid-template-columns: minmax(0, 1fr); }
+    html.hn-flow body.mode-section .home-welcome { opacity: 1; visibility: visible; }
+    html.hn-flow #stage { display: none; }
+    .hn-secs { display: none; }
+    html.hn-flow .hn-secs { display: flex; flex-direction: column; gap: var(--hn-sec-gap); padding-top: var(--hn-sec-gap);
+        padding-bottom: calc(var(--hn-sec-gap) + var(--hn-foot-h, 36px)); }
+    .hn-sec { position: relative; border: 1px solid var(--line); background: var(--bg);
+        padding: clamp(1rem, 2.4vw, 1.8rem); scroll-margin-top: calc(var(--hn-bar-h, 40px) + var(--hn-sec-gap)); }
+    .hn-sec .stage { position: static; inset: auto; display: block; opacity: 1; visibility: visible; transform: none; padding: 0; z-index: auto; }
+    .hn-sec .stage-text { overflow: visible; padding-right: 0; }
+    html.hn-flow .hn-sec .stage .filters { top: var(--hn-bar-h, 40px); z-index: 2; }
+    .hn-sec .hn-more { display: none; }
+
+    /* the plates: where they always are on the cover; pinned under the bar off it */
+    html.hn-flow main > .tiles { align-self: start; height: var(--hn-tiles-h, 80vh); }
+    html.hn-flow.hn-scrolled main > .tiles { position: fixed; z-index: 20; right: 0; top: var(--hn-bar-h, 40px);
+        width: var(--hn-rail-w); height: calc(100vh - var(--hn-bar-h, 40px) - var(--hn-foot-h, 36px)); }
+
+    /* the bar: the small name and the section being read, then the console and the theme button */
+    html.hn-flow.hn-scrolled body > header { display: flex; position: fixed; left: 0; right: 0; top: 0; z-index: 40; background: var(--bg);
+        animation: hn-bar-in 0.38s cubic-bezier(0.22, 1, 0.36, 1); }
+    html.hn-flow.hn-scrolled body > header .id { display: inline; }
+    html.hn-flow.hn-scrolled body > header .header-actions { margin-left: 0; }
+    html.hn-flow.hn-scrolled body.console-modal .header-actions .console-launch { position: relative; inset: auto; top: auto; right: auto;
+        margin: 0; height: 1.45rem; padding: 0 0.62rem; }
+    html.hn-flow.hn-scrolled .header-actions .tog { height: 1.45rem; padding: 0 0.62rem; display: inline-flex; align-items: center; }
+    html.hn-flow.hn-scrolled body.console-open .console-launch { opacity: 0; pointer-events: none; }
+    .hn-crumb { color: var(--muted); }
+    .hn-crumb b { color: var(--fg); font-weight: inherit; }
+
+    /* how far down the page is, as a gold rule under the bar */
+    .hn-progress { position: absolute; left: 0; bottom: -1px; height: 1px; width: 100%; background: var(--gold);
+        transform-origin: 0 0; transform: scaleX(var(--hn-progress, 0)); pointer-events: none; }
+}
+html:not(.hn-scrolled) .hn-progress { display: none; }
+
+@keyframes hn-bar-in { from { opacity: 0; transform: translateY(-100%); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { html.hn-flow.hn-scrolled body > header { animation: none; } }
