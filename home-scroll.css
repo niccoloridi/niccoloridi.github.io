@@ -20,7 +20,6 @@
     html.hn-flow main > .hero > .hero-cols { flex: none; height: var(--hn-cover-h, 70vh); grid-template-columns: minmax(0, 1fr); }
     html.hn-flow body.mode-section .home-welcome { opacity: 1; visibility: visible; }
     html.hn-flow #stage { display: none; }
-    .hn-secs { display: none; }
     html.hn-flow .hn-secs { display: flex; flex-direction: column; gap: var(--hn-sec-gap); padding-top: var(--hn-sec-gap);
         padding-bottom: calc(var(--hn-sec-gap) + var(--hn-foot-h, 36px)); }
     .hn-sec { position: relative; border: 1px solid var(--line); background: var(--bg);
@@ -51,6 +50,8 @@
     .hn-progress { position: absolute; left: 0; bottom: -1px; height: 1px; width: 100%; background: var(--gold);
         transform-origin: 0 0; transform: scaleX(var(--hn-progress, 0)); pointer-events: none; }
 }
+/* the written-out sections exist only for the scrolling page (they are built on every width) */
+.hn-secs { display: none; }
 html:not(.hn-scrolled) .hn-progress { display: none; }
 
 @keyframes hn-bar-in { from { opacity: 0; transform: translateY(-100%); } to { opacity: 1; transform: none; } }
