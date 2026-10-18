@@ -26,7 +26,7 @@
     <link rel="help" type="text/markdown" href="https://niccoloridi.com/skill.md" title="Agent Guestbook signing instructions">
     <link rel="help" type="text/markdown" href="https://niccoloridi.com/agentic-law-journal-skill.md" title="Agentic Law Journal submission instructions">
     <script>(function(){var t=localStorage.getItem('noir-theme');if(!t){t='dark';}if(t==='light')document.documentElement.classList.add('light-mode');})()</script>
-    <script>document.documentElement.classList.add('hn','plates-grid','hn-stack','hn-side')</script>
+    <script>document.documentElement.classList.add('hn','plates-grid','hn-stack','hn-side','hn-row')</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -204,7 +204,7 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(0.8rem, 3vh, 2rem);
             overflow: hidden; transition: opacity 0.9s ease; }
         #intro.done { opacity: 0; pointer-events: none; }
-        /* plate intro: the Data plate fills the screen, then shrinks into its tile */
+        /* plate intro: the Data plate fills the screen, then shrinks into the tiles' space and breaks into the mosaic */
         #intro { transition: opacity 0.7s ease, background-color 0.5s ease; }
         #intro.opening { background: transparent; pointer-events: none; transition: background-color 0.6s ease 0.25s; }
         #intro.opening .intro-skip { opacity: 0; transition: opacity 0.2s ease; }
@@ -230,6 +230,14 @@
             padding: 0.45rem 0.95rem; border-radius: 999px; transition: color 0.2s, border-color 0.2s, opacity 0.4s; }
         .intro-skip:hover { color: var(--fg); border-color: var(--gold); }
         #intro.done .intro-skip { opacity: 0; }
+        /* the mosaic: one pane over the four tiles, a grid of cells over the plates, then four strips that glide
+           into the tiles */
+        #intro .intro-cycle, #intro .intro-strip { position: fixed; overflow: hidden; }
+        #intro .intro-cycle { z-index: 1; }
+        #intro .intro-cycle canvas { position: absolute; left: 0; top: 0; display: block; }
+        #intro .intro-strip { z-index: 2; background: var(--bg); transform-origin: 0 0; will-change: transform; contain: strict; }
+        #intro .intro-strip-in { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; }
+        #intro .intro-strip canvas { position: absolute; left: 0; top: 0; display: block; }
         /* when a section is open, the constellation recedes behind the content */
         body.mode-section .net-panel canvas { opacity: 0; transition: opacity 0.35s ease; }
         body.mode-section .home-welcome { opacity: 0; visibility: hidden; }
@@ -440,7 +448,7 @@
     <link rel="stylesheet" href="font-lab.css?v=20260926-1">
     <!-- prototype, inert without its query string: ?pane=1…5 -->
     <link rel="stylesheet" href="home-pane-variants.css?v=20260918-7">
-    <link rel="stylesheet" href="home-layout.css?v=20261016-5">
+    <link rel="stylesheet" href="home-layout.css?v=20261018-1">
 </head>
 <body class="ts-mono terminal-folded">
     <div id="intro" aria-hidden="true">
@@ -523,7 +531,7 @@
 
         <nav class="tiles" aria-label="Sections">
             <a class="tile" href="profile.html" data-section="profile"><span class="num">01</span>
-                <span class="specimen"><canvas data-plate="g-stipple" aria-label="Stipple archipelago, animated art for Profile"></canvas><img class="hn-photo" alt="" data-src="images/niccolo-portrait.jpg" width="1080" height="720"><span class="hn-hint">click to reveal</span></span>
+                <span class="specimen"><canvas data-plate="chrome" aria-label="Liquid index, animated art for Profile"></canvas><img class="hn-photo" alt="" data-src="images/niccolo-portrait.jpg" width="1080" height="720"><span class="hn-hint">click to reveal</span></span>
                 <span class="label"><span class="name">Profile</span><span class="sub">Bio, positions, and education</span><span class="arrow">↗</span></span></a>
             <a class="tile" href="practice.html" data-section="practice"><span class="num">02</span>
                 <span class="specimen"><canvas data-plate="moire" aria-label="Moiré signal field, animated art for Practice"></canvas><img class="hn-photo" alt="" data-src="images/N_Ridi_ICJ.jpeg" width="1600" height="1371"><span class="hn-hint">click to reveal</span></span>
@@ -762,7 +770,7 @@
             // ─── in-panel "viewport": sections render in the network space ───
             const stage = document.getElementById('stage');
             const VIEW = {
-                profile: { n:'01', plate:'g-stipple', photo:'images/niccolo-portrait.jpg', ratio:'1080 / 720', pf:[0.54,0.44], body:
+                profile: { n:'01', plate:'chrome', photo:'images/niccolo-portrait.jpg', ratio:'1080 / 720', pf:[0.54,0.44], body:
                     '<p>Senior Lecturer (Associate Professor) in Public International Law at The Dickson Poon School of Law, King\'s College London — Associate Director of CIGAD, Associate Dean for Doctoral Studies, Fellow of the Centre for Data Futures, and liaison to the King\'s Institute for AI.</p>'
                   + '<p>My research concerns the authority and effectiveness of international law — how it is produced and changes — applying empirical and computational methods to legal argumentation and actor behaviour.</p>'
                   + '<h3>positions &amp; affiliations</h3><ul>'
@@ -1166,16 +1174,16 @@
         })();
     </script>
 
-    <script src="generative-plates.js?v=20261016-2"></script>
-    <script src="generative-more.js?v=20261016-1"></script>
+    <script src="generative-plates.js?v=20261018-1"></script>
+    <script src="generative-more.js?v=20261018-1"></script>
     <script src="photo-annotations.js?v=20260920-1"></script>
     <script src="mobile-welcome.js?v=20260919-2"></script>
     <script src="console-modal.js?v=20260918-3"></script>
     <script src="font-lab.js?v=20260926-1"></script>
     <script src="home-pane-variants.js?v=20260918-7"></script>
-    <script src="home-layout.js?v=20261016-5"></script>
+    <script src="home-layout.js?v=20261018-1"></script>
     <script type="module">
-        // ─── Intro: the Data plate fills the screen, then shrinks into its own tile ───
+        // ─── Intro: the Data plate fills the screen, shrinks into the tiles' space, breaks into a mosaic of the four plates and splits into the tiles ───
         const introEl = document.getElementById('intro');
         const deepLink = /^#(profile|practice|research|data)$/.test(location.hash);
         const forced = /[?&]intro(=|&|$)/.test(location.search);
@@ -1186,7 +1194,7 @@
         if (playIntro) cover(true);
         /* the Data tile starts in the intro's blue and violet, so the plate lands on the same colours,
            then drifts through blue and teal to its usual palette over a few seconds */
-        const dataTile = document.querySelector('.tiles .tile:nth-child(4) canvas');
+        let dataTile = document.querySelector('.tiles .tile:nth-child(4) canvas');
         const HUE0 = 222, SPAN0 = 62, HUE1 = 28, SPAN1 = 120;
         if (playIntro && dataTile) { dataTile.dataset.hue = HUE0; dataTile.dataset.hueSpan = SPAN0; }
         function releaseTileColour(){
@@ -1227,44 +1235,196 @@
             const wait = ms => new Promise(r => setTimeout(r, ms));
             const box = introEl.querySelector('.intro-plate');
             const nameEl = introEl.querySelector('.intro-name');
-            const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
             requestAnimationFrame(() => introEl.classList.add('lit'));
             await wait(140);
             if (nameEl) nameEl.classList.add('show');
             await wait(1150);
             if (__introDone) return;
-            /* where the Data tile's own canvas sits: the plate lands exactly on it, clipped to the tile's window */
-            const tileCanvas = document.querySelector('.tiles .tile:nth-child(4) canvas');
-            const spec = tileCanvas && tileCanvas.closest('.specimen');
-            const cr = tileCanvas && tileCanvas.getBoundingClientRect();
-            const sr = spec && spec.getBoundingClientRect();
-            const visible = cr && sr && sr.width > 20 && sr.height > 20 && sr.top >= 0 && sr.bottom <= innerHeight && sr.left >= 0 && sr.right <= innerWidth;
-            introEl.classList.add('opening');
-            cover(false);
-            setTimeout(revealPage, 260);
-            if (nameEl) nameEl.classList.remove('show');
-            if (!visible) { await wait(450); finishIntro(); return; }
+            return runMosaic(box, nameEl, wait);
+        }
+
+        /* ─── the mosaic: the plate flies into one pane the height of the four tiles. The pane is a grid of
+           cells over live plates (the tiles' own, the Data one in the intro's colours), each cell showing one of
+           them, the landed plate showing through where none does. The cells settle into the tiles' plates in four
+           bands, which split and glide into the tiles. ─── */
+        function fly(box, R, duration){
+            /* the flight, to any rectangle: the outer box clips, the inner box is counter-scaled so the frozen
+               full-screen frame shrinks uniformly and stays centred on R, like object-fit: cover */
             const W = innerWidth, H = innerHeight;
-            /* freeze the plate for the flight: its canvas keeps its last frame at full-screen size,
-               so the flight is pure transforms the compositor can run without redrawing anything */
-            const canvas = box.querySelector('canvas');
-            canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
-            canvas.dataset.plate = 'rest-dither';
-            if (canvas.dataset.hnArt) canvas.dataset.hnArt = 'rest-dither';
-            /* outer box: full screen to the tile's window (it clips); inner box: counter-scaled so the
-               plate shrinks uniformly and stays centred on the tile, like object-fit: cover */
-            const s = Math.max(sr.width / W, sr.height / H), N = 24, outer = [], inner = [];
+            const s = Math.max(R.width / W, R.height / H), N = 24, outer = [], inner = [];
             for (let i = 0; i <= N; i++) {
                 const k = i / N;
-                const ol = sr.left * k, ot = sr.top * k, ow = W + (sr.width - W) * k, oh = H + (sr.height - H) * k;
+                const ol = R.left * k, ot = R.top * k, ow = W + (R.width - W) * k, oh = H + (R.height - H) * k;
                 const ox = ow / W, oy = oh / H, c = 1 + (s - 1) * k;
                 const cx = ol + ow / 2 - c * W / 2, cy = ot + oh / 2 - c * H / 2;
                 outer.push({ offset: k, transform: `translate(${ol}px, ${ot}px) scale(${ox}, ${oy})` });
                 inner.push({ offset: k, transform: `translate(${(cx - ol) / ox}px, ${(cy - ot) / oy}px) scale(${c / ox}, ${c / oy})` });
             }
-            const timing = { duration: 950, easing: 'cubic-bezier(0.65, 0, 0.25, 1)', fill: 'forwards' };
-            const a1 = box.animate(outer, timing), a2 = box.firstElementChild.animate(inner, timing);
-            await Promise.all([a1.finished, a2.finished]).catch(() => {});
+            const timing = { duration, easing: 'cubic-bezier(0.65, 0, 0.25, 1)', fill: 'forwards' };
+            return Promise.all([box.animate(outer, timing).finished, box.firstElementChild.animate(inner, timing).finished]).catch(() => {});
+        }
+        function plateCanvas(id, data){
+            const c = document.createElement('canvas');
+            c.dataset.plate = id;
+            if (data) { c.dataset.hue = HUE0; c.dataset.hueSpan = SPAN0; c.dataset.soft = 'true'; }
+            c.setAttribute('aria-hidden', 'true');
+            return c;
+        }
+        const COLS = 10, ROWS = 24, BAND = ROWS / 4;
+        const band = r => Math.floor(r / BAND);
+        const hash = (a, b, c) => {
+            let h = Math.imul(a + 1, 374761393) ^ Math.imul(b + 7, 668265263) ^ Math.imul(c + 13, 2246822519);
+            h = Math.imul(h ^ (h >>> 13), 1274126177);
+            return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+        };
+        /* what cell (c, r) shows at t ms after landing: -1 the landed plate, 0 to 3 a passing plate, 4 to 7 a
+           tile's own plate in its band (the canvas that ends up in the tile). The cells break up into all four
+           plates at once, flicker, and settle into the bands: the first break on landing and all have broken
+           within 60ms; all are settled by 640ms, and the split begins at 760ms. */
+        const MOSAIC_END = 760;
+        function mosaicAt(t, c, r){
+            const u = hash(c, r, 1), settle = 330 + 310 * hash(c, r, 2);
+            if (t >= settle) return 4 + band(r);
+            if (t < u * 60) return -1;
+            const period = 40 + 35 * hash(c, r, 3);
+            return Math.floor(hash(c, r, 10 + Math.floor((t + u * 97) / period)) * 4);
+        }
+        async function runMosaic(box, nameEl, wait){
+            const tiles = Array.from(document.querySelectorAll('.tiles .tile')).slice(0, 4);
+            const olds = tiles.map(t => t.querySelector('.specimen canvas'));
+            const ids = olds.map(c => c ? (c.dataset.hnArt || c.dataset.plate || '').replace(/^rest-/, '') : '');
+            const tr = tiles.map(t => t.getBoundingClientRect());
+            const sp = tiles.map(t => { const x = t.querySelector('.specimen'); return x && x.getBoundingClientRect(); });
+            const fits = r => r && r.width > 20 && r.height > 20 && r.top >= 0 && r.bottom <= innerHeight && r.left >= 0 && r.right <= innerWidth;
+            const ok = tiles.length === 4 && sp.every(fits) && ids.every(Boolean);
+            introEl.classList.add('opening');
+            setTimeout(revealPage, 260);
+            if (nameEl) nameEl.classList.remove('show');
+            if (!ok) { cover(false); await wait(450); finishIntro(); return; }
+            /* the pane: the four tiles together, frames included */
+            const P = { left: Math.min(...tr.map(r => r.left)), top: Math.min(...tr.map(r => r.top)) };
+            P.width = Math.max(...tr.map(r => r.right)) - P.left;
+            P.height = Math.max(...tr.map(r => r.bottom)) - P.top;
+            const q = P.height / 4;
+            /* two sets of plates start now, unseen, so each is fully grown when its first cells open (the flight
+               is all transforms, which the compositor runs whatever the main thread is drawing):
+               - the passing plates, one over the whole pane each, drawn at 1x since they only flicker past;
+               - the tiles' own plates, each the size of its tile's canvas and centred on its band. These are the
+                 canvases that end up in the tiles, so the plates the intro settles on simply carry on. */
+            const pane = document.createElement('div');
+            pane.className = 'intro-cycle';
+            Object.assign(pane.style, { left: P.left + 'px', top: P.top + 'px', width: P.width + 'px', height: P.height + 'px' });
+            const plates = ids.map((id, i) => {
+                const c = plateCanvas(id, i === 3);
+                c.dataset.dpr = '1';
+                Object.assign(c.style, { width: P.width + 'px', height: P.height + 'px', clipPath: 'inset(100%)' });
+                pane.appendChild(c);
+                return c;
+            });
+            const fin = olds.map((old, i) => {
+                const r = old.getBoundingClientRect();
+                const w = parseFloat(old.style.width) || r.width, h = parseFloat(old.style.height) || r.height;
+                const c = plateCanvas(ids[i], false);
+                if (i === 3) { c.dataset.hue = HUE0; c.dataset.hueSpan = SPAN0; }
+                const x = P.width / 2 - w / 2, y = (i + 0.5) * q - h / 2;
+                Object.assign(c.style, { width: w + 'px', height: h + 'px', left: x + 'px', top: y + 'px', clipPath: 'inset(100%)' });
+                pane.appendChild(c);
+                return { c, w, h, x, y };
+            });
+            introEl.appendChild(pane);
+            const W = innerWidth, H = innerHeight;
+            const canvas = box.querySelector('canvas');
+            canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+            canvas.dataset.plate = 'rest-dither';
+            if (canvas.dataset.hnArt) canvas.dataset.hnArt = 'rest-dither';
+            /* a quick flight; its easing spends the last fifth settling the final pixel,
+               so the cells start then, when the plate has visibly arrived */
+            const FLIGHT = 640;
+            fly(box, P, FLIGHT);
+            await wait(FLIGHT * 0.8);
+            if (__introDone) return;
+            /* the landed plate stays frozen: the cells cover it within a few frames, and bringing it back to
+               life would mean drawing a full-screen canvas under them */
+            const xs = Array.from({ length: COLS + 1 }, (_, c) => Math.round(c * P.width / COLS));
+            const ys = Array.from({ length: ROWS + 1 }, (_, r) => Math.round(r * P.height / ROWS));
+            const layers = plates.map(c => ({ c, x: 0, y: 0 })).concat(fin);
+            const last = layers.map(() => '');
+            let boxGone = false;
+            const t0 = performance.now();
+            await new Promise(done => {
+                (function frame(now){
+                    if (__introDone) return done();
+                    const t = now - t0, d = layers.map(() => '');
+                    let under = false;
+                    for (let r = 0; r < ROWS; r++) {
+                        let run = -2, from = 0;
+                        for (let c = 0; c <= COLS; c++) {
+                            const k = c < COLS ? mosaicAt(t, c, r) : -2;
+                            if (k === -1) under = true;
+                            if (k === run) continue;
+                            if (run >= 0) {
+                                const L = layers[run], x0 = xs[from] - L.x, x1 = xs[c] - L.x, y0 = ys[r] - L.y, y1 = ys[r + 1] - L.y;
+                                d[run] += `M${x0} ${y0}H${x1}V${y1}H${x0}Z`;
+                            }
+                            run = k; from = c;
+                        }
+                    }
+                    layers.forEach((L, k) => {
+                        if (d[k] === last[k]) return;
+                        last[k] = d[k];
+                        L.c.style.clipPath = d[k] ? `path('${d[k]}')` : 'inset(100%)';
+                    });
+                    if (!under && !boxGone) { boxGone = true; box.style.visibility = 'hidden'; }
+                    if (t >= MOSAIC_END) return done();
+                    requestAnimationFrame(frame);
+                })(t0);
+            });
+            if (__introDone) return;
+            /* the split: each band becomes a strip around its tile's own plate, laid out on the band and moved by
+               transforms alone (the compositor runs the glide): the outer box takes the strip from its band to its
+               tile's picture, and the inner box is counter-scaled so the plate keeps its size, centred */
+            const strips = fin.map((f, i) => {
+                const el = document.createElement('div');
+                el.className = 'intro-strip';
+                Object.assign(el.style, { left: P.left + 'px', top: (P.top + q * i) + 'px', width: P.width + 'px', height: q + 'px' });
+                const inner = document.createElement('div');
+                inner.className = 'intro-strip-in';
+                Object.assign(inner.style, { width: f.w + 'px', height: f.h + 'px', transform: `translate(${(P.width - f.w) / 2}px, ${(q - f.h) / 2}px)` });
+                Object.assign(f.c.style, { clipPath: 'none', left: '0px', top: '0px' });
+                inner.appendChild(f.c);
+                el.appendChild(inner);
+                introEl.appendChild(el);
+                return el;
+            });
+            pane.remove(); box.style.visibility = 'hidden';
+            const timing = { duration: 620, easing: 'cubic-bezier(0.65, 0, 0.25, 1)', fill: 'forwards' };
+            await Promise.all(strips.map((el, i) => {
+                const S = sp[i], f = fin[i], N = 16, outer = [], inner = [];
+                for (let j = 0; j <= N; j++) {
+                    const k = j / N;
+                    const l = P.left + (S.left - P.left) * k, t = P.top + q * i + (S.top - P.top - q * i) * k;
+                    const w = P.width + (S.width - P.width) * k, h = q + (S.height - q) * k;
+                    const sx = w / P.width, sy = h / q;
+                    outer.push({ offset: k, transform: `translate(${l - P.left}px, ${t - P.top - q * i}px) scale(${sx}, ${sy})` });
+                    inner.push({ offset: k, transform: `translate(${(w - f.w) / 2 / sx}px, ${(h - f.h) / 2 / sy}px) scale(${1 / sx}, ${1 / sy})` });
+                }
+                return Promise.all([el.animate(outer, timing).finished, el.firstElementChild.animate(inner, timing).finished]);
+            })).catch(() => {});
+            if (__introDone) return;
+            /* the hand-over: each strip's plate takes its tile canvas's place, at the same size and position, so
+               it carries on where the intro left it. The page's own plates never had to start. */
+            cover(false);
+            fin.forEach((f, i) => {
+                const old = olds[i];
+                if (!old || !old.isConnected) return;
+                f.c.style.cssText = old.style.cssText;
+                f.c.removeAttribute('aria-hidden');
+                if (old.getAttribute('aria-label')) f.c.setAttribute('aria-label', old.getAttribute('aria-label'));
+                delete f.c.dataset.hnArt;   // home-layout.js picks it up again as a tile's plate
+                old.replaceWith(f.c);
+            });
+            dataTile = fin[3].c;
+            strips.forEach(el => el.remove());
             finishIntro();
         }
 

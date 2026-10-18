@@ -2476,7 +2476,8 @@
 
     function render(e, dt) {
         const c = e.canvas, def = e.def;
-        const dpr = dprOf();
+        /* data-dpr on a canvas caps its density (the homepage intro draws its passing plates at 1x) */
+        const dpr = c.dataset.dpr ? Math.min(dprOf(), +c.dataset.dpr || 1) : dprOf();
         const cw = e.cw || c.clientWidth || c.width, ch = e.ch || c.clientHeight || c.height;
         if (!cw || !ch) return;
         const W = Math.max(1, Math.min(4096, Math.round(cw * dpr))), H = Math.max(1, Math.min(4096, Math.round(ch * dpr)));

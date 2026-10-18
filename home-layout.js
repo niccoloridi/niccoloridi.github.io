@@ -330,6 +330,7 @@
 
     /* ─── the console control moves to the right of the wordmark row ─── */
     function moveLaunch() {
+        if (html.classList.contains('hn-row')) return;   // the wordmark row has its own group (below)
         const launch = document.querySelector('.console-launch');
         const hero = document.querySelector('main > .hero');
         if (launch && hero && launch.parentNode !== hero) hero.appendChild(launch);
@@ -386,18 +387,16 @@
 })();
 
 /* ═══════════════════════════════════════════════════════════════════════════════════════════
-   Sidebar reading pane (html.hn-side, set by index-next.html; inert on pages without the class)
+   Sidebar reading pane (html.hn-side, set by index.html; inert on pages without the class)
    - sizes the photograph above the welcome by the live rules (see home-layout.css)
-   - folds "what's new" into a row that opens in place where its column would be cramped (a reading
-     pane under 720px) and on phones, where it moves with the guestbook line into the strip under
-     the photograph and the welcome (mobile-welcome.js moves those two)
+   - keeps "what's new" at the side at every desktop width; on phones it folds into a row that opens
+     in place and moves with the guestbook line into the strip under the photograph and the welcome
+     (mobile-welcome.js moves those two)
    ═══════════════════════════════════════════════════════════════════════════════════════════ */
 (function () {
     'use strict';
     const html = document.documentElement;
     if (!html.classList.contains('hn-side')) return;
-
-    const FOLD_BELOW = 720;   // reading-pane width (px) under which the what's new column folds
     const desktop = window.matchMedia('(min-width: 881px)');
     const pane = document.getElementById('home-welcome');
     const panel = document.getElementById('net-panel');
@@ -413,14 +412,8 @@
     let toggle = null;
     function setOpen(on) {
         log.classList.toggle('cl-open', on);
-        pane.classList.toggle('side-open', on && pane.classList.contains('side-folded'));
         if (toggle) toggle.setAttribute('aria-expanded', String(on));
         fit();
-        // on a narrow desktop pane the opened list runs on below; the pane scrolls to show its start
-        if (on && desktop.matches && pane.classList.contains('side-folded')) {
-            const top = head.getBoundingClientRect().top - pane.getBoundingClientRect().top + pane.scrollTop - 12;
-            pane.scrollTo({ top: Math.max(0, top), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-        } else if (!on) pane.scrollTop = 0;
     }
     function setCollapsible(on) {
         if (on === log.classList.contains('cl-collapsible')) return;
@@ -471,12 +464,11 @@
     else place();
 
     function mode() {
-        const folded = !desktop.matches || panel.clientWidth < FOLD_BELOW;
-        setCollapsible(folded);
-        pane.classList.toggle('side-folded', desktop.matches && folded);
+        // what's new folds on phones only, never on the desktop
+        setCollapsible(!desktop.matches);
         const fig = pane.querySelector(':scope > .welcome-portrait');
         const exploring = !!fig && fig.classList.contains('pa-exploring');
-        const scrolls = desktop.matches && ((folded && log.classList.contains('cl-open')) || exploring);
+        const scrolls = desktop.matches && exploring;
         pane.classList.toggle('side-open', scrolls);
         if (!scrolls && pane.scrollTop) pane.scrollTop = 0;
     }
@@ -530,9 +522,6 @@
                 return;
             }
             const els = [fig, intro, log, guest];
-            // an opened list on a narrow pane is measured as if shut, so opening it never shrinks the picture
-            const measureShut = pane.classList.contains('side-folded') && log.classList.contains('cl-open');
-            if (measureShut) log.classList.remove('cl-open');
             for (let k = 0; k < 8; k++) {
                 ({ W, H } = apply(W, H, chromeW));
                 const over = overflow(els, bottom);
@@ -542,7 +531,6 @@
                 if (H < W / 1.5) W = H * 1.5;
                 if (H <= 48) { apply(W, H, chromeW); break; }
             }
-            if (measureShut) log.classList.add('cl-open');
             if (!fig.classList.contains('pa-exploring')) rest = { w: pane.style.getPropertyValue('--side-fig-w'), h: pane.style.getPropertyValue('--side-img-h') };
         } finally { fitting = false; }
     }
@@ -578,4 +566,61 @@
     new MutationObserver(() => { watchFig(); schedule(); }).observe(pane, { childList: true });
     window.addEventListener('load', schedule, { once: true });
     fit();
+})();
+
+/* ═══════════════════════════════════════════════════════════════════════════════════════════
+   The wordmark row (html.hn-row, set by index.html; inert on pages without the class)
+   On the desktop the console and theme buttons leave the bar for a group at the right end of the
+   wordmark row; the row above the plates is as tall as the space above the reading pane, and the
+   buttons are centred on the wordmark's capitals. On phones the theme button goes back to the bar.
+   ═══════════════════════════════════════════════════════════════════════════════════════════ */
+(function () {
+    'use strict';
+    const html = document.documentElement;
+    if (!html.classList.contains('hn-row')) return;
+    const desktop = window.matchMedia('(min-width: 881px)');
+    const main = document.querySelector('main');
+    const hero = main && main.querySelector(':scope > .hero');
+    const headerActions = document.querySelector('body > header .header-actions');
+    const tog = headerActions && headerActions.querySelector('.tog');
+    if (!main || !hero || !tog) return;
+
+    const group = document.createElement('div');
+    group.className = 'hn-controls';
+    main.appendChild(group);
+    function place() {
+        const launch = document.querySelector('.console-launch');
+        if (desktop.matches) {
+            if (tog.parentNode !== group) group.appendChild(tog);
+            if (launch && launch.parentNode !== group) group.insertBefore(launch, tog);
+        } else if (tog.parentNode !== headerActions) {
+            headerActions.insertBefore(tog, headerActions.firstChild);
+        }
+        measure();
+    }
+    function measure() {
+        if (!desktop.matches) {
+            ['--hn-head-h', '--hn-cap-top', '--hn-cap-h'].forEach(k => main.style.removeProperty(k));
+            return;
+        }
+        const panel = document.getElementById('net-panel');
+        const wm = hero.querySelector('.wordmark');
+        if (!panel || !wm) return;
+        const mt = main.getBoundingClientRect().top;
+        const pr = panel.getBoundingClientRect(), wr = wm.getBoundingClientRect();
+        const fs = parseFloat(getComputedStyle(wm).fontSize) || 60;
+        // Space Grotesk's capitals are about 0.70em high; in a line box of 0.92em they sit a little below its middle
+        const capH = fs * 0.70, capTop = wr.top + (wr.height - capH) / 2 + fs * 0.02;
+        main.style.setProperty('--hn-head-h', Math.round(pr.top - mt) + 'px');
+        main.style.setProperty('--hn-cap-top', Math.round(capTop - mt) + 'px');
+        main.style.setProperty('--hn-cap-h', Math.round(capH) + 'px');
+    }
+    desktop.addEventListener('change', place);
+    // the console sets itself up on DOMContentLoaded, after this file has run
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', place, { once: true });
+    window.addEventListener('load', place, { once: true });
+    window.addEventListener('resize', measure);
+    if ('ResizeObserver' in window) new ResizeObserver(measure).observe(hero);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+    place();
 })();

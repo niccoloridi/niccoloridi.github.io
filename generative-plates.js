@@ -29,7 +29,8 @@
 
     function surface(canvas) {
         const rect = canvas.getBoundingClientRect();
-        const dpr = Math.min(devicePixelRatio || 1, 2);
+        /* data-dpr on a canvas caps its density (the homepage intro draws its passing plates at 1x) */
+        const dpr = Math.min(devicePixelRatio || 1, 2, +canvas.dataset.dpr || 2);
         const w = Math.max(1, Math.round(rect.width * dpr));
         const h = Math.max(1, Math.round(rect.height * dpr));
         if (canvas.width !== w || canvas.height !== h) {

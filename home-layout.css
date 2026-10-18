@@ -209,15 +209,16 @@ html.hn .tile .num { display: none; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════════════════════
-   Sidebar reading pane (html.hn-side, set by index-next.html; inert on pages without the class)
+   Sidebar reading pane (html.hn-side, set by index.html; inert on pages without the class)
    The photograph sits above the welcome paragraph at every width. "What's new" is a narrow column
    down the right of the pane, its entries as running text (date and kind on a mono line, the title,
    the note), with the guestbook line at its foot. home-layout.js sizes the photograph by the live
    rules: 3:2 above a height floor of clamp(190px, 32vh, 310px), the sides cut when the frame is too
    narrow for 3:2 at that floor, never the top or bottom, and the floor lowered (then the frame
    narrowed at 3:2) only as far as the screen needs.
-   Where the column would be cramped (a reading pane under 720px, as on a 1024px screen) and on
-   phones, "what's new" folds into a row under the welcome that opens in place.
+   The column stays at the side at every desktop width: at narrow widths it keeps 180px, its titles
+   wrap and its notes are left out below 190px, and the photograph and the welcome give way. On
+   phones "what's new" folds into a row under the welcome that opens in place.
    ═══════════════════════════════════════════════════════════════════════════════════════════ */
 
 /* the entries, on every width */
@@ -251,7 +252,7 @@ html.hn-side .site-changelog.cl-collapsible:not(.cl-open) > .hn-more { display: 
 @media (prefers-reduced-motion: reduce) { html.hn-side .changelog-toggle .cl-chevron { transition: none; } }
 
 @media (min-width: 881px) {
-    html.hn-side { --side-nw: clamp(200px, 25cqi, 290px); --side-measure: calc(43 * clamp(0.96rem, 1.22vw, 1.18rem)); }
+    html.hn-side { --side-nw: clamp(180px, 26cqi, 290px); --side-measure: calc(43 * clamp(0.96rem, 1.22vw, 1.18rem)); }
     html.hn-side #home-welcome { display: grid; justify-content: space-between; align-content: stretch; overflow: hidden;
         padding: clamp(1rem, min(2.4vw, 3.4vh), 2.6rem); column-gap: clamp(1.2rem, 3cqi, 2.6rem); row-gap: clamp(0.75rem, 2.1vh, 1.35rem);
         grid-template-columns: minmax(0, var(--side-measure)) var(--side-nw); grid-template-rows: auto minmax(0, 1fr) auto;
@@ -277,19 +278,15 @@ html.hn-side .site-changelog.cl-collapsible:not(.cl-open) > .hn-more { display: 
     html.hn-side #home-welcome .welcome-portrait figcaption,
     html.hn-side #home-welcome .welcome-portrait.hn-cap-one figcaption { flex-wrap: wrap; row-gap: 0.35rem; }
 
-    /* a narrow pane: one column, with what's new folded under the welcome and the guestbook line below it */
-    html.hn-side #home-welcome.side-folded { grid-template-columns: minmax(0, var(--side-measure)); justify-content: start;
-        grid-template-rows: auto auto auto auto; align-content: start; grid-template-areas: "p" "w" "n" "g"; }
-    html.hn-side #home-welcome.side-folded > .site-changelog { contain: none; min-height: auto; align-self: start; padding-bottom: 0; }
-    html.hn-side #home-welcome.side-folded > .guestbook-invite { align-self: start; }
-    /* opened there, the entries open in place at their full length and the pane scrolls inside its frame;
-       the photograph keeps the size it had (home-layout.js). The pane also scrolls while the captions of
-       "explore this photo" are shown. */
+    /* a narrow column keeps the titles (wrapping) and leaves the notes out */
+    @container (max-width: 189.98px) {
+        html.hn-side #home-welcome .changelog-note { display: none; }
+        html.hn-side #home-welcome .changelog-item { padding: 0.5rem 0; }
+    }
+
+    /* while the captions of "explore this photo" are shown the picture keeps its size and the pane scrolls inside its frame */
     html.hn-side #home-welcome.side-open { overflow-y: auto; overscroll-behavior: contain;
         scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
-    html.hn-side #home-welcome.side-folded > .site-changelog.cl-open { padding-bottom: 0.1rem; }
-    html.hn-side #home-welcome.side-folded > .site-changelog.cl-open .changelog-scroll { overflow: visible; -webkit-mask-image: none; mask-image: none; }
-    html.hn-side #home-welcome.side-folded > .site-changelog.cl-open > .hn-more { display: none; }
 }
 
 /* phones: photograph, then the welcome full width, then what's new folded, then the guestbook line */
@@ -306,4 +303,28 @@ html.hn-side .site-changelog.cl-collapsible:not(.cl-open) > .hn-more { display: 
     html.hn-side .mobile-welcome .changelog-date, html.hn-side .mobile-welcome .changelog-tag { font-size: 0.66rem; }
     /* what's new and the guestbook line have left the pane, so on the landing view it is empty and stays shut */
     html.hn-side body:not(.mode-section) .net-panel { display: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════════════════
+   The wordmark row (html.hn-row, set by index.html; inert on pages without the class)
+   No bar on the desktop: the console and theme buttons sit at the right end of the wordmark row, centred
+   on its capitals, and the plates start level with the reading pane (home-layout.js measures both). On
+   phones the bar stays for the theme button and the menu, without the small name the wordmark repeats.
+   ═══════════════════════════════════════════════════════════════════════════════════════════ */
+.hn-controls { display: none; }
+html.hn-row body > header .id { display: none; }
+html.hn-row body > header .header-actions { margin-left: auto; }
+
+@media (min-width: 881px) {
+    html.hn-row body > header { display: none; }
+    html.hn-row main { grid-template-rows: var(--hn-head-h, 6.5rem) minmax(0, 1fr); }
+    html.hn-row main > .hero { grid-row: 1 / -1; padding-top: clamp(0.9rem, 2.6vh, 1.9rem); }
+    html.hn-row main > .tiles { grid-row: 2; border-top: 1px solid var(--line); }
+    html.hn-row main > .hn-controls { display: flex; grid-column: 2; grid-row: 1; align-self: start; align-items: center;
+        justify-content: flex-end; gap: 0.5rem; z-index: 5; height: var(--hn-cap-h, 4rem); margin-top: var(--hn-cap-top, 1rem);
+        padding: 0 var(--gutter) 0 0; }
+    html.hn-row body.console-modal .hn-controls .console-launch { position: relative; inset: auto; top: auto; right: auto; margin: 0;
+        height: 1.6rem; padding: 0 0.62rem; }
+    html.hn-row .hn-controls .tog { height: 1.6rem; padding: 0 0.62rem; display: inline-flex; align-items: center; }
+    html.hn-row body.console-open .console-launch { opacity: 0; pointer-events: none; }
 }
