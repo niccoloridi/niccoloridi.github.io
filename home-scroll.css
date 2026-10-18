@@ -55,3 +55,12 @@ html:not(.hn-scrolled) .hn-progress { display: none; }
 
 @keyframes hn-bar-in { from { opacity: 0; transform: translateY(-100%); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { html.hn-flow.hn-scrolled body > header { animation: none; } }
+
+/* very wide windows (a large monitor): the page keeps --hn-max and stands in the middle, the plates beside
+   the text as always; the bar and the footer line up with it. Narrower windows are filled as before. */
+html.hn-scroll { --hn-max: 1800px; --hn-side-pad: max(var(--gutter), calc((100vw - var(--hn-max)) / 2 + var(--gutter))); }
+@media (min-width: 1801px) {
+    html.hn-scroll main { width: var(--hn-max); margin-left: auto; margin-right: auto; }
+    html.hn-scroll body > header, html.hn-scroll footer { padding-left: var(--hn-side-pad); padding-right: var(--hn-side-pad); }
+    html.hn-flow.hn-scrolled main > .tiles { right: calc((100vw - var(--hn-max)) / 2); }
+}
