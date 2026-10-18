@@ -22,7 +22,10 @@
     html.hn-flow #stage { display: none; }
     html.hn-flow .hn-secs { display: flex; flex-direction: column; gap: var(--hn-sec-gap); padding-top: var(--hn-sec-gap);
         padding-bottom: calc(var(--hn-sec-gap) + var(--hn-foot-h, 36px)); }
+    /* each frame is at least a screen tall: a short section (Practice) holds the plates for a while, and
+       when it is brought to the top the next frame starts below the window, never across the reading line */
     .hn-sec { position: relative; border: 1px solid var(--line); background: var(--bg);
+        min-height: calc(100vh - var(--hn-bar-h, 48px) - var(--hn-foot-h, 36px) - 2 * var(--hn-sec-gap));
         padding: clamp(1rem, 2.4vw, 1.8rem); scroll-margin-top: calc(var(--hn-bar-h, 40px) + var(--hn-sec-gap)); }
     .hn-sec .stage { position: static; inset: auto; display: block; opacity: 1; visibility: visible; transform: none; padding: 0; z-index: auto; }
     .hn-sec .stage-text { overflow: visible; padding-right: 0; }

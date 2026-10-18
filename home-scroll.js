@@ -49,7 +49,7 @@
     if (shell.initResearchFilters) shell.initResearchFilters(secs.querySelector('#sec-research'));
     const secEls = Array.from(secs.children);
 
-    let on = false, scrolled = false, cur = null, driving = false, locked = false;
+    let on = false, scrolled = false, cur = null, driving = false, locked = false, clickedAt = -1e9;
 
     /* ─── the cover keeps the size it has on the one-screen page ─── */
     function measure() {
@@ -147,9 +147,13 @@
     }
     document.querySelectorAll('.tiles .tile').forEach(a => a.addEventListener('click', e => {
         if (!on || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        /* a click rearranges the plates, so a second click soon after (a double click, an impatient one)
+           would land on whichever plate has just moved under the pointer: it is let go */
+        if (performance.now() - clickedAt < 700) { e.preventDefault(); e.stopImmediatePropagation(); return; }
         const s = a.dataset.section;
         if (s === cur && document.body.classList.contains('mode-section')) return;   // the open plate's own click shows its photograph
         e.preventDefault(); e.stopImmediatePropagation();
+        clickedAt = performance.now();
         goTo(s);
     }, true));
     document.addEventListener('click', e => {
