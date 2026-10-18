@@ -4,7 +4,7 @@
    a line a third of the way down the window is shown open, with the same switch as a click, and its name
    follows the small name in the bar. Clicking a plate scrolls to its section; the wordmark and the small
    name scroll back to the cover. Anything else that opens a section (keys 1 to 4, the console, the back
-   button) scrolls to it as well. */
+   button) scrolls to it as well. Phones get the same sections after the four plates (see the end). */
 (function () {
     'use strict';
     const html = document.documentElement;
@@ -20,6 +20,7 @@
     const headerActions = header && header.querySelector('.header-actions');
     const id = header && header.querySelector('.id');
     const footer = document.querySelector('body > footer');
+    const main = document.querySelector('main');
     if (!hero || !cols || !tilesNav || !header || !headerActions || !id || !footer) return;
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
@@ -182,11 +183,86 @@
         // a page opened on a section (#research) starts there, without a scroll down from the cover
         if (s) { cur = undefined; goTo(s, true); } else { window.scrollTo(0, 0); update(); }
     }
-    window.addEventListener('intro:done', () => setTimeout(start, 60), { once: true });
+    /* ─── phones: the same sections after the four plates, each headed by its own plate, which stays under
+       the bar while its section is read; the bar stays at the top, and the small name and the section come
+       into it once the wordmark has gone ─── */
+    let mon = false, mcur = null;
+    const plateH = () => parseFloat(getComputedStyle(html).getPropertyValue('--hn-mplate-h')) || 96;
+    function barH() { return header.getBoundingClientRect().height; }
+    function mUpdate() {
+        if (!mon) return;
+        const wm = document.querySelector('.wordmark');
+        const past = !!wm && wm.getBoundingClientRect().bottom < barH();
+        html.classList.toggle('hn-mscrolled', past);
+        const line = barH() + plateH() + 8;
+        let s = null;
+        secEls.forEach(el => { if (el.getBoundingClientRect().top <= line) s = el.dataset.section; });
+        if (s && window.scrollY >= document.documentElement.scrollHeight - innerHeight - 2) s = secEls[secEls.length - 1].dataset.section;
+        if (s === mcur) return;
+        mcur = s;
+        crumb.innerHTML = s ? ' / <b>' + s + '</b>' : '';
+        try { history.replaceState(history.state, '', location.pathname + location.search + (s ? '#' + s : '')); } catch (e) { /* ignore */ }
+    }
+    function mGo(s, instant) {
+        const el = secs.querySelector('#sec-' + s);
+        if (!el) return;
+        const top = Math.max(0, Math.round(window.scrollY + el.getBoundingClientRect().top - barH()));
+        window.scrollTo({ top, behavior: instant || matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+    }
+    function startMobile() {
+        if (mon || desktop.matches) return;
+        mon = true;
+        html.classList.add('hn-mflow');
+        html.style.setProperty('--hn-mbar-h', barH() + 'px');
+        main.insertBefore(secs, tilesNav.nextSibling);
+        secEls.forEach(el => {
+            const v = shell.VIEW[el.dataset.section];
+            if (!v || el.querySelector('.hn-mplate')) return;
+            const p = document.createElement('div');
+            p.className = 'hn-mplate';
+            p.setAttribute('aria-hidden', 'true');
+            p.innerHTML = '<canvas data-plate="' + v.plate + '"></canvas><span class="hn-mplate-label"><b>' + v.n + '</b> ' + el.dataset.section + '</span>';
+            el.insertBefore(p, el.firstChild);
+        });
+        // a page opened on a section (#research) shows it in place: here it scrolls there instead
+        const open = document.body.classList.contains('mode-section');
+        const active = document.querySelector('.tiles .tile.active');
+        if (open) quietlyClose();
+        if (open && active) requestAnimationFrame(() => mGo(active.dataset.section, true));
+        mUpdate();
+    }
+    function quietlyClose() {
+        const push = history.pushState;
+        history.pushState = function (st, t, u) { history.replaceState(st, t, u); };
+        try { shell.closeSection(); } finally { history.pushState = push; }
+    }
+    window.addEventListener('scroll', () => { if (mon) requestAnimationFrame(mUpdate); }, { passive: true });
+    // the plates and the menu's section links scroll to their section
+    document.addEventListener('click', e => {
+        if (!mon || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        const a = e.target.closest && e.target.closest('.tiles .tile, #site-nav a');
+        if (!a) return;
+        const s = a.dataset.section || (a.getAttribute('href') || '').replace('.html', '');
+        if (!secs.querySelector('#sec-' + s)) return;
+        e.preventDefault(); e.stopImmediatePropagation();
+        document.body.classList.remove('nav-open');
+        const mt = document.getElementById('menu-toggle');
+        if (mt) { mt.setAttribute('aria-expanded', 'false'); mt.setAttribute('aria-label', 'Open menu'); }
+        mGo(s);
+    }, true);
+    // the console and the back button open a section in place: here they scroll to it
+    new MutationObserver(() => {
+        if (!mon || !document.body.classList.contains('mode-section')) return;
+        const active = document.querySelector('.tiles .tile.active');
+        quietlyClose();
+        if (active) requestAnimationFrame(() => mGo(active.dataset.section));
+    }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+    window.addEventListener('intro:done', () => setTimeout(() => { start(); startMobile(); }, 60), { once: true });
     window.addEventListener('load', () => setTimeout(() => {
         const intro = document.getElementById('intro');
-        if (!intro || getComputedStyle(intro).display === 'none') start();
+        if (!intro || getComputedStyle(intro).display === 'none') { start(); startMobile(); }
     }, 200), { once: true });
-    window.addEventListener('resize', () => { if (on) { measure(); update(); } });
+    window.addEventListener('resize', () => { if (on) { measure(); update(); } if (mon) mUpdate(); });
     desktop.addEventListener('change', () => location.reload());
 })();

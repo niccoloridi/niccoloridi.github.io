@@ -65,3 +65,30 @@ html.hn-scroll { --hn-max: 1800px; --hn-side-pad: max(var(--gutter), calc((100vw
     html.hn-scroll body > header, html.hn-scroll footer { padding-left: var(--hn-side-pad); padding-right: var(--hn-side-pad); }
     html.hn-flow.hn-scrolled main > .tiles { right: calc((100vw - var(--hn-max)) / 2); }
 }
+
+/* ─── phones (html.hn-mflow): the bar stays at the top; the sections follow the four plates, each at least a
+   screen tall and headed by a flat plate that stays under the bar while its section is read ─── */
+@media (max-width: 880px) {
+    html.hn-mflow { --hn-mplate-h: clamp(84px, 12svh, 112px); --hn-mbar-h: 55px; }
+    html.hn-mflow body > header { position: sticky; top: 0; z-index: 50; background: var(--bg); }
+    html.hn-mflow.hn-mscrolled body > header .id { display: inline; }
+    html.hn-mflow .hn-secs { display: block; }
+    html.hn-mflow .hn-sec { position: relative; border-top: 1px solid var(--line); padding: 0 var(--gutter) 2.4rem;
+        min-height: calc(100svh - var(--hn-mbar-h)); }
+    html.hn-mflow .hn-sec .stage { position: static; inset: auto; display: block; opacity: 1; visibility: visible; transform: none;
+        padding: 0; z-index: auto; background: none; border: 0; box-shadow: none; min-height: 0; }
+    html.hn-mflow .hn-sec .stage-text { overflow: visible; padding-right: 0; }
+    html.hn-mflow .hn-sec .stage-num { display: none; }
+    html.hn-mflow .hn-sec .stage-title { margin-top: 0.2rem; }
+    html.hn-mflow .hn-sec .stage .filters { top: calc(var(--hn-mbar-h) + var(--hn-mplate-h)); z-index: 4; }
+    html.hn-mflow .hn-sec .hn-more { display: none; }
+    .hn-mplate { position: sticky; top: var(--hn-mbar-h); z-index: 6; height: var(--hn-mplate-h); overflow: hidden;
+        margin: 0 calc(-1 * var(--gutter)) 1.1rem; background: var(--bg); border-bottom: 1px solid var(--line); }
+    .hn-mplate canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    .hn-mplate-label { position: absolute; left: var(--gutter); bottom: 0.45rem; padding: 0.12rem 0.45rem; border-radius: 2px;
+        background: color-mix(in srgb, var(--bg) 82%, transparent); font-family: var(--mono); font-size: 0.66rem;
+        letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg); }
+    .hn-mplate-label b { color: var(--gold); font-weight: 500; margin-right: 0.3rem; }
+}
+.hn-mplate { display: none; }
+@media (max-width: 880px) { html.hn-mflow .hn-mplate { display: block; } }
