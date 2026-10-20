@@ -49,6 +49,24 @@
     if (shell.initResearchFilters) shell.initResearchFilters(secs.querySelector('#sec-research'));
     const secEls = Array.from(secs.children);
 
+    /* ─── carets: one at the foot of the cover, and one at the foot of every section but the last, each in
+       room of its own so it never sits on text; a click goes on to the next section by way of its plate ─── */
+    const CARET = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 9l7 7 7-7"/></svg>';
+    function caret(cls, next) {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'hn-caret ' + cls;
+        b.setAttribute('aria-label', 'Scroll on to ' + next);
+        b.innerHTML = CARET;
+        b.addEventListener('click', () => {
+            const tile = document.querySelector('.tiles .tile[data-section="' + next + '"]');
+            if (tile) tile.click();
+        });
+        return b;
+    }
+    cols.appendChild(caret('hn-caret-cover', ORDER[0]));
+    secEls.slice(0, -1).forEach((el, i) => el.appendChild(caret('hn-caret-next', ORDER[i + 1])));
+
     let on = false, scrolled = false, cur = null, driving = false, locked = false, clickedAt = -1e9;
 
     /* ─── the cover keeps the size it has on the one-screen page ─── */

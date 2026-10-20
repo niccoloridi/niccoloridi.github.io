@@ -53,6 +53,31 @@
     .hn-progress { position: absolute; left: 0; bottom: -1px; height: 1px; width: 100%; background: var(--gold);
         transform-origin: 0 0; transform: scaleX(var(--hn-progress, 0)); pointer-events: none; }
 }
+/* carets that say the page goes on: at the foot of the cover (desktop) and of every section but the last,
+   in room of their own; a faint gold glow, a slow bob */
+.hn-caret { display: none; position: absolute; z-index: 4; left: 50%; bottom: 0.7rem; width: 2.2rem; height: 2.2rem; padding: 0.35rem;
+    transform: translateX(-50%); border: 0; background: none; color: var(--gold); cursor: pointer;
+    filter: drop-shadow(0 0 5px color-mix(in srgb, var(--gold) 60%, transparent)) drop-shadow(0 0 12px color-mix(in srgb, var(--gold) 25%, transparent));
+    transition: opacity 0.35s ease; }
+.light-mode .hn-caret { filter: drop-shadow(0 0 4px color-mix(in srgb, var(--gold) 45%, transparent)); }
+.hn-caret svg { display: block; width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round;
+    stroke-linejoin: round; animation: hn-caret-bob 1.9s ease-in-out infinite; }
+.hn-caret:hover svg, .hn-caret:focus-visible svg { animation-play-state: paused; }
+.hn-caret:focus-visible { outline: 1px solid var(--gold); outline-offset: 2px; border-radius: 3px; }
+@keyframes hn-caret-bob { 0%, 100% { transform: translateY(0); opacity: 0.72; } 50% { transform: translateY(4px); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .hn-caret svg { animation: none; } }
+@media (min-width: 881px) {
+    html.hn-flow main > .hero > .hero-cols { position: relative; }
+    html.hn-flow .hn-caret-cover { display: block; }
+    html.hn-flow.hn-scrolled .hn-caret-cover { opacity: 0; pointer-events: none; }
+    html.hn-flow .hn-caret-next { display: block; }
+    html.hn-flow .hn-sec:has(> .hn-caret-next) { padding-bottom: calc(clamp(1rem, 2.4vw, 1.8rem) + 2.6rem); }
+}
+@media (max-width: 880px) {
+    html.hn-mflow .hn-caret-next { display: block; bottom: 0.5rem; }
+    html.hn-mflow .hn-sec:has(> .hn-caret-next) { padding-bottom: 3.4rem; }
+}
+
 /* the written-out sections exist only for the scrolling page (they are built on every width) */
 .hn-secs { display: none; }
 html:not(.hn-scrolled) .hn-progress { display: none; }
