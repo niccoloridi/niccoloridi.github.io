@@ -33,3 +33,5 @@
 
 User-agent: *
 Allow: /
+
+Sitemap: https://niccoloridi.com/sitemap.xml
