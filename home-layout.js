@@ -424,13 +424,15 @@
             toggle.className = 'changelog-toggle';
             toggle.setAttribute('aria-controls', scroller.id);
             toggle.setAttribute('aria-expanded', 'false');
-            while (head.firstChild) toggle.appendChild(head.firstChild);
+            // the feed's icon stays beside the row: a link cannot sit inside the button
+            const feed = head.querySelector(':scope > .changelog-feed');
+            Array.from(head.childNodes).filter(n => n !== feed).forEach(n => toggle.appendChild(n));
             const chev = document.createElement('span');
             chev.className = 'cl-chevron';
             chev.setAttribute('aria-hidden', 'true');
             chev.textContent = '⌄';
             toggle.appendChild(chev);
-            head.appendChild(toggle);
+            head.insertBefore(toggle, feed);
             toggle.addEventListener('click', () => setOpen(!log.classList.contains('cl-open')));
             log.classList.remove('cl-open');
         } else if (toggle) {
