@@ -917,46 +917,6 @@
   "citizenship": [],
   "gender": null
  },
- "John McDonnell": {
-  "how": "alias",
-  "title": "John Macdonell (jurist)",
-  "found": true,
-  "page": "John Macdonell (judge)",
-  "url": "https://en.wikipedia.org/wiki/John_Macdonell_(judge)",
-  "desc": "British jurist (1846–1921)",
-  "extract": "Sir John Macdonell was a British jurist. He was King's Remembrancer (1912–1920) and invested as a Knight Commander of the Order of the Bath. Shaw of Dunfermline gives a prefatory biography in Historical Trials.",
-  "qid": "Q15047427",
-  "image_file": "Sir_John_Macdonell.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/Sir_John_Macdonell.jpg/330px-Sir_John_Macdonell.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
-  "verified": true,
-  "born": 1846,
-  "died": 1921,
-  "gender_q": "Q6581097",
-  "birthplace_q": "Q45848",
-  "citizen_q": [
-   "Q174193"
-  ],
-  "birthplace": {
-   "name": "Brechin",
-   "coords": [
-    56.73,
-    -2.655
-   ],
-   "country": "United Kingdom"
-  },
-  "citizenship": [
-   "United Kingdom of Great Britain and Ireland"
-  ],
-  "gender": "male",
-  "portrait": {
-   "file": "Sir_John_Macdonell.jpg",
-   "page": "https://commons.wikimedia.org/wiki/File:Sir_John_Macdonell.jpg",
-   "thumb_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/Sir_John_Macdonell.jpg/500px-Sir_John_Macdonell.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "artist": "Unknown authorUnknown author",
-   "license": "Public domain",
-   "local": "portraits/john-mcdonnell.jpg"
-  }
- },
  "W. A. Steiner": {
   "title": null,
   "how": "none",
@@ -1318,7 +1278,7 @@
   ],
   "gender": "male"
  },
- "D. P. OConnell": {
+ "D. P. O'Connell": {
   "how": "alias",
   "title": "Daniel Patrick O'Connell",
   "found": true,
@@ -1413,13 +1373,6 @@
    "license": "Public domain",
    "local": "portraits/sir-henry-maine.jpg"
   }
- },
- "C. Hopkins": {
-  "title": null,
-  "how": "none",
-  "found": false,
-  "citizenship": [],
-  "gender": null
  },
  "Hisashi Owada": {
   "how": "direct",
@@ -2257,40 +2210,6 @@
    "license": "Public domain",
    "local": "portraits/sir-augustus-phillimore.jpg"
   }
- },
- "Sir Clarence Wilfred Jenks": {
-  "how": "alias",
-  "title": "C. Wilfred Jenks",
-  "found": true,
-  "page": "C. Wilfred Jenks",
-  "url": "https://en.wikipedia.org/wiki/C._Wilfred_Jenks",
-  "desc": null,
-  "extract": "C. Wilfred Jenks was an international lawyer and director-general of the International Labour Organization (1970–1973).",
-  "qid": "Q3568179",
-  "image_file": null,
-  "thumb": null,
-  "verified": true,
-  "born": 1909,
-  "died": 1973,
-  "gender_q": "Q6581097",
-  "birthplace_q": "Q24826",
-  "citizen_q": [
-   "Q145",
-   "Q174193"
-  ],
-  "birthplace": {
-   "name": "Liverpool",
-   "coords": [
-    53.407,
-    -2.992
-   ],
-   "country": "United Kingdom"
-  },
-  "citizenship": [
-   "United Kingdom",
-   "United Kingdom of Great Britain and Ireland"
-  ],
-  "gender": "male"
  },
  "Andres Aguillar": {
   "how": "alias",
@@ -4244,13 +4163,6 @@
    "Q145"
   ]
  },
- "Gerald Draper": {
-  "title": null,
-  "how": "none",
-  "found": false,
-  "citizenship": [],
-  "gender": null
- },
  "Eileen Denza": {
   "title": null,
   "how": "none",
@@ -4522,13 +4434,6 @@
   }
  },
  "Cyrill M. Picciotto": {
-  "title": null,
-  "how": "none",
-  "found": false,
-  "citizenship": [],
-  "gender": null
- },
- "Ben Wortley": {
   "title": null,
   "how": "none",
   "found": false,

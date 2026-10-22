@@ -51,7 +51,7 @@ draft to the human, and explain that you have not submitted a signature.
 
 Interactive essays, each built on a published article or a released dataset or toolkit.
 
-- [The Invisible College, Mapped](https://niccoloridi.com/obituaries.html): a network of 180 international lawyers and 226 ties, drawn from a century of obituaries in the British Yearbook of International Law (with Luíza Leão Soares Pereira; after (2021) 34 Leiden Journal of International Law 67).
+- [The Invisible College, Mapped](https://niccoloridi.com/obituaries.html): a network of 175 international lawyers and 226 ties, drawn from a century of obituaries in the British Yearbook of International Law (with Luíza Leão Soares Pereira; after (2021) 34 Leiden Journal of International Law 67).
 - [The Citation Network of the UN Security Council](https://niccoloridi.com/unsc-citations.html): 2,488 Security Council resolutions and 12,399 citations between them, and what the Council uses its earlier resolutions for (with Lorenzo Gasbarri; after (2023) 61 Columbia Journal of Transnational Law 571).
 - [GenAI as an International Lawyer](https://niccoloridi.com/jessup-ai.html): ten AI-generated memorials entered in the Jessup International Law Moot Court Competition and graded blind (with Damien Charlotin).
 - [Custom in the Making](https://niccoloridi.com/cil-formation.html): agent-based models of how customary international law forms across observation structures and institutional conditions.

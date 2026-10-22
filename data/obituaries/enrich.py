@@ -56,7 +56,7 @@ ALIASES = {
  'Lord Bryce': 'James Bryce, 1st Viscount Bryce', 'Lord Wilberforce': 'Richard Wilberforce, Baron Wilberforce',
  'Lord Denning': 'Tom Denning, Baron Denning', 'Sir Samuel Evans': 'Samuel Evans (British politician)',
  'Sir John Paget Mellor': 'Sir John Mellor, 1st Baronet', 'J. W. Mellor': 'John William Mellor',
- 'Mr. Justice Bray': None, 'D. P. OConnell': 'Daniel Patrick O\'Connell',
+ 'Mr. Justice Bray': None, "D. P. O'Connell": 'Daniel Patrick O\'Connell',
  'Andres Aguillar': 'Andrés Aguilar Mawdsley', 'Julio Sanguinetti': 'Julio María Sanguinetti',
  'Sir Henry Maine': 'Henry James Sumner Maine', 'J. B. Scott': 'James Brown Scott',
  'Sir John Salmond': 'John Salmond (judge)', 'Sir William Harrison Moore': 'William Harrison Moore',
