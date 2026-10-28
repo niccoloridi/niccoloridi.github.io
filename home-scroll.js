@@ -216,10 +216,13 @@
         const wm = document.querySelector('.wordmark');
         const past = !!wm && wm.getBoundingClientRect().bottom < barH();
         html.classList.toggle('hn-mscrolled', past);
-        const line = barH() + plateH() + 8;
+        const line = plateH() + 8;
         let s = null;
         secEls.forEach(el => { if (el.getBoundingClientRect().top <= line) s = el.dataset.section; });
         if (s && window.scrollY >= document.documentElement.scrollHeight - innerHeight - 2) s = secEls[secEls.length - 1].dataset.section;
+        // the bar turns to a fade once a section's plate has slid up under it
+        const under = secEls.some(el => { const r = el.getBoundingClientRect(); return r.top <= 1 && r.bottom > plateH(); });
+        html.classList.toggle('hn-mover', under);
         if (s === mcur) return;
         mcur = s;
         crumb.innerHTML = s ? ' / <b>' + s + '</b>' : '';
@@ -228,7 +231,7 @@
     function mGo(s, instant) {
         const el = secs.querySelector('#sec-' + s);
         if (!el) return;
-        const top = Math.max(0, Math.round(window.scrollY + el.getBoundingClientRect().top - barH()));
+        const top = Math.max(0, Math.round(window.scrollY + el.getBoundingClientRect().top));
         window.scrollTo({ top, behavior: instant || matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
     }
     function startMobile() {
@@ -236,6 +239,26 @@
         mon = true;
         html.classList.add('hn-mflow');
         html.style.setProperty('--hn-mbar-h', barH() + 'px');
+        // the console: a small button beside the theme button, which opens the folded terminal
+        const ctog = document.getElementById('console-toggle');
+        if (ctog && !headerActions.querySelector('.hn-mconsole')) {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'hn-mconsole';
+            b.setAttribute('aria-label', 'Open the console');
+            b.innerHTML = '<span aria-hidden="true">&gt;_</span>';
+            b.addEventListener('click', () => ctog.click());
+            const tog = headerActions.querySelector('.tog');
+            headerActions.insertBefore(b, tog || headerActions.firstChild);
+            const sync = () => {
+                const open = !document.body.classList.contains('mcollapsed');
+                b.classList.toggle('on', open);
+                b.setAttribute('aria-expanded', String(open));
+                b.setAttribute('aria-label', open ? 'Close the console' : 'Open the console');
+            };
+            new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+            sync();
+        }
         main.insertBefore(secs, tilesNav.nextSibling);
         secEls.forEach(el => {
             const v = shell.VIEW[el.dataset.section];

@@ -539,9 +539,11 @@
     <!-- prototype, inert without its query string: ?pane=1…5 -->
     <link rel="stylesheet" href="home-pane-variants.css?v=20260918-7">
     <link rel="stylesheet" href="home-layout.css?v=20261018-1">
-    <link rel="stylesheet" href="home-scroll.css?v=20261020-1">
+    <link rel="stylesheet" href="home-scroll.css?v=20261028-2">
 </head>
 <body class="ts-mono terminal-folded">
+    <!-- phones: the terminal starts folded, from the first paint; the console button opens it -->
+    <script>if (matchMedia('(max-width: 880px)').matches) document.body.classList.add('mcollapsed');</script>
     <div id="intro" aria-hidden="true">
         <div class="intro-plate"><div class="intro-plate-in"><canvas data-plate="dither" data-hue="222" data-hue-span="62" data-soft="true" aria-hidden="true"></canvas></div></div>
         <h1 class="intro-name"><span class="l1">Niccolò</span> <span class="l2">Ridi</span></h1>
@@ -1368,7 +1370,7 @@
     <script src="font-lab.js?v=20260926-1"></script>
     <script src="home-pane-variants.js?v=20260918-7"></script>
     <script src="home-layout.js?v=20261021-1"></script>
-    <script src="home-scroll.js?v=20261020-1"></script>
+    <script src="home-scroll.js?v=20261028-1"></script>
     <script type="module">
         // ─── Intro: the Data plate fills the screen, shrinks into the tiles' space, breaks into a mosaic of the four plates and splits into the tiles ───
         const introEl = document.getElementById('intro');
