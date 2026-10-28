@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Niccolò Ridi ~ homepage</title>
+<meta name="description" content="Niccolò Ridi, public international law and computational methods. The lightweight edition of niccoloridi.com.">
+<meta name="robots" content="noindex">
+<link rel="alternate" type="application/atom+xml" href="/feed.xml" title="What's new">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen&display=swap">
+<style>
+:root {
+    --face: #c0c0c0; --hi: #fff; --lo: #808080; --dk: #0a0a0a; --paper: #fff; --ink: #000;
+    --pink: #ff4fb0; --cyan: #3ee8ff; --violet: #7b2cff; --night: #1b0f3a;
+    --title: linear-gradient(90deg, #6a1fb0, #c13fbf 55%, #ff6ab8);
+    --title-off: linear-gradient(90deg, #7b7b7b, #b4b4b4);
+    --out: inset -1px -1px var(--dk), inset 1px 1px var(--hi), inset -2px -2px var(--lo), inset 2px 2px #dfdfdf;
+    --in: inset -1px -1px var(--hi), inset 1px 1px var(--lo), inset -2px -2px #dfdfdf, inset 2px 2px var(--dk);
+    --thin: inset -1px -1px var(--hi), inset 1px 1px var(--lo);
+    --px: "Silkscreen", "Courier New", monospace;
+    --ui: Tahoma, Verdana, Geneva, sans-serif;
+    color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { background: var(--night) url("%%TILE%%"); scroll-padding-top: 12px; }
+body { margin: 0; padding-bottom: 44px; font: 13px/1.55 Verdana, Geneva, Tahoma, sans-serif; color: var(--ink); background: transparent; }
+a { color: #0000ee; }
+a:visited { color: #551a8b; }
+a:hover { color: #fff; background: var(--violet); text-decoration: none; }
+:focus-visible { outline: 1px dotted #000; outline-offset: 1px; }
+::selection { background: #000080; color: #fff; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.skip { position: absolute; left: 8px; top: -40px; z-index: 99; background: #ffff9e; padding: 4px 8px; }
+.skip:focus { top: 8px; }
+
+/* ─── page frame ─── */
+.wrap { max-width: 1120px; margin: 0 auto; padding: 14px 16px 18px; }
+.banner { text-align: center; padding: 16px 0 12px; color: #fff; }
+.banner h1 { margin: 0; font: 400 clamp(30px, 6.4vw, 60px)/1.05 var(--px); letter-spacing: 1px;
+    text-shadow: 3px 3px 0 var(--pink), 6px 6px 0 var(--violet); }
+.banner p { margin: 10px 0 0; font: 400 12px/1.4 var(--px); color: var(--cyan); letter-spacing: 1px; }
+.banner .sp { color: var(--pink); }
+.cols { display: grid; grid-template-columns: 206px minmax(0, 1fr) 232px; gap: 14px; align-items: start; }
+.cols > * { min-width: 0; }
+
+/* ─── windows ─── */
+.win { background: var(--face); box-shadow: var(--out); padding: 3px; margin: 0 0 14px; }
+.tb { display: flex; align-items: center; gap: 2px; height: 20px; padding: 0 2px 0 3px; background: var(--title-off); color: #fff;
+    font: 700 11px/1 var(--ui); user-select: none; }
+.win.active > .tb { background: var(--title); }
+.tb h2 { flex: 1; margin: 0 0 0 3px; font: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ico { width: 14px; height: 14px; flex: 0 0 14px; background: conic-gradient(var(--pink) 0 25%, var(--cyan) 0 50%, #ffe14d 0 75%, var(--violet) 0); }
+.tb button { width: 16px; height: 14px; padding: 0; border: 0; background: var(--face); box-shadow: var(--out); color: #000;
+    font: 700 10px/1 var(--ui); cursor: pointer; display: grid; place-items: center; }
+.tb button[data-act="close"] { margin-left: 2px; }
+.tb button:active { box-shadow: var(--in); }
+.bd { padding: 6px; }
+.sb { display: flex; gap: 2px; padding: 2px 0 0; font: 11px/1 var(--ui); }
+.sb span { flex: 1; padding: 3px 6px; box-shadow: var(--thin); }
+.sb span + span { flex: 0 0 auto; }
+.win.min > .bd, .win.min > .sb { display: none; }
+.win.closed { display: none; }
+.win.max { position: fixed; inset: 0 0 34px 0; z-index: 60; margin: 0; display: flex; flex-direction: column; }
+.win.max > .bd { flex: 1; overflow: auto; }
+.win.max .doc { max-width: 860px; }
+.doc { background: var(--paper); box-shadow: var(--in); padding: 12px 14px; overflow: hidden; }
+.doc p { margin: 0 0 0.9em; }
+.doc p:last-child { margin-bottom: 0; }
+.doc h3 { margin: 1.1em 0 0.4em; font: 400 11px/1.3 var(--px); letter-spacing: 1px; color: var(--violet); text-transform: uppercase; }
+.doc ul { margin: 0; padding-left: 1.2em; }
+.doc li { margin: 0.2em 0; }
+.doc li::marker { content: '» '; color: var(--pink); }
+.welcome-copy strong { color: #b0006e; }
+.guestbook-invite { font-size: 12px; color: #444; }
+.uc { display: inline-block; margin-left: 4px; padding: 0 6px; font: 400 9px/16px var(--px); color: #000; vertical-align: 1px;
+    background: repeating-linear-gradient(-45deg, #ffd400 0 6px, #000 6px 12px); }
+.uc { text-shadow: 0 0 2px #ffd400, 0 0 2px #ffd400, 0 0 3px #ffd400; }
+
+/* pictures: dithered first, colour on request */
+.pic { margin: 0 0 8px; padding: 3px; background: var(--face); box-shadow: var(--out); width: 246px; max-width: 100%; }
+.pic.right { float: right; margin: 0 0 8px 14px; }
+.pic img { display: block; width: 100%; height: auto; image-rendering: pixelated; box-shadow: var(--thin); }
+.pic.colour img { image-rendering: auto; }
+.pic figcaption { padding: 3px 0 0; text-align: right; }
+
+/* buttons */
+.btn, .tools select, .tabs button, .ring button { font: 11px/1 var(--ui); color: #000; background: var(--face); border: 0; box-shadow: var(--out);
+    padding: 5px 10px; min-height: 23px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; }
+.btn.sm { padding: 3px 8px; min-height: 21px; }
+.btn:active, .btn[aria-pressed="true"], .ring button:active { box-shadow: var(--in);
+    background: repeating-conic-gradient(#c0c0c0 0 25%, #e9e9e9 0 50%) 0 0 / 2px 2px; }
+a.btn, a.btn:visited { color: #000; }
+a.btn:hover { background: var(--face); color: #000; }
+
+/* research: tabs, toolbar, lists */
+.intro { margin-bottom: 8px; }
+.tabs { display: flex; gap: 0; padding-left: 4px; margin-top: 4px; position: relative; z-index: 1; }
+.tabs button { box-shadow: inset 1px 1px var(--hi), inset -1px 0 var(--dk), inset -2px 0 var(--lo); padding: 5px 12px 4px; margin-top: 2px; }
+.tabs button[aria-selected="true"] { margin-top: 0; padding-bottom: 7px; margin-bottom: -2px; font-weight: 700; position: relative; z-index: 2; }
+.tabpane { box-shadow: var(--out); padding: 8px; }
+.tools { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin-bottom: 8px; }
+.tools .yr { margin-left: auto; font: 11px/1 var(--ui); display: inline-flex; gap: 5px; align-items: center; }
+.tools select { box-shadow: var(--in); background: #fff; padding: 2px 4px; }
+.list { list-style: none; margin: 0; padding: 0; background: var(--paper); box-shadow: var(--in); max-height: 560px; overflow: auto; }
+.win.max .list { max-height: none; }
+.list li { position: relative; padding: 7px 10px 7px 96px; border-bottom: 1px dotted #b8b8b8; }
+.list li[hidden] { display: none; }
+.list li:nth-child(odd) { background: #f6f0ff; }
+.pub-kind, .talk-date { position: absolute; left: 10px; top: 9px; width: 80px; font: 400 9px/1.6 var(--px); color: var(--violet); text-transform: uppercase; }
+.pub-note { display: block; font-size: 11px; color: #555; }
+.pub-chip { display: inline-block; padding: 0 5px; font: 400 9px/15px var(--px); color: #000 !important; background: var(--face); box-shadow: var(--out);
+    text-decoration: none; margin-left: 3px; }
+.pub-chip:hover { background: var(--cyan); }
+
+/* sidebars */
+.nav { list-style: none; margin: 0; padding: 4px; background: var(--paper); box-shadow: var(--in); }
+.nav a { display: flex; align-items: center; gap: 6px; padding: 3px 4px; color: #000; text-decoration: none; }
+.nav a:hover, .nav a:focus-visible { background: #000080; color: #fff; }
+.fi { width: 16px; height: 12px; flex: 0 0 16px; background: linear-gradient(#ffe68a, #e2b33c); box-shadow: inset 0 0 0 1px #8a6a12;
+    clip-path: polygon(0 18%, 40% 18%, 50% 0, 100% 0, 100% 100%, 0 100%); }
+.b88s { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; padding: 4px 0; }
+.b88 { width: 88px; height: 31px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-decoration: none;
+    background: var(--a); color: var(--b) !important; border: 1px solid #000; box-shadow: inset 1px 1px rgba(255,255,255,0.55), inset -1px -1px rgba(0,0,0,0.45);
+    font: 400 10px/1 var(--px); letter-spacing: 0.5px; image-rendering: pixelated; }
+.b88 small { font-size: 7px; opacity: 0.85; margin-top: 2px; letter-spacing: 1px; text-transform: uppercase; }
+.b88:hover { outline: 2px solid var(--cyan); outline-offset: 1px; background: var(--a); color: var(--b); }
+.news { list-style: none; margin: 0; padding: 0; background: var(--paper); box-shadow: var(--in); max-height: 360px; overflow: auto; }
+.news li { padding: 7px 9px; border-bottom: 1px dotted #b8b8b8; font-size: 12px; line-height: 1.4; }
+.nd { display: block; font: 400 9px/1.5 var(--px); color: var(--violet); }
+.nn { display: block; color: #444; font-size: 11px; margin-top: 2px; }
+.feed { margin: 6px 0 0; text-align: right; }
+.ring { text-align: center; font-size: 11px; }
+.ring p { margin: 0 0 6px; padding: 6px; background: var(--paper); box-shadow: var(--in); min-height: 3.2em; display: grid; place-items: center; }
+.ring .row { display: flex; gap: 4px; justify-content: center; }
+.blinkies { display: grid; gap: 4px; justify-items: center; }
+.blinkie { width: 150px; height: 20px; display: grid; place-items: center; font: 400 9px/1 var(--px); letter-spacing: 0.5px; text-decoration: none;
+    border: 1px solid #000; color: #fff !important; background: var(--violet); animation: blink 1.2s steps(1) infinite; }
+.blinkie:nth-child(2) { animation-delay: -0.4s; --c2: var(--cyan); }
+.blinkie:nth-child(3) { animation-delay: -0.8s; }
+@keyframes blink { 50% { background: var(--pink); color: #000 !important; } }
+.about { font-size: 11px; line-height: 1.5; }
+.about p { margin: 0 0 6px; }
+
+/* ticker */
+.ticker { margin: 0 0 14px; }
+.tick { overflow: hidden; background: #000; box-shadow: var(--in); padding: 5px 0; font: 400 11px/1.3 var(--px); }
+.tick-track { display: inline-flex; white-space: nowrap; animation: tick 60s linear infinite; }
+.tick-track > span { display: inline-flex; gap: 40px; padding: 0 20px; }
+.tick a { color: #9ffcff; text-decoration: none; }
+.tick a:nth-child(even) { color: #ff9ad5; }
+.tick a:hover { background: none; color: #fff; text-decoration: underline; }
+.ticker:hover .tick-track, .ticker:focus-within .tick-track { animation-play-state: paused; }
+@keyframes tick { to { transform: translateX(-50%); } }
+
+/* taskbar and Start menu */
+.taskbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 70; height: 34px; display: flex; align-items: center; gap: 4px; padding: 3px 4px;
+    background: var(--face); box-shadow: inset 0 1px #dfdfdf, inset 0 2px #fff; }
+.start { font: 700 12px/1 var(--ui); gap: 5px; padding: 4px 8px; }
+.start .ico { width: 15px; height: 15px; }
+.start[aria-expanded="true"] { box-shadow: var(--in); }
+.tasks { flex: 1; display: flex; gap: 3px; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+.task { flex: 0 1 140px; min-width: 70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; justify-content: flex-start;
+    font: 11px/1 var(--ui); padding: 5px 8px; }
+.task.on { box-shadow: var(--in); background: repeating-conic-gradient(#c0c0c0 0 25%, #e9e9e9 0 50%) 0 0 / 2px 2px; font-weight: 700; }
+.task.gone { display: none; }
+.tray { padding: 5px 10px; box-shadow: var(--thin); font: 11px/1 var(--ui); white-space: nowrap; }
+.menu { position: fixed; left: 2px; bottom: 33px; z-index: 80; display: flex; background: var(--face); box-shadow: var(--out); padding: 3px;
+    min-width: 230px; max-height: calc(100vh - 44px); }
+.menu[hidden] { display: none; }
+.menu .side { width: 24px; background: linear-gradient(0deg, #6a1fb0, #ff6ab8); color: #fff; writing-mode: vertical-rl; transform: rotate(180deg);
+    font: 400 13px/24px var(--px); text-align: left; padding: 8px 0; letter-spacing: 1px; }
+.menu .side b { color: #ffe14d; font-weight: 400; }
+.menu ul { list-style: none; margin: 0; padding: 0; flex: 1; overflow: auto; }
+.menu a, .menu button { display: block; width: 100%; text-align: left; padding: 6px 12px 6px 10px; color: #000; text-decoration: none;
+    font: 12px/1.2 var(--ui); background: none; border: 0; cursor: pointer; }
+.menu a:hover, .menu button:hover, .menu a:focus-visible, .menu button:focus-visible { background: #000080; color: #fff; outline: 0; }
+.menu small { color: inherit; opacity: 0.75; }
+.menu .sep { height: 2px; margin: 3px 2px; box-shadow: inset 0 1px var(--lo), inset 0 -1px var(--hi); }
+
+/* MS-DOS Prompt: a floating window */
+#dos { position: fixed; z-index: 65; left: 50%; top: 10vh; width: min(640px, calc(100vw - 20px)); margin: 0; transform: translateX(-50%); }
+#dos.max { left: 0; top: 0; width: auto; transform: none; }
+#dos .bd { padding: 3px; }
+.dos { background: #000; color: #c0c0c0; font: 14px/1.35 "Courier New", monospace; padding: 8px; height: 260px; overflow: auto; box-shadow: var(--in); }
+.win.max .dos { height: 100%; }
+.dos pre { margin: 0; white-space: pre-wrap; font: inherit; }
+.dos form { display: flex; }
+.dos input { flex: 1; background: transparent; border: 0; color: #fff; font: inherit; padding: 0; outline: 0; caret-color: #fff; }
+.dos a { color: #9ffcff; }
+
+footer.small { color: #cfc4ff; font: 400 10px/1.8 var(--px); text-align: center; padding: 4px 0 8px; }
+footer.small a { color: #9ffcff; }
+
+@media (max-width: 980px) {
+    .cols { grid-template-columns: 190px minmax(0, 1fr); }
+    .right { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0 14px; }
+}
+@media (max-width: 700px) {
+    .wrap { padding: 10px 10px 14px; }
+    .cols { grid-template-columns: minmax(0, 1fr); }
+    .center { order: -1; }
+    .pic.right { float: none; margin: 0 auto 10px; }
+    .list li { padding-left: 10px; }
+    .pub-kind, .talk-date { position: static; display: block; width: auto; }
+    .list { max-height: 70vh; }
+    .tools .yr { margin-left: 0; }
+    .task { min-width: 0; flex-basis: 96px; }
+    .tray { padding: 5px 6px; }
+    .win.max { inset: 0 0 34px 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .tick-track { animation: none; }
+    .tick-track > span[aria-hidden] { display: none; }
+    .tick { overflow-x: auto; }
+    .blinkie { animation: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#welcome">skip to content</a>
+<div class="wrap">
+    <header class="banner">
+        <h1>Niccolò Ridi</h1>
+        <p><span class="sp">✦</span> public international law <span class="sp">✦</span> computational methods <span class="sp">✦</span></p>
+    </header>
+
+    <section class="win ticker" aria-label="What's new, scrolling">
+        <div class="tick"><div class="tick-track">%%TICKER%%</div></div>
+    </section>
+
+    <div class="cols">
+        <aside class="left">
+            <section class="win" id="dir" aria-labelledby="t-dir"><div class="tb"><span class="ico" aria-hidden="true"></span><h2 id="t-dir">C:\NICCOLO</h2></div>
+                <div class="bd"><nav aria-label="Sections"><ul class="nav">%%NAV%%</ul></nav></div>
+                <div class="sb"><span>6 object(s)</span></div></section>
+            <section class="win" aria-labelledby="t-links"><div class="tb"><span class="ico" aria-hidden="true"></span><h2 id="t-links">links.htm</h2></div>
+                <div class="bd"><div class="b88s">%%BADGES%%</div></div></section>
+            <section class="win" aria-labelledby="t-about"><div class="tb"><span class="ico" aria-hidden="true"></span><h2 id="t-about">about.txt</h2></div>
+                <div class="bd"><div class="doc about">
+                    <p>This is the lightweight edition: one page of %%SIZE%%, two dithered pictures, no canvases and no frameworks.</p>
+                    <p>Last updated: %%UPDATED%%</p>
+                    <p><a href="index.html">← the full site</a></p>
+                </div></div></section>
+        </aside>
+
+        <main class="center" id="main">%%MAIN%%</main>
+
+        <aside class="right">
+            %%NEWS%%
+            <section class="win" aria-labelledby="t-ring"><div class="tb"><span class="ico" aria-hidden="true"></span><h2 id="t-ring">essay ring</h2></div>
+                <div class="bd ring">
+                    <p id="ring-now" aria-live="polite">the data essay ring</p>
+                    <div class="row"><button type="button" data-ring="-1" aria-label="Previous essay">◄ prev</button><button type="button" data-ring="0">random</button><button type="button" data-ring="1" aria-label="Next essay">next ►</button></div>
+                    <p style="margin:6px 0 0;min-height:0;background:none;box-shadow:none;padding:0"><a class="btn sm" id="ring-go" href="obituaries.html">visit</a></p>
+                </div></section>
+            <section class="win" aria-labelledby="t-blink"><div class="tb"><span class="ico" aria-hidden="true"></span><h2 id="t-blink">blinkies.gif</h2></div>
+                <div class="bd blinkies">
+                    <a class="blinkie" href="guestbook/">sign my guestbook!</a>
+                    <a class="blinkie" href="#research" data-open="research">i ♥ intl law</a>
+                    <a class="blinkie" href="#data" data-open="data">data essays inside</a>
+                </div></section>
+        </aside>
+    </div>
+
+    <section class="win closed" id="dos" data-title="MS-DOS Prompt" aria-labelledby="t-dos">
+        <div class="tb"><span class="ico" aria-hidden="true"></span><h2 id="t-dos">MS-DOS Prompt</h2>
+            <button type="button" data-act="min" aria-label="Minimise MS-DOS Prompt">_</button><button type="button" data-act="max" aria-label="Maximise MS-DOS Prompt">□</button><button type="button" data-act="close" aria-label="Close MS-DOS Prompt">×</button></div>
+        <div class="bd"><div class="dos" id="dos-screen"><pre id="dos-out"></pre><form id="dos-form" autocomplete="off"><label for="dos-in" id="dos-ps">C:\NICCOLO&gt;</label><input id="dos-in" spellcheck="false" aria-label="Command"></form></div></div>
+    </section>
+
+    <footer class="small">© 2026 niccolò ridi · <a href="mailto:%%MAIL%%">%%MAIL%%</a> · <a href="feed.xml">feed</a> · <a href="sitemap.xml">sitemap</a> · <a href="llms.txt">llms.txt</a></footer>
+</div>
+
+<nav class="menu" id="menu" hidden aria-label="Start menu"><div class="side" aria-hidden="true">Ridi<b>98</b></div><ul role="menu">%%START%%</ul></nav>
+<div class="taskbar">
+    <button type="button" class="btn start" id="start" aria-expanded="false" aria-controls="menu"><span class="ico" aria-hidden="true"></span>Start</button>
+    <div class="tasks">%%TASKS%%</div>
+    <span class="tray" id="clock"></span>
+</div>
+
+<script>
+(() => {
+    const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+    const wins = $$('.win[data-title]');
+    const RING = %%RING%%;
+
+    /* windows: one is active at a time; minimise folds it to its title bar, maximise fills the screen, close hides it */
+    function activate(w) { wins.forEach(x => x.classList.toggle('active', x === w)); syncTasks(); }
+    function show(id, scroll = true) {
+        const w = document.getElementById(id); if (!w) return;
+        w.classList.remove('closed', 'min'); activate(w);
+        if (scroll && id !== 'dos' && !w.classList.contains('max')) w.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+        if (id === 'dos') setTimeout(() => $('#dos-in').focus({ preventScroll: true }), 50);
+        else w.querySelector('.tb h2').setAttribute('tabindex', '-1'), w.querySelector('.tb h2').focus({ preventScroll: true });
+    }
+    function syncTasks() {
+        $$('.task').forEach(t => {
+            const w = document.getElementById(t.dataset.task);
+            t.classList.toggle('gone', w.classList.contains('closed'));
+            t.classList.toggle('on', w.classList.contains('active') && !w.classList.contains('min'));
+            t.setAttribute('aria-pressed', t.classList.contains('on'));
+        });
+    }
+    document.addEventListener('click', e => {
+        const act = e.target.closest('.tb button[data-act]');
+        if (act) {
+            const w = act.closest('.win'), a = act.dataset.act;
+            if (a === 'min') { w.classList.toggle('min'); w.classList.remove('max'); }
+            if (a === 'max') { w.classList.toggle('max'); w.classList.remove('min'); document.body.style.overflow = $('.win.max') ? 'hidden' : ''; }
+            if (a === 'close') { w.classList.add('closed'); w.classList.remove('max', 'active'); document.body.style.overflow = $('.win.max') ? 'hidden' : ''; }
+            syncTasks(); return;
+        }
+        const open = e.target.closest('[data-open]');
+        if (open) { e.preventDefault(); closeMenu(); show(open.dataset.open); history.replaceState(null, '', '#' + open.dataset.open); return; }
+        const task = e.target.closest('.task');
+        if (task) { show(task.dataset.task); return; }
+        const w = e.target.closest('.win[data-title]');
+        if (w) activate(w);
+        if (!e.target.closest('#menu, #start')) closeMenu();
+    });
+
+    /* Start menu */
+    const start = $('#start'), menu = $('#menu');
+    function closeMenu() { if (!menu.hidden) { menu.hidden = true; start.setAttribute('aria-expanded', 'false'); } }
+    start.addEventListener('click', () => {
+        const open = menu.hidden; menu.hidden = !open; start.setAttribute('aria-expanded', open);
+        if (open) $('a, button', menu).focus();
+    });
+    menu.addEventListener('keydown', e => {
+        const items = $$('a, button', menu), i = items.indexOf(document.activeElement);
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); items[(i + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length].focus(); }
+    });
+    document.addEventListener('keydown', e => {
+        if (e.key !== 'Escape') return;
+        if (!menu.hidden) { closeMenu(); start.focus(); return; }
+        const m = $('.win.max'); if (m) { m.classList.remove('max'); document.body.style.overflow = ''; }
+    });
+
+    /* clock */
+    const clock = $('#clock');
+    const tick = () => { clock.textContent = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); };
+    tick(); setInterval(tick, 15000);
+
+    /* pictures: dithered until asked for colour */
+    $$('[data-colour-toggle]').forEach(b => b.addEventListener('click', () => {
+        const fig = b.closest('.pic'), img = $('img', fig), on = b.getAttribute('aria-pressed') !== 'true';
+        if (!img.dataset.dither) img.dataset.dither = img.getAttribute('src');
+        img.src = on ? img.dataset.colour : img.dataset.dither;
+        fig.classList.toggle('colour', on); b.setAttribute('aria-pressed', on); b.textContent = on ? 'view dithered' : 'view in colour';
+    }));
+
+    /* research: tabs, type filter, year filter, count in the status bar */
+    const pubs = $$('.pubs > li'), talks = $$('.talks > li'), yr = $('#yr'), count = $('#rcount');
+    let type = 'all', view = 'pubs';
+    [...new Set(pubs.map(li => li.dataset.year))].sort((a, b) => (b === 'forthcoming') - (a === 'forthcoming') || b - a)
+        .forEach(y => yr.add(new Option(y, y)));
+    function filter() {
+        let n = 0;
+        pubs.forEach(li => { const ok = (type === 'all' || li.dataset.type === type) && (yr.value === 'all' || li.dataset.year === yr.value); li.hidden = !ok; n += ok; });
+        count.textContent = view === 'pubs' ? `${n} of ${pubs.length} publications` : `${talks.length} talks`;
+    }
+    $$('[data-f]').forEach(b => b.addEventListener('click', () => {
+        type = b.dataset.f; $$('[data-f]').forEach(x => x.setAttribute('aria-pressed', x === b)); filter();
+    }));
+    yr.addEventListener('change', filter);
+    const tabs = $$('[role="tab"]');
+    function selectTab(t) {
+        tabs.forEach(x => { const on = x === t; x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1; document.getElementById(x.getAttribute('aria-controls')).hidden = !on; });
+        view = t.id === 'tab-pubs' ? 'pubs' : 'talks'; filter();
+    }
+    tabs.forEach(t => {
+        t.addEventListener('click', () => selectTab(t));
+        t.addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { const n = tabs[(tabs.indexOf(t) + 1) % tabs.length]; selectTab(n); n.focus(); } });
+    });
+    $('#tab-pubs').textContent += ` (${pubs.length})`; $('#tab-talks').textContent = `Talks, selection (${talks.length})`;
+    filter();
+
+    /* the essay ring */
+    let at = -1;
+    const now = $('#ring-now'), go = $('#ring-go');
+    $$('[data-ring]').forEach(b => b.addEventListener('click', () => {
+        const d = +b.dataset.ring;
+        at = d === 0 ? Math.floor(Math.random() * RING.length) : (at + d + RING.length) % RING.length;
+        now.textContent = `${at + 1}/${RING.length}: ${RING[at][1]}`; go.href = RING[at][0];
+    }));
+
+    /* MS-DOS Prompt: a few commands to walk the site */
+    const out = $('#dos-out'), form = $('#dos-form'), input = $('#dos-in');
+    const SECTIONS = wins.filter(w => w.id !== 'dos').map(w => w.id);
+    const say = t => { out.append(t + '\n'); $('#dos-screen').scrollTop = 1e6; };
+    say('Ridi 98 [Version 4.10.2026]\n(C) Copyright Niccolò Ridi 2026.\n\nType HELP for a list of commands.\n');
+    const CMDS = {
+        help: () => 'DIR        list what is here\nOPEN name  open a window (e.g. OPEN RESEARCH)\nRING       visit a random data essay\nCLS        clear the screen\nEXIT       close this window',
+        dir: () => SECTIONS.map(s => `${s.toUpperCase().padEnd(10)} <DIR>`).join('\n') + '\n' + RING.map(r => r[0].replace(/\/$/, '').padEnd(22) + ' ' + r[1]).join('\n'),
+        open: a => SECTIONS.includes(a) ? (show(a), `opening ${a}...`) : `File not found - ${a.toUpperCase() || '?'}`,
+        ring: () => { const r = RING[Math.floor(Math.random() * RING.length)]; setTimeout(() => location.href = r[0], 500); return `starting ${r[1]}...`; },
+        cls: () => { out.textContent = ''; return null; },
+        exit: () => { $('#dos').classList.add('closed'); $('#dos').classList.remove('max', 'active'); document.body.style.overflow = ''; syncTasks(); return null; },
+        ver: () => 'Ridi 98 [Version 4.10.2026]',
+    };
+    CMDS.ls = CMDS.dir; CMDS.cd = CMDS.open;
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        const line = input.value.trim(); input.value = '';
+        say('C:\\NICCOLO>' + line);
+        if (!line) return;
+        const [c, ...rest] = line.toLowerCase().split(/\s+/), f = CMDS[c];
+        const r = f ? f(rest.join(' ')) : `Bad command or file name`;
+        if (r) say(r + '\n');
+    });
+    $('#dos-screen').addEventListener('click', () => input.focus());
+
+    /* arriving at #section opens that window */
+    const h = location.hash.slice(1);
+    if (SECTIONS.includes(h)) show(h); else { activate($('#welcome')); }
+})();
+</script>
+</body>
+</html>
