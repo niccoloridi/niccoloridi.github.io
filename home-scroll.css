@@ -99,7 +99,7 @@ html.hn-scroll { --hn-max: 1800px; --hn-side-pad: max(var(--gutter), calc((100vw
    the console and theme buttons and the menu float over it on a soft fade, and the plate's own marker
    ("01 Profile") names the section below them. The next section's plate pushes it away. ─── */
 @media (max-width: 880px) {
-    html.hn-mflow { --hn-mbar-h: 55px; --hn-mplate-h: calc(var(--hn-mbar-h) + 6rem); }
+    html.hn-mflow { --hn-mbar-h: 55px; --hn-mplate-h: calc(var(--hn-mbar-h) + 4.5rem); }
     html.hn-mflow body > header { position: sticky; top: 0; z-index: 50; background: var(--bg);
         transition: background-color 0.25s ease, border-color 0.25s ease; }
     html.hn-mflow.hn-mscrolled body > header .id { display: inline; }
