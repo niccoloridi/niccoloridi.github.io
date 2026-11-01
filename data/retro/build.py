@@ -1,11 +1,7 @@
-"""Builds retro/index.html, the Neocities edition of the homepage (niccoloridi.com/retro), from index.html.
-
-The content (welcome, sections, publications, talks, what's new, links) is lifted from
-index.html, so the two stay in step; the page itself is one self-contained file with
-inline CSS and JS, no canvases and no frameworks. It is linked from nowhere and asks not to be
-indexed. Links are made root-absolute so they work from /retro. The dithered pictures in retro/
-were made once with Pillow and are not rebuilt here. Run: python3 data/retro/build.py
-"""
+"""Builds retro/index.html, the Niccolo Ridi at Dusk edition of the homepage (niccoloridi.com/retro), from index.html.
+The content is lifted from index.html, so run this and commit after homepage changes. Pictures in retro/ are made once
+and not rebuilt here. It is reached by long-pressing the theme button (retro-door.js) and asks not to be indexed.
+Run: python3 data/retro/build.py"""
 import html, json, os, re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -13,137 +9,108 @@ ROOT = os.path.dirname(os.path.dirname(HERE))
 src = open(os.path.join(ROOT, 'index.html'), encoding='utf-8').read()
 
 
-def grab(pattern, flags=re.S):
-    m = re.search(pattern, src, flags)
+def grab(pattern):
+    m = re.search(pattern, src, re.S)
     if not m:
-        raise SystemExit(f'not found in index.html: {pattern[:60]}')
+        raise SystemExit(f'not found: {pattern[:60]}')
     return m.group(1)
 
 
 def view_body(key):
-    """the concatenated JS string literals of VIEW.<key>.body"""
     block = grab(r"\n\s+" + key + r": \{[^\n]*?body:(.*?)' \},")
-    parts = re.findall(r"'((?:[^'\\]|\\.)*)'", block + "'")
-    return ''.join(parts).replace("\\'", "'")
+    return ''.join(re.findall(r"'((?:[^'\\]|\\.)*)'", block + "'")).replace("\\'", "'")
 
 
-welcome = grab(r'(<p class="welcome-copy">.*?</p>)')
-guestbook = grab(r'(<p class="guestbook-invite">.*?</p>)')
+data = view_body('data').replace('<span class="pub-note">Alpha preview</span>', '<span class="uc">under construction</span>')
+research = grab(r'<div id="research-src" hidden>(.*?)\n    </div>')
 changes = re.findall(r'<li class="changelog-item">(.*?)</li>', src, re.S)
-research_src = grab(r'<div id="research-src" hidden>(.*?)\n    </div>')
-research_intro = re.search(r'<p>.*?</p>', research_src, re.S).group(0)
-pubs = re.search(r'<ul class="pub-list">(.*?)</ul>', research_src, re.S).group(1)
-talks = re.search(r'<ul class="talk-list">(.*?)</ul>', research_src, re.S).group(1)
-profile, practice, data = view_body('profile'), view_body('practice'), view_body('data')
-data = data.replace('<span class="pub-note">Alpha preview</span>', '<span class="uc">under construction</span>')
-foot = grab(r'<footer>(.*?)</footer>')
-links = dict((t.strip(), h) for h, t in re.findall(r'<a href="([^"]+)"[^>]*>([^<]+)</a>', foot))
-
-# what's new: the list, the ticker and the last-updated date
-news_items, ticker = [], []
+news = ''
 for c in changes:
-    date = re.search(r'<time[^>]*>(.*?)</time>', c).group(1)
-    tag = re.search(r'changelog-tag">(.*?)<', c).group(1)
-    a = re.search(r'<a href="([^"]+)">(.*?)</a>', c)
-    note = re.search(r'changelog-note">(.*?)</span>', c)
-    news_items.append(f'<li><span class="nd">{date} · {tag}</span><a href="{a.group(1)}">{a.group(2)}</a>'
-                      + (f'<span class="nn">{note.group(1)}</span>' if note else '') + '</li>')
-    ticker.append(f'<a href="{a.group(1)}">★ {date}: new {tag.lower()}, {a.group(2)}</a>')
-last_updated = re.search(r'<time[^>]*>(.*?)</time>', changes[0]).group(1)
-
-# the essay ring: every data essay linked from the Data section
-ring = [(h, re.split(r' — |: ', re.sub('<[^>]+>', '', t))[0].strip())
+    d = re.search(r'<time[^>]*>(.*?)</time>', c).group(1)
+    a = re.search(r'<a href="[^"]+">.*?</a>', c).group(0)
+    n = re.search(r'changelog-note">(.*?)</span>', c)
+    news += f'<li><span class="nd">{d}</span> {a}' + (f' <span class="nn">{n.group(1)}</span>' if n else '') + '</li>'
+ring = [(('/' + h), re.split(r' — |: ', re.sub('<[^>]+>', '', t))[0].strip())
         for h, t in re.findall(r'<li><a href="([^"]+)">(.*?)</a></li>', data)]
-ring_js = json.dumps([('/' + h, t) for h, t in ring], ensure_ascii=False)
+foot = grab(r'<footer>(.*?)</footer>')
+links = ''.join(f'<li><a href="{h}">{t.strip()}</a></li>' for h, t in re.findall(r'<a href="(http[^"]+)"[^>]*>([^<]+)</a>', foot)
+                if 'llms' not in h)
+FILTER = ('<form class="filt" onsubmit="return false"><label>show <select id="ftype"><option value="all">everything</option>'
+          '<option value="book">books</option><option value="article">articles</option><option value="working">working papers</option>'
+          '<option value="dataset">datasets</option><option value="code">code</option><option value="other">other</option></select></label> '
+          '<label>from <select id="fyear"><option value="all">all years</option></select></label> <span id="fcount"></span></form>')
+SCRIPT = open(os.path.join(HERE, 'shared.js'), encoding='utf-8').read()
+parts = {
+    'WELCOME': grab(r'(<p class="welcome-copy">.*?</p>)'), 'GUEST': grab(r'(<p class="guestbook-invite">.*?</p>)'),
+    'PROFILE': view_body('profile'), 'PRACTICE': view_body('practice'), 'DATA': data,
+    'RINTRO': re.search(r'<p>.*?</p>', research, re.S).group(0), 'FILTER': FILTER,
+    'PUBS': '<ul class="pub-list">' + re.search(r'<ul class="pub-list">(.*?)</ul>', research, re.S).group(1) + '</ul>',
+    'TALKS': '<ul class="talk-list">' + re.search(r'<ul class="talk-list">(.*?)</ul>', research, re.S).group(1) + '</ul>',
+    'NEWS': f'<ul class="news">{news}</ul>', 'UPDATED': re.search(r'<time[^>]*>(.*?)</time>', changes[0]).group(1),
+    'MAIL': grab(r'<a href="mailto:([^"]+)"'), 'LINKS': f'<ul class="links">{links}</ul>', 'ALT': grab(r'<img src="images/niccolo-portrait.jpg" alt="([^"]+)"'),
+    'SCRIPT': SCRIPT.replace('%%RING%%', json.dumps(ring, ensure_ascii=False)),
+    'HEAD': '<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">',
+}
 
-BADGES = [  # 88×31 buttons: label, small print, link key, colours
-    ('ORCID', 'iD', 'orcid', '#a6ce39', '#2b3a0a'), ('Scholar', 'google', 'scholar', '#4285f4', '#fff'),
-    ('SSRN', 'papers', 'ssrn', '#ffd400', '#1a1a1a'), ('KCL', 'king\'s', 'kcl', '#e2231a', '#fff'),
-    ('PURE', 'kcl', 'pure', '#7b2cff', '#fff'), ('GitHub', 'code', 'github', '#24292f', '#fff'),
-    ('LinkedIn', 'in', 'linkedin', '#0a66c2', '#fff'), ('RSS', 'feed', 'feed', '#ff8a00', '#fff'),
-    ('llms', '.txt', 'LLMs, start here: llms.txt', '#00b3a1', '#002b27'), ('guest', 'book', 'guestbook', '#ff4fb0', '#fff'),
-]
-badges = ''.join(
-    f'<a class="b88" href="{links[k]}"{" target=_blank rel=noopener" if links[k].startswith("http") else ""} '
-    f'style="--a:{bg};--b:{fg}" title="{html.escape(k)}"><b>{t}</b><small>{s}</small></a>'
-    for t, s, k, bg, fg in BADGES if k in links)
-
-WINDOWS = [('welcome', 'welcome.txt - Notepad'), ('profile', 'profile.doc - WordPad'), ('practice', 'practice.doc - WordPad'),
-           ('research', 'research.mdb'), ('data', 'data.xls'), ('news', 'whats_new.log')]
-
-
-def win(key, title, body, status=None, extra=''):
-    sb = f'<div class="sb">{status}</div>' if status else ''
-    return (f'<section class="win" id="{key}" data-title="{html.escape(title)}" aria-labelledby="t-{key}"{extra}>'
-            f'<div class="tb"><span class="ico" aria-hidden="true"></span><h2 id="t-{key}">{html.escape(title)}</h2>'
-            f'<button type="button" data-act="min" aria-label="Minimise {html.escape(title)}">_</button>'
-            f'<button type="button" data-act="max" aria-label="Maximise {html.escape(title)}">□</button>'
-            f'<button type="button" data-act="close" aria-label="Close {html.escape(title)}">×</button></div>'
-            f'<div class="bd">{body}</div>{sb}</section>')
-
-
-def photo(small, big, alt, cls=''):
-    return (f'<figure class="pic {cls}"><img src="{small}" data-colour="{big}" alt="{alt}" width="240" height="160">'
-            f'<figcaption><button type="button" class="btn sm" data-colour-toggle aria-pressed="false">view in colour</button></figcaption></figure>')
+def about(path):
+    """the first sentence of a page's own meta description"""
+    s = open(os.path.join(ROOT, path), encoding='utf-8', errors='ignore').read()
+    d = html.unescape(re.search(r'<meta name="description"\s+content="(.*?)"', s, re.S).group(1)).strip()
+    return re.split(r'(?<=[a-z0-9)])\. ', d)[0].rstrip('.').replace('ILC Atlas: an', 'An') + '.'
 
 
-portrait_alt = grab(r'<img src="images/niccolo-portrait.jpg" alt="([^"]+)"')
-main = ''.join([
-    win('welcome', 'welcome.txt - Notepad',
-        '<div class="doc">' + photo('/retro/portrait.png', 'images/niccolo-portrait.jpg', portrait_alt, 'right')
-        + welcome + guestbook + '</div>'),
-    win('profile', 'profile.doc - WordPad', '<div class="doc">' + profile + '</div>'),
-    win('practice', 'practice.doc - WordPad', '<div class="doc">'
-        + photo('/retro/icj.png', 'images/N_Ridi_ICJ.jpeg', 'Niccolò Ridi at the International Court of Justice', 'right')
-        + practice + '</div>'),
-    win('research', 'research.mdb',
-        '<div class="doc intro">' + research_intro + '</div>'
-        + '<div class="tabs" role="tablist" aria-label="Show">'
-        + '<button type="button" role="tab" aria-selected="true" aria-controls="pane-pubs" id="tab-pubs">Publications</button>'
-        + '<button type="button" role="tab" aria-selected="false" aria-controls="pane-talks" id="tab-talks">Talks (selection)</button></div>'
-        + '<div class="tabpane"><div id="pane-pubs" role="tabpanel" aria-labelledby="tab-pubs">'
-        + '<div class="tools" role="group" aria-label="Filter publications">'
-        + ''.join(f'<button type="button" class="btn sm" data-f="{f}" aria-pressed="{str(f == "all").lower()}">{l}</button>'
-                  for f, l in [('all', 'All'), ('book', 'Books'), ('article', 'Articles'), ('working', 'Working papers'),
-                               ('dataset', 'Datasets'), ('code', 'Code'), ('other', 'Other')])
-        + '<label class="yr">Year <select id="yr"><option value="all">all</option></select></label></div>'
-        + f'<ul class="list pubs">{pubs}</ul></div>'
-        + f'<div id="pane-talks" role="tabpanel" aria-labelledby="tab-talks" hidden><ul class="list talks">{talks}</ul></div></div>',
-        status='<span id="rcount">&nbsp;</span><span>sorted by year</span>'),
-    win('data', 'data.xls', '<div class="doc">' + data + '</div>'),
-])
+def row(icon, title, desc, href, ext=False):
+    return (f'<a class="row" href="{href}"' + (' target="_blank" rel="noopener"' if ext else '') + f'><img src="/retro-lab/i2-{icon}.png" alt=""><b>{title}</b><span>{desc}</span></a>')
 
-nav = ''.join(f'<li><a href="#{k}" data-open="{k}"><span class="fi" aria-hidden="true"></span>{t.split(" - ")[0]}</a></li>'
-              for k, t in WINDOWS)
 
-start_items = (''.join(f'<li><a href="#{k}" data-open="{k}" role="menuitem">{t.split(" - ")[0]}</a></li>' for k, t in WINDOWS)
-               + '<li class="sep" role="separator"></li>'
-               + ''.join(f'<li><a href="{h}" role="menuitem">{t}</a></li>' for h, t in ring)
-               + '<li class="sep" role="separator"></li>'
-               + '<li><button type="button" data-open="dos" role="menuitem">MS-DOS Prompt</button></li>'
-               + '<li><a href="guestbook/" role="menuitem">Guestbook</a></li>'
-               + '<li class="sep" role="separator"></li>'
-               + '<li><a href="index.html" role="menuitem">Shut Down… <small>(back to the full site)</small></a></li>')
-tasks = ''.join(f'<button type="button" class="task" data-task="{k}">{t.split(" - ")[0]}</button>' for k, t in WINDOWS[:5])
-
-TILE = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72'%3E"
-        "%3Crect width='72' height='72' fill='%231b0f3a'/%3E"
-        "%3Cpath d='M14 9h2v6h-2zM12 11h6v2h-6z' fill='%23ff4fb0'/%3E"
-        "%3Cpath d='M51 44h2v6h-2zM49 46h6v2h-6z' fill='%233ee8ff'/%3E"
-        "%3Cpath d='M36 22h1v1h-1zM62 14h1v1h-1zM6 52h1v1h-1zM28 62h1v1h-1zM66 60h1v1h-1z' fill='%23fff4d6'/%3E"
-        "%3Cpath d='M40 58h1v1h-1zM22 36h1v1h-1z' fill='%23ff8ac8'/%3E%3C/svg%3E")
-
-page = open(os.path.join(HERE, 'template.html'), encoding='utf-8').read()
-for k, v in {'TILE': TILE, 'TICKER': '<span>' + ''.join(ticker) + '</span><span aria-hidden="true">' + ''.join(ticker).replace('<a ', '<a tabindex="-1" ') + '</span>', 'NAV': nav, 'BADGES': badges, 'MAIN': main,
-             'NEWS': win('news', 'whats_new.log', '<ul class="news">' + ''.join(news_items) + '</ul>'
-                         + f'<p class="feed"><a class="btn sm" href="{links.get("feed", "feed.xml")}">subscribe (RSS)</a></p>'),
-             'UPDATED': last_updated, 'RING': ring_js, 'START': start_items, 'TASKS': tasks,
-             'MAIL': grab(r'<a href="mailto:([^"]+)"')}.items():
-    page = page.replace('%%' + k + '%%', v)
-# from /retro, every site-relative link has to start at the root
-page = re.sub(r'((?:href|src|data-colour)=")(?!https?:|mailto:|#|/|data:)', r'\1/', page)
-size = len(page.encode('utf-8'))
-page = page.replace('%%SIZE%%', f'{round(size / 1024)} KB')
+fl = {t.strip(): h for h, t in re.findall(r'<a href="([^"]+)"[^>]*>([^<]+)</a>', foot)}
+ESSAYS = [('The Invisible College, Mapped', 'obituaries.html'), ('The Law of Citations', 'unsc-citations.html'), ('GenAI as an International Lawyer', 'jessup-ai.html'), ('Custom in the Making', 'cil-formation.html')]
+TOOLS = [('echr-py', 'echr-py.html', 'echr-py.html'), ('cjeu-py', 'cjeu-py.html', 'cjeu-py.html'), ('ILC Atlas', 'ilc-atlas/', 'ilc-atlas/index.html'), ('Agentic Law Journal', 'agentic-law-journal/', 'agentic-law-journal/index.html'), ('The Treaty', 'treaties/', 'treaties/index.html')]
+ELSE = [('Google Scholar', 'scholar', 'Citations and papers.'), ('SSRN', 'ssrn', 'Working papers.'), ('ORCID', 'orcid', 'The researcher record.'), ('King\'s Pure', 'pure', 'The research portal at King\'s.'), ('King\'s College London', 'kcl', 'Staff page.'), ('GitHub', 'github', 'Code.'), ('LinkedIn', 'linkedin', 'Professional profile.')]
+parts['DATAINTRO'] = re.search(r'<p>.*?</p>', data, re.S).group(0)
+parts['ESSAYROWS'] = ''.join(row('pen', t, about(h), h) for t, h in ESSAYS)
+parts['ELSEROWS'] = ''.join(row('globe', t, d, fl[k], True) for t, k, d in ELSE)
+ICONS = [('profile', 'person', 'Profile'), ('practice', 'court', 'Practice'), ('research', 'book', 'Research'), ('talks', 'mic', 'Talks'), ('data', 'chart', 'Data'),
+         ('essays', 'pen', 'Essays'), ('tools', 'wrench', 'Tools'), ('news', 'news', 'What\'s new'), ('elsewhere', 'globe', 'Elsewhere'), ('guest', 'letter', 'Guestbook')]
+parts['ICONS'] = ''.join(f'<a href="#{k}" data-card="{k}"><img src="/retro-lab/i2-{i}.png" alt="">{t}</a>' for k, i, t in ICONS)
+l = lambda h, t, x=False: f'<li><a href="{h}"' + (' target="_blank" rel="noopener"' if x else '') + f'>{t}</a></li>'
+TOOLS = [('echr-py', 'echr-py.html', 'echr-py.html'), ('cjeu-py', 'cjeu-py.html', 'cjeu-py.html'), ('ILC Atlas', 'ilc-atlas/', 'ilc-atlas/index.html')]
+parts['TOOLROWS'] = ''.join(row('wrench', t, about(p_), h) for t, h, p_ in TOOLS) + row('wrench', 'ICJeocities', 'A citation-analytics platform for international courts and tribunals. Private beta, by invitation.', 'https://icjeocities.org', True)
+parts['AGENTROWS'] = (row('news', 'llms.txt', 'Start here: the site, described for language models.', 'llms.txt') + row('court', 'The Treaty', about('treaties/index.html'), 'treaties/')
+                      + row('book', 'Agentic Law Journal', about('agentic-law-journal/index.html'), 'agentic-law-journal/') + row('letter', 'The guestbook', about('guestbook/index.html'), 'guestbook/'))
+parts['SITEROWS'] = (row('letter', 'Sign the guestbook', 'For humans with endless patience, too.', 'guestbook/') + row('news', 'Feed', 'What\'s new, by RSS.', 'feed.xml')
+                     + row('letter', 'Write to me', parts['MAIL'], 'mailto:' + parts['MAIL']) + row('person', 'The other website', 'The full homepage.', '/'))
+newsrows, tick = '', []
+for ch in changes:
+    d = re.search(r'<time[^>]*>(.*?)</time>', ch).group(1); tg = re.search(r'changelog-tag">(.*?)<', ch).group(1)
+    a_ = re.search(r'<a href="([^"]+)">(.*?)</a>', ch); n = re.search(r'changelog-note">(.*?)</span>', ch)
+    newsrows += f'<div class="nrow"><time>{d}</time><span class="tag">{tg}</span><div><a href="{a_.group(1)}">{a_.group(2)}</a>' + (f'<span class="nn">{n.group(1)}</span>' if n else '') + '</div></div>'
+    tick.append(f'<a href="{a_.group(1)}">★ {d}: {a_.group(2)}</a>')
+parts['NEWSROWS'] = newsrows
+MQ = '<div class="mq"><div class="mq-t"><span>' + ''.join(tick) + '</span><span aria-hidden="true">' + ''.join(tick).replace('<a ', '<a tabindex="-1" ') + '</span></div></div>'
+parts['RING2'] = json.dumps([(t, '/' + h, about(h)) for t, h in ESSAYS], ensure_ascii=False)
+parts['JUKE'] = ''  # the player waits for its music: juke.js is kept here, ready to be included again
+c2 = lambda k, t, ex='': f'<li><a href="#{k}" data-card="{k}"{ex}>{t}</a></li>'
+SEP = '<li class="sep" role="separator"></li>'
+MIX = [('Profile', c2('profile', 'About') + c2('profile', 'Positions and affiliations', ' data-at="positions"') + c2('profile', 'Education', ' data-at="education"')),
+       ('Practice', c2('practice', 'Overview') + c2('practice', 'Recent matters', ' data-at="recent"') + SEP + l('mailto:' + parts['MAIL'], 'Get in touch')),
+       ('Research', c2('research', 'All publications', ' data-filter="all"') + c2('research', 'Books', ' data-filter="book"') + c2('research', 'Articles', ' data-filter="article"') + c2('research', 'Working papers', ' data-filter="working"')
+        + c2('research', 'Datasets', ' data-filter="dataset"') + c2('research', 'Code', ' data-filter="code"') + SEP + c2('talks', 'Talks')),
+       ('Data', c2('data', 'Overview') + SEP + ''.join(l(h, t) for t, h in ESSAYS) + SEP + c2('tools', 'Tools')),
+       ('Elsewhere', ''.join(l(fl[k], t, True) for t, k, _ in ELSE) + SEP + c2('elsewhere', 'All on one card')),
+       ('Agents', l('llms.txt', 'llms.txt: start here') + l('treaties/', 'The Treaty') + l('agentic-law-journal/', 'Agentic Law Journal') + l('guestbook/', 'The guestbook') + SEP + c2('agents', 'For agents'))]
+MB = ('<nav class="mbar" aria-label="Menu"><a class="mlink mhome" href="#home" data-card="home">Niccol&ograve; Ridi</a>' + ''.join(f'<div><button type="button" aria-expanded="false">{n}</button><ul hidden>{m}</ul></div>' for n, m in MIX)
+      + '<a class="mlink" href="#news" data-card="news">What\'s new</a><span class="clock"></span></nav>')
+JB = ('<section class="mini" id="juke"><h2><span class="ml">Jukebox</span></h2><div class="in"><p class="jname">Music to come</p><div class="jrow" aria-hidden="true">'
+      + ''.join(f'<button type="button" disabled tabindex="-1">{g}</button>' for g in ('|◄', '◄◄', '▶', '►►', '►|')) + '</div></div></section>')
+PL = ('<aside class="pile"><section class="mini"><h2><a href="#news" data-card="news">What\'s new</a></h2>' + MQ + '<p class="mqmore"><a href="#news" data-card="news">read it all</a></p></section>' + JB
+      + '<section class="mini"><h2><a href="#essays" data-card="essays">Essay ring</a></h2><div class="in"><p class="rname" id="rn"></p><p class="rdesc" id="rd"></p><div class="rbtns"><button type="button" data-r="-1" aria-label="Previous essay">◄</button><button type="button" data-r="0">random</button><button type="button" data-r="1" aria-label="Next essay">►</button><a id="rg" href="#">visit</a></div></div></section></aside>')
+tmpl = open(os.path.join(HERE, 'template.html'), encoding='utf-8').read()
+page = tmpl.replace('%%VARIANT%%', 'v-mix').replace('%%NAVTOP%%', MB).replace('%%NAVSIDE%%', PL).replace('%%STRIP%%', f'<div class="strip" aria-label="What\'s new">{MQ}</div>')
+for k, v in parts.items():
+    page = page.replace(f'%%{k}%%', v)
+page = re.sub(r'((?:href|src)=")(?!https?:|mailto:|#|/|data:)', r'\1/', page)
+page = page.replace('&mdash;', '&ndash;').replace('—', '–')
+page = page.replace('/retro-lab/', '/retro/')
 open(os.path.join(ROOT, 'retro', 'index.html'), 'w', encoding='utf-8').write(page)
-print(f'retro/index.html: {size / 1024:.1f} KB, {len(re.findall("<li data-type", pubs))} publications, '
-      f'{len(re.findall("<li", talks))} talks, {len(ring)} ring stops')
+print(f'retro/index.html {len(page.encode()) / 1024:.0f} KB, em dashes left: {page.count(chr(8212))}')
