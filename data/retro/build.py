@@ -92,15 +92,13 @@ parts['RING2'] = json.dumps([(t, '/' + h, about(h)) for t, h in ESSAYS], ensure_
 parts['JUKE'] = ''  # the player waits for its music: juke.js is kept here, ready to be included again
 c2 = lambda k, t, ex='': f'<li><a href="#{k}" data-card="{k}"{ex}>{t}</a></li>'
 SEP = '<li class="sep" role="separator"></li>'
-MIX = [('Profile', c2('profile', 'About') + c2('profile', 'Positions and affiliations', ' data-at="positions"') + c2('profile', 'Education', ' data-at="education"')),
-       ('Practice', c2('practice', 'Overview') + c2('practice', 'Recent matters', ' data-at="recent"') + SEP + l('mailto:' + parts['MAIL'], 'Get in touch')),
-       ('Research', c2('research', 'All publications', ' data-filter="all"') + c2('research', 'Books', ' data-filter="book"') + c2('research', 'Articles', ' data-filter="article"') + c2('research', 'Working papers', ' data-filter="working"')
-        + c2('research', 'Datasets', ' data-filter="dataset"') + c2('research', 'Code', ' data-filter="code"') + SEP + c2('talks', 'Talks')),
+MIX = [('Practice', c2('practice', 'Overview') + l('mailto:' + parts['MAIL'], 'Get in touch')),
+       ('Research', c2('research', 'All publications', ' data-filter="all"') + c2('talks', 'Talks')),
        ('Data', c2('data', 'Overview') + SEP + ''.join(l(h, t) for t, h in ESSAYS) + SEP + c2('tools', 'Tools')),
        ('Elsewhere', ''.join(l(fl[k], t, True) for t, k, _ in ELSE) + SEP + c2('elsewhere', 'All on one card')),
        ('Agents', l('llms.txt', 'llms.txt: start here') + l('treaties/', 'The Treaty') + l('agentic-law-journal/', 'Agentic Law Journal') + l('guestbook/', 'The guestbook') + SEP + c2('agents', 'For agents'))]
-MB = ('<nav class="mbar" aria-label="Menu"><a class="mlink mhome" href="#home" data-card="home">Niccol&ograve; Ridi</a>' + ''.join(f'<div><button type="button" aria-expanded="false">{n}</button><ul hidden>{m}</ul></div>' for n, m in MIX)
-      + '<a class="mlink" href="#news" data-card="news">What\'s new</a><span class="clock"></span></nav>')
+MB = ('<nav class="mbar" aria-label="Menu"><a class="mlink mhome" href="#home" data-card="home">Niccol&ograve; Ridi</a><a class="mlink" href="#profile" data-card="profile">About</a>' + ''.join(f'<div><button type="button" aria-expanded="false">{n}</button><ul hidden>{m}</ul></div>' for n, m in MIX)
+      + '<a class="mlink" href="#news" data-card="news">What\'s new</a><div class="mtheme"><button type="button" aria-expanded="false" aria-label="Theme: 1990s">1990s ▾</button><ul hidden><li><a href="/" data-theme="dark">dark</a></li><li><a href="/" data-theme="light">light</a></li><li><a href="#home" data-card="home" aria-current="true">1990s</a></li></ul></div><span class="clock"></span></nav>')
 JB = ('<section class="mini" id="juke"><h2><span class="ml">Jukebox</span></h2><div class="in"><p class="jname">Music to come</p><div class="jrow" aria-hidden="true">'
       + ''.join(f'<button type="button" disabled tabindex="-1">{g}</button>' for g in ('|◄', '◄◄', '▶', '►►', '►|')) + '</div></div></section>')
 PL = ('<aside class="pile"><section class="mini"><h2><a href="#news" data-card="news">What\'s new</a></h2>' + MQ + '<p class="mqmore"><a href="#news" data-card="news">read it all</a></p></section>' + JB

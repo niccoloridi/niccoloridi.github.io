@@ -104,7 +104,10 @@ a.row:visited { color: var(--ink); }
 .mbar ul[hidden] { display: none; }
 .mbar ul a { display: block; padding: 7px 16px; color: var(--ink); text-decoration: none; font: 400 17px/1.15 var(--px); }
 .mbar ul a:hover, .mbar ul a:focus-visible { background: var(--ink); color: var(--card); outline: 0; }
-.mbar .clock { margin-left: auto; display: flex; align-items: center; padding: 0 6px; }
+.mbar .mtheme { margin-left: auto; }
+.mbar .mtheme ul { left: auto; right: 0; min-width: 130px; }
+.mbar .mtheme a[aria-current] { color: var(--link); }
+.mbar .clock { display: flex; align-items: center; padding: 0 6px; }
 .v-menu body { padding-top: 48px; }
 .v-menu .stack { height: min(790px, calc(100dvh - 92px)); }
 
@@ -193,7 +196,8 @@ a.row:visited { color: var(--ink); }
     .v-mix body { padding-top: 76px; justify-content: center; }
     .v-mix .stack { height: calc(100dvh - 104px); }
     .mbar .clock { display: none; }
-    .v-mix .mbar { overflow-x: auto; scrollbar-width: none; padding-right: 66px; }
+    .v-mix .mbar { overflow-x: auto; scrollbar-width: none; padding-right: 84px; }
+    .mbar .mtheme { position: fixed; right: 0; top: 0; height: 28px; margin: 0; background: var(--card); border-left: 2px solid var(--ink); }
     .mbar .jq { display: flex; position: fixed; right: 0; top: 0; height: 28px; background: var(--card); border-left: 2px solid var(--ink); }
     .mbar ul { position: fixed; left: 8px; right: 8px; top: 30px; min-width: 0; max-height: calc(100dvh - 50px); overflow: auto; }
     .mbar button, .mbar .mlink { flex: 0 0 auto; white-space: nowrap; }
@@ -314,6 +318,10 @@ a.row:visited { color: var(--ink); }
     addEventListener('keydown', e => { if (e.key === 'Escape') { const o = tops.find(t => t.getAttribute('aria-expanded') === 'true'); closeMenus(); if (o) o.focus(); } });
     const clk = document.querySelector('.mbar .clock');
     if (clk) { const t = () => { clk.textContent = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); }; t(); setInterval(t, 15000); }
+    /* the theme menu: dark and light are the homepage's own themes, so choosing one goes back there */
+    document.querySelectorAll('[data-theme]').forEach(a => a.addEventListener('click', () => {
+        try { localStorage.setItem('noir-theme', a.dataset.theme); sessionStorage.setItem('intro-seen', '1'); } catch (e) {}
+    }));
     /* the photographs: dithered first, the original on request */
     document.querySelectorAll('.hi').forEach(b => b.addEventListener('click', () => {
         const fig = b.closest('.pic'), img = fig.querySelector('img'), on = !fig.classList.contains('full');
