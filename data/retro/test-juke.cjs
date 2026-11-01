@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const root = path.resolve(__dirname, '../..');
+const localFile = url => path.join(root, decodeURIComponent(url.split('?')[0]));
 const source = fs.readFileSync(path.join(__dirname, 'juke.js'), 'utf8');
 const bytes = b => b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength);
 const settle = async () => { for (let i = 0; i < 4; i++) await new Promise(setImmediate); };
@@ -37,7 +38,7 @@ function player(fetcher) {
         document: { getElementById: element, createElement: () => ({}) },
         window: { AudioContext: function () {}, WebAudioTinySynth: Synth }, addEventListener() {},
         setInterval: fn => { timers.set(++count, fn); return count; }, clearInterval: id => timers.delete(id),
-        fetch: fetcher || (async url => ({ ok: true, arrayBuffer: async () => bytes(fs.readFileSync(path.join(root, decodeURIComponent(url)))) })),
+        fetch: fetcher || (async url => ({ ok: true, arrayBuffer: async () => bytes(fs.readFileSync(localFile(url))) })),
     });
     vm.runInContext(source, context);
     return { api: context.window.__juke, elements, calls, warnings, get audio() { return audio; },
@@ -53,7 +54,8 @@ function player(fetcher) {
     p.click('jquick'); assert.equal(p.elements.get('jquick').attrs['aria-expanded'], 'false');
     let total = 0;
     for (const track of p.api.MIDI_FILES) {
-        const file = fs.readFileSync(path.join(root, decodeURIComponent(track.url)));
+        assert.match(track.url, /\?v=mi-gm-1$/, 'Deployed MIDI URLs bypass cached pre-deployment 404s');
+        const file = fs.readFileSync(localFile(track.url));
         const song = parse(bytes(file));
         assert(song.noteCount > 100 && song.duration > 30 && song.duration < 300, track.name);
         assert(song.events.every((e, i, a) => Number.isFinite(e.time) && (!i || e.time >= a[i - 1].time)));
@@ -91,7 +93,7 @@ function player(fetcher) {
     const pending = new Map();
     const race = player(url => new Promise(resolve => pending.set(url, resolve)));
     race.select(1); race.select(2);
-    const selectedFile = fs.readFileSync(path.join(root, decodeURIComponent(race.api.MIDI_FILES[2].url)));
+    const selectedFile = fs.readFileSync(localFile(race.api.MIDI_FILES[2].url));
     pending.get(race.api.MIDI_FILES[2].url)({ ok: true, arrayBuffer: async () => bytes(selectedFile) }); await settle();
     assert.match(race.elements.get('jtime').textContent, /1:22$/);
     pending.get(race.api.MIDI_FILES[1].url)({ ok: true, arrayBuffer: async () => bytes(fixture) }); await settle();

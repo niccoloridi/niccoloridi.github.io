@@ -19,7 +19,8 @@
         ['The Carnival', '14 The Carnival.mid'],
         ['Organ Prelude', '15 Organ Prelude.mid'],
         ['Closing Themes', '16 Closing Themes.mid'],
-    ].map(([name, file]) => ({ name, url: '/retro/midi/' + encodeURIComponent(file) }));
+    // Version the URLs: the public edge cache can retain a 404 from before deployment.
+    ].map(([name, file]) => ({ name, url: '/retro/midi/' + encodeURIComponent(file) + '?v=mi-gm-1' }));
 
     // Read format 0/1 SMF files, including running status and tempo changes on any track.
     // Bounds checks also turn a missing file / HTML response into a visible player error.
