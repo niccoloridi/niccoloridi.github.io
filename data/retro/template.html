@@ -208,6 +208,16 @@ a.row:visited { color: var(--ink); }
     .pic.side { float: none; width: 100%; margin: 0 0 12px; }
     .nrow { grid-template-columns: 1fr; gap: 0; }
 }
+/* on phones and tablets the card can be scrolled away to look at the sky */
+#skyb, .skygap, .skyback { display: none; }
+@media (max-width: 1040px) {
+    html, body { height: auto; }
+    .v-mix body { display: block; }
+    #skyb { display: inline-block; font-size: 18px; }
+    .skygap { display: block; height: 82dvh; }
+    .skyback { position: fixed; z-index: 26; left: 50%; bottom: 18px; transform: translateX(-50%); padding: 7px 14px; font: 400 16px/1 var(--px); color: var(--ink); background: var(--card); border: 2px solid var(--ink); border-radius: 7px; box-shadow: 3px 3px 0 var(--ink); cursor: pointer; white-space: nowrap; }
+    .sky-out .skyback { display: block; }
+}
 @media (prefers-reduced-motion: reduce) { .mq-t, #juke.on .eq i { animation: none; } .mq { overflow-x: auto; } .mq-t > span[aria-hidden] { display: none; } }
 </style>
 </head>
@@ -244,6 +254,7 @@ a.row:visited { color: var(--ink); }
         <button type="button" id="prev" aria-label="Previous card">&#9664;</button>
         <button type="button" id="homeb">Home</button>
         <span class="gap"><span id="pos"></span><span class="wide" data-visits-line> &middot; visit no. <span data-visits="1">1</span></span></span>
+        <button type="button" id="skyb" aria-label="Look at the sky">&#9729;</button>
         <button type="button" id="next" aria-label="Next card">&#9654;</button>
     </div>
     <canvas id="fx" aria-hidden="true"></canvas>
@@ -251,6 +262,8 @@ a.row:visited { color: var(--ink); }
 %%NAVSIDE%%
 </div>
 %%STRIP%%
+<div class="skygap" aria-hidden="true"></div>
+<button type="button" class="skyback" id="skyback">&#9650; back to the card</button>
 <script>%%SCRIPT%%</script>
 <script>%%JUKE%%</script>
 <script>
@@ -318,6 +331,12 @@ a.row:visited { color: var(--ink); }
     addEventListener('keydown', e => { if (e.key === 'Escape') { const o = tops.find(t => t.getAttribute('aria-expanded') === 'true'); closeMenus(); if (o) o.focus(); } });
     const clk = document.querySelector('.mbar .clock');
     if (clk) { const t = () => { clk.textContent = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); }; t(); setInterval(t, 15000); }
+    /* the sky: the page scrolls on past the card, and a button goes there and back */
+    const glide = y => scrollTo({ top: y, behavior: calm ? 'auto' : 'smooth' }), root = document.documentElement;
+    document.getElementById('skyb').addEventListener('click', () => glide(root.scrollHeight));
+    document.getElementById('skyback').addEventListener('click', () => glide(0));
+    const skyWatch = () => root.classList.toggle('sky-out', scrollY > 90);
+    addEventListener('scroll', skyWatch, { passive: true }); skyWatch();
     /* the theme menu: dark and light are the homepage's own themes, so choosing one goes back there */
     document.querySelectorAll('[data-theme]').forEach(a => a.addEventListener('click', () => {
         try { localStorage.setItem('noir-theme', a.dataset.theme); sessionStorage.setItem('intro-seen', '1'); } catch (e) {}

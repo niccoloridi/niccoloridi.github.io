@@ -208,6 +208,16 @@ a.row:visited { color: var(--ink); }
     .pic.side { float: none; width: 100%; margin: 0 0 12px; }
     .nrow { grid-template-columns: 1fr; gap: 0; }
 }
+/* on phones and tablets the card can be scrolled away to look at the sky */
+#skyb, .skygap, .skyback { display: none; }
+@media (max-width: 1040px) {
+    html, body { height: auto; }
+    .v-mix body { display: block; }
+    #skyb { display: inline-block; font-size: 18px; }
+    .skygap { display: block; height: 82dvh; }
+    .skyback { position: fixed; z-index: 26; left: 50%; bottom: 18px; transform: translateX(-50%); padding: 7px 14px; font: 400 16px/1 var(--px); color: var(--ink); background: var(--card); border: 2px solid var(--ink); border-radius: 7px; box-shadow: 3px 3px 0 var(--ink); cursor: pointer; white-space: nowrap; }
+    .sky-out .skyback { display: block; }
+}
 @media (prefers-reduced-motion: reduce) { .mq-t, #juke.on .eq i { animation: none; } .mq { overflow-x: auto; } .mq-t > span[aria-hidden] { display: none; } }
 </style>
 </head>
@@ -367,6 +377,7 @@ a.row:visited { color: var(--ink); }
         <button type="button" id="prev" aria-label="Previous card">&#9664;</button>
         <button type="button" id="homeb">Home</button>
         <span class="gap"><span id="pos"></span><span class="wide" data-visits-line> &middot; visit no. <span data-visits="1">1</span></span></span>
+        <button type="button" id="skyb" aria-label="Look at the sky">&#9729;</button>
         <button type="button" id="next" aria-label="Next card">&#9654;</button>
     </div>
     <canvas id="fx" aria-hidden="true"></canvas>
@@ -374,6 +385,8 @@ a.row:visited { color: var(--ink); }
 <aside class="pile"><section class="mini"><h2><a href="#news" data-card="news">What's new</a></h2><div class="mq"><div class="mq-t"><span><a href="/obituaries.html">★ 14 Oct 2026: The Invisible College, Mapped</a><a href="/ilc-atlas/">★ 11 Sep 2026: ILC Atlas</a><a href="/echr-py.html">★ 24 Aug 2026: echr-py</a><a href="/agentic-law-journal/">★ 14 Aug 2026: Agentic Law Journal</a><a href="/cjeu-py.html">★ 28 Feb 2026: cjeu-py</a></span><span aria-hidden="true"><a tabindex="-1" href="/obituaries.html">★ 14 Oct 2026: The Invisible College, Mapped</a><a tabindex="-1" href="/ilc-atlas/">★ 11 Sep 2026: ILC Atlas</a><a tabindex="-1" href="/echr-py.html">★ 24 Aug 2026: echr-py</a><a tabindex="-1" href="/agentic-law-journal/">★ 14 Aug 2026: Agentic Law Journal</a><a tabindex="-1" href="/cjeu-py.html">★ 28 Feb 2026: cjeu-py</a></span></div></div><p class="mqmore"><a href="#news" data-card="news">read it all</a></p></section><section class="mini" id="juke"><h2><span class="ml">Jukebox</span></h2><div class="in"><p class="jname">Music to come</p><div class="jrow" aria-hidden="true"><button type="button" disabled tabindex="-1">|◄</button><button type="button" disabled tabindex="-1">◄◄</button><button type="button" disabled tabindex="-1">▶</button><button type="button" disabled tabindex="-1">►►</button><button type="button" disabled tabindex="-1">►|</button></div></div></section><section class="mini"><h2><a href="#essays" data-card="essays">Essay ring</a></h2><div class="in"><p class="rname" id="rn"></p><p class="rdesc" id="rd"></p><div class="rbtns"><button type="button" data-r="-1" aria-label="Previous essay">◄</button><button type="button" data-r="0">random</button><button type="button" data-r="1" aria-label="Next essay">►</button><a id="rg" href="#">visit</a></div></div></section></aside>
 </div>
 <div class="strip" aria-label="What's new"><div class="mq"><div class="mq-t"><span><a href="/obituaries.html">★ 14 Oct 2026: The Invisible College, Mapped</a><a href="/ilc-atlas/">★ 11 Sep 2026: ILC Atlas</a><a href="/echr-py.html">★ 24 Aug 2026: echr-py</a><a href="/agentic-law-journal/">★ 14 Aug 2026: Agentic Law Journal</a><a href="/cjeu-py.html">★ 28 Feb 2026: cjeu-py</a></span><span aria-hidden="true"><a tabindex="-1" href="/obituaries.html">★ 14 Oct 2026: The Invisible College, Mapped</a><a tabindex="-1" href="/ilc-atlas/">★ 11 Sep 2026: ILC Atlas</a><a tabindex="-1" href="/echr-py.html">★ 24 Aug 2026: echr-py</a><a tabindex="-1" href="/agentic-law-journal/">★ 14 Aug 2026: Agentic Law Journal</a><a tabindex="-1" href="/cjeu-py.html">★ 28 Feb 2026: cjeu-py</a></span></div></div></div>
+<div class="skygap" aria-hidden="true"></div>
+<button type="button" class="skyback" id="skyback">&#9650; back to the card</button>
 <script>(() => {
     const RING = [["/obituaries.html", "The Invisible College, Mapped"], ["/unsc-citations.html", "The Law of Citations"], ["/jessup-ai.html", "GenAI as an International Lawyer"], ["/cil-formation.html", "Custom in the Making"], ["/echr-py.html", "echr-py"], ["/cjeu-py.html", "cjeu-py"], ["/ilc-atlas/", "ILC Atlas"]], $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 
@@ -467,6 +480,12 @@ a.row:visited { color: var(--ink); }
     addEventListener('keydown', e => { if (e.key === 'Escape') { const o = tops.find(t => t.getAttribute('aria-expanded') === 'true'); closeMenus(); if (o) o.focus(); } });
     const clk = document.querySelector('.mbar .clock');
     if (clk) { const t = () => { clk.textContent = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); }; t(); setInterval(t, 15000); }
+    /* the sky: the page scrolls on past the card, and a button goes there and back */
+    const glide = y => scrollTo({ top: y, behavior: calm ? 'auto' : 'smooth' }), root = document.documentElement;
+    document.getElementById('skyb').addEventListener('click', () => glide(root.scrollHeight));
+    document.getElementById('skyback').addEventListener('click', () => glide(0));
+    const skyWatch = () => root.classList.toggle('sky-out', scrollY > 90);
+    addEventListener('scroll', skyWatch, { passive: true }); skyWatch();
     /* the theme menu: dark and light are the homepage's own themes, so choosing one goes back there */
     document.querySelectorAll('[data-theme]').forEach(a => a.addEventListener('click', () => {
         try { localStorage.setItem('noir-theme', a.dataset.theme); sessionStorage.setItem('intro-seen', '1'); } catch (e) {}
