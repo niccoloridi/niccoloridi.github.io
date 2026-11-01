@@ -89,7 +89,7 @@ for ch in changes:
 parts['NEWSROWS'] = newsrows
 MQ = '<div class="mq"><div class="mq-t"><span>' + ''.join(tick) + '</span><span aria-hidden="true">' + ''.join(tick).replace('<a ', '<a tabindex="-1" ') + '</span></div></div>'
 parts['RING2'] = json.dumps([(t, '/' + h, about(h)) for t, h in ESSAYS], ensure_ascii=False)
-parts['JUKE'] = ''  # the player waits for its music: juke.js is kept here, ready to be included again
+parts['JUKE'] = open(os.path.join(HERE, 'juke.js'), encoding='utf-8').read()
 c2 = lambda k, t, ex='': f'<li><a href="#{k}" data-card="{k}"{ex}>{t}</a></li>'
 SEP = '<li class="sep" role="separator"></li>'
 MIX = [('Practice', c2('practice', 'Overview') + l('mailto:' + parts['MAIL'], 'Get in touch')),
@@ -98,9 +98,22 @@ MIX = [('Practice', c2('practice', 'Overview') + l('mailto:' + parts['MAIL'], 'G
        ('Elsewhere', ''.join(l(fl[k], t, True) for t, k, _ in ELSE) + SEP + c2('elsewhere', 'All on one card')),
        ('Agents', l('llms.txt', 'llms.txt: start here') + l('treaties/', 'The Treaty') + l('agentic-law-journal/', 'Agentic Law Journal') + l('guestbook/', 'The guestbook') + SEP + c2('agents', 'For agents'))]
 MB = ('<nav class="mbar" aria-label="Menu"><a class="mlink mhome" href="#home" data-card="home">Niccol&ograve; Ridi</a><a class="mlink" href="#profile" data-card="profile">About</a>' + ''.join(f'<div><button type="button" aria-expanded="false">{n}</button><ul hidden>{m}</ul></div>' for n, m in MIX)
-      + '<a class="mlink" href="#news" data-card="news">What\'s new</a><div class="mtheme"><button type="button" aria-expanded="false" aria-label="Theme: 1990s">1990s ▾</button><ul hidden><li><a href="/" data-theme="dark">dark</a></li><li><a href="/" data-theme="light">light</a></li><li><a href="#home" data-card="home" aria-current="true">1990s</a></li></ul></div><span class="clock"></span></nav>')
-JB = ('<section class="mini" id="juke"><h2><span class="ml">Jukebox</span></h2><div class="in"><p class="jname">Music to come</p><div class="jrow" aria-hidden="true">'
-      + ''.join(f'<button type="button" disabled tabindex="-1">{g}</button>' for g in ('|◄', '◄◄', '▶', '►►', '►|')) + '</div></div></section>')
+      + '<a class="mlink" href="#news" data-card="news">What\'s new</a><button type="button" class="jq" id="jquick" aria-controls="juke" aria-expanded="false" aria-label="Open jukebox">♪</button><div class="mtheme"><button type="button" aria-expanded="false" aria-label="Theme: 1990s">1990s ▾</button><ul hidden><li><a href="/" data-theme="dark">dark</a></li><li><a href="/" data-theme="light">light</a></li><li><a href="#home" data-card="home" aria-current="true">1990s</a></li></ul></div><span class="clock"></span></nav>')
+JB = ('<section class="mini" id="juke" aria-label="Monkey Island jukebox"><h2><button type="button" class="ml jfold" id="jfold" aria-expanded="false" aria-controls="jbody">Jukebox <span aria-hidden="true">▸</span></button></h2><div class="jbody" id="jbody"><div class="in">'
+      '<p class="jnote jcredit">The Secret of Monkey Island</p><p class="jname" id="jname">Introduction and Opening Themes</p>'
+      '<select id="jtracks" aria-label="Choose a track"></select><div class="jrow">'
+      '<button type="button" id="jprev" aria-label="Previous track" title="Previous track">|◄</button>'
+      '<button type="button" id="jback" aria-label="Back 10 seconds" title="Back 10 seconds" disabled>◄◄</button>'
+      '<button type="button" id="jplay" aria-label="Play" title="Play / pause">▶</button>'
+      '<button type="button" id="jfwd" aria-label="Forward 10 seconds" title="Forward 10 seconds" disabled>►►</button>'
+      '<button type="button" id="jnext" aria-label="Next track" title="Next track">►|</button></div>'
+      '<div class="jrow jr2"><label for="jvol">Vol.</label><input id="jvol" type="range" min="0" max="1" step="0.05" value="0.5">'
+      '<span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>'
+      '<p class="jnote" id="jtime" aria-label="Playback time">0:00 / –:––</p>'
+      '<p class="jnote" id="jstatus" role="status">Press play for a little adventure.</p>'
+      '<details class="jnote"><summary>Music credits</summary><p>Michael Land, Barney Jones, Andy Newell and Patrick Mundy. '
+      'MIDI conversions include Quest Studios and HighLand Productions; original file credits are preserved.</p></details>'
+      '<noscript><p class="jnote">Enable JavaScript to play the jukebox.</p></noscript></div></div></section>')
 PL = ('<aside class="pile"><section class="mini"><h2><a href="#news" data-card="news">What\'s new</a></h2>' + MQ + '<p class="mqmore"><a href="#news" data-card="news">read it all</a></p></section>' + JB
       + '<section class="mini"><h2><a href="#essays" data-card="essays">Essay ring</a></h2><div class="in"><p class="rname" id="rn"></p><p class="rdesc" id="rd"></p><div class="rbtns"><button type="button" data-r="-1" aria-label="Previous essay">◄</button><button type="button" data-r="0">random</button><button type="button" data-r="1" aria-label="Next essay">►</button><a id="rg" href="#">visit</a></div></div></section></aside>')
 tmpl = open(os.path.join(HERE, 'template.html'), encoding='utf-8').read()

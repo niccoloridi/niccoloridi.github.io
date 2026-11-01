@@ -157,10 +157,21 @@ a.row:visited { color: var(--ink); }
 .mq:hover .mq-t, .mq:focus-within .mq-t { animation-play-state: paused; }
 @keyframes mq { to { transform: translateX(-50%); } }
 .mini .mqmore { padding: 6px 12px 8px; font-size: 15px; text-align: right; }
+.jfold { border: 0; cursor: pointer; }
+.jfold:hover { background: var(--glow); }
+.jfold span { display: inline-block; transition: transform 0.25s ease; }
+#juke.jopen .jfold span { transform: rotate(90deg); }
+#juke.on .jfold::after { content: ' ♪'; color: var(--link); }
+#juke:not(.jopen) h2 { border-bottom: 0; }
+/* folded by default; the grid row eases open, so the card below moves with it */
+.jbody { display: grid; grid-template-rows: 0fr; visibility: hidden; transition: grid-template-rows 0.3s ease, visibility 0s linear 0.3s; }
+#juke.jopen .jbody { grid-template-rows: 1fr; visibility: visible; transition: grid-template-rows 0.3s ease, visibility 0s; }
+.jbody > .in { min-height: 0; overflow: hidden; padding-top: 0; padding-bottom: 0; }
+.jbody > .in::before, .jbody > .in::after { content: ''; display: block; height: 10px; }
 .jname { font: 600 18px/1.2 var(--px); margin: 0 0 8px; color: var(--wood); }
 .jrow { display: flex; align-items: center; gap: 7px; }
 .jrow button, .rbtns button { height: 28px; min-width: 38px; padding: 0 8px; font: 400 15px/1 var(--px); color: var(--ink); background: var(--card); border: 2px solid var(--ink); border-radius: 7px; cursor: pointer; }
-.rbtns button:hover { background: var(--glow); }
+.jrow button:hover, .rbtns button:hover { background: var(--glow); }
 .jrow button:disabled { opacity: 0.4; cursor: default; }
 .jrow input { flex: 1; min-width: 0; accent-color: var(--link); }
 .eq { display: flex; align-items: flex-end; gap: 2px; height: 14px; margin-left: auto; }
@@ -171,6 +182,9 @@ a.row:visited { color: var(--ink); }
 .jload { display: inline-block; margin-top: 7px; font-size: 13px; color: var(--link); text-decoration: underline; cursor: pointer; } .jload:hover { background: var(--glow); } .jload input { position: absolute; width: 1px; height: 1px; opacity: 0; } .jload:focus-within { outline: 2px dotted var(--ink); }
 .jrow button { flex: 1 1 0; min-width: 0; padding: 0 2px; } .jr2 { margin-top: 8px; }
 .jnote { margin: 7px 0 0; font-size: 13px; line-height: 1.3; color: #6a5560; }
+.jcredit { margin: 0 0 4px; }
+#jtracks { display: block; width: 100%; min-width: 0; margin-bottom: 9px; font-size: 14px; }
+#jtime { font-variant-numeric: tabular-nums; }
 .rname { font: 600 18px/1.2 var(--px); color: var(--wood); margin: 0 0 3px; }
 .rdesc { font-size: 14px; line-height: 1.3; color: #6a5560; margin: 0 0 8px; min-height: 5.2em; }
 .rbtns { display: flex; align-items: center; gap: 6px; }
@@ -189,16 +203,18 @@ a.row:visited { color: var(--ink); }
 .feedline { margin-top: 12px; }
 .strip { display: none; }
 @media (max-width: 1040px) {
-    .v-mix .pile { display: none; }
+    .v-mix .pile { display: block; }
+    .pile > section { display: none; }
+    .pile > #juke.jopen { display: block; position: fixed; z-index: 29; top: 76px; right: 10px; width: min(300px, calc(100vw - 20px)); }
     .v-mix .deck { width: 100%; display: block; }
     .v-mix .stack { width: 100%; }
     .strip { display: block; position: fixed; z-index: 25; left: 0; right: 0; top: 30px; border-bottom: 2px solid var(--ink); }
     .v-mix body { padding-top: 76px; justify-content: center; }
     .v-mix .stack { height: calc(100dvh - 104px); }
     .mbar .clock { display: none; }
-    .v-mix .mbar { overflow-x: auto; scrollbar-width: none; padding-right: 84px; }
+    .v-mix .mbar { overflow-x: auto; scrollbar-width: none; padding-right: 130px; }
     .mbar .mtheme { position: fixed; right: 0; top: 0; height: 28px; margin: 0; background: var(--card); border-left: 2px solid var(--ink); }
-    .mbar .jq { display: flex; position: fixed; right: 0; top: 0; height: 28px; background: var(--card); border-left: 2px solid var(--ink); }
+    .mbar .jq { display: flex; position: fixed; right: 84px; top: 0; height: 28px; background: var(--card); border-left: 2px solid var(--ink); }
     .mbar ul { position: fixed; left: 8px; right: 8px; top: 30px; min-width: 0; max-height: calc(100dvh - 50px); overflow: auto; }
     .mbar button, .mbar .mlink { flex: 0 0 auto; white-space: nowrap; }
 }
@@ -218,7 +234,7 @@ a.row:visited { color: var(--ink); }
     .skyback { position: fixed; z-index: 26; left: 50%; bottom: 18px; transform: translateX(-50%); padding: 7px 14px; font: 400 16px/1 var(--px); color: var(--ink); background: var(--card); border: 2px solid var(--ink); border-radius: 7px; box-shadow: 3px 3px 0 var(--ink); cursor: pointer; white-space: nowrap; }
     .sky-out .skyback { display: block; }
 }
-@media (prefers-reduced-motion: reduce) { .mq-t, #juke.on .eq i { animation: none; } .mq { overflow-x: auto; } .mq-t > span[aria-hidden] { display: none; } }
+@media (prefers-reduced-motion: reduce) { .jbody, #juke.jopen .jbody, .jfold span { transition: none; } .mq-t, #juke.on .eq i { animation: none; } .mq { overflow-x: auto; } .mq-t > span[aria-hidden] { display: none; } }
 </style>
 </head>
 <body>
@@ -265,6 +281,7 @@ a.row:visited { color: var(--ink); }
 <div class="skygap" aria-hidden="true"></div>
 <button type="button" class="skyback" id="skyback">&#9650; back to the card</button>
 <script>%%SCRIPT%%</script>
+<script src="/retro/vendor/webaudio-tinysynth.min.js"></script>
 <script>%%JUKE%%</script>
 <script>
 (() => {
