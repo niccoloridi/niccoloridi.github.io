@@ -7,6 +7,7 @@ import { render as members } from './views/members.js';
 import { render as provisions } from './views/provisions.js';
 import { render as search } from './views/search.js';
 import { render as documents } from './views/documents.js';
+import { render as about } from './views/about.js';
 
 let meetings;
 let currentPath = '/m/1';
@@ -53,6 +54,9 @@ async function render() {
     else if (view === 'topic') {
       cancelChrono();
       await topicsV1(document.querySelector('#reader'), state, api);
+    } else if (view === 'about') {
+      cancelChrono();
+      await about(document.querySelector('#reader'), state, api);
     } else if (view === 'docs') {
       cancelChrono();
       await documents(document.querySelector('#reader'), state, api);

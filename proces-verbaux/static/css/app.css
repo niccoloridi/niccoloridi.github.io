@@ -113,3 +113,29 @@ body.ctx-open .workspace{margin-right:min(44rem,46vw)}
 .advisory[hidden]{display:none}.advisory p{margin:.15rem 0}.advisory b{font-weight:600}
 .advisory button{position:absolute;top:.4rem;right:.5rem;border:0;background:transparent;color:var(--muted);font:inherit}
 body[data-dl=fr] .advisory p[lang=en],body[data-dl=en] .advisory p[lang=fr]{display:none}
+
+
+.about{max-width:46rem;margin:0 auto;padding:1rem 0 4rem}
+.about-head{border-bottom:1px solid var(--line);padding-bottom:1.2rem;margin-bottom:1.4rem}
+.about-kicker{font:.7rem var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0}
+.about-head h2{font:400 clamp(1.8rem,4vw,2.6rem)/1.12 var(--serif);margin:.4rem 0 .3rem;text-wrap:balance}
+.about-dates{font-style:italic;color:var(--gold);margin:0 0 .6rem;font-size:1.1rem}
+.about-editor{margin:0;font:.85rem var(--sans);color:var(--muted)}.about-editor strong{color:var(--fg);font-weight:500}
+.about section{margin:1.6rem 0}
+.about h3{font:500 .78rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 .6rem}
+.about p,.about li,.about dd{line-height:1.65;hyphens:auto}
+.about-advisory{border-left:3px solid var(--gold);background:var(--highlight);padding:.7rem 1rem}
+.about-advisory h3{color:var(--gold)}.about-advisory p{margin:0}
+.about-members{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(15rem,1fr));gap:.35rem 1.4rem}
+.about-members li{display:flex;flex-direction:column;border-bottom:1px solid var(--line);padding:.3rem 0}
+.about-members a{text-decoration:none;color:var(--fg)}.about-members a:hover{color:var(--gold)}
+.about-members span{font:.75rem var(--sans);color:var(--muted)}
+.about-note{font-size:.88rem;color:var(--muted)}
+.about-offers{display:grid;grid-template-columns:9rem 1fr;gap:.5rem 1rem;margin:0}
+.about-offers dt a{font:500 .85rem var(--sans);color:var(--gold);text-decoration:none}.about-offers dd{margin:0}
+.about-cite{display:flex;gap:.8rem;align-items:flex-start;border:1px solid var(--line);background:var(--panel);padding:.8rem 1rem}
+.about-cite p{margin:0;flex:1;font-size:.95rem;overflow-wrap:anywhere}.about-cite button{font:.75rem var(--sans)}
+.about-downloads{padding-left:1.1rem}.about-downloads a{color:var(--gold)}
+.about-version{font:.72rem var(--mono);color:var(--muted);margin-top:2.4rem;border-top:1px solid var(--line);padding-top:.8rem}
+@media(max-width:600px){.about-offers{grid-template-columns:1fr}.about-cite{flex-direction:column}}
+body[data-view=about] #advisory{display:none}
