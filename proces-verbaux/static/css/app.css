@@ -139,3 +139,7 @@ body[data-dl=fr] .advisory p[lang=en],body[data-dl=en] .advisory p[lang=fr]{disp
 .about-version{font:.72rem var(--mono);color:var(--muted);margin-top:2.4rem;border-top:1px solid var(--line);padding-top:.8rem}
 @media(max-width:600px){.about-offers{grid-template-columns:1fr}.about-cite{flex-direction:column}}
 body[data-view=about] #advisory{display:none}
+.about-doc{display:grid;grid-template-columns:9rem 1fr;gap:.25rem 1rem;margin:.4rem 0 .8rem;font-size:.92rem}
+.about-doc dt{font:.72rem var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-top:.2rem}
+.about-doc dd{margin:0}.about-doc a,.about-ia{color:var(--gold)}.about-ia{font:.82rem var(--sans)}
+@media(max-width:600px){.about-doc{grid-template-columns:1fr}}

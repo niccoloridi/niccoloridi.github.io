@@ -1,5 +1,5 @@
 
-import { link } from '../state.js';
+import { link } from '../state.js?v=31701b5892';
 
 const MEMBERS = [
   ['adatci', 'Mineichirō Adatci', 'Japon', 'Japan'],
@@ -55,13 +55,20 @@ const T = {
       ['data/meetings.csv', 'Meetings (CSV)'], ['data/documents.csv', 'Annexes and speeches (CSV)'],
       ['data/thesaurus.json', 'Analytical index thesaurus (JSON)']],
     dlLocal: 'Downloads are available in the published edition.',
+    docH: 'Source document',
+    doc: 'The edition is based on the copy of the printed volume held by the Robarts Library, University of Toronto, digitised by the Internet Archive in 2007 (300 ppi; 800 page images). The scan is not in copyright and is freely available there.',
+    docFacts: [['Title', 'Procès-verbaux of the Proceedings of the Committee, June 16th–July 24th, 1920, with Annexes'],
+      ['Author', 'League of Nations. Advisory Committee of Jurists'], ['Published', 'The Hague: Van Langenhuysen, 1920'],
+      ['Copy', 'Robarts Library, University of Toronto'], ['Internet Archive', 'procsverbauxof00leaguoft'],
+      ['ARK', 'ark:/13960/t20c4wm3x']],
+    docLink: 'View the scan on the Internet Archive',
     srcH: 'Sources',
     src: [
-      'Advisory Committee of Jurists, Procès-verbaux of the Proceedings of the Committee, June 16th–July 24th 1920, with Annexes (The Hague: Van Langenhuysen Brothers, 1920). Scan of the University of Toronto copy, via the Internet Archive.',
+      'Advisory Committee of Jurists, Procès-verbaux of the Proceedings of the Committee, June 16th–July 24th 1920, with Annexes (The Hague: Van Langenhuysen Brothers, 1920).',
       'Permanent Court of International Justice, Series D, No. 1: Statute and Rules of Court (Leyden: Sijthoff, 1926) — for the text of the Statute as adopted on 13 December 1920.',
     ],
     licH: 'Licence',
-    lic: 'The texts of 1920 are in the public domain. The edition’s data are published under the Creative Commons Attribution 4.0 International licence (CC BY 4.0).',
+    lic: 'The edition and all its data — the transcribed French and English texts, the analytical index, the metadata and the downloads — are published under the Creative Commons Attribution 4.0 International licence (CC BY 4.0). The printed volume of 1920 is out of copyright.',
     version: 'Version 0.1 · 11 November 2026',
   },
   fr: {
@@ -104,13 +111,20 @@ const T = {
       ['data/meetings.csv', 'Séances (CSV)'], ['data/documents.csv', 'Annexes et discours (CSV)'],
       ['data/thesaurus.json', 'Thésaurus de l’index analytique (JSON)']],
     dlLocal: 'Les téléchargements sont disponibles dans l’édition publiée.',
+    docH: 'Document source',
+    doc: 'L’édition repose sur l’exemplaire du volume imprimé conservé à la Robarts Library de l’Université de Toronto, numérisé par l’Internet Archive en 2007 (300 ppp ; 800 images). La numérisation, libre de droits, y est accessible gratuitement.',
+    docFacts: [['Titre', 'Procès-verbaux of the Proceedings of the Committee, June 16th–July 24th, 1920, with Annexes'],
+      ['Auteur', 'Société des Nations. Comité consultatif de juristes'], ['Publication', 'La Haye : Van Langenhuysen, 1920'],
+      ['Exemplaire', 'Robarts Library, Université de Toronto'], ['Internet Archive', 'procsverbauxof00leaguoft'],
+      ['ARK', 'ark:/13960/t20c4wm3x']],
+    docLink: 'Consulter la numérisation sur l’Internet Archive',
     srcH: 'Sources',
     src: [
-      'Comité consultatif de juristes, Procès-verbaux des séances du Comité, 16 juin – 24 juillet 1920, avec annexes (La Haye : Van Langenhuysen Frères, 1920). Numérisation de l’exemplaire de l’Université de Toronto, via l’Internet Archive.',
+      'Comité consultatif de juristes, Procès-verbaux des séances du Comité, 16 juin – 24 juillet 1920, avec annexes (La Haye : Van Langenhuysen Frères, 1920).',
       'Cour permanente de justice internationale, Série D, n° 1 : Statut et Règlement de la Cour (Leyde : Sijthoff, 1926) — pour le texte du Statut adopté le 13 décembre 1920.',
     ],
     licH: 'Licence',
-    lic: 'Les textes de 1920 appartiennent au domaine public. Les données de l’édition sont publiées sous licence Creative Commons Attribution 4.0 International (CC BY 4.0).',
+    lic: 'L’édition et l’ensemble de ses données — textes français et anglais transcrits, index analytique, métadonnées et téléchargements — sont publiés sous licence Creative Commons Attribution 4.0 International (CC BY 4.0). Le volume imprimé de 1920 n’est plus protégé par le droit d’auteur.',
     version: 'Version 0.1 · 11 novembre 2026',
   },
 };
@@ -170,6 +184,19 @@ export async function render(root, state) {
   };
   box.append(q, btn);
   sec(t.citeH, box, el('p', t.citeNote, 'about-note'));
+
+  const IA = 'https://archive.org/details/procsverbauxof00leaguoft';
+  const table = el('dl', undefined, 'about-doc');
+  for (const [k, v] of t.docFacts) {
+    const dd = el('dd');
+    if (k === 'Internet Archive') { const a = el('a', v); a.href = IA; a.target = '_blank'; a.rel = 'noopener'; dd.append(a); }
+    else if (k === 'ARK') { const a = el('a', v); a.href = `https://n2t.net/${v}`; a.target = '_blank'; a.rel = 'noopener'; dd.append(a); }
+    else dd.textContent = v;
+    table.append(el('dt', k), dd);
+  }
+  const go = el('a', `${t.docLink} ↗`, 'about-ia');
+  go.href = IA; go.target = '_blank'; go.rel = 'noopener';
+  sec(t.docH, el('p', t.doc), table, go);
 
   const cfg = window.PV_STATIC;
   if (cfg) {

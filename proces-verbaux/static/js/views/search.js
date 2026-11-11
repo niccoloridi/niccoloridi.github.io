@@ -1,5 +1,5 @@
-import { element } from './chrono.js';
-import { link, navigate } from '../state.js';
+import { element } from './chrono.js?v=31701b5892';
+import { link, navigate } from '../state.js?v=31701b5892';
 
 let request = 0;
 
