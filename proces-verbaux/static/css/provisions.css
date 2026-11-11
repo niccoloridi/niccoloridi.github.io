@@ -1,0 +1,38 @@
+.provisions-view .provision-tabs { display: flex; gap: .5rem; margin-block: 1rem; }
+.provisions-view button[aria-pressed="true"] { outline: 2px solid currentColor; }
+.provision-stages { display: grid; grid-template-columns: repeat(6, minmax(15rem, 1fr)); gap: 1rem; overflow-x: auto; }
+.provision-stage { min-width: 0; padding: .5rem; border: 1px solid currentColor; border-radius: .25rem; }
+.provision-stage summary { cursor: pointer; margin-block: .5rem; overflow-wrap: anywhere; }
+.provision-articles { display: flex; flex-direction: column; align-items: stretch; gap: .25rem; }
+.provision-articles button { text-align: start; }
+.provision-detail { margin-block: 1.5rem; }
+.provision-paragraph { display: flex; gap: 1.5rem; margin-block: 1rem; }
+.provision-language { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.provision-language p, .provision-cues blockquote { white-space: pre-wrap; }
+.provision-cues li { margin-block: 1.5rem; }
+@media (max-width: 700px) { .provision-paragraph { flex-direction: column; gap: .5rem; } }
+
+.provision-filters { display: flex; flex-wrap: wrap; gap: 1rem; margin-block: 1rem; }
+.provision-filters label { display: flex; align-items: center; gap: .4rem; }
+.provision-statute-row { display: grid; grid-template-columns: 5rem minmax(12rem, 1fr) minmax(12rem, 1fr);
+  gap: .8rem; align-items: center; padding: .75rem 0; border-bottom: 1px solid var(--line, #8886); }
+.provision-row-label p { margin: .2rem 0; }
+.provision-mini-ladder { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem; font-size: .8rem; }
+.ladder-dot { border: 1px solid var(--line, #8886); border-radius: .6rem; padding: .15rem .4rem; }
+.ladder-dot.s5 { font-weight: bold; border-width: 2px; }
+.provision-flag { grid-column: 2 / -1; }
+.provision-lineage-layout { display: grid; grid-template-columns: minmax(0, 3fr) minmax(15rem, 1fr); gap: 1.5rem; }
+.provision-ladder-step { margin-block: .8rem; padding: .8rem; border: 1px solid var(--line, #8886); }
+.provision-ladder-step summary { cursor: pointer; font-weight: 600; }
+.provision-ladder-step p, .provision-diff p { white-space: pre-wrap; overflow-wrap: anywhere; }
+.provision-ladder-step > a { display: inline-block; margin: .25rem; font-size: .75rem; }
+.provision-diff ins { background: #22883330; text-decoration: underline; }
+.provision-diff del { background: #cc331130; text-decoration: line-through; }
+.provision-evidence { font-size: .85rem; overflow-wrap: anywhere; }
+.provision-evidence details { padding-block: .5rem; border-bottom: 1px solid var(--line, #8886); }
+.provision-evidence blockquote { margin-inline: .5rem; }
+@media (max-width: 900px) {
+  .provision-statute-row { grid-template-columns: 4rem 1fr; }
+  .provision-mini-ladder { grid-column: 2; }
+  .provision-lineage-layout { grid-template-columns: 1fr; }
+}

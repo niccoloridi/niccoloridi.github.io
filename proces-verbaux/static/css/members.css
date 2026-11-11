@@ -1,0 +1,28 @@
+.member-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; }
+.member-card, .member-profile { padding: 1rem; border: 1px solid currentColor; border-radius: .35rem; min-width: 0; }
+.member-cards h3, .member-profile h2 { margin-top: 0; }
+.member-compare { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; }
+.member-single { margin-top: 1rem; }
+.presence-strip, .turns-strip { display: grid; grid-template-columns: repeat(35, minmax(1.25rem, 1fr));
+  list-style: none; padding: 0; margin: .5rem 0; overflow-x: auto; }
+.presence-strip li { border: 1px solid currentColor; text-align: center; }
+.presence-strip a { display: block; padding: .35rem 0; font-size: .7rem; }
+.presence-absent { background: repeating-linear-gradient(135deg, transparent 0 3px, #8885 3px 5px); }
+.presence-partial { background: linear-gradient(90deg, #8888 50%, transparent 50%); }
+.presence-other { border-bottom-width: 3px !important; }
+.presence-legend, .members-note { font-size: .85rem; opacity: .8; }
+.turns-strip a { position: relative; display: block; height: 5rem; border-bottom: 1px solid currentColor; }
+.turns-bar { position: absolute; bottom: 1rem; left: 12%; width: 76%; max-height: calc(100% - 1rem);
+  background: currentColor; opacity: .65; }
+.turns-strip small { position: absolute; bottom: 0; width: 100%; text-align: center; font-size: .6rem; }
+.member-turns { padding-left: 1.4rem; }
+.member-turns > li { padding: .75rem 0; border-bottom: 1px solid #8886; }
+.turn-snippet { margin: .5rem 0; }
+.turn-warning { font-size: .85rem; border-left: 3px solid currentColor; padding-left: .5rem; }
+.speaker-chip { display: inline-block; border: 1px solid #8888; border-radius: .3rem; padding: .1rem .35rem;
+  font-size: .85em; text-decoration: none; }
+.speaker-chip.inferred { text-decoration: underline dotted; }
+.speaker-chip.unresolved { color: #888; }
+.original-language { font-size: .75em; }
+.members-view label { display: inline-block; margin: .5rem 1rem; }
+@media (max-width: 850px) { .member-compare { grid-template-columns: minmax(0, 1fr); } }

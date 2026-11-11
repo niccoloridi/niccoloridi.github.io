@@ -1,0 +1,29 @@
+.documents-view { max-width: 100%; }
+.documents-tabs, .documents-controls { display: flex; flex-wrap: wrap; gap: .65rem; align-items: center; margin: 1rem 0; }
+.documents-view button { cursor: pointer; color: inherit; font: inherit; }
+.documents-view button[aria-pressed="true"] { font-weight: 700; outline: 2px solid currentColor; outline-offset: 1px; }
+.documents-controls label { display: inline-flex; gap: .35rem; align-items: center; }
+.documents-controls input { color: inherit; background: transparent; border: 1px solid currentColor; padding: .35rem; font: inherit; }
+.documents-controls input[type="number"] { width: 4.5rem; }
+.documents-facets { display: grid; gap: .6rem; }
+.documents-facets fieldset { border: 1px solid currentColor; border-radius: .25rem; padding: .5rem; min-width: 0; }
+.documents-facets legend { font-weight: 600; padding: 0 .3rem; }
+.documents-facets button { margin: .2rem .35rem .2rem 0; }
+.document-chip, .documents-tabs button, .documents-controls button { border: 1px solid currentColor; background: transparent; border-radius: 1rem; padding: .25rem .7rem; }
+.documents-count { font-variant-numeric: tabular-nums; }
+.documents-view > div:last-child { overflow-x: auto; }
+.documents-table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+.documents-table caption { text-align: left; margin-bottom: .6rem; }
+.documents-table th, .documents-table td { padding: .65rem .5rem; text-align: left; border-bottom: 1px solid currentColor; vertical-align: top; }
+.documents-table th button { background: transparent; border: 0; padding: .15rem; text-align: left; }
+.documents-table th[aria-sort="ascending"] button::after { content: ' ↑'; }
+.documents-table th[aria-sort="descending"] button::after { content: ' ↓'; }
+.documents-table td p { margin: 0 0 .4rem; }
+.documents-table td:nth-child(4) { min-width: 16rem; overflow-wrap: anywhere; }
+.documents-table td:nth-child(5) { min-width: 8rem; }
+.documents-table td:nth-child(6) { min-width: 8rem; font-variant-numeric: tabular-nums; }
+.documents-table tbody tr { cursor: pointer; }
+.documents-table tbody tr:hover, .documents-table tbody tr:focus-within { background: color-mix(in srgb, currentColor 8%, transparent); }
+.document-kind { display: inline-block; border: 1px solid currentColor; border-radius: .3rem; padding: .15rem .4rem; font-size: .85em; }
+.documents-view :focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+@media (max-width: 600px) { .documents-controls label:first-child, .documents-controls input[type="search"] { width: 100%; } }

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Procès-verbaux du Comité consultatif de juristes, 1920</title>
+<meta name="description" content="The proceedings, annexes, and Statute of the Advisory Committee of Jurists, 1920. Edited by Niccolò Ridi.">
+<meta property="og:title" content="Procès-verbaux du Comité consultatif de juristes, 1920">
+<meta property="og:description" content="The proceedings, annexes, and Statute of the Advisory Committee of Jurists, 1920. Edited by Niccolò Ridi.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://niccoloridi.com/proces-verbaux/">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="static/css/app.css">
+  <link rel="stylesheet" href="static/css/members.css">
+  <link rel="stylesheet" href="static/css/search.css">
+  <link rel="stylesheet" href="static/css/provisions.css">
+  <link rel="stylesheet" href="static/css/documents.css">
+  <link rel="stylesheet" href="static/css/topics.css">
+  <script>window.PV_STATIC = {"data": "https://niccoloridi.com/proces-verbaux/data", "pages": "https://niccoloridi.com/proces-verbaux/pages", "pdf": "https://niccoloridi.com/proces-verbaux/pdf"};</script>
+<script src="static-shim.js"></script>
+  <script type="module" src="static/js/app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#reader" data-anchor="reader">Skip to reader</a>
+  <header>
+    <h1 lang="fr">Procès-verbaux <em>1920</em></h1>
+    <nav id="tabs" aria-label="Views">
+      <a data-view="m" href="#/m/1">Chronological</a>
+      <a data-view="docs" href="#/docs">Documents</a>
+      <a data-view="topic" href="#/topic">Topics</a>
+      <a data-view="search" href="#/search">Search</a>
+      <a data-view="prov" href="#/prov">Provisions</a>
+      <a data-view="who" href="#/who">Members</a>
+    <a href="about.html">About this edition</a></nav>
+    <div class="controls" role="group" aria-label="Reading controls">
+      <button data-dl="fr" aria-pressed="false">FR</button>
+      <button data-dl="en" aria-pressed="false">EN</button>
+      <button data-dl="both" aria-pressed="true">FR+EN</button>
+      <button id="facs-toggle" aria-pressed="false" title="Show the printed page beside the text">Facsimile</button>
+      <button id="theme" aria-label="Toggle light and dark mode">◐</button>
+    </div>
+  </header>
+  <aside id="advisory" class="advisory" role="note" hidden>
+    <p lang="en"><b>Advisory.</b> This edition is a work in progress. The French and English texts were transcribed from
+      the printed volume of 1920 and are still being proofread: they may contain errors of transcription, layout or
+      pairing. Please check the facsimile (the <i>Facsimile</i> button, or any page marker) before quoting.</p>
+    <p lang="fr"><b>Avertissement.</b> Cette édition est en cours. Les textes français et anglais ont été transcrits à
+      partir du volume imprimé de 1920 et sont en cours de relecture : ils peuvent contenir des erreurs de transcription,
+      de mise en page ou d'alignement. Veuillez vérifier le fac-similé (bouton <i>Facsimile</i> ou repère de page) avant
+      toute citation.</p>
+    <button id="advisory-close" aria-label="Dismiss advisory">✕</button>
+  </aside>
+  <div class="workspace">
+    <nav id="meetings" aria-label="Meetings and annexes"></nav>
+    <main id="reader" tabindex="-1" aria-label="Reading edition"></main>
+    <aside id="facsimile" class="facs" aria-labelledby="facsimile-title" hidden>
+      <div class="panel-head">
+        <h2 id="facsimile-title">Facsimile</h2>
+        <div class="facs-ctl">
+          <button id="facs-prev" aria-label="Previous page">‹</button>
+          <button id="facs-next" aria-label="Next page">›</button>
+          <button id="facs-sync" aria-pressed="true" title="Keep the facsimile on the passage you are reading">Follow text</button>
+          <button id="close-facsimile" aria-label="Close facsimile">✕</button>
+        </div>
+      </div>
+      <p id="image-status" role="status"></p>
+      <div class="facs-frame"><img id="page-image" alt=""><svg id="facs-boxes" viewBox="0 0 1 1" preserveAspectRatio="none" aria-hidden="true"></svg></div>
+      <p class="facs-hint">Scrolls with the text · click a passage on the page to jump to it</p>
+    </aside>
+  </div>
+</body>
+</html>

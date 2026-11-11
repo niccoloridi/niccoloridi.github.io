@@ -1,0 +1,35 @@
+.positions-view{max-width:100%;min-width:0}
+.pos-controls{display:flex;flex-wrap:wrap;gap:.7rem 1.2rem;margin:1rem 0;font:.8rem var(--sans)}
+.pos-controls select{max-width:30rem;background:var(--panel);color:var(--fg);border:1px solid var(--line);padding:.3rem;font:inherit}
+.pos-meetings{display:flex;flex-wrap:wrap;gap:.25rem;font:.78rem var(--mono);margin:.8rem 0}
+.pos-meetings a{padding:.2rem .45rem;border:1px solid var(--line);text-decoration:none}
+.pos-meetings [aria-current]{border-color:var(--gold);background:var(--highlight)}
+.pos-legend{font:.75rem/1.6 var(--sans);color:var(--muted)}
+.pos-scroll{overflow-x:auto;margin:1rem 0;max-width:100%}
+.pos-matrix{font:.8rem/1.5 var(--sans);width:max-content;min-width:100%;margin:0}
+.pos-matrix th:first-child{min-width:10rem;max-width:30rem;position:sticky;left:0;background:var(--panel);z-index:1}
+.pos-matrix th{font-weight:500}.pos-matrix td{text-align:center;vertical-align:middle}
+.pos-matrix a{text-underline-offset:3px}
+.pos-glyph{font:1.2rem var(--sans);min-width:2rem;min-height:2rem;margin:.1rem;padding:.1rem .3rem;border:1px solid transparent}
+.pos-recorded{background:var(--highlight);color:var(--gold)}
+.pos-uncertain{background:transparent;border:1px dashed var(--gold);color:var(--fg)}
+.pos-vote{border:2px solid var(--gold);background:var(--panel);color:var(--gold)}
+.pos-glyph:disabled{cursor:default;color:var(--muted)}
+.pos-absent{background:repeating-linear-gradient(135deg,var(--line),var(--line) 1px,transparent 1px,transparent 7px);color:var(--muted)}
+.pos-evidence{border:1px solid var(--gold);background:var(--panel);padding:.8rem 1rem;margin:1rem 0;max-height:28rem;overflow:auto}
+.pos-evidence[hidden]{display:none}.pos-evidence h3{font:500 .9rem var(--sans)}
+.pos-quote{border-bottom:1px solid var(--line);padding:.6rem 0;text-align:left}
+.pos-quote small{font:.7rem var(--mono);color:var(--muted)}
+.pos-quote blockquote{margin:.4rem 0;padding-left:.7rem;border-left:2px solid var(--line);white-space:pre-wrap}
+.pos-quote a{font:.75rem var(--sans);color:var(--gold)}
+.pos-comparison{border-bottom:1px solid var(--line);padding:1rem 0}
+.pos-verdict{border-left:2px solid var(--gold);padding-left:.7rem}
+.pos-pair{font:.75rem var(--mono);min-width:3rem;border:0;padding:.45rem}
+.pos-positive{background:var(--highlight);color:var(--gold)}
+.pos-negative{background:var(--line);color:var(--fg)}
+.pos-sparse{background-image:repeating-linear-gradient(135deg,transparent,transparent 4px,var(--line) 4px,var(--line) 5px)}
+.pos-dendrogram{width:100%;min-width:28rem;max-width:60rem;background:var(--panel)}
+.pos-dendrogram path{stroke:var(--muted);stroke-width:1.5}
+.pos-dendrogram text{fill:var(--fg);font:12px var(--sans)}
+@media(max-width:650px){.pos-controls{display:block}.pos-controls label{display:block;margin:.5rem 0}.pos-controls select{max-width:100%}
+  .pos-matrix th:first-child{min-width:8rem;max-width:14rem}.pos-dendrogram{min-width:0}}
