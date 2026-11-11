@@ -1,13 +1,13 @@
-import { api } from './api.js?v=1c4899085d';
-import './context.js?v=1c4899085d';
-import { link, navigate, readState, state } from './state.js?v=1c4899085d';
-import { cancelChrono, chrono, element, rail } from './views/chrono.js?v=1c4899085d';
-import { render as topicsV1 } from './views/topics_v1.js?v=1c4899085d';
-import { render as members } from './views/members.js?v=1c4899085d';
-import { render as provisions } from './views/provisions.js?v=1c4899085d';
-import { render as search } from './views/search.js?v=1c4899085d';
-import { render as documents } from './views/documents.js?v=1c4899085d';
-import { render as about } from './views/about.js?v=1c4899085d';
+import { api } from './api.js?v=1509f92807';
+import './context.js?v=1509f92807';
+import { link, navigate, readState, state } from './state.js?v=1509f92807';
+import { cancelChrono, chrono, element, rail } from './views/chrono.js?v=1509f92807';
+import { render as topicsV1 } from './views/topics_v1.js?v=1509f92807';
+import { render as members } from './views/members.js?v=1509f92807';
+import { render as provisions } from './views/provisions.js?v=1509f92807';
+import { render as search } from './views/search.js?v=1509f92807';
+import { render as documents } from './views/documents.js?v=1509f92807';
+import { render as about } from './views/about.js?v=1509f92807';
 
 let meetings;
 let currentPath = '/m/1';
@@ -168,6 +168,21 @@ function drawCurrentBoxes() {
       boxes.append(rect);
     }
   }
+  if (follow && row && rows.includes(row)) followScan(row);
+}
+
+
+function followScan(row) {
+  const rects = rectsOf(row);
+  const frame = image.parentElement;
+  if (!rects.length || !image.complete || !frame.offsetHeight) return;
+  const y0 = Math.min(...rects.map(r => r[1])), y1 = Math.max(...rects.map(r => r[3]));
+  const top = document.querySelector('header').getBoundingClientRect().bottom + 8;
+  const r = row.getBoundingClientRect();
+  const progress = Math.min(1, Math.max(0, (top - r.top) / (r.height || 1)));
+  const y = (y0 + progress * (y1 - y0)) * frame.offsetHeight;
+  const frameTop = frame.getBoundingClientRect().top - panel.getBoundingClientRect().top + panel.scrollTop;
+  panel.scrollTop = Math.max(0, frameTop + y - panel.clientHeight * 0.35);
 }
 let ticking = false;
 window.addEventListener('scroll', () => {

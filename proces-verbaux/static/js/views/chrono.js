@@ -1,5 +1,5 @@
-import { api } from '../api.js?v=1c4899085d';
-import { link, state } from '../state.js?v=1c4899085d';
+import { api } from '../api.js?v=1509f92807';
+import { link, state } from '../state.js?v=1509f92807';
 
 export function element(tag, text, className) {
   const node = document.createElement(tag);
