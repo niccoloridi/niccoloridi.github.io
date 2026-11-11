@@ -1,5 +1,5 @@
 
-import { link } from '../state.js?v=31701b5892';
+import { link } from '../state.js?v=1c4899085d';
 
 const MEMBERS = [
   ['adatci', 'Mineichirō Adatci', 'Japon', 'Japan'],
@@ -140,7 +140,9 @@ export async function render(root, state) {
   const head = el('header', undefined, 'about-head');
   head.append(el('p', t.kicker, 'about-kicker'), el('h2', t.title), el('p', t.dates, 'about-dates'));
   const ed = el('p', undefined, 'about-editor');
-  ed.append(`${t.editor} `, el('strong', 'Niccolò Ridi'));
+  const me = el('a', 'Niccolò Ridi'); me.href = 'https://niccoloridi.com/';
+  const strong = el('strong'); strong.append(me);
+  ed.append(`${t.editor} `, strong);
   head.append(ed);
   page.append(head);
 
