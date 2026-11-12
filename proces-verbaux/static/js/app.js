@@ -1,13 +1,13 @@
-import { api } from './api.js?v=1509f92807';
-import './context.js?v=1509f92807';
-import { link, navigate, readState, state } from './state.js?v=1509f92807';
-import { cancelChrono, chrono, element, rail } from './views/chrono.js?v=1509f92807';
-import { render as topicsV1 } from './views/topics_v1.js?v=1509f92807';
-import { render as members } from './views/members.js?v=1509f92807';
-import { render as provisions } from './views/provisions.js?v=1509f92807';
-import { render as search } from './views/search.js?v=1509f92807';
-import { render as documents } from './views/documents.js?v=1509f92807';
-import { render as about } from './views/about.js?v=1509f92807';
+import { api } from './api.js?v=32bb2641f0';
+import './context.js?v=32bb2641f0';
+import { link, navigate, readState, state } from './state.js?v=32bb2641f0';
+import { cancelChrono, chrono, element, rail } from './views/chrono.js?v=32bb2641f0';
+import { render as topicsV1 } from './views/topics_v1.js?v=32bb2641f0';
+import { render as members } from './views/members.js?v=32bb2641f0';
+import { render as provisions } from './views/provisions.js?v=32bb2641f0';
+import { render as search } from './views/search.js?v=32bb2641f0';
+import { render as documents } from './views/documents.js?v=32bb2641f0';
+import { render as about } from './views/about.js?v=32bb2641f0';
 
 let meetings;
 let currentPath = '/m/1';
@@ -18,9 +18,8 @@ const image = document.querySelector('#page-image');
 const imageStatus = document.querySelector('#image-status');
 const boxes = document.querySelector('#facs-boxes');
 const facsToggle = document.querySelector('#facs-toggle');
-const facsSync = document.querySelector('#facs-sync');
 let facsPdf = null;
-let follow = true;
+let follow = true;  // always follows the text; ‹ › page browsing pauses it until the text is scrolled again
 
 function applyLanguage() {
   document.body.dataset.dl = state.dl;
@@ -122,18 +121,23 @@ function openFacsimile(pdf, explicit = false) {
   document.body.classList.add('facs-open');
   facsToggle.setAttribute('aria-pressed', 'true');
   persistFacs(true);
-  if (explicit && pdf) { follow = false; facsSync.setAttribute('aria-pressed', 'false'); }
   setFacsPage(pdf || currentRow()?.dataset.pdf && Number(currentRow().dataset.pdf));
   drawCurrentBoxes();
 }
 function closeFacsimile() {
   panel.hidden = true;
+  for (const el of document.querySelectorAll('#reader article.segment.reading')) el.classList.remove('reading');
   document.body.classList.remove('facs-open');
   facsToggle.setAttribute('aria-pressed', 'false');
   persistFacs(false);
 }
+
+function readingLine() {
+  const head = document.querySelector('header').getBoundingClientRect().bottom;
+  return head + Math.max(8, (window.innerHeight - head) * 0.25);
+}
 function currentRow() {
-  const top = document.querySelector('header').getBoundingClientRect().bottom + 8;
+  const top = readingLine();
   for (const row of document.querySelectorAll('#reader article.segment')) {
     const r = row.getBoundingClientRect();
     if (r.bottom > top) return row;
@@ -168,6 +172,8 @@ function drawCurrentBoxes() {
       boxes.append(rect);
     }
   }
+  for (const el of document.querySelectorAll('#reader article.segment.reading')) if (el !== row) el.classList.remove('reading');
+  if (row) row.classList.add('reading');
   if (follow && row && rows.includes(row)) followScan(row);
 }
 
@@ -177,7 +183,7 @@ function followScan(row) {
   const frame = image.parentElement;
   if (!rects.length || !image.complete || !frame.offsetHeight) return;
   const y0 = Math.min(...rects.map(r => r[1])), y1 = Math.max(...rects.map(r => r[3]));
-  const top = document.querySelector('header').getBoundingClientRect().bottom + 8;
+  const top = readingLine();
   const r = row.getBoundingClientRect();
   const progress = Math.min(1, Math.max(0, (top - r.top) / (r.height || 1)));
   const y = (y0 + progress * (y1 - y0)) * frame.offsetHeight;
@@ -192,7 +198,8 @@ window.addEventListener('scroll', () => {
     ticking = false;
     const row = currentRow();
     if (!row) return;
-    if (follow) setFacsPage(Number(row.dataset.pdf));
+    follow = true;
+    setFacsPage(Number(row.dataset.pdf));
     drawCurrentBoxes();
   });
 }, { passive: true });
@@ -207,13 +214,8 @@ boxes.addEventListener('click', event => {
   }
 });
 facsToggle.onclick = () => (panel.hidden ? openFacsimile() : closeFacsimile());
-facsSync.onclick = () => {
-  follow = !follow;
-  facsSync.setAttribute('aria-pressed', String(follow));
-  if (follow) { const row = currentRow(); if (row) setFacsPage(Number(row.dataset.pdf)); drawCurrentBoxes(); }
-};
-document.querySelector('#facs-prev').onclick = () => { follow = false; facsSync.setAttribute('aria-pressed', 'false'); setFacsPage(Math.max(1, (facsPdf || 2) - 1)); drawCurrentBoxes(); };
-document.querySelector('#facs-next').onclick = () => { follow = false; facsSync.setAttribute('aria-pressed', 'false'); setFacsPage((facsPdf || 0) + 1); drawCurrentBoxes(); };
+document.querySelector('#facs-prev').onclick = () => { follow = false; setFacsPage(Math.max(1, (facsPdf || 2) - 1)); drawCurrentBoxes(); };
+document.querySelector('#facs-next').onclick = () => { follow = false; setFacsPage((facsPdf || 0) + 1); drawCurrentBoxes(); };
 document.querySelector('#close-facsimile').onclick = closeFacsimile;
 window.addEventListener('pv:rendered', () => { if (!panel.hidden) { facsPdf = null; const row = currentRow(); setFacsPage(row ? Number(row.dataset.pdf) : null); drawCurrentBoxes(); } });
 try {

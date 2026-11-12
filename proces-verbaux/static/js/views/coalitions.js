@@ -1,7 +1,7 @@
-import { element } from './chrono.js?v=1509f92807';
-import { navigate } from '../state.js?v=1509f92807';
+import { element } from './chrono.js?v=32bb2641f0';
+import { navigate } from '../state.js?v=32bb2641f0';
 import { getPositions, layerControl, localText, quoteCard, routeAnchor, say, selector,
-  stanceButton, table } from './debate.js?v=1509f92807';
+  stanceButton, table } from './debate.js?v=32bb2641f0';
 
 function dendrogram(host, data, names, state) {
   if (!data.dendrogram.length) return;

@@ -1,6 +1,6 @@
-import { element } from './chrono.js?v=1509f92807';
-import { link, navigate } from '../state.js?v=1509f92807';
-import { contextLink } from '../context.js?v=1509f92807';
+import { element } from './chrono.js?v=32bb2641f0';
+import { link, navigate } from '../state.js?v=32bb2641f0';
+import { contextLink } from '../context.js?v=32bb2641f0';
 
 export const glyphs = { support: '●', oppose: '○', conditional: '◐', unclear: '◌', abstain: '−' };
 const stanceLabels = {

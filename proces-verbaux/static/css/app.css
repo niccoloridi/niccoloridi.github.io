@@ -147,3 +147,4 @@ body[data-view=about] #advisory{display:none}
   margin-right:-.2rem;white-space:nowrap}.home-link:hover{color:var(--gold)}
 @media(max-width:600px){.home-link{border-right:0;padding-right:0}}
 .home-title{color:inherit;text-decoration:none}.home-title:hover{color:var(--gold)}
+body.facs-open .segment.reading{box-shadow:inset 2px 0 0 color-mix(in srgb,var(--gold) 45%,transparent)}
