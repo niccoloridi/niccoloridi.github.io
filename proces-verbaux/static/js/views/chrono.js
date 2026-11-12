@@ -1,5 +1,6 @@
-import { api } from '../api.js?v=b1c575ee6d';
-import { link, state } from '../state.js?v=b1c575ee6d';
+import { enableCitations } from '../cite.js?v=5bf29e1df6';
+import { api } from '../api.js?v=5bf29e1df6';
+import { link, state } from '../state.js?v=5bf29e1df6';
 
 export function element(tag, text, className) {
   const node = document.createElement(tag);
@@ -115,6 +116,7 @@ export async function chrono(meetings, id, segmentId) {
         row.dataset.bbox = JSON.stringify({ fr: segment.bbox_fr, en: segment.bbox_en, full: segment.bbox_full });
         row.tabIndex = -1;
         row.setAttribute('aria-label', `Segment ${segment.id}`);
+        row.title = 'Click to copy a citation to this passage';
         for (const lang of segment.row_type === 'full' ? ['full'] : ['fr', 'en']) {
           const column = element('div', undefined, `column ${lang}`);
           column.lang = lang === 'full' ? (segment.doc === 'index' && page.pdf >= 781 ? 'en' : 'fr') : lang;
@@ -135,6 +137,7 @@ export async function chrono(meetings, id, segmentId) {
       }
       if (notesByPage.has(page.pdf)) main.append(noteList(notesByPage.get(page.pdf)));
     }
+    enableCitations(meeting, id, new Map(meeting.segments.map(segment => [segment.id, segment])));
     const pager = element('nav', undefined, 'pager');
     pager.setAttribute('aria-label', 'Previous and next meeting');
     const position = meetings.findIndex(item => item.id === id);

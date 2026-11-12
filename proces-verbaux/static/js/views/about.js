@@ -1,5 +1,5 @@
 
-import { link } from '../state.js?v=b1c575ee6d';
+import { link } from '../state.js?v=5bf29e1df6';
 
 const MEMBERS = [
   ['adatci', 'Mineichirō Adatci', 'Japon', 'Japan'],
