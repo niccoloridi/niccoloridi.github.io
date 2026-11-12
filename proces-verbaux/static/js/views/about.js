@@ -1,5 +1,5 @@
 
-import { link } from '../state.js?v=5bf29e1df6';
+import { link } from '../state.js?v=500c5c3c2b';
 
 const MEMBERS = [
   ['adatci', 'Mineichirō Adatci', 'Japon', 'Japan'],
@@ -40,13 +40,13 @@ const T = {
     ],
     convH: 'Reading conventions',
     conv: [
-      'Page references are to the printed pagination of the 1920 volume (“p. 335”). The facsimile button shows the corresponding page of the scan.',
-      'Each paragraph has a permanent address; the French and English versions of a paragraph share it.',
+      'Page references are to the printed pagination of the 1920 volume (“p. 335”). The Facsimile button opens the scanned page beside the text. It follows the passage you are reading, which is marked in the margin and outlined on the scan.',
+      'Each paragraph has a permanent address, shared by its French and English versions. Paragraph identifiers are fixed and will not change as the text is corrected. Click any paragraph to copy a citation with its permanent link.',
       'Footnotes are those of the printed volume. The language buttons in the header show French, English, or both.',
     ],
     citeH: 'How to cite',
-    cite: 'Advisory Committee of Jurists, Procès-verbaux of the Proceedings of the Committee, June 16th–July 24th 1920, with Annexes (The Hague: Van Langenhuysen, 1920), p. 335; digital edition by Niccolò Ridi (2026),',
-    citeNote: 'Cite the printed page; the link points to the paragraph in this edition.',
+    cite: 'Procès-verbaux of the Proceedings of the Advisory Committee of Jurists, 15th Meeting (3 July 1920), p. 335 (Phillimore) (The Hague: Van Langenhuysen Brothers, 1920), also available at',
+    citeNote: 'Click any paragraph in the reader to copy a citation in this form: the meeting or annex, the printed page, the speaker where there is one, and a permanent link to that paragraph.',
     copy: 'Copy',
     copied: 'Copied',
     dlH: 'Downloads',
@@ -96,13 +96,13 @@ const T = {
     ],
     convH: 'Conventions de lecture',
     conv: [
-      'Les références de page renvoient à la pagination imprimée du volume de 1920 (« p. 335 »). Le bouton fac-similé affiche la page correspondante.',
-      'Chaque paragraphe possède une adresse permanente, commune à ses versions française et anglaise.',
+      'Les références de page renvoient à la pagination imprimée du volume de 1920 (« p. 335 »). Le bouton fac-similé ouvre la page numérisée à côté du texte ; elle suit le passage en cours de lecture, signalé dans la marge et encadré sur la page.',
+      'Chaque paragraphe possède une adresse permanente, commune à ses versions française et anglaise. Les identifiants des paragraphes sont fixes et ne changeront pas au fil des corrections. Cliquez sur un paragraphe pour copier une référence avec son lien permanent.',
       'Les notes sont celles du volume imprimé. Les boutons de langue de l’en-tête affichent le français, l’anglais ou les deux.',
     ],
     citeH: 'Comment citer',
-    cite: 'Comité consultatif de juristes, Procès-verbaux des séances du Comité, 16 juin – 24 juillet 1920, avec annexes (La Haye : Van Langenhuysen, 1920), p. 335 ; édition numérique par Niccolò Ridi (2026),',
-    citeNote: 'Citez la page imprimée ; le lien renvoie au paragraphe dans cette édition.',
+    cite: 'Procès-verbaux des séances du Comité consultatif de juristes, 15e séance (3 juillet 1920), p. 335 (Phillimore) (La Haye : Van Langenhuysen frères, 1920), également disponible à l’adresse',
+    citeNote: 'Cliquez sur un paragraphe du texte pour copier une référence sous cette forme (en anglais) : séance ou annexe, page imprimée, orateur le cas échéant, et lien permanent vers ce paragraphe.',
     copy: 'Copier',
     copied: 'Copié',
     dlH: 'Téléchargements',
@@ -175,7 +175,7 @@ export async function render(root, state) {
 
   const base = location.origin + location.pathname.replace(/[^/]*$/, '');
   const permalink = `${base}#/m/15/s0345.04`;
-  const citation = `${t.cite} ${permalink}`;
+  const citation = `${t.cite} ${permalink}.`;
   const box = el('div', undefined, 'about-cite');
   const q = el('p', citation);
   const btn = el('button', t.copy);

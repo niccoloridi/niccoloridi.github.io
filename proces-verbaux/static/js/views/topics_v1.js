@@ -1,6 +1,6 @@
 
-import { element } from './chrono.js?v=5bf29e1df6';
-import { link } from '../state.js?v=5bf29e1df6';
+import { element } from './chrono.js?v=500c5c3c2b';
+import { link } from '../state.js?v=500c5c3c2b';
 
 const requests = new WeakMap();
 async function get(path) {
