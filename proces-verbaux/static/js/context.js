@@ -1,6 +1,6 @@
 
 
-import { link, navigate, state } from './state.js?v=32bb2641f0';
+import { link, navigate, state } from './state.js?v=b1c575ee6d';
 
 const cache = new Map();
 let panel;
