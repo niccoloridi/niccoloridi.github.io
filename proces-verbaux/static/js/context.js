@@ -1,6 +1,6 @@
 
 
-import { link, navigate, state } from './state.js?v=500c5c3c2b';
+import { link, navigate, state } from './state.js?v=97869ffb33';
 
 const cache = new Map();
 let panel;
@@ -123,7 +123,7 @@ export async function openContext({ meeting, segs = [], title = '' }) {
   if (hit) hit.scrollIntoView({ block: 'center' });
 }
 
-document.addEventListener('click', event => {
+document.addEventListener?.('click', event => {
   if (event.ctrlKey || event.metaKey || event.shiftKey || event.button !== 0) return;
 
   const route = event.target.closest('a[data-route]');
@@ -143,5 +143,5 @@ document.addEventListener('click', event => {
     title: a.dataset.ctxTitle || '' });
 }, true);
 
-window.addEventListener('hashchange', closeContext);
-window.addEventListener('pv:navigate', closeContext);
+globalThis.window?.addEventListener('hashchange', closeContext);
+globalThis.window?.addEventListener('pv:navigate', closeContext);

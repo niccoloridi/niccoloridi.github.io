@@ -1,6 +1,6 @@
-import { enableCitations } from '../cite.js?v=500c5c3c2b';
-import { api } from '../api.js?v=500c5c3c2b';
-import { link, state } from '../state.js?v=500c5c3c2b';
+import { enableCitations } from '../cite.js?v=97869ffb33';
+import { api } from '../api.js?v=97869ffb33';
+import { link, state } from '../state.js?v=97869ffb33';
 
 export function element(tag, text, className) {
   const node = document.createElement(tag);

@@ -1,5 +1,5 @@
 
-import { link } from '../state.js?v=500c5c3c2b';
+import { link } from '../state.js?v=97869ffb33';
 
 const MEMBERS = [
   ['adatci', 'Mineichirō Adatci', 'Japon', 'Japan'],
@@ -68,8 +68,8 @@ const T = {
       'Permanent Court of International Justice, Series D, No. 1: Statute and Rules of Court (Leyden: Sijthoff, 1926) — for the text of the Statute as adopted on 13 December 1920.',
     ],
     licH: 'Licence',
-    lic: 'The edition and all its data — the transcribed French and English texts, the analytical index, the metadata and the downloads — are published under the Creative Commons Attribution 4.0 International licence (CC BY 4.0). The printed volume of 1920 is out of copyright.',
-    version: 'Version 0.1 · 11 November 2026',
+    lic: 'The editor’s contributions — the structure and identifiers, the analytical index, the metadata and the downloads — are published under the Creative Commons Attribution 4.0 International licence (CC BY 4.0). The 1920 text is treated as in the public domain. The volume is attributed to the Committee and was printed in The Hague in 1920: under Dutch law, copyright in a work attributed to an institution lasts seventy years from first publication, and in the United States works published before 1931 are in the public domain. The Internet Archive lists the scanned copy, which the edition uses, as not in copyright. The position is not certain: the United Nations states that it holds the copyright in materials produced by the League of Nations, and annexes published under a member’s name may be protected for that member’s lifetime and seventy years after.',
+    version: 'Version 0.9.0 · 24 November 2026',
   },
   fr: {
     kicker: 'À propos de l’édition',
@@ -124,8 +124,8 @@ const T = {
       'Cour permanente de justice internationale, Série D, n° 1 : Statut et Règlement de la Cour (Leyde : Sijthoff, 1926) — pour le texte du Statut adopté le 13 décembre 1920.',
     ],
     licH: 'Licence',
-    lic: 'L’édition et l’ensemble de ses données — textes français et anglais transcrits, index analytique, métadonnées et téléchargements — sont publiés sous licence Creative Commons Attribution 4.0 International (CC BY 4.0). Le volume imprimé de 1920 n’est plus protégé par le droit d’auteur.',
-    version: 'Version 0.1 · 11 novembre 2026',
+    lic: 'Les apports de l’éditeur — structure et identifiants, index analytique, métadonnées et téléchargements — sont publiés sous licence Creative Commons Attribution 4.0 International (CC BY 4.0). Le texte de 1920 est traité comme relevant du domaine public. Le volume est attribué au Comité et a été imprimé à La Haye en 1920 : en droit néerlandais, le droit d’auteur sur une œuvre attribuée à une institution dure soixante-dix ans à compter de la première publication, et aux États-Unis les œuvres publiées avant 1931 sont dans le domaine public. L’Internet Archive indique que la copie numérisée, qu’utilise l’édition, n’est pas protégée. La situation n’est pas certaine : l’Organisation des Nations Unies déclare détenir le droit d’auteur sur les documents produits par la Société des Nations, et les annexes publiées sous le nom d’un membre peuvent être protégées pendant la vie de celui-ci et soixante-dix ans après.',
+    version: 'Version 0.9.0 · 24 novembre 2026',
   },
 };
 

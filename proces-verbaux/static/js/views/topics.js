@@ -1,6 +1,6 @@
 
-import { link, state } from '../state.js?v=500c5c3c2b';
-import { element, longDate } from './chrono.js?v=500c5c3c2b';
+import { link, state } from '../state.js?v=97869ffb33';
+import { element, longDate } from './chrono.js?v=97869ffb33';
 
 let treeCache;
 const get = async path => {

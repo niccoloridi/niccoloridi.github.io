@@ -110,12 +110,18 @@ async function copy(text) {
   return ok;
 }
 
+
+let listening = false;
 export function enableCitations(meeting, routeId, segmentsById) {
   current = { meeting, routeId, segmentsById };
   preload(meeting);
+  if (!listening) {
+    document.querySelector('#reader')?.addEventListener('click', onClick);
+    listening = true;
+  }
 }
 
-document.querySelector('#reader')?.addEventListener('click', async event => {
+async function onClick(event) {
   const row = event.target.closest('article.segment');
   if (!row || !current?.segmentsById) return;
   if (event.target.closest('a, button, sup, input, summary, .continuation')) return;
@@ -128,4 +134,4 @@ document.querySelector('#reader')?.addEventListener('click', async event => {
   toast(ok ? `Copied: ${text}` : `Copy failed — ${text}`);
   row.classList.add('cited');
   setTimeout(() => row.classList.remove('cited'), 900);
-});
+}
